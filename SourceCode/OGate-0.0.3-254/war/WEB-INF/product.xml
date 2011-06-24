@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<corewa>
+  <home-screen>product</home-screen>
+  <screen id="product" input="/WEB-INF/pages/product.jsp" >
+  </screen>
+  
+</corewa>

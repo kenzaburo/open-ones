@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<corewa>
+  <layout id="Layout">
+    <part id="layout.do" screen="Layout"/>
+    <part id="header.do" screen="Header"/>
+    <part id="left.do" screen="Left"/>
+    <part id="main.do" screen="Main"/>
+    <part id="right.do" screen="Right"/>
+    <part id="footer.do" screen="Footer"/>
+  </layout>
+  <home-screen>Layout</home-screen>
+  
+  <screen id="Layout" control="openones.gate.control.LayoutControl" input="/WEB-INF/pages/layout.jsp">
+  </screen>
+  
+  <screen id="Header" control="openones.gate.control.HeaderControl" input="/WEB-INF/pages/layout.jsp" >
+    <event id="login" procId="googleLogin"/>
+    <event id="logout" procId="googleLogout"/>
+    <event id="changeLanguage" procId="changeLanguage"/>
+    
+    <event id="setting" procId="setting"/>
+    
+  </screen>
+
+
+  <screen id="Navigation" control="openones.gate.control.NavigationControl" input="/WEB-INF/pages/layout.jsp" >
+    <event id="clickTab" procId="selectTab"></event>
+<!--     <event id="click_service" procId="gotoService"></event> -->
+<!--     <event id="click_intro" procId="gotoIntro"></event> -->
+<!--     <event id="click_member" procId="gotoMember"></event> -->
+<!--     <event id="click_product" procId="gotoProduct"></event> -->
+  </screen>
+  
+  <!-- Menu for Admin -->
+  <screen id="Menu" control="openones.gate.control.MenuControl" input="/WEB-INF/pages/layout.jsp" >
+    <event id="selectItem" procId="procItem"/>
+    
+    <!-- Common Item -->
+    <event id="ciTabSetting" procId="procCommonItem"/>
+    <event id="ciAccSetting" procId="procCommonItem"/>
+    <event id="ciLangSetting" procId="procCommonItem"/>
+    
+    <!-- Common Item: Tab saving -->
+    <event id="ciT" procId="procCommonItem"/>
+    
+    <!-- Layout setting -->
+    <event id="changeLogo" procId="changeLayoutItem"/>
+    <event id="changeSlogan" procId="changeLayoutItem"/>
+    <event id="changeSponsor" procId="changeLayoutItem"/>
+    <event id="changeHotNews" procId="changeLayoutItem"/>
+    <event id="changeLeftAdv" procId="changeLayoutItem"/>
+    <event id="changeLink" procId="changeLayoutItem"/>
+    <event id="changeRightAdv" procId="changeLayoutItem"/>
+    <event id="changeFooter" procId="changeLayoutItem"/>
+    
+  </screen>
+  
+  <screen id="PartEdit" control="openones.gate.control.PartEditControl" input="/WEB-INF/pages/layout.jsp" >
+    <!-- Layout setting -->
+    <event id="changeLogo" procId="changeLayoutItem"/>
+    <event id="changeSlogan" procId="changeLayoutItem"/>
+    <event id="changeSponsor" procId="changeLayoutItem"/>
+    <event id="changeHotNews" procId="changeLayoutItem"/>
+    <event id="changeLeftAdv" procId="changeLayoutItem"/>
+    <event id="changeLink" procId="changeLayoutItem"/>
+    <event id="changeRightAdv" procId="changeLayoutItem"/>
+    <event id="changeFooter" procId="changeLayoutItem"/>
+    
+  </screen>
+</corewa>

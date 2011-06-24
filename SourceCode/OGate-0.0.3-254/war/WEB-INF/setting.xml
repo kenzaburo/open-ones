@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<corewa>
+  <home-screen>Setting</home-screen>
+
+  <screen id="Setting" control="openones.gate.control.setting.SettingControl" input="/WEB-INF/pages/setting/setting.jsp" >
+  </screen>
+
+  <screen id="TabSetting" control="openones.gate.control.setting.TabControl" input="/WEB-INF/pages/setting/tab.jsp" >
+    <!-- Common Item: Tab saving -->
+    <event id="save" procId="save" nextScreen="/WEB-INF/pages/layout.jsp"/>
+  </screen>
+  
+  <screen id="LangSetting" control="openones.gate.control.setting.LangControl" input="/WEB-INF/pages/setting/lang.jsp" >
+    <!-- Common Item: Tab saving -->
+    <event id="save" procId="save" nextScreen="/WEB-INF/pages/layout.jsp"/>
+  </screen>
+</corewa>
