@@ -16,10 +16,10 @@ public class StarDictTest {
     // String dictPathWin = prjPathWin + "src_ut/testdata/stardict-dictd-easton-2.4.2";
 
     /*** prjPath, dictPaht used for test case xxx02 */
-    String prjPath = "/media/Data1/Projects/Open-OnesGroup/GoogleCode_RapidSVN/trunk/ProjectList/InnoDict/Stardict-Core/";
+    String prjPath = "/media/Data1/Projects/Open-Ones/GoogleCode/trunk/ProjectList/InnoDict/Stardict-Core/src_ut/testdata/";
     // String prjPath = prjPathWin;
-    String dictPathVE = prjPath + "src_ut/testdata/stardict-dictd_viet-anh-2.4.2";
-    String dictEastonPath = prjPath + "src_ut/testdata/stardict-dictd-easton-2.4.2";
+    String dictPathVE = prjPath + "stardict-dictd_viet-anh-2.4.2";
+    String dictEastonPath = prjPath + "stardict-dictd-easton-2.4.2";
 
     /**
      * test look up word.

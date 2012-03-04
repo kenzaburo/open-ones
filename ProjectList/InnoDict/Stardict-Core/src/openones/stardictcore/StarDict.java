@@ -18,7 +18,10 @@
  */
 
 package openones.stardictcore;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +31,15 @@ import org.apache.log4j.Logger;
 
 /**
  * This class is used to read idx, ifo,dict files get dictionary information, word and meaning.
- * @author kien
- * @author Thach Le
+ * @author Tuan, Kien, Thach
  */
 public class StarDict {
+    private static final String EXT_DICT = ".dict";
+
+    private static final String EXT_INDEX = ".idx";
+
+    private static final String EXT_INFO = ".ifo";
+
     /** Logger. */
     static final Logger LOG = Logger.getLogger("DictFile");
 
@@ -64,9 +72,9 @@ public class StarDict {
         if (!file.isDirectory()) {
             strURL = getFileNameWithoutExtension(url);
             LOG.debug("strURL=" + strURL);
-            ifoFile = new IfoFile(strURL + ".ifo");
-            idxFile = new IdxFile(strURL + ".idx", ifoFile.getLongWordCount(), ifoFile.getLongIdxFileSize());
-            dictFile = new DictFile(strURL + ".dict");
+            ifoFile = new IfoFile(strURL + EXT_INFO);
+            idxFile = new IdxFile(strURL + EXT_INDEX, ifoFile.getLongWordCount(), ifoFile.getLongIdxFileSize());
+            dictFile = new DictFile(strURL + EXT_DICT);
         } else {
             String[] list = file.list();
             // Map<file extension,file name>
@@ -74,19 +82,19 @@ public class StarDict {
 
             // Build table to mapping the file extension and file name
             for (int i = list.length - 1; i >= 0; i--) {
-                if (list[i].endsWith(".ifo")) {
-                    fileMap.put(".ifo", list[i]);
-                } else if (list[i].endsWith(".idx")) {
-                    fileMap.put(".idx", list[i]);
-                } else if (list[i].endsWith(".dict")) {
-                    fileMap.put(".dict", list[i]);
+                if (list[i].endsWith(EXT_INFO)) {
+                    fileMap.put(EXT_INFO, list[i]);
+                } else if (list[i].endsWith(EXT_INDEX)) {
+                    fileMap.put(EXT_INDEX, list[i]);
+                } else if (list[i].endsWith(EXT_DICT)) {
+                    fileMap.put(EXT_DICT, list[i]);
                 }
             }
 
-            ifoFile = new IfoFile(url + File.separator + fileMap.get(".ifo"));
-            idxFile = new IdxFile(url + File.separator + fileMap.get(".idx"), ifoFile.getLongWordCount(),
+            ifoFile = new IfoFile(url + File.separator + fileMap.get(EXT_INFO));
+            idxFile = new IdxFile(url + File.separator + fileMap.get(EXT_INDEX), ifoFile.getLongWordCount(),
                     ifoFile.getLongIdxFileSize());
-            dictFile = new DictFile(url + File.separator + fileMap.get(".dict"));
+            dictFile = new DictFile(url + File.separator + fileMap.get(EXT_DICT));
         }
 
         if (ifoFile.isBoolIsLoaded() && idxFile.isLoaded()) {
@@ -112,11 +120,11 @@ public class StarDict {
 
     /**
      * Load dictionary from the folder.
-     * @param url path of folder
+     * @param dictRepo path of folder
      * @return object of StarDict
      */
-    public static StarDict loadDict(String url) {
-        File file = new File(url);
+    public static StarDict loadDict(String dictRepo) {
+        File file = new File(dictRepo);
         String ifoFilePath;
 
         IfoFile ifoFile = null;
@@ -124,18 +132,18 @@ public class StarDict {
         DictFile dictFile = null;
 
         if (!file.isDirectory()) {
-            String filePathNoExt = getFileNameWithoutExtension(url);
+            String filePathNoExt = getFileNameWithoutExtension(dictRepo);
             LOG.debug("filePathNoExt=" + filePathNoExt);
 
-            ifoFilePath = filePathNoExt + ".ifo";
+            ifoFilePath = filePathNoExt + EXT_INFO;
             if (new File(ifoFilePath).isFile()) {
                 ifoFile = new IfoFile(ifoFilePath);
             } else {
                 return null;
             }
 
-            idxFile = new IdxFile(filePathNoExt + ".idx", ifoFile.getLongWordCount(), ifoFile.getLongIdxFileSize());
-            dictFile = new DictFile(filePathNoExt + ".dict");
+            idxFile = new IdxFile(filePathNoExt + EXT_INDEX, ifoFile.getLongWordCount(), ifoFile.getLongIdxFileSize());
+            dictFile = new DictFile(filePathNoExt + EXT_DICT);
         } else {
             String[] list = file.list();
             // Map<file extension,file name>
@@ -143,19 +151,24 @@ public class StarDict {
 
             // Build table to mapping the file extension and file name
             for (int i = list.length - 1; i >= 0; i--) {
-                if (list[i].endsWith(".ifo")) {
-                    fileMap.put(".ifo", list[i]);
-                } else if (list[i].endsWith(".idx")) {
-                    fileMap.put(".idx", list[i]);
-                } else if (list[i].endsWith(".dict")) {
-                    fileMap.put(".dict", list[i]);
+                if (list[i].endsWith(EXT_INFO)) {
+                    fileMap.put(EXT_INFO, list[i]);
+                } else if (list[i].endsWith(EXT_INDEX)) {
+                    fileMap.put(EXT_INDEX, list[i]);
+                } else if (list[i].endsWith(EXT_DICT)) {
+                    fileMap.put(EXT_DICT, list[i]);
                 }
             }
 
-            ifoFile = new IfoFile(url + File.separator + fileMap.get(".ifo"));
-            idxFile = new IdxFile(url + File.separator + fileMap.get(".idx"), ifoFile.getLongWordCount(),
+            if (fileMap.size() < 3) { // There is not enough files of StarDict
+                LOG.warn("Only " + fileMap.size() + " file(s) in folder '" + dictRepo + "'");
+                return null;
+            }
+
+            ifoFile = new IfoFile(dictRepo + File.separator + fileMap.get(EXT_INFO));
+            idxFile = new IdxFile(dictRepo + File.separator + fileMap.get(EXT_INDEX), ifoFile.getLongWordCount(),
                     ifoFile.getLongIdxFileSize());
-            dictFile = new DictFile(url + File.separator + fileMap.get(".dict"));
+            dictFile = new DictFile(dictRepo + File.separator + fileMap.get(EXT_DICT));
 
         }
 
@@ -165,6 +178,68 @@ public class StarDict {
 
         StarDict dict = new StarDict(ifoFile, idxFile, dictFile);
         return dict;
+    }
+
+    /**
+     * Create an empty Stardict-based dictionary.
+     * The dictionary includes 3 files dictName.dict, dictName.idx, dictName.ifo.
+     * These 3 files will be generated at path: repoPath + "/" + dictName.
+     * @param repoPath folder contains the dictionary files.
+     * @param dictName name of the dictionary. It's used for naming of files
+     * @return true if success; false if the dictionary is existed or error.
+     */
+    public static boolean createDict(String repoPath, String dictName, DictInfo dictInfo) {
+        String dictPath = repoPath + File.separator + dictName;
+        String dictFilePath = dictPath + File.separator + dictName + EXT_DICT;
+        String idxFilePath = dictPath + File.separator + dictName + EXT_INDEX;
+        String ifoFilePath = dictPath + File.separator + dictName + EXT_INFO;
+
+        if (((new File(dictFilePath)).exists()) || ((new File(idxFilePath)).exists())
+                || ((new File(ifoFilePath)).exists())) {
+            LOG.debug("The dictionary is already.");
+            return false;
+        }
+
+        // Create the path folder for dictionary files.
+        File dictPathFile = new File(dictPath);
+        if (!dictPathFile.exists() || !dictPathFile.isDirectory()) {
+            if (!dictPathFile.mkdirs()) {
+                LOG.error("Could not create folder '" + dictPath);
+                return false;
+            }
+        }
+
+        try {
+            DataOutputStream dt = new DataOutputStream(new FileOutputStream(dictFilePath));
+            // java.io.FileWriter fw = new java.io.FileWriter(dictFile);
+            String strFirstWord = "@00-database-info\nThis is the " + dictName
+                    + " dictionary database of the " + dictName;
+            dt.write(strFirstWord.getBytes());
+            dt.flush();
+            dt.close();
+
+            dt = new DataOutputStream(new FileOutputStream(idxFilePath));
+            dt.write('\0');
+            dt.write(convertAnInt32(0));
+            dt.write(convertAnInt32(strFirstWord.length()));
+            dt.flush();
+            dt.close();
+            FileWriter fw = new FileWriter(ifoFilePath);
+            fw.write(dictInfo.toString());
+            fw.write("sametypesequence=m\n");
+            fw.flush();
+            fw.close();
+
+            return true;
+        } catch (Exception ex) {
+            LOG.error("Could not create new dictionary", ex);
+            // Delete created files
+            (new File(dictFilePath)).delete();
+            (new File(idxFilePath)).delete();
+            (new File(ifoFilePath)).delete();
+        }
+
+        return false;
     }
 
     /**
@@ -375,4 +450,20 @@ public class StarDict {
         int dot = url.lastIndexOf(".");
         return url.substring(dot + 1);
     }
+
+    /**
+     * Convert int into 32-bit integer.
+     * @param val integer
+     * @return 4 bytes of 32-bit integer
+     */
+    public static byte[] convertAnInt32(int val) {
+        byte[] str = new byte[4];
+
+        str[0] = (byte) ((val & 0xFF000000) >> 24);
+        str[1] = (byte) ((val & 0x00FF0000) >> 16);
+        str[2] = (byte) ((val & 0x0000FF00) >> 8);
+        str[3] = (byte) ((val & 0x000000FF));
+        return str;
+    }
+
 }

@@ -39,5 +39,10 @@ Notes:
 
 +Tracking changes
 ==========================================
+Development Build
+-------------------------------------
++ New: Create newly Stardict-based dictionary: Coding
+
 Version 0.0.2
+-------------------------------------
 + Fix bug: ordering of reading file in Linux
