@@ -50,7 +50,8 @@ import net.jforum.repository.ForumRepository;
 /**
  * Represents a specific forum.
  * 
- * @author Rafael Steil
+ * @author Rafael Steil,
+ * @author Open-Ones member
  * @version $Id: Forum.java,v 1.13 2007/07/28 14:17:09 rafaelsteil Exp $
  */
 public class Forum implements Serializable
@@ -66,6 +67,17 @@ public class Forum implements Serializable
 	private boolean moderated;
 	private boolean unread;
 	private LastPostInfo lpi;
+	
+	// new attributes for version 2.1.9
+	private String imageUrl;
+	private String tooltip;
+
+	/**
+     * @return the imageUrl
+     */
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
 	public Forum() { }
 	
@@ -86,6 +98,9 @@ public class Forum implements Serializable
 		this.totalTopics = f.getTotalTopics();
 		this.unread = f.getUnread();
 		this.lpi = f.getLastPostInfo();
+		//new attr
+		this.imageUrl = f.getImageUrl();
+		this.tooltip = f.getTooltip();
 	}
 	
 	public void setLastPostInfo(LastPostInfo lpi) {
@@ -268,6 +283,27 @@ public class Forum implements Serializable
 	{
 		return ((o instanceof Forum) && (((Forum)o).getId() == this.id));
 	}
+
+    /**
+     * @param imageUrl the imageUrl to set
+     */
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = (imageUrl != null) ? imageUrl.trim() : "";
+    }
+
+    /**
+     * @return the tooltip
+     */
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    /**
+     * @param tooltip the tooltip to set
+     */
+    public void setTooltip(String tooltip) {
+        this.tooltip = (tooltip != null) ? tooltip.trim() : "";
+    }
 
 	/** 
 	 * @see java.lang.Object#hashCode()

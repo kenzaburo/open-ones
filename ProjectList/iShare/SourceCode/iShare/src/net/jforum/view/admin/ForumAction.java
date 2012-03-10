@@ -68,6 +68,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
+ * @author Open-Ones member 
  * @version $Id: ForumAction.java,v 1.34 2007/08/25 00:11:29 rafaelsteil Exp $
  */
 public class ForumAction extends AdminCommand 
@@ -119,6 +120,13 @@ public class ForumAction extends AdminCommand
 		int categoryId = f.getCategoryId();
 		
 		f.setDescription(this.request.getParameter("description"));
+		
+		String tooltip = this.request.getParameter("tooltip");
+        String url = this.request.getParameter("img_url");
+
+        f.setTooltip(tooltip);
+        f.setImageUrl(url);
+		
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));
 		f.setModerated("1".equals(this.request.getParameter("moderate")));
@@ -255,7 +263,22 @@ public class ForumAction extends AdminCommand
 	public void insertSave()
 	{
 		Forum f = new Forum();
-		f.setDescription(this.request.getParameter("description"));
+
+		f.setDescription(this.request.getParameter("description"));		
+
+        
+		String tooltip = this.request.getParameter("tooltip");
+		String url = this.request.getParameter("img_url");
+		
+		//set tooltip default value
+        tooltip = ((tooltip == null) || ("".equals(tooltip))) ? "" : tooltip.trim();
+        if (tooltip.length() > 150) {
+            tooltip.substring(0, 149);
+        }
+        
+        f.setTooltip(tooltip);
+        f.setImageUrl(url);
+        
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));	
 		f.setModerated("1".equals(this.request.getParameter("moderate")));

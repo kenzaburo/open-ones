@@ -4,6 +4,9 @@
 <#import "../macros/presentation.ftl" as presentation/>
 
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.dimensions.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.tooltip.js"></script>
+
 
 <#if logged>
 	<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/watch.js?${startupTime}"></script>
@@ -323,4 +326,9 @@
 	</tr>
 </table>
 
+<script>
+$(document).ready(function() {
+	$("a").tooltip({fade:250});
+});
+</script>
 <#include "bottom.htm"/>

@@ -1,0 +1,146 @@
+<project name="jForum" default="dist" basedir=".">
+  <description>
+      Build file for the project
+  </description>
+  <!-- Load user property definition overrides -->
+  <property file="build.properties"/>
+  
+  <!-- set global properties for this build
+    web.content: Folder contain web content of application
+  -->
+  <property name="build.home" location="build"/>
+  <property name="dist.home"  location="dist/${app.name}-${app.version}"/>
+  <property name="web.content" location="WebContent"/>
+
+  <property name="lib.compile" value="${web.content}/WEB-INF/lib"/>
+  <property name="lib.server.compile" value="${tomcat.home}/lib"/>
+  
+  <!-- Configure the custom Ant tasks for the Manager application -->
+  <!--
+  <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+  <taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+  -->
+
+
+<!--
+
+  These properties control option settings on the Javac compiler when it
+  is invoked using the <javac> task.
+
+  compile.debug        Should compilation include the debug option?
+
+  compile.deprecation  Should compilation include the deprecation option?
+
+  compile.optimize     Should compilation include the optimize option?
+
+-->
+
+  <property name="compile.debug"       value="true"/>
+  <property name="compile.deprecation" value="false"/>
+  <property name="compile.optimize"    value="true"/>
+  
+  <path id="compile.classpath">
+    <fileset dir="${lib.compile}">
+       <include name="**/*.jar"/>
+    </fileset>
+	<!-- Un-comment this tag your project wants external libraries from folder "server-lib" for compiling. -->
+    <fileset dir="${lib.server.compile}">
+       <include name="servlet-api.jar"/>
+    </fileset>
+	
+  </path>
+
+  <target name="init" depends="clean">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build.home}"/>
+    <mkdir dir="${build.home}/WEB-INF/classes"/>
+    
+  </target>
+
+  <target name="compile" depends="init" description="Compile all Java sources">
+
+    <!-- Compile Java classes as necessary -->
+    <echo message="Complie sourse folder 'src'"/>
+    <javac srcdir="src"
+          destdir="${build.home}/WEB-INF/classes"
+            debug="${compile.debug}"
+      deprecation="${compile.deprecation}"
+          target="1.6"
+          source="1.6"
+          encoding="UTF-8"
+         optimize="${compile.optimize}">
+      <classpath refid="compile.classpath"/>
+    </javac>
+    
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution war file" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist.home}"/>
+	
+	<!-- Copy WebContent -->
+	<copy todir="${build.home}" preservelastmodified="true">
+	    <fileset dir="${web.content}" excludes=".svn/**,*.svn-base"/>
+    </copy>
+	
+	<!-- Copy resources from folder "resource" -->
+	<copy todir="${build.home}/WEB-INF/classes" preservelastmodified="true">
+	    <fileset dir="resource" excludes=".svn/**,*.svn-base, **/*.java"/>
+    </copy>
+	
+	<!-- Copy templates -->
+	<copy todir="${build.home}/WEB-INF/classes" preservelastmodified="true">
+	    <fileset dir="templates" excludes=".svn/**,*.svn-base, **/*.java"/>
+    </copy>
+	
+	<!-- deployPortlet.bat: helps to deploy the .war into uPortal -->
+	<copy file="./deployPortlet.bat" todir="${dist.home}" preservelastmodified="true"/>
+	<!-- deployPortlet.sh: helps to deploy the .war into uPortal -->
+	<copy file="./deployPortlet.sh" todir="${dist.home}" preservelastmodified="true"/>
+
+    <jar jarfile="${dist.home}/${app.name}.war" basedir="${build.home}/"/>
+	<echo message="View the result within folder ${dist.home}"/>
+  </target>
+  
+  <target name="dist218to219" depends="compile" description="generate the distribution to upgrade from version 2.1.8 to 2.1.9" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist.home}"/>
+    
+    <mkdir dir="${dist.home}/WEB-INF/classes"/>
+	
+    <!-- Copy WebContent -->
+    <copy todir="${dist.home}/WEB-INF/classes" preservelastmodified="true">
+	<fileset dir="${build.home}/WEB-INF/classes" includes="**/Forum.class, **/GenericForumDAO.class, **/admin/ForumAction.class"/>
+    </copy>
+    
+    <copy todir="${dist.home}" preservelastmodified="true">
+	<fileset dir="./WebContent" includes="**/WEB-INF/config/database/generic/generic_queries.sql"/>
+    </copy>
+    
+    <copy todir="${dist.home}/" preservelastmodified="true">
+	<fileset dir="./WebContent" includes="**/templates/default/forum_list.htm, **/templates/default/forum_show.htm, **/templates/default/admin/forum_form.htm"/>
+    </copy>
+    
+    <copy todir="${dist.home}/" preservelastmodified="true">
+	<fileset dir="./WebContent" includes="**/templates/default/js/jquery.tooltip.js, **/templates/default/js/jquery.dimensions.js"/>
+    </copy>
+    
+    <copy todir="${dist.home}/" preservelastmodified="true">
+	<fileset dir="./WebContent" includes="**/WEB-INF/config/languages/en_US.properties"/>
+    </copy>
+    <copy todir="${dist.home}/" preservelastmodified="true">
+	<fileset dir="./WebContent" includes="**/upgrade/2.1.9/mysql_2.1.8_to_2.1.9.sql"/>
+    </copy>
+</target>
+  
+  
+  <target name="clean" description="clean up the build folder" >
+    <!-- Delete the ${build.home} and ${dist.home} directory trees -->
+	<echo message="Delete the '${build.home}' and '${dist.home}' directory trees "/>
+    <delete dir="${build.home}"/>
+	<delete dir="dist"/>
+  </target>
+
+</project>

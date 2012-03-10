@@ -3,6 +3,17 @@
 <#assign edit = forum?exists/>
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
 
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js"></script>
+<script>
+  function picPreview() {
+	$("#img_preview").show(300);
+	$("#img_preview").attr("src", $("#img_url").val());
+  }
+
+  function hide() {
+	$("#img_preview").hide(100);
+  }
+</script>
 <form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}" onSubmit="return checkInput();" enctype="multipart/form-data">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
@@ -136,6 +147,27 @@ function limitTextArea(field, limit)
 	<tr>
 		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.Description")}</span></td>
 		<td class="row2"><textarea name="description" cols="40" rows="10" class="post" style="width: 100%" onKeyDown="limitTextArea(this, 255);" onKeyUp="limitTextArea(this, 255);"><#if forum?exists>${forum.description?default("")}</#if></textarea></td>
+	</tr>
+	
+	<!-- tooltip -->
+	<tr>
+		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.Tooltip")}</span></td>
+		<td class="row2"><input id="tooltip" name="tooltip" class="post" style="width: 50%" value="<#if forum?exists>${forum.tooltip?default("")}</#if>"/></td>
+	</tr>
+	
+	<!-- forum Image URL -->
+	<tr>
+		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.ImageURL")}</span></td>
+		<td class="row2">
+		<input name="img_url" id="img_url" class="post" style="width: 50%" value="<#if forum?exists>${forum.imageUrl?default("")}</#if>"/>
+		<input type="button" name="p"  onclick="picPreview();" onblur="hide();" value="Preview"/><br/>
+		<img alt="Forum Image" height="115px" id="img_preview" />
+		<script>
+		  $(document).ready(function() {
+		    hide();
+		  });
+		</script>
+		</td>
 	</tr>
 	
 	<#if !edit>
