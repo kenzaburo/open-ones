@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project DomainChecker with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="./release/domainchecker.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="openones.dc.App"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ htmlunit-2.8.jar htmlunit-core-js-2.8.jar httpclient-4.0.1.jar httpcore-4.0.1.jar httpmime-4.0.1.jar nekohtml-1.9.14.jar xalan-2.7.1.jar xercesImpl-2.9.1.jar xml-apis-1.3.04.jar junit.jar org.hamcrest.core_1.1.0.v20090501071000.jar sac-1.3.jar apache-mime4j-0.6.jar commons-codec-1.4.jar commons-logging-1.1.1.jar cssparser-0.9.5.jar commons-io-2.0.jar commons-lang-2.4.jar commons-collections-3.2.1.jar log4j-1.2.15.jar rocky-common-0.1.4-20120113103013.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="./bin"/>
+            <zipfileset dir="./lib" includes="htmlunit-2.8.jar"/>
+            <zipfileset dir="./lib" includes="htmlunit-core-js-2.8.jar"/>
+            <zipfileset dir="./lib" includes="httpclient-4.0.1.jar"/>
+            <zipfileset dir="./lib" includes="httpcore-4.0.1.jar"/>
+            <zipfileset dir="./lib" includes="httpmime-4.0.1.jar"/>
+            <zipfileset dir="./lib" includes="nekohtml-1.9.14.jar"/>
+            <zipfileset dir="./lib" includes="xalan-2.7.1.jar"/>
+            <zipfileset dir="./lib" includes="xercesImpl-2.9.1.jar"/>
+            <zipfileset dir="./lib" includes="xml-apis-1.3.04.jar"/>
+            <zipfileset dir="./lib" includes="sac-1.3.jar"/>
+            <zipfileset dir="./lib" includes="apache-mime4j-0.6.jar"/>
+            <zipfileset dir="./lib" includes="commons-codec-1.4.jar"/>
+            <zipfileset dir="./lib" includes="commons-logging-1.1.1.jar"/>
+            <zipfileset dir="./lib" includes="cssparser-0.9.5.jar"/>
+            <zipfileset dir="./lib" includes="commons-io-2.0.jar"/>
+            <zipfileset dir="./lib" includes="commons-lang-2.4.jar"/>
+            <zipfileset dir="./lib" includes="commons-collections-3.2.1.jar"/>
+            <zipfileset dir="./lib" includes="log4j-1.2.15.jar"/>
+            <zipfileset dir="./lib" includes="rocky-common-0.1.4-20120113103013.jar"/>
+        </jar>
+    </target>
+</project>
