@@ -50,18 +50,18 @@ public final class App {
     public static void main(String[] args) {
         if ((args != null) && (args.length > 0) && (args[0].length() > 0)) {
             if (args.length >= 1) {
-                startDomain = args[0];
+                startDomain = args[0].trim();
             }
 
             if (args.length >= 2) {
-                endDomain = args[1];
+                endDomain = args[1].trim();
 
                 // Determine extension. Ex .co .com
                 if (args.length > 2) {
                     exts = new String[args.length - 2];
                     // Scan from argument 3
                     for (int i = 2; i < args.length; i++) {
-                        exts[i - 2] = args[i];
+                        exts[i - 2] = args[i].trim();
                     }
                 }
             }

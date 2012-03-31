@@ -46,8 +46,13 @@ public class AppTest {
     }
 
     @Test
-    public void testMain() {
+    public void testMainDomain3C() {
         App.main(new String[]{"eap", "zzz", ".com", ".co", ".vn"});
+    }
+    
+    @Test
+    public void testMainDomain4C() {
+        App.main(new String[]{"aaaa", "zzzz", ".com", ".co", ".vn"});
     }
     
     @Test
