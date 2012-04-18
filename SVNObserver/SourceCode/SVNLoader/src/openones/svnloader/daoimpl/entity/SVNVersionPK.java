@@ -22,19 +22,24 @@ public class SVNVersionPK implements ISVNVersionPK, Serializable {
     @Column(name = "DirID")
     private int dirID;
     @Basic(optional = false)
-    @Column(name = "FileName")
+    @Column(name = "FileName", columnDefinition="nvarchar(200)")
     private String fileName;
     @Basic(optional = false)
     @Column(name = "RevisionID")
     private long revisionID;
-
+    @Basic(optional = false)
+    @Column(name = "SVNAction")
+    private char sVNAction;
+    
+    
     public SVNVersionPK() {
     }
 
-    public SVNVersionPK(int dirID, String fileName, long revisionID) {
+    public SVNVersionPK(int dirID, String fileName, long revisionID, char sVNAction) {
         this.dirID = dirID;
         this.fileName = fileName;
         this.revisionID = revisionID;
+        this.sVNAction = sVNAction;
     }
 
     public int getDirID() {
@@ -60,7 +65,14 @@ public class SVNVersionPK implements ISVNVersionPK, Serializable {
     public void setRevisionID(long revisionID) {
         this.revisionID = revisionID;
     }
+    public char getSVNAction() {
+        return sVNAction;
+    }
 
+    public void setSVNAction(char svnAct) {
+        this.sVNAction = svnAct;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -33,6 +33,6 @@ public interface ISVNVersionPKManager {
      * @param revision
      * @return
      */
-    ISVNVersionPK newSVNVersionPKInst(Integer dirID, String name, long revision);
+    ISVNVersionPK newSVNVersionPKInst(Integer dirID, String name, long revision,char svnAction);
 
 }

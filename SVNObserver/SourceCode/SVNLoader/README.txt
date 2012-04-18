@@ -1,6 +1,6 @@
 SVNLoader loads statistical data from the Subversion (SVN) repository to the relational database.
 
-Current version: 0.1.0
+Current version: 0.2.1
 
 How to make the binary package and run the demo from the source code?
 =========================================
@@ -27,6 +27,8 @@ How to run the binary?
 
 How to run the Test Case?
 =========================================
+1) Start the database by executing batch script "hsqldb-8.1\svnreport\StartDB.bat"
+2) Refer samples at /SVNLoader/src_ut/openones/svnloader/engine/SVNLoaderBizTest.java
 
 How to develop?
 =========================================
@@ -34,18 +36,7 @@ How to develop?
 - Support tools:
   + Database client: Squirrel (http://squirrel-sql.sourceforge.net/)
   + HSQL: http://hsqldb.org/
-  A built-in HSQL is in folder "hsqldb-8.1/svnreport".
-Step 1) Start the database HSQL by execute $SVNLOADER_SOURCE/hsqldb-8.1/svnreport/StartDB.bat (Working folder is $SVNLOADER_SOURCE/hsqldb-8.1/svnreport)
-Step 2) Import the project into the Eclipse, revise the database configuration in /SVNLoader/resources/META-INF/persistence.xml
-Step 3) Explore the feature of SVNLoader by execute the test case "testTransfer0002_GoogleCode" in /SVNLoader/src_ut/openones/svnloader/engine/SVNLoaderBizTest.java
-Step 4) Start HSQL client by execute "SVNLoader/hsqldb-8.1/svnreport/runManager.bat" to explore the database.
-  Input information for connection:
-   Setting Name: svnreport
-   Type: HSQL Database Engine Standalone
-   Driver: keep value "org.hsqldb.jdbcDriver"
-   URL: jdbc:hsqldb:hsql://localhost/svnreport
-   User: sa
-   Password: <blank>
-
+  
 Bugs/Changes tracking
 ==============================
+#1: Violation of PRIMARY KEY constraint 'PK__SVNVersion__7DC38901'. Cannot insert duplicate key in object 'dbo.SVNVersion'.

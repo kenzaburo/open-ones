@@ -31,7 +31,7 @@ import openones.svnloader.dao.entity.ISVNVersion;
     @NamedQuery(name = "SVNVersion.findAll", query = "SELECT s FROM SVNVersion s"),
     @NamedQuery(name = "SVNVersion.findByDirID", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.dirID = :dirID"),
     @NamedQuery(name = "SVNVersion.findByFileName", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.fileName = :fileName"),
-    @NamedQuery(name = "SVNVersion.findBySVNAction", query = "SELECT s FROM SVNVersion s WHERE s.sVNAction = :sVNAction"),
+//    @NamedQuery(name = "SVNVersion.findBySVNAction", query = "SELECT s FROM SVNVersion s WHERE s.sVNAction = :sVNAction"),
     @NamedQuery(name = "SVNVersion.findByNMComment", query = "SELECT s FROM SVNVersion s WHERE s.nMComment = :nMComment"),
     @NamedQuery(name = "SVNVersion.findByRevisionID", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.revisionID = :revisionID"),
     @NamedQuery(name = "SVNVersion.findByCopyFromPath", query = "SELECT s FROM SVNVersion s WHERE s.copyFromPath = :copyFromPath"),
@@ -43,9 +43,9 @@ public class SVNVersion implements ISVNVersion, Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected SVNVersionPK sVNVersionPK;
-    @Basic(optional = false)
-    @Column(name = "SVNAction")
-    private char sVNAction;
+//    @Basic(optional = false)
+//    @Column(name = "SVNAction")
+//    private char sVNAction;
     
     @Column(name = "Size")
     private BigInteger size;
@@ -93,13 +93,13 @@ public class SVNVersion implements ISVNVersion, Serializable {
         this.sVNVersionPK = sVNVersionPK;
     }
 
-    public SVNVersion(SVNVersionPK sVNVersionPK, char sVNAction) {
-        this.sVNVersionPK = sVNVersionPK;
-        this.sVNAction = sVNAction;
-    }
+//    public SVNVersion(SVNVersionPK sVNVersionPK, char sVNAction) {
+//        this.sVNVersionPK = sVNVersionPK;
+//        this.sVNAction = sVNAction;
+//    }
 
-    public SVNVersion(int dirID, String fileName, long revisionID) {
-        this.sVNVersionPK = new SVNVersionPK(dirID, fileName, revisionID);
+    public SVNVersion(int dirID, String fileName, long revisionID, char svnAction) {
+        this.sVNVersionPK = new SVNVersionPK(dirID, fileName, revisionID, svnAction);
     }
 
     public SVNVersionPK getSVNVersionPK() {
@@ -110,13 +110,13 @@ public class SVNVersion implements ISVNVersion, Serializable {
         this.sVNVersionPK = sVNVersionPK;
     }
 
-    public char getSVNAction() {
-        return sVNAction;
-    }
-
-    public void setSVNAction(char sVNAction) {
-        this.sVNAction = sVNAction;
-    }
+//    public char getSVNAction() {
+//        return sVNAction;
+//    }
+//
+//    public void setSVNAction(char sVNAction) {
+//        this.sVNAction = sVNAction;
+//    }
 
     public BigInteger getNMComment() {
         return nMComment;

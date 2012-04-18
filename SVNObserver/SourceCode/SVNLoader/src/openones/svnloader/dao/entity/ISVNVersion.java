@@ -36,7 +36,7 @@ public interface ISVNVersion {
      * [Give the description for method].
      * @param added
      */
-    void setSVNAction(char added);
+//    void setSVNAction(char added);
 
     /**
      * [Give the description for method].
@@ -46,21 +46,47 @@ public interface ISVNVersion {
 
     /**
      * [Give the description for method].
+     * @param string
+     */
+    void setUnit(String string);
+    
+    
+    /**
+     * [Give the description for method].
      * @param valueOf
      */
     void setSize(BigInteger valueOf);
 
     /**
      * [Give the description for method].
+     * @param string
+     */
+    void setUnit1(String string);
+    
+    
+    /**
+     * [Give the description for method].
      * @param valueOf
      */
-    void setNMComment(BigInteger valueOf);
+    void setSize1(BigInteger valueOf);
 
     /**
      * [Give the description for method].
      * @param string
      */
-    void setUnit(String string);
+    void setUnit2(String string);
+
+    /**
+     * [Give the description for method].
+     * @param valueOf
+     */
+    void setSize2(BigInteger valueOf);
+
+    /**
+     * [Give the description for method].
+     * @param valueOf
+     */
+    void setNMComment(BigInteger valueOf);
 
     /**
      * [Give the description for method].

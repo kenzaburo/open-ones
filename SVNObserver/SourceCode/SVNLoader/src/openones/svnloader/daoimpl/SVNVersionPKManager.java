@@ -37,9 +37,9 @@ public class SVNVersionPKManager implements ISVNVersionPKManager {
      * @see openones.svnloader.dao.ISVNVersionPKManager#newSVNVersionPKInst(java.lang.Integer, java.lang.String, long)
      */
     @Override
-    public ISVNVersionPK newSVNVersionPKInst(Integer dirID, String name, long revision) {
+    public ISVNVersionPK newSVNVersionPKInst(Integer dirID, String name, long revision,char svnAction) {
         // TODO Auto-generated method stub
-        return new SVNVersionPK(dirID, name, revision);
+        return new SVNVersionPK(dirID, name, revision, svnAction);
     }
 
 }

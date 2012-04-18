@@ -21,7 +21,7 @@ public class SVNFilePK implements ISVNFilePK, Serializable {
     @Column(name = "DirID")
     private int dirID;
     @Basic(optional = false)
-    @Column(name = "FileName")
+    @Column(name = "FileName", columnDefinition="nvarchar(200)")
     private String fileName;
     @Basic(optional = false)
     @Column(name = "CreateRevision")

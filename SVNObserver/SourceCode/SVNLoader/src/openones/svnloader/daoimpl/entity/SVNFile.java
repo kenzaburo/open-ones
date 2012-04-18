@@ -20,7 +20,7 @@ import openones.svnloader.dao.entity.ISVNFilePK;
 
 /**
  *
- */
+ */ 
 @Entity
 @Table(name = "SVNFile")
 @NamedQueries({
