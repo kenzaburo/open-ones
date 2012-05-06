@@ -21,8 +21,7 @@ package openones.svnloader.dao.entity;
 import java.math.BigInteger;
 
 /**
- * @author Thach Le
- *
+ * @author Thach.Le
  */
 public interface ISVNRepo {
 

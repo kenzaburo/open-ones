@@ -32,6 +32,9 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
+/**
+ * @author Thach.Le, OOG member
+ */
 public class SVNUtility {
     /*
      * Initializes the library to work with a repository via different protocols.
@@ -54,7 +57,6 @@ public class SVNUtility {
 
     /**
      * Build SVNRepository by url, username ,password params
-     * 
      * @param url
      * @param username
      * @param password
@@ -65,12 +67,13 @@ public class SVNUtility {
         SVNRepository repository = null;
         try {
             repository = SVNRepositoryFactory.create(SVNURL.parseURIDecoded(url));
-            //ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(username, password);
+            // ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(username, password);
             File configFile = new File(".svnloader");
-            ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(configFile, username, password);
+            ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(configFile, username,
+                    password);
 
             repository.setAuthenticationManager(authManager);
-            
+
         } catch (SVNException svnex) {
             throw svnex;
         }
@@ -79,7 +82,6 @@ public class SVNUtility {
 
     /**
      * Replace a string with a pattern to relative path
-     * 
      * @param str
      * @param pattern
      * @param replace
@@ -101,7 +103,6 @@ public class SVNUtility {
 
     /**
      * change a ChangedPath to relative path with root name
-     * 
      * @param repository
      * @param pathSource
      * @return
@@ -128,7 +129,6 @@ public class SVNUtility {
 
     /**
      * get a substring with index from end
-     * 
      * @param fullPath
      * @param abortString
      * @return
@@ -146,7 +146,6 @@ public class SVNUtility {
     /**
      * Deletes all files and subdirectories under dir. Returns true if all deletions were successful. If a deletion
      * fails, the method stops attempting to delete and returns false.
-     * 
      * @param dir
      * @return
      */
@@ -173,7 +172,7 @@ public class SVNUtility {
         }
         boolean success = deleteDir(dirLocal);
         if (!success) {
-            throw new Exception("Can not delete path: " + path);
+            // throw new Exception("Can not delete path: " + path);
         }
         return success;
     }

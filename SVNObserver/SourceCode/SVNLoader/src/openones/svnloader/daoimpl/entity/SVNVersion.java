@@ -8,7 +8,6 @@ package openones.svnloader.daoimpl.entity;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -23,48 +22,49 @@ import openones.svnloader.dao.entity.IRevision;
 import openones.svnloader.dao.entity.ISVNVersion;
 
 /**
- *
+ * @author Thach.Le, OOG member
  */
 @Entity
 @Table(name = "SVNVersion")
 @NamedQueries({
-    @NamedQuery(name = "SVNVersion.findAll", query = "SELECT s FROM SVNVersion s"),
-    @NamedQuery(name = "SVNVersion.findByDirID", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.dirID = :dirID"),
-    @NamedQuery(name = "SVNVersion.findByFileName", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.fileName = :fileName"),
-//    @NamedQuery(name = "SVNVersion.findBySVNAction", query = "SELECT s FROM SVNVersion s WHERE s.sVNAction = :sVNAction"),
-    @NamedQuery(name = "SVNVersion.findByNMComment", query = "SELECT s FROM SVNVersion s WHERE s.nMComment = :nMComment"),
-    @NamedQuery(name = "SVNVersion.findByRevisionID", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.revisionID = :revisionID"),
-    @NamedQuery(name = "SVNVersion.findByCopyFromPath", query = "SELECT s FROM SVNVersion s WHERE s.copyFromPath = :copyFromPath"),
-    @NamedQuery(name = "SVNVersion.findByCopyRevision", query = "SELECT s FROM SVNVersion s WHERE s.copyRevision = :copyRevision"),
-    @NamedQuery(name = "SVNVersion.findByNmStaticBug", query = "SELECT s FROM SVNVersion s WHERE s.nmStaticBug = :nmStaticBug"),
-    @NamedQuery(name = "SVNVersion.findByNmUTBug", query = "SELECT s FROM SVNVersion s WHERE s.nmUTBug = :nmUTBug"),
-    @NamedQuery(name = "SVNVersion.findByEffort", query = "SELECT s FROM SVNVersion s WHERE s.effort = :effort")})
+        @NamedQuery(name = "SVNVersion.findAll", query = "SELECT s FROM SVNVersion s"),
+        @NamedQuery(name = "SVNVersion.findByDirID", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.dirID = :dirID"),
+        @NamedQuery(name = "SVNVersion.findByFileName", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.fileName = :fileName"),
+        // @NamedQuery(name = "SVNVersion.findBySVNAction", query =
+        // "SELECT s FROM SVNVersion s WHERE s.sVNAction = :sVNAction"),
+        @NamedQuery(name = "SVNVersion.findByNMComment", query = "SELECT s FROM SVNVersion s WHERE s.nMComment = :nMComment"),
+        @NamedQuery(name = "SVNVersion.findByRevisionID", query = "SELECT s FROM SVNVersion s WHERE s.sVNVersionPK.revisionID = :revisionID"),
+        @NamedQuery(name = "SVNVersion.findByCopyFromPath", query = "SELECT s FROM SVNVersion s WHERE s.copyFromPath = :copyFromPath"),
+        @NamedQuery(name = "SVNVersion.findByCopyRevision", query = "SELECT s FROM SVNVersion s WHERE s.copyRevision = :copyRevision"),
+        @NamedQuery(name = "SVNVersion.findByNmStaticBug", query = "SELECT s FROM SVNVersion s WHERE s.nmStaticBug = :nmStaticBug"),
+        @NamedQuery(name = "SVNVersion.findByNmUTBug", query = "SELECT s FROM SVNVersion s WHERE s.nmUTBug = :nmUTBug"),
+        @NamedQuery(name = "SVNVersion.findByEffort", query = "SELECT s FROM SVNVersion s WHERE s.effort = :effort")})
 public class SVNVersion implements ISVNVersion, Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected SVNVersionPK sVNVersionPK;
-//    @Basic(optional = false)
-//    @Column(name = "SVNAction")
-//    private char sVNAction;
-    
+    // @Basic(optional = false)
+    // @Column(name = "SVNAction")
+    // private char sVNAction;
+
     @Column(name = "Size")
     private BigInteger size;
-    
+
     @Column(name = "Unit")
     private String unit;
-    
+
     @Column(name = "Size1")
     private BigInteger size1;
-    
+
     @Column(name = "Unit1")
     private String unit1;
-    
+
     @Column(name = "Size2")
     private BigInteger size2;
-    
+
     @Column(name = "Unit2")
     private String unit2;
-    
+
     @Column(name = "NMComment")
     private BigInteger nMComment;
     @Column(name = "CopyFromPath")
@@ -93,10 +93,10 @@ public class SVNVersion implements ISVNVersion, Serializable {
         this.sVNVersionPK = sVNVersionPK;
     }
 
-//    public SVNVersion(SVNVersionPK sVNVersionPK, char sVNAction) {
-//        this.sVNVersionPK = sVNVersionPK;
-//        this.sVNAction = sVNAction;
-//    }
+    // public SVNVersion(SVNVersionPK sVNVersionPK, char sVNAction) {
+    // this.sVNVersionPK = sVNVersionPK;
+    // this.sVNAction = sVNAction;
+    // }
 
     public SVNVersion(int dirID, String fileName, long revisionID, char svnAction) {
         this.sVNVersionPK = new SVNVersionPK(dirID, fileName, revisionID, svnAction);
@@ -110,13 +110,13 @@ public class SVNVersion implements ISVNVersion, Serializable {
         this.sVNVersionPK = sVNVersionPK;
     }
 
-//    public char getSVNAction() {
-//        return sVNAction;
-//    }
-//
-//    public void setSVNAction(char sVNAction) {
-//        this.sVNAction = sVNAction;
-//    }
+    // public char getSVNAction() {
+    // return sVNAction;
+    // }
+    //
+    // public void setSVNAction(char sVNAction) {
+    // this.sVNAction = sVNAction;
+    // }
 
     public BigInteger getNMComment() {
         return nMComment;
@@ -125,7 +125,7 @@ public class SVNVersion implements ISVNVersion, Serializable {
     public void setNMComment(BigInteger nMComment) {
         this.nMComment = nMComment;
     }
-    
+
     public void setNMComment(int nMComment) {
         this.nMComment = BigInteger.valueOf(nMComment);
     }
@@ -177,11 +177,11 @@ public class SVNVersion implements ISVNVersion, Serializable {
     public void setNmStaticBug(BigInteger nmStaticBug) {
         this.nmStaticBug = nmStaticBug;
     }
-    
+
     public void setNmStaticBug(int nmStaticBug) {
         this.nmStaticBug = BigInteger.valueOf(nmStaticBug);
     }
-    
+
     public BigInteger getNmUTBug() {
         return nmUTBug;
     }
@@ -189,11 +189,11 @@ public class SVNVersion implements ISVNVersion, Serializable {
     public void setNmUTBug(BigInteger nmUTBug) {
         this.nmUTBug = nmUTBug;
     }
-    
+
     public void setNmUTBug(int nmUTBug) {
         this.nmUTBug = BigInteger.valueOf(nmUTBug);
     }
-    
+
     public Double getEffort() {
         return effort;
     }
@@ -217,7 +217,7 @@ public class SVNVersion implements ISVNVersion, Serializable {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-    
+
     public BigInteger getSize1() {
         return size1;
     }
@@ -249,7 +249,7 @@ public class SVNVersion implements ISVNVersion, Serializable {
     public void setUnit2(String unit2) {
         this.unit2 = unit2;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -264,13 +264,13 @@ public class SVNVersion implements ISVNVersion, Serializable {
             return false;
         }
         SVNVersion other = (SVNVersion) object;
-        if ((this.sVNVersionPK == null && other.sVNVersionPK != null) || (this.sVNVersionPK != null && !this.sVNVersionPK.equals(other.sVNVersionPK))) {
+        if ((this.sVNVersionPK == null && other.sVNVersionPK != null)
+                || (this.sVNVersionPK != null && !this.sVNVersionPK.equals(other.sVNVersionPK))) {
             return false;
         }
         return true;
     }
 
-    
     @Override
     public String toString() {
         return this.getClass().getName() + "[sVNVersionPK=" + sVNVersionPK + "]";

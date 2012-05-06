@@ -18,12 +18,10 @@
  */
 package openones.svnloader.dao.entity;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * @author Thach Le
- *
+ * @author Thach.Le
  */
 public interface IRevision {
 

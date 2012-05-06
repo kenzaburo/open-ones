@@ -20,10 +20,8 @@ package openones.svnloader.dao.entity;
 
 import java.math.BigInteger;
 
-
 /**
- * @author ThachLN
- *
+ * @author Thach.Le
  */
 public interface IDir {
 

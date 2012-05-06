@@ -30,17 +30,17 @@ import openones.svnloader.dao.entity.ISVNRepo;
 @Entity
 @Table(name = "Dir")
 @NamedQueries({
-    @NamedQuery(name = "Dir.getMaxId", query = "SELECT max(d.dirID) FROM Dir d"),
-    @NamedQuery(name = "Dir.findAll", query = "SELECT d FROM Dir d"),
-    @NamedQuery(name = "Dir.findByDirID", query = "SELECT d FROM Dir d WHERE d.dirID = :dirID"),
-    @NamedQuery(name = "Dir.findByDirName", query = "SELECT d FROM Dir d WHERE d.dirName = :dirName"),
-    @NamedQuery(name = "Dir.findByParentDirID", query = "SELECT d FROM Dir d WHERE d.parentDirID = :parentDirID"),
-    @NamedQuery(name = "Dir.findByParentPath", query = "SELECT d FROM Dir d WHERE d.parentPath = :parentPath"),
-    @NamedQuery(name = "Dir.findByStatus", query = "SELECT d FROM Dir d WHERE d.status = :status"),
-    @NamedQuery(name = "Dir.findByCopyFormPath", query = "SELECT d FROM Dir d WHERE d.copyFormPath = :copyFormPath"),
-    @NamedQuery(name = "Dir.findByCopyRevision", query = "SELECT d FROM Dir d WHERE d.copyRevision = :copyRevision"),
-    @NamedQuery(name = "Dir.findByParentPathAndName", query = "SELECT d FROM Dir d WHERE d.dirName = :dirName AND d.parentPath = :parentPath AND d.deletedRevisionID IS NULL "),
-    @NamedQuery(name = "Dir.findByDeletedRevisionID", query = "SELECT d FROM Dir d WHERE d.deletedRevisionID = :deletedRevisionID")})
+        @NamedQuery(name = "Dir.getMaxId", query = "SELECT max(d.dirID) FROM Dir d"),
+        @NamedQuery(name = "Dir.findAll", query = "SELECT d FROM Dir d"),
+        @NamedQuery(name = "Dir.findByDirID", query = "SELECT d FROM Dir d WHERE d.dirID = :dirID"),
+        @NamedQuery(name = "Dir.findByDirName", query = "SELECT d FROM Dir d WHERE d.dirName = :dirName"),
+        @NamedQuery(name = "Dir.findByParentDirID", query = "SELECT d FROM Dir d WHERE d.parentDirID = :parentDirID"),
+        @NamedQuery(name = "Dir.findByParentPath", query = "SELECT d FROM Dir d WHERE d.parentPath = :parentPath"),
+        @NamedQuery(name = "Dir.findByStatus", query = "SELECT d FROM Dir d WHERE d.status = :status"),
+        @NamedQuery(name = "Dir.findByCopyFormPath", query = "SELECT d FROM Dir d WHERE d.copyFormPath = :copyFormPath"),
+        @NamedQuery(name = "Dir.findByCopyRevision", query = "SELECT d FROM Dir d WHERE d.copyRevision = :copyRevision"),
+        @NamedQuery(name = "Dir.findByParentPathAndName", query = "SELECT d FROM Dir d WHERE d.dirName = :dirName AND d.parentPath = :parentPath AND d.deletedRevisionID IS NULL "),
+        @NamedQuery(name = "Dir.findByDeletedRevisionID", query = "SELECT d FROM Dir d WHERE d.deletedRevisionID = :deletedRevisionID")})
 public class Dir implements IDir, Serializable {
     private static final long serialVersionUID = 1L;
     @Id

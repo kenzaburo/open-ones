@@ -19,15 +19,15 @@ import openones.svnloader.dao.entity.ISVNFile;
 import openones.svnloader.dao.entity.ISVNFilePK;
 
 /**
- *
- */ 
+ * @author Thach.Le, OOG member
+ */
 @Entity
 @Table(name = "SVNFile")
 @NamedQueries({
-    @NamedQuery(name = "SVNFile.findAll", query = "SELECT s FROM SVNFile s"),
-    @NamedQuery(name = "SVNFile.findByDirID", query = "SELECT s FROM SVNFile s WHERE s.sVNFilePK.dirID = :dirID"),
-    @NamedQuery(name = "SVNFile.findByFileName", query = "SELECT s FROM SVNFile s WHERE s.sVNFilePK.fileName = :fileName"),
-    @NamedQuery(name = "SVNFile.findByCreateRevision", query = "SELECT s FROM SVNFile s WHERE s.sVNFilePK.createRevision = :createRevision")})
+        @NamedQuery(name = "SVNFile.findAll", query = "SELECT s FROM SVNFile s"),
+        @NamedQuery(name = "SVNFile.findByDirID", query = "SELECT s FROM SVNFile s WHERE s.sVNFilePK.dirID = :dirID"),
+        @NamedQuery(name = "SVNFile.findByFileName", query = "SELECT s FROM SVNFile s WHERE s.sVNFilePK.fileName = :fileName"),
+        @NamedQuery(name = "SVNFile.findByCreateRevision", query = "SELECT s FROM SVNFile s WHERE s.sVNFilePK.createRevision = :createRevision")})
 public class SVNFile implements ISVNFile, Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -77,7 +77,8 @@ public class SVNFile implements ISVNFile, Serializable {
             return false;
         }
         SVNFile other = (SVNFile) object;
-        if ((this.sVNFilePK == null && other.sVNFilePK != null) || (this.sVNFilePK != null && !this.sVNFilePK.equals(other.sVNFilePK))) {
+        if ((this.sVNFilePK == null && other.sVNFilePK != null)
+                || (this.sVNFilePK != null && !this.sVNFilePK.equals(other.sVNFilePK))) {
             return false;
         }
         return true;

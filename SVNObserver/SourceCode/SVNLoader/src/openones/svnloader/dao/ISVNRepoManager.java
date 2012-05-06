@@ -21,14 +21,13 @@ package openones.svnloader.dao;
 import openones.svnloader.dao.entity.ISVNRepo;
 
 /**
- * DAO Interface of SVN Repository.
- * @author Thach Le
+ * @author Thach.Le
  */
 public interface ISVNRepoManager {
 
     /**
-     * Create a SVNRepo.
-     * @param url Path of SVN. Ex: https://...; file:///...
+     * [Give the description for method].
+     * @param url
      * @param revisionID
      * @return SVNRepo
      * @throws Exception
@@ -36,7 +35,6 @@ public interface ISVNRepoManager {
     public abstract ISVNRepo createSVNRepo(String url, long revisionID) throws Exception;
 
     /**
-     * 
      * [Give the description for method].
      * @param url
      * @return SVNRepo
@@ -53,7 +51,6 @@ public interface ISVNRepoManager {
     public abstract ISVNRepo createSVNRepo(String url, String projectCode) throws Exception;
 
     /**
-     * 
      * [Give the description for method].
      * @param repo SVNRepo
      * @throws Exception
@@ -61,7 +58,6 @@ public interface ISVNRepoManager {
     public abstract void updateSVNRepo(Object repo) throws Exception;
 
     /**
-     * 
      * [Give the description for method].
      * @param URL
      * @return SVNRepo

@@ -209,15 +209,15 @@ public class DirJpaController {
                 }
             }
             // em.getTransaction().commit();
-//        } catch (Exception ex) {
-//            String msg = ex.getLocalizedMessage();
-//            if (msg == null || msg.length() == 0) {
-//                Integer id = dir.getDirID();
-//                if (findDir(id) == null) {
-//                    throw new NonexistentEntityException("The dir with id " + id + " no longer exists.");
-//                }
-//            }
-//            throw ex;
+            // } catch (Exception ex) {
+            // String msg = ex.getLocalizedMessage();
+            // if (msg == null || msg.length() == 0) {
+            // Integer id = dir.getDirID();
+            // if (findDir(id) == null) {
+            // throw new NonexistentEntityException("The dir with id " + id + " no longer exists.");
+            // }
+            // }
+            // throw ex;
         } finally {
             if (em != null) {
                 // em.close();
@@ -369,7 +369,7 @@ public class DirJpaController {
             // em.close();
         }
     }
-    
+
     /**
      * Get List of Dir by parent DirID
      * @param parentDirID
@@ -377,8 +377,8 @@ public class DirJpaController {
      */
     public List<Dir> findDirEntities(int parentDirID) {
         EntityManager em = getEntityManager();
-        List<Dir> listDir= new ArrayList<Dir>();
-       
+        List<Dir> listDir = new ArrayList<Dir>();
+
         try {
             Query q = em.createNamedQuery("Dir.findByParentDirID");
             q.setParameter("parentDirID", parentDirID);

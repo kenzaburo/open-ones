@@ -22,8 +22,7 @@ import openones.svnloader.dao.entity.ISVNVersion;
 import openones.svnloader.dao.entity.ISVNVersionPK;
 
 /**
- * @author ThachLN
- *
+ * @author Thach.Le
  */
 public interface ISVNVersionManager {
 

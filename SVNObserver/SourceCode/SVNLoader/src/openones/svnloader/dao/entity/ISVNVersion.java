@@ -21,8 +21,7 @@ package openones.svnloader.dao.entity;
 import java.math.BigInteger;
 
 /**
- * @author Thach Le
- *
+ * @author Thach.Le, OOG member
  */
 public interface ISVNVersion {
 
@@ -36,7 +35,7 @@ public interface ISVNVersion {
      * [Give the description for method].
      * @param added
      */
-//    void setSVNAction(char added);
+    // void setSVNAction(char added);
 
     /**
      * [Give the description for method].
@@ -49,8 +48,7 @@ public interface ISVNVersion {
      * @param string
      */
     void setUnit(String string);
-    
-    
+
     /**
      * [Give the description for method].
      * @param valueOf
@@ -62,8 +60,7 @@ public interface ISVNVersion {
      * @param string
      */
     void setUnit1(String string);
-    
-    
+
     /**
      * [Give the description for method].
      * @param valueOf

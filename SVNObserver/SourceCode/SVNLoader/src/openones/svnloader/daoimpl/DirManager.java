@@ -30,7 +30,6 @@ import openones.svnloader.engine.SVNUtility;
 import openones.svnloader.engine.Status;
 import rocky.common.CommonUtil;
 
-
 public class DirManager implements IDirManager {
     private DirJpaController jpaController;
 
@@ -60,7 +59,8 @@ public class DirManager implements IDirManager {
      * @param svnRepoObj
      * @param path
      * @return
-     * @see openones.svnloader.engine.manager.IDirManager#findDir(openones.svnloader.daoimpl.entity.SVNRepo, java.lang.String)
+     * @see openones.svnloader.engine.manager.IDirManager#findDir(openones.svnloader.daoimpl.entity.SVNRepo,
+     *      java.lang.String)
      */
     @Override
     public Dir findDir(Object svnRepoObj, String path) {
@@ -68,14 +68,14 @@ public class DirManager implements IDirManager {
             return null;
         }
         SVNRepo svnRepo = (SVNRepo) svnRepoObj;
-        
+
         Dir targetDir = null;
         String[] listPaths = path.split("/");
-        
+
         if (!CommonUtil.isNNandNB(listPaths)) {
             return null;
         }
-        
+
         String dirName = listPaths[listPaths.length - 1];
         String parentPath = null;
         if (dirName.equals(path)) {
@@ -142,10 +142,9 @@ public class DirManager implements IDirManager {
     }
 
     /**
-     * Update information in a dir
-     * 
+     * Update information in a dir.
      * @param dir
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     public void updateDir(IDir dir) throws Exception {
@@ -159,10 +158,10 @@ public class DirManager implements IDirManager {
      * @see openones.svnloader.engine.manager.IDirManager#getDirs(openones.svnloader.daoimpl.entity.Dir)
      */
     @Override
-    public List getDirs(IDir parentDirObj) {    
+    public List getDirs(IDir parentDirObj) {
         Dir parentDir = (Dir) parentDirObj;
         List<Dir> dirList = jpaController.findDirEntities(parentDir.getDirID());
-        
+
         return dirList;
     }
 

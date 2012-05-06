@@ -19,7 +19,6 @@ import openones.svnloader.daoimpl.entity.SVNFilePK;
 import openones.svnloader.daoimpl.store.exceptions.NonexistentEntityException;
 import openones.svnloader.daoimpl.store.exceptions.PreexistingEntityException;
 
-
 /**
  *
  */
@@ -37,7 +36,7 @@ public class SVNFileJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             Dir dir = SVNFile.getDir();
             if (dir != null) {
                 dir = em.getReference(dir.getClass(), dir.getDirID());
@@ -48,7 +47,7 @@ public class SVNFileJpaController {
                 dir.getSVNFileList().add(SVNFile);
                 dir = em.merge(dir);
             }
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } catch (Exception ex) {
             if (findSVNFile(SVNFile.getSVNFilePK()) != null) {
                 throw new PreexistingEntityException("SVNFile " + SVNFile + " already exists.", ex);
@@ -56,7 +55,7 @@ public class SVNFileJpaController {
             throw ex;
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -66,7 +65,7 @@ public class SVNFileJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             SVNFile persistentSVNFile = em.find(SVNFile.class, SVNFile.getSVNFilePK());
             Dir dirOld = persistentSVNFile.getDir();
             Dir dirNew = SVNFile.getDir();
@@ -83,7 +82,7 @@ public class SVNFileJpaController {
                 dirNew.getSVNFileList().add(SVNFile);
                 dirNew = em.merge(dirNew);
             }
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -95,7 +94,7 @@ public class SVNFileJpaController {
             throw ex;
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -104,7 +103,7 @@ public class SVNFileJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             SVNFile SVNFile;
             try {
                 SVNFile = em.getReference(SVNFile.class, id);
@@ -118,10 +117,10 @@ public class SVNFileJpaController {
                 dir = em.merge(dir);
             }
             em.remove(SVNFile);
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -146,7 +145,7 @@ public class SVNFileJpaController {
             }
             return q.getResultList();
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 
@@ -155,7 +154,7 @@ public class SVNFileJpaController {
         try {
             return em.find(SVNFile.class, id);
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 
@@ -168,7 +167,7 @@ public class SVNFileJpaController {
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 

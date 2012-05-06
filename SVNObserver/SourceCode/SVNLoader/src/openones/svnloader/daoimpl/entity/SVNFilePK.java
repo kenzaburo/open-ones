@@ -13,7 +13,7 @@ import javax.persistence.Embeddable;
 import openones.svnloader.dao.entity.ISVNFilePK;
 
 /**
- *
+ * @author Thach.Le, OOG member
  */
 @Embeddable
 public class SVNFilePK implements ISVNFilePK, Serializable {
@@ -21,7 +21,7 @@ public class SVNFilePK implements ISVNFilePK, Serializable {
     @Column(name = "DirID")
     private int dirID;
     @Basic(optional = false)
-    @Column(name = "FileName", columnDefinition="nvarchar(200)")
+    @Column(name = "FileName", columnDefinition = "nvarchar(200)")
     private String fileName;
     @Basic(optional = false)
     @Column(name = "CreateRevision")
@@ -79,7 +79,8 @@ public class SVNFilePK implements ISVNFilePK, Serializable {
         if (this.dirID != other.dirID) {
             return false;
         }
-        if ((this.fileName == null && other.fileName != null) || (this.fileName != null && !this.fileName.equals(other.fileName))) {
+        if ((this.fileName == null && other.fileName != null)
+                || (this.fileName != null && !this.fileName.equals(other.fileName))) {
             return false;
         }
         if (this.createRevision != other.createRevision) {
@@ -90,7 +91,8 @@ public class SVNFilePK implements ISVNFilePK, Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + "[dirID=" + dirID + ", fileName=" + fileName + ", createRevision=" + createRevision + "]";
+        return this.getClass().getName() + "[dirID=" + dirID + ", fileName=" + fileName + ", createRevision="
+                + createRevision + "]";
     }
 
 }

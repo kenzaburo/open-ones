@@ -16,25 +16,25 @@
      + drop-and-create-tables
      -->
     
-    <!--  For MSSQL
+    <!--  For MSSQL -->
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=ProgNews_Test"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=HAInfo"/>
       <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
-      <property name="javax.persistence.jdbc.password" value="sa12345"/>
-	  <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+      <property name="javax.persistence.jdbc.password" value="123456"/>
+<!--  <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>--> 
     </properties>
 
-    -->
+   
 
-    <!--  For HSQL --> 
+    <!--  For HSQL 
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost/svnreport"/>
       <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
       <property name="javax.persistence.jdbc.password" value=""/>
 	  <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/> 
-    </properties>
+    </properties>--> 
     
     <!-- 
 	<properties>

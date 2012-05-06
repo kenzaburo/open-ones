@@ -20,7 +20,6 @@ import openones.svnloader.daoimpl.entity.SVNVersionPK;
 import openones.svnloader.daoimpl.store.exceptions.NonexistentEntityException;
 import openones.svnloader.daoimpl.store.exceptions.PreexistingEntityException;
 
-
 /**
  *
  */
@@ -39,7 +38,7 @@ public class SVNVersionJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             Revision revision = SVNVersion.getRevision();
             if (revision != null) {
                 revision = em.getReference(revision.getClass(), revision.getRevisionID());
@@ -59,7 +58,7 @@ public class SVNVersionJpaController {
                 dir.getSVNVersionList().add(SVNVersion);
                 dir = em.merge(dir);
             }
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } catch (Exception ex) {
             if (findSVNVersion(SVNVersion.getSVNVersionPK()) != null) {
                 throw new PreexistingEntityException("SVNVersion " + SVNVersion + " already exists.", ex);
@@ -67,7 +66,7 @@ public class SVNVersionJpaController {
             throw ex;
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -78,7 +77,7 @@ public class SVNVersionJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             SVNVersion persistentSVNVersion = em.find(SVNVersion.class, SVNVersion.getSVNVersionPK());
             Revision revisionOld = persistentSVNVersion.getRevision();
             Revision revisionNew = SVNVersion.getRevision();
@@ -109,7 +108,7 @@ public class SVNVersionJpaController {
                 dirNew.getSVNVersionList().add(SVNVersion);
                 dirNew = em.merge(dirNew);
             }
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -121,7 +120,7 @@ public class SVNVersionJpaController {
             throw ex;
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -130,7 +129,7 @@ public class SVNVersionJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             SVNVersion SVNVersion;
             try {
                 SVNVersion = em.getReference(SVNVersion.class, id);
@@ -149,10 +148,10 @@ public class SVNVersionJpaController {
                 dir = em.merge(dir);
             }
             em.remove(SVNVersion);
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -177,7 +176,7 @@ public class SVNVersionJpaController {
             }
             return q.getResultList();
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 
@@ -186,7 +185,7 @@ public class SVNVersionJpaController {
         try {
             return em.find(SVNVersion.class, id);
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 
@@ -199,7 +198,7 @@ public class SVNVersionJpaController {
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 

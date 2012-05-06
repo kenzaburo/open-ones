@@ -30,10 +30,9 @@ import rocky.common.PropertiesManager;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
 
 /**
- * 
- * 
+ * @author Thach.Le, OOG member
  */
-public class CodeCheckerUtil {    
+public class CodeCheckerUtil {
     final static Logger LOG = Logger.getLogger("CodeCheckerUtil");
     static String codeCheckerImpl = null;
     static String xmlCheckStyle = null;
@@ -42,8 +41,9 @@ public class CodeCheckerUtil {
 
     static Object checkCheckerObj = null;
     static Method checkMethod = null;
-    static boolean isImplemented;
+    static boolean isImplemented = false;;
     static {
+        LOG.debug("Loading configuration /conf.properties");
         PropertiesManager props;
         try {
             props = new PropertiesManager("/conf.properties");
@@ -55,20 +55,24 @@ public class CodeCheckerUtil {
                 int lastDot = codeCheckerImpl.lastIndexOf(Constant.STR_DOT);
                 className = codeCheckerImpl.substring(0, lastDot);
                 methodName = codeCheckerImpl.substring(lastDot + 1);
-                createCodeCheckerImpl();
+                LOG.debug("Create an instance of CodeChecker: " + className + "." + methodName);
+                createCodeCheckerImpl(xmlCheckStyle);
+                isImplemented = true;
             } else {
                 isImplemented = false;
             }
+            // LOG.debug("isImplemented " + isImplemented); //- test (hungnq11) - true
         } catch (Exception ex) {
             LOG.error("Load configuration file conf.properties", ex);
         }
 
     }
 
-    static void createCodeCheckerImpl() {
+    static void createCodeCheckerImpl(String xmlConfiguration) {
         try {
-            checkCheckerObj = Class.forName(className).newInstance();
-            checkMethod = checkCheckerObj.getClass().getMethod(methodName, String.class, String.class);
+            checkCheckerObj = Class.forName(className).getConstructor(String.class).newInstance(xmlConfiguration);
+            // checkMethod = checkCheckerObj.getClass().getMethod(methodName, String.class, String.class);
+            checkMethod = checkCheckerObj.getClass().getMethod(methodName, String.class);
         } catch (Exception ex) {
             LOG.error("New class " + className, ex);
         }
@@ -77,9 +81,9 @@ public class CodeCheckerUtil {
     public Map<String, List<AuditEvent>> check(String sourcePath) {
         Map<String, List<AuditEvent>> errorMap = null;
         try {
-        	if (codeCheckerImpl != null) {
-        		errorMap = (Map<String, List<AuditEvent>>) checkMethod.invoke(checkCheckerObj, xmlCheckStyle, sourcePath);
-        	}
+            if (codeCheckerImpl != null) {
+                errorMap = (Map<String, List<AuditEvent>>) checkMethod.invoke(checkCheckerObj, sourcePath);
+            }
         } catch (Exception ex) {
             LOG.error("Invoke method '" + methodName + "' of class '" + className, ex);
         }

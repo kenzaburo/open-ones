@@ -111,13 +111,13 @@ public class SVNLoaderBizTest {
         }
     }
     @Test
-    public void testTransfer0002_Ilunarcal() {
+    public void testTransfer0002_HAInfo() {
         try {
             String username = "fsofter";
             String password = "Test@123";
-            String url = "https://raiservices/svn/ILunarCal/trunk";
-            String path = "D:/Temp/News";
-            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "Ilunarcal", 690);
+            String url = "https://raiservices/svn/HAInfo/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "HAInfo", 146);
             svn2DBBiz.transfer();
 
             assertTrue("Check the result in the database!", true);
@@ -161,11 +161,27 @@ public class SVNLoaderBizTest {
     @Test
     public void testTransfer0002_iDictionary() {
         try {
-            String username = "fsoter";
-            String password = "Test@123";
-            String url = "https://raiservices/svn/IDictionary";
-            String path = "D:/Temp/News";
-            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "iDictionary", 895);
+            String username = "hieucm";
+            String password = "raphael2910";
+            String url = "https://raiservices/svn/IDictionary/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "iDictionary", 1033);
+            svn2DBBiz.transfer();
+
+            assertTrue("Check the result in the database!", true);
+        } catch (Throwable th) {
+            th.printStackTrace();
+            fail(th.getMessage());
+        }
+    }
+    @Test
+    public void testTransfer0002_iTyping() {
+        try {
+            String username = "hieucm";
+            String password = "raphael2910";
+            String url = "https://raiservices/svn/ITyping/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "ITyping", 380);
             svn2DBBiz.transfer();
 
             assertTrue("Check the result in the database!", true);
@@ -177,11 +193,11 @@ public class SVNLoaderBizTest {
     @Test
     public void testTransfer0002_RsPortal() {
         try {
-            String username = "fsofter";
-            String password = "Test@123";
-            String url = "https://raiservices/svn/RsPortal";
-            String path = "D:/Temp/News";
-            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "RsPortal", 80);
+            String username = "hieucm";
+            String password = "raphael2910";
+            String url = "https://raiservices/svn/RsPortal/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "RsPortal", 176);
             svn2DBBiz.transfer();
 
             assertTrue("Check the result in the database!", true);
@@ -195,9 +211,9 @@ public class SVNLoaderBizTest {
         try {
             String username = "fsofter";
             String password = "Test@123";
-            String url = "https://raiservices/svn/NxForum";
-            String path = "D:/Temp/News";
-            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "NxForum", 80);
+            String url = "https://raiservices/svn/NxjForum/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "NxjForum", 218);
             svn2DBBiz.transfer();
 
             assertTrue("Check the result in the database!", true);
@@ -209,11 +225,11 @@ public class SVNLoaderBizTest {
     @Test
     public void testTransfer0002_iFood() {
         try {
-            String username = "fsofter";
-            String password = "Test@123";
-            String url = "https://raiservices/svn/iFood";
-            String path = "D:/Temp/News";
-            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "iFood", 230);
+            String username = "hieucm";
+            String password = "raphael2910";
+            String url = "https://raiservices/svn/iFood/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "iFood", 1398);
             svn2DBBiz.transfer();
 
             assertTrue("Check the result in the database!", true);
@@ -227,9 +243,9 @@ public class SVNLoaderBizTest {
         try {
             String username = "fsofter";
             String password = "Test@123";
-            String url = "https://raiservices/svn/PRM";
-            String path = "D:/Temp/News";
-            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "PRM", 540);
+            String url = "https://raiservices/svn/PRM/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "PRM", 709);
             svn2DBBiz.transfer();
 
             assertTrue("Check the result in the database!", true);
@@ -243,9 +259,9 @@ public class SVNLoaderBizTest {
         try {
             String username = "fsofter";
             String password = "Test@123";
-            String url = "https://raiservices/svn/iPresenter";
-            String path = "D:/Temp/News";
-            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "iPresenter", 420);
+            String url = "https://raiservices/svn/iPresenter/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "iPresenter", 631);
             svn2DBBiz.transfer();
 
             assertTrue("Check the result in the database!", true);
@@ -254,5 +270,52 @@ public class SVNLoaderBizTest {
             fail(th.getMessage());
         }
     }
-    
+    @Test
+    public void testTransfer0002_4PSuite() {
+        try {
+            String username = "hieucm";
+            String password = "raphael2910";
+            String url = "https://raiservices/svn/4PSuite/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "4PSuite", 52);
+            svn2DBBiz.transfer();
+
+            assertTrue("Check the result in the database!", true);
+        } catch (Throwable th) {
+            th.printStackTrace();
+            fail(th.getMessage());
+        }
+    }
+    @Test
+    public void testTransfer0002_AndroidResource() {
+        try {
+            String username = "fsofter";
+            String password = "Test@123";
+            String url = "https://raiservices/svn/AndroidResource/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "AndroidResource",17);
+            svn2DBBiz.transfer();
+
+            assertTrue("Check the result in the database!", true);
+        } catch (Throwable th) {
+            th.printStackTrace();
+            fail(th.getMessage());
+        }
+    }
+    @Test
+    public void testTransfer0002_TQS() {
+        try {
+            String username = "fsofter";
+            String password = "Test@123";
+            String url = "https://raiservices/svn/TQS_v3/trunk";
+            String path = "G:/Temp/News";
+            SVNLoaderBiz svn2DBBiz = new SVNLoaderBiz(url, username, password, path, "TQS",463);
+            svn2DBBiz.transfer();
+
+            assertTrue("Check the result in the database!", true);
+        } catch (Throwable th) {
+            th.printStackTrace();
+            fail(th.getMessage());
+        }
+    }
 }

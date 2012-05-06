@@ -26,12 +26,12 @@ import openones.svnloader.dao.entity.ISVNRepo;
 @Entity
 @Table(name = "SVNRepo")
 @NamedQueries({
-    @NamedQuery(name = "SVNRepo.getMaxId", query = "SELECT max(s.svnid) FROM SVNRepo s"),
-    @NamedQuery(name = "SVNRepo.findAll", query = "SELECT s FROM SVNRepo s"),
-    @NamedQuery(name = "SVNRepo.findBySvnid", query = "SELECT s FROM SVNRepo s WHERE s.svnid = :svnid"),
-    @NamedQuery(name = "SVNRepo.findByUrl", query = "SELECT s FROM SVNRepo s WHERE s.url = :url"),
-    @NamedQuery(name = "SVNRepo.findByLastestRevisionID", query = "SELECT s FROM SVNRepo s WHERE s.lastestRevisionID = :lastestRevisionID"),
-    @NamedQuery(name = "SVNRepo.findByProjectCode", query = "SELECT s FROM SVNRepo s WHERE s.projectCode = :projectCode")})
+        @NamedQuery(name = "SVNRepo.getMaxId", query = "SELECT max(s.svnid) FROM SVNRepo s"),
+        @NamedQuery(name = "SVNRepo.findAll", query = "SELECT s FROM SVNRepo s"),
+        @NamedQuery(name = "SVNRepo.findBySvnid", query = "SELECT s FROM SVNRepo s WHERE s.svnid = :svnid"),
+        @NamedQuery(name = "SVNRepo.findByUrl", query = "SELECT s FROM SVNRepo s WHERE s.url = :url"),
+        @NamedQuery(name = "SVNRepo.findByLastestRevisionID", query = "SELECT s FROM SVNRepo s WHERE s.lastestRevisionID = :lastestRevisionID"),
+        @NamedQuery(name = "SVNRepo.findByProjectCode", query = "SELECT s FROM SVNRepo s WHERE s.projectCode = :projectCode")})
 public class SVNRepo implements ISVNRepo, Serializable {
     private static final long serialVersionUID = 1L;
     @Id

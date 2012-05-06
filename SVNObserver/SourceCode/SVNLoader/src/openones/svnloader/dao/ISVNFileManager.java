@@ -20,10 +20,8 @@ package openones.svnloader.dao;
 
 import openones.svnloader.dao.entity.ISVNFile;
 
-
 /**
- * @author ThachLN
- *
+ * @author Thach.Le
  */
 public interface ISVNFileManager {
 

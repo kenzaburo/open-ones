@@ -21,8 +21,7 @@ package openones.svnloader.dao;
 import openones.svnloader.dao.entity.IRevision;
 
 /**
- * @author ThachLN
- *
+ * @author Thach.Le
  */
 public interface IRevisionManager {
 

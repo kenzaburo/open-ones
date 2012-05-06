@@ -47,35 +47,35 @@ public class SVNVersionJpaControllerTest {
     /**
      * Test method for {@link openones.svnloader.daoimpl.store.SVNVersionJpaController#create(openones.svnloader.daoimpl.entity.SVNVersion)}.
      */
-    @Test
-    public void testCreate() {
-        SVNVersionJpaController jpa = new SVNVersionJpaController();
-        // Create dir
-        DirJpaController dirJpa = new DirJpaController();
-        RevisionJpaController revisionJpa = new RevisionJpaController();
-        Dir dir = new Dir(0);
-        try {
-            dirJpa.create(dir);
-            Revision revision = new Revision(Long.valueOf(0), 0);
-            revisionJpa.create(revision );
-            
-            SVNVersion svnVersion = new SVNVersion(0, "FileCheckedCode.java", 0);
-            svnVersion.setEffort(2.0);
-            svnVersion.setNmStaticBug(10);
-            svnVersion.setNmUTBug(15);
-
-            
-            jpa.create(svnVersion);
-        } catch (PreexistingEntityException e) {
-           
-            e.printStackTrace();
-            fail();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            fail();
-        }
-    }
+//    @Test
+//    public void testCreate() {
+//        SVNVersionJpaController jpa = new SVNVersionJpaController();
+//        // Create dir
+//        DirJpaController dirJpa = new DirJpaController();
+//        RevisionJpaController revisionJpa = new RevisionJpaController();
+//        Dir dir = new Dir(0);
+//        try {
+//            dirJpa.create(dir);
+//            Revision revision = new Revision(Long.valueOf(0), 0);
+//            revisionJpa.create(revision );
+//            
+//            SVNVersion svnVersion = new SVNVersion(0, "FileCheckedCode.java", 0);
+//            svnVersion.setEffort(2.0);
+//            svnVersion.setNmStaticBug(10);
+//            svnVersion.setNmUTBug(15);
+//
+//            
+//            jpa.create(svnVersion);
+//        } catch (PreexistingEntityException e) {
+//           
+//            e.printStackTrace();
+//            fail();
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//            fail();
+//        }
+//    }
 
     /**
      * Test method for {@link openones.svnloader.daoimpl.store.SVNVersionJpaController#edit(openones.svnloader.daoimpl.entity.SVNVersion)}.

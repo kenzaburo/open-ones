@@ -117,7 +117,7 @@
 	</copy>
 	
 	<!--copy resource-->
-	<copy todir="${dist.home}/resources" preservelastmodified="true">
+	<copy todir="${dist.home}/bin/resources" preservelastmodified="true">
 	  <fileset dir="resources" includes="*.properties, *.xml, **/*.xml" excludes=".svn,**/.svn"/>
 	</copy>	
   	<!--copy resource-->

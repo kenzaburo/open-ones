@@ -31,8 +31,7 @@ import openones.svnloader.dao.ISVNVersionPKManager;
 import openones.svnloader.daoimpl.store.PersistentManager;
 
 /**
- * @author Thach Le
- *
+ * @author Thach.Le
  */
 public class JpaDaoManager extends DaoManager {
     EntityManager em = PersistentManager.getEntityManager();

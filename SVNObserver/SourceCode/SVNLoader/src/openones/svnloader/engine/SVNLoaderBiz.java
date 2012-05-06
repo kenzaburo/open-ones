@@ -68,6 +68,9 @@ import rocky.sizecounter.UnsupportedFileType;
 
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
 
+/**
+ * @author Thach.Le, OOG member
+ */
 public class SVNLoaderBiz {
     private final long startRevision = 0;
     private final long endRevision = -1; // head
@@ -366,12 +369,15 @@ public class SVNLoaderBiz {
                     currentFile.setDir(parentDir);
                     svnFileManager.createFile(currentFile);
                     // create a version into DB
-                    ISVNVersionPK svnVersionPK = DaoManager.getInstance().newSVNVersionPKManagerInst()
-                            .newSVNVersionPKInst(parentDir.getDirID(), entry.getName(), entry.getRevision(), AppConstant.ADDED);
+                    ISVNVersionPK svnVersionPK = DaoManager
+                            .getInstance()
+                            .newSVNVersionPKManagerInst()
+                            .newSVNVersionPKInst(parentDir.getDirID(), entry.getName(), entry.getRevision(),
+                                    AppConstant.ADDED);
                     ISVNVersion currentVersion = DaoManager.getInstance().newSVNVersionManagerInst()
                             .newSVNVersionInst(svnVersionPK);
                     currentVersion.setDir(parentDir);
-//                    currentVersion.setSVNAction(AppConstant.ADDED);
+                    // currentVersion.setSVNAction(AppConstant.ADDED);
                     currentVersion.setRevision(revision);
                     String pathLocal = "/" + (path.equals("") ? "" : path + "/") + entry.getName();
                     pathLocal = pathLocal.replace('/', File.separatorChar); // Due to: Program need to save to local
@@ -531,7 +537,7 @@ public class SVNLoaderBiz {
                     String pathLocal = this.tempPath + "/"
                             + (path.equals("") ? entry.getName() : (path + "/" + entry.getName()));
                     pathLocal = pathLocal.replace("/", File.separator);
-                    
+
                     // export source code at Special URL --sub URL
                     // This export in order to minimize data transform from SVN to Local
                     exportSVNBySpecificPath(specificURL, pathLocal, revision.getRevisionNum());
@@ -556,8 +562,8 @@ public class SVNLoaderBiz {
                             + " revisionId=" + revision.getRevisionID());
                     // SVNFilePK svnFilePK = new SVNFilePK(parentDir.getDirID(), entry.getName(),
                     // revision.getRevisionID());
-                    ISVNFilePK svnFilePK = DaoManager.getInstance().newSVNFilePKManagerInst().newSVNFilePKInst(
-                            parentDir.getDirID(), entry.getName(), revision.getRevisionID());
+                    ISVNFilePK svnFilePK = DaoManager.getInstance().newSVNFilePKManagerInst()
+                            .newSVNFilePKInst(parentDir.getDirID(), entry.getName(), revision.getRevisionID());
                     ISVNFile currentFile = DaoManager.getInstance().newSVNFileManagerInst().newSVNFileInst();
                     currentFile.setSVNFilePK(svnFilePK);
                     currentFile.setDir(parentDir);
@@ -568,14 +574,17 @@ public class SVNLoaderBiz {
 
                 // SVNVersionPK svnVersionPK = new SVNVersionPK(parentDir.getDirID(), entry.getName(),
                 // entry.getRevision());
-                ISVNVersionPK svnVersionPK = DaoManager.getInstance().newSVNVersionPKManagerInst().newSVNVersionPKInst(
-                        parentDir.getDirID(), entry.getName(), entry.getRevision(),entryPath.getType());
-                ISVNVersion currentVersion = DaoManager.getInstance().newSVNVersionManagerInst().newSVNVersionInst(
-                        svnVersionPK);
+                ISVNVersionPK svnVersionPK = DaoManager
+                        .getInstance()
+                        .newSVNVersionPKManagerInst()
+                        .newSVNVersionPKInst(parentDir.getDirID(), entry.getName(), entry.getRevision(),
+                                entryPath.getType());
+                ISVNVersion currentVersion = DaoManager.getInstance().newSVNVersionManagerInst()
+                        .newSVNVersionInst(svnVersionPK);
                 currentVersion.setCopyFromPath(entryPath.getCopyPath());
                 currentVersion.setCopyRevision(BigInteger.valueOf(entryPath.getCopyRevision()));
                 currentVersion.setDir(parentDir);
-//                currentVersion.setSVNAction(entryPath.getType());
+                // currentVersion.setSVNAction(entryPath.getType());
 
                 currentVersion.setRevision(revision);
 
@@ -654,14 +663,17 @@ public class SVNLoaderBiz {
                     LOG.debug("currentDir=" + currentDir + ";revision+" + revision);
                 } else {
                     // svnVersionPK = new SVNVersionPK(currentDir.getDirID(), fileName, revision.getRevisionID());
-                    svnVersionPK = DaoManager.getInstance().newSVNVersionPKManagerInst()
-                            .newSVNVersionPKInst(currentDir.getDirID(), fileName, revision.getRevisionID(),entryPath.getType());
+                    svnVersionPK = DaoManager
+                            .getInstance()
+                            .newSVNVersionPKManagerInst()
+                            .newSVNVersionPKInst(currentDir.getDirID(), fileName, revision.getRevisionID(),
+                                    entryPath.getType());
                     // svnVersion = new SVNVersion(svnVersionPK);
                     svnVersion = DaoManager.getInstance().newSVNVersionManagerInst().newSVNVersionInst(svnVersionPK);
                     svnVersion.setCopyFromPath(entryPath.getCopyPath());
                     svnVersion.setCopyRevision(BigInteger.valueOf(entryPath.getCopyRevision()));
                     svnVersion.setDir(currentDir);
-//                    svnVersion.setSVNAction(entryPath.getType());
+                    // svnVersion.setSVNAction(entryPath.getType());
                     svnVersion.setRevision(revision);
                     svnVersion.setNMComment(BigInteger.valueOf(0));
                     svnVersionManager.createVersion(svnVersion);

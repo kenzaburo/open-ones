@@ -14,7 +14,7 @@ import javax.persistence.Embeddable;
 import openones.svnloader.dao.entity.ISVNVersionPK;
 
 /**
- *
+ * @author Thach.Le, OOG member
  */
 @Embeddable
 public class SVNVersionPK implements ISVNVersionPK, Serializable {
@@ -22,7 +22,7 @@ public class SVNVersionPK implements ISVNVersionPK, Serializable {
     @Column(name = "DirID")
     private int dirID;
     @Basic(optional = false)
-    @Column(name = "FileName", columnDefinition="nvarchar(200)")
+    @Column(name = "FileName", columnDefinition = "nvarchar(200)")
     private String fileName;
     @Basic(optional = false)
     @Column(name = "RevisionID")
@@ -30,8 +30,7 @@ public class SVNVersionPK implements ISVNVersionPK, Serializable {
     @Basic(optional = false)
     @Column(name = "SVNAction")
     private char sVNAction;
-    
-    
+
     public SVNVersionPK() {
     }
 
@@ -72,7 +71,7 @@ public class SVNVersionPK implements ISVNVersionPK, Serializable {
     public void setSVNAction(char svnAct) {
         this.sVNAction = svnAct;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -92,7 +91,8 @@ public class SVNVersionPK implements ISVNVersionPK, Serializable {
         if (this.dirID != other.dirID) {
             return false;
         }
-        if ((this.fileName == null && other.fileName != null) || (this.fileName != null && !this.fileName.equals(other.fileName))) {
+        if ((this.fileName == null && other.fileName != null)
+                || (this.fileName != null && !this.fileName.equals(other.fileName))) {
             return false;
         }
         if (this.revisionID != other.revisionID) {
@@ -103,7 +103,8 @@ public class SVNVersionPK implements ISVNVersionPK, Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + "[dirID=" + dirID + ", fileName=" + fileName + ", revisionID=" + revisionID + "]";
+        return this.getClass().getName() + "[dirID=" + dirID + ", fileName=" + fileName + ", revisionID=" + revisionID
+                + "]";
     }
 
 }

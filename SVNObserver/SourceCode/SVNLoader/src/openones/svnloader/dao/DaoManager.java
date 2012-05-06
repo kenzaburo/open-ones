@@ -27,13 +27,12 @@ import rocky.common.PropertiesManager;
 
 /**
  * @author ThachLN
- *
  */
 public abstract class DaoManager {
     final static Logger LOG = Logger.getLogger("DaoManager");
-    
+
     static DaoManager daoInstance = null;
-    
+
     /**
      * [Give the description for method].
      * @return
@@ -43,23 +42,23 @@ public abstract class DaoManager {
             try {
                 Properties props = PropertiesManager.newInstanceFromProps("/conf.properties");
                 // get class of DaoManager implementation.
-                String daoManagerImplClassName = props.getProperty("DaoManagerImpl", "openones.svnloader.daoimpl.DefaultDaoManager");
+                String daoManagerImplClassName = props.getProperty("DaoManagerImpl",
+                        "openones.svnloader.daoimpl.DefaultDaoManager");
                 Class daoManagerClass = Class.forName(daoManagerImplClassName);
                 daoInstance = (DaoManager) daoManagerClass.newInstance();
             } catch (IOException ex) {
-                LOG.error("Load configuration resource file /conf.properties" , ex);
+                LOG.error("Load configuration resource file /conf.properties", ex);
             } catch (ClassNotFoundException ex) {
-                LOG.error("Create class for DaoManagerImpl in /conf.properties" , ex);
+                LOG.error("Create class for DaoManagerImpl in /conf.properties", ex);
             } catch (InstantiationException ex) {
-                LOG.error("Create instance for DaoManagerImpl in /conf.properties" , ex);
+                LOG.error("Create instance for DaoManagerImpl in /conf.properties", ex);
             } catch (IllegalAccessException ex) {
-                LOG.error("Create instance for DaoManagerImpl in /conf.properties" , ex);
+                LOG.error("Create instance for DaoManagerImpl in /conf.properties", ex);
             }
         }
 
         return daoInstance;
     }
-
 
     /**
      * [Give the description for method].
@@ -85,8 +84,7 @@ public abstract class DaoManager {
     public abstract ISVNFileManager newSVNFileManagerInst();
     public abstract ISVNFilePKManager newSVNFilePKManagerInst();
     public abstract ISVNRepoManager newSVNRepoManagerInst();
-    public abstract  ISVNVersionManager newSVNVersionManagerInst();
-
+    public abstract ISVNVersionManager newSVNVersionManagerInst();
 
     /**
      * [Give the description for method].

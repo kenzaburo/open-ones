@@ -19,8 +19,7 @@
 package openones.svnloader.dao.entity;
 
 /**
- * @author Thach Le
- *
+ * @author Thach.Le
  */
 public interface ISVNFilePK {
 

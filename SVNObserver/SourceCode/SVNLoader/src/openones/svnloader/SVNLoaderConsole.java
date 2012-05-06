@@ -22,7 +22,6 @@ import openones.svnloader.engine.SVNLoaderBiz;
 
 import org.apache.log4j.Logger;
 
-
 public class SVNLoaderConsole {
     private static Logger LOGGER = Logger.getLogger(SVNLoaderConsole.class);
 

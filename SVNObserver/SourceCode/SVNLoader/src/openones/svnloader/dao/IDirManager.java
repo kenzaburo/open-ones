@@ -23,52 +23,31 @@ import java.util.List;
 import openones.svnloader.dao.entity.IDir;
 
 /**
- * @author Thach Le
+ * @author Thach.Le
  */
 public interface IDirManager {
 
-    /**
-     * Create a new instance of directory.
-     * @return instance of directory
-     */
-    IDir newDirInst();
+    public IDir newDirInst();
+    public abstract void createDir(IDir dir) throws Exception;
 
-    /**
-     * Persist a given directory.
-     * @param dir instance of directory
-     * @throws Exception if could not persist directory
-     */
-    void createDir(IDir dir) throws Exception;
+    public abstract IDir findDir(Object svnRepo, String path);
 
-    /**
-     * Find an instance of directory.
-     * @param svnRepo
-     * @param path
-     * @return
-     */
-    IDir findDir(Object svnRepo, String path);
+    public abstract IDir findDirRoot(Object svnRepo);
 
-    /**
-     * Find the root directory of SVN Repository.
-     * @param svnRepo instance of ISVNRepo
-     * @return instance of directory 
-     */
-    IDir findDirRoot(Object svnRepo);
-
-    IDir findRoot(Object svnRepo);
+    public abstract IDir findRoot(Object svnRepo);
 
     /**
      * Update information in a dir.
      * @exception Exception
      * @param dir
      */
-    void updateDir(IDir dir) throws Exception;
+    public abstract void updateDir(IDir dir) throws Exception;
 
     /**
      * get List Dir has the same ParentDirID.
      * @param parentDir :parent of dir You want to find out
      * @return Set of Dir
      */
-    List getDirs(IDir parentDir);
+    public abstract List getDirs(IDir parentDir);
 
 }

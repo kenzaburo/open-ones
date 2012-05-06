@@ -37,9 +37,9 @@ public class SVNFileManager implements ISVNFileManager {
      * @see openones.svnloader.engine.manager.ISVNFileManager#createFile(openones.svnloader.daoimpl.entity.SVNFile)
      */
     @Override
-    public void createFile(Object svnFile) throws Exception {        
+    public void createFile(Object svnFile) throws Exception {
         jpaController.create((SVNFile) svnFile);
-       
+
     }
 
     /**

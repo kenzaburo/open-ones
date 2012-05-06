@@ -21,8 +21,7 @@ package openones.svnloader.dao;
 import openones.svnloader.dao.entity.ISVNVersionPK;
 
 /**
- * @author Thach Le
- *
+ * @author Thach.Le, OOG member
  */
 public interface ISVNVersionPKManager {
 
@@ -33,6 +32,6 @@ public interface ISVNVersionPKManager {
      * @param revision
      * @return
      */
-    ISVNVersionPK newSVNVersionPKInst(Integer dirID, String name, long revision,char svnAction);
+    ISVNVersionPK newSVNVersionPKInst(Integer dirID, String name, long revision, char svnAction);
 
 }

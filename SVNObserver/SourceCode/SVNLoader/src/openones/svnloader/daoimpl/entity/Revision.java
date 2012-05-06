@@ -31,13 +31,13 @@ import openones.svnloader.dao.entity.ISVNRepo;
 @Entity
 @Table(name = "Revision")
 @NamedQueries({
-    @NamedQuery(name = "Revision.getMaxId", query = "SELECT max(r.revisionID) FROM Revision r"),
-    @NamedQuery(name = "Revision.findAll", query = "SELECT r FROM Revision r"),
-    @NamedQuery(name = "Revision.findByRevisionID", query = "SELECT r FROM Revision r WHERE r.revisionID = :revisionID"),
-    @NamedQuery(name = "Revision.findByRevisionNum", query = "SELECT r FROM Revision r WHERE r.revisionNum = :revisionNum"),
-    @NamedQuery(name = "Revision.findByAuthor", query = "SELECT r FROM Revision r WHERE r.author = :author"),
-    @NamedQuery(name = "Revision.findByDateLog", query = "SELECT r FROM Revision r WHERE r.dateLog = :dateLog"),
-    @NamedQuery(name = "Revision.findByComment", query = "SELECT r FROM Revision r WHERE r.comment = :comment")})
+        @NamedQuery(name = "Revision.getMaxId", query = "SELECT max(r.revisionID) FROM Revision r"),
+        @NamedQuery(name = "Revision.findAll", query = "SELECT r FROM Revision r"),
+        @NamedQuery(name = "Revision.findByRevisionID", query = "SELECT r FROM Revision r WHERE r.revisionID = :revisionID"),
+        @NamedQuery(name = "Revision.findByRevisionNum", query = "SELECT r FROM Revision r WHERE r.revisionNum = :revisionNum"),
+        @NamedQuery(name = "Revision.findByAuthor", query = "SELECT r FROM Revision r WHERE r.author = :author"),
+        @NamedQuery(name = "Revision.findByDateLog", query = "SELECT r FROM Revision r WHERE r.dateLog = :dateLog"),
+        @NamedQuery(name = "Revision.findByComment", query = "SELECT r FROM Revision r WHERE r.comment = :comment")})
 public class Revision implements IRevision, Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -154,7 +154,8 @@ public class Revision implements IRevision, Serializable {
             return false;
         }
         Revision other = (Revision) object;
-        if ((this.revisionID == null && other.revisionID != null) || (this.revisionID != null && !this.revisionID.equals(other.revisionID))) {
+        if ((this.revisionID == null && other.revisionID != null)
+                || (this.revisionID != null && !this.revisionID.equals(other.revisionID))) {
             return false;
         }
         return true;

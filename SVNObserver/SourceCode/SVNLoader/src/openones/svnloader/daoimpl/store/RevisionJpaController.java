@@ -22,7 +22,6 @@ import openones.svnloader.daoimpl.store.exceptions.IllegalOrphanException;
 import openones.svnloader.daoimpl.store.exceptions.NonexistentEntityException;
 import openones.svnloader.daoimpl.store.exceptions.PreexistingEntityException;
 
-
 /**
  *
  */
@@ -42,7 +41,7 @@ public class RevisionJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             SVNRepo SVNRepo = revision.getSVNRepo();
             if (SVNRepo != null) {
                 SVNRepo = em.getReference(SVNRepo.getClass(), SVNRepo.getSvnid());
@@ -50,7 +49,8 @@ public class RevisionJpaController {
             }
             List<SVNVersion> attachedSVNVersionList = new ArrayList<SVNVersion>();
             for (SVNVersion SVNVersionListSVNVersionToAttach : revision.getSVNVersionList()) {
-                SVNVersionListSVNVersionToAttach = em.getReference(SVNVersionListSVNVersionToAttach.getClass(), SVNVersionListSVNVersionToAttach.getSVNVersionPK());
+                SVNVersionListSVNVersionToAttach = em.getReference(SVNVersionListSVNVersionToAttach.getClass(),
+                        SVNVersionListSVNVersionToAttach.getSVNVersionPK());
                 attachedSVNVersionList.add(SVNVersionListSVNVersionToAttach);
             }
             revision.setSVNVersionList(attachedSVNVersionList);
@@ -83,7 +83,7 @@ public class RevisionJpaController {
                     oldRevisionOfDirListDir = em.merge(oldRevisionOfDirListDir);
                 }
             }
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } catch (Exception ex) {
             if (findRevision(revision.getRevisionID()) != null) {
                 throw new PreexistingEntityException("Revision " + revision + " already exists.", ex);
@@ -91,7 +91,7 @@ public class RevisionJpaController {
             throw ex;
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -100,7 +100,7 @@ public class RevisionJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             Revision persistentRevision = em.find(Revision.class, revision.getRevisionID());
             SVNRepo SVNRepoOld = persistentRevision.getSVNRepo();
             SVNRepo SVNRepoNew = revision.getSVNRepo();
@@ -114,7 +114,8 @@ public class RevisionJpaController {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain SVNVersion " + SVNVersionListOldSVNVersion + " since its revision field is not nullable.");
+                    illegalOrphanMessages.add("You must retain SVNVersion " + SVNVersionListOldSVNVersion
+                            + " since its revision field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -126,14 +127,16 @@ public class RevisionJpaController {
             }
             List<SVNVersion> attachedSVNVersionListNew = new ArrayList<SVNVersion>();
             for (SVNVersion SVNVersionListNewSVNVersionToAttach : SVNVersionListNew) {
-                SVNVersionListNewSVNVersionToAttach = em.getReference(SVNVersionListNewSVNVersionToAttach.getClass(), SVNVersionListNewSVNVersionToAttach.getSVNVersionPK());
+                SVNVersionListNewSVNVersionToAttach = em.getReference(SVNVersionListNewSVNVersionToAttach.getClass(),
+                        SVNVersionListNewSVNVersionToAttach.getSVNVersionPK());
                 attachedSVNVersionListNew.add(SVNVersionListNewSVNVersionToAttach);
             }
             SVNVersionListNew = attachedSVNVersionListNew;
             revision.setSVNVersionList(SVNVersionListNew);
             List<Dir> attachedDirListNew = new ArrayList<Dir>();
             for (Dir dirListNewDirToAttach : dirListNew) {
-                dirListNewDirToAttach = em.getReference(dirListNewDirToAttach.getClass(), dirListNewDirToAttach.getDirID());
+                dirListNewDirToAttach = em.getReference(dirListNewDirToAttach.getClass(),
+                        dirListNewDirToAttach.getDirID());
                 attachedDirListNew.add(dirListNewDirToAttach);
             }
             dirListNew = attachedDirListNew;
@@ -152,8 +155,10 @@ public class RevisionJpaController {
                     Revision oldRevisionOfSVNVersionListNewSVNVersion = SVNVersionListNewSVNVersion.getRevision();
                     SVNVersionListNewSVNVersion.setRevision(revision);
                     SVNVersionListNewSVNVersion = em.merge(SVNVersionListNewSVNVersion);
-                    if (oldRevisionOfSVNVersionListNewSVNVersion != null && !oldRevisionOfSVNVersionListNewSVNVersion.equals(revision)) {
-                        oldRevisionOfSVNVersionListNewSVNVersion.getSVNVersionList().remove(SVNVersionListNewSVNVersion);
+                    if (oldRevisionOfSVNVersionListNewSVNVersion != null
+                            && !oldRevisionOfSVNVersionListNewSVNVersion.equals(revision)) {
+                        oldRevisionOfSVNVersionListNewSVNVersion.getSVNVersionList()
+                                .remove(SVNVersionListNewSVNVersion);
                         oldRevisionOfSVNVersionListNewSVNVersion = em.merge(oldRevisionOfSVNVersionListNewSVNVersion);
                     }
                 }
@@ -175,7 +180,7 @@ public class RevisionJpaController {
                     }
                 }
             }
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -187,7 +192,7 @@ public class RevisionJpaController {
             throw ex;
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -196,7 +201,7 @@ public class RevisionJpaController {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            //em.getTransaction().begin();
+            // em.getTransaction().begin();
             Revision revision;
             try {
                 revision = em.getReference(Revision.class, id);
@@ -210,7 +215,9 @@ public class RevisionJpaController {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Revision (" + revision + ") cannot be destroyed since the SVNVersion " + SVNVersionListOrphanCheckSVNVersion + " in its SVNVersionList field has a non-nullable revision field.");
+                illegalOrphanMessages.add("This Revision (" + revision + ") cannot be destroyed since the SVNVersion "
+                        + SVNVersionListOrphanCheckSVNVersion
+                        + " in its SVNVersionList field has a non-nullable revision field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
@@ -226,10 +233,10 @@ public class RevisionJpaController {
                 dirListDir = em.merge(dirListDir);
             }
             em.remove(revision);
-            //em.getTransaction().commit();
+            // em.getTransaction().commit();
         } finally {
             if (em != null) {
-                //em.close();
+                // em.close();
             }
         }
     }
@@ -254,7 +261,7 @@ public class RevisionJpaController {
             }
             return q.getResultList();
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 
@@ -263,7 +270,7 @@ public class RevisionJpaController {
         try {
             return em.find(Revision.class, id);
         } finally {
-            //em.close();
+            // em.close();
         }
     }
 
@@ -276,22 +283,19 @@ public class RevisionJpaController {
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
-            //em.close();
+            // em.close();
         }
     }
-    
+
     public long getNextId() {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createNamedQuery("Revision.getMaxId");           
-            return ((Long) q.getSingleResult()) + 1;          
-        }
-        catch(Exception ex)
-        {
+            Query q = em.createNamedQuery("Revision.getMaxId");
+            return ((Long) q.getSingleResult()) + 1;
+        } catch (Exception ex) {
             return 1;
-        }
-        finally {
-            //em.close();
+        } finally {
+            // em.close();
         }
     }
 

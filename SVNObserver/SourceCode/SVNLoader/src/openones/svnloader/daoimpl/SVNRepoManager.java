@@ -8,7 +8,6 @@ import openones.svnloader.dao.entity.ISVNRepo;
 import openones.svnloader.daoimpl.entity.SVNRepo;
 import openones.svnloader.daoimpl.store.SVNRepoJpaController;
 
-
 public class SVNRepoManager implements ISVNRepoManager {
     private SVNRepoJpaController jpaController;
 
@@ -38,7 +37,7 @@ public class SVNRepoManager implements ISVNRepoManager {
         return repo;
 
     }
-    
+
     /**
      * [Explain the description for this method here].
      * @param url

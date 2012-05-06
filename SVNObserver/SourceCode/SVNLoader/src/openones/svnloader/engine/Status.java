@@ -19,6 +19,5 @@
 package openones.svnloader.engine;
 
 public enum Status {
-    Added, 
-    Deleted
+    Added, Deleted
 }

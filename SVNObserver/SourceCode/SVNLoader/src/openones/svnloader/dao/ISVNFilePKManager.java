@@ -21,12 +21,11 @@ package openones.svnloader.dao;
 import openones.svnloader.dao.entity.ISVNFilePK;
 
 /**
- * @author Thach Le
- *
+ * @author Thach.Le
  */
 public interface ISVNFilePKManager {
 
-    //public abstract void createFile(Object svnFile) throws Exception;
+    // public abstract void createFile(Object svnFile) throws Exception;
 
     /**
      * [Give the description for method].

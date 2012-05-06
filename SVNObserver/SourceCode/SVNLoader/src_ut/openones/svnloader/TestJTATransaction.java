@@ -32,9 +32,9 @@ public class TestJTATransaction {
             jpa.create(svnRepo2);           
             em.getTransaction().commit();
          
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
             em.getTransaction().rollback();
            
             fail();
@@ -56,9 +56,9 @@ public class TestJTATransaction {
             SVNRepo svnRepo = new SVNRepo(10, repoPath, "");
             jpa.create(svnRepo);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
            em.getTransaction().rollback();
            
             fail();
@@ -83,9 +83,9 @@ public class TestJTATransaction {
             SVNRepoJpaController jpa = new SVNRepoJpaController();
             jpa.destroy(10);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
             
             fail();
         }
@@ -127,9 +127,9 @@ public class TestJTATransaction {
              
             em.getTransaction().commit();
          
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
             em.getTransaction().rollback();
            
             fail();
