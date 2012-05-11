@@ -122,10 +122,12 @@ public class ForumAction extends AdminCommand
 		f.setDescription(this.request.getParameter("description"));
 		
 		String tooltip = this.request.getParameter("tooltip");
-        String url = this.request.getParameter("img_url");
+        String imageUrl = this.request.getParameter("img_url");
+        String newImageUrl = this.request.getParameter("new_img_url");
 
         f.setTooltip(tooltip);
-        f.setImageUrl(url);
+        f.setImageUrl(imageUrl);
+        f.setNewImageUrl(newImageUrl);
 		
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));
@@ -268,16 +270,18 @@ public class ForumAction extends AdminCommand
 
         
 		String tooltip = this.request.getParameter("tooltip");
-		String url = this.request.getParameter("img_url");
+		String imgUrl = this.request.getParameter("img_url");
+		String newImgUrl = this.request.getParameter("new_img_url");
 		
 		//set tooltip default value
         tooltip = ((tooltip == null) || ("".equals(tooltip))) ? "" : tooltip.trim();
-        if (tooltip.length() > 150) {
-            tooltip.substring(0, 149);
+        if (tooltip.length() > 200) {
+            tooltip.substring(0, 199);
         }
         
         f.setTooltip(tooltip);
-        f.setImageUrl(url);
+        f.setImageUrl(imgUrl);
+        f.setNewImageUrl(newImgUrl);
         
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));	

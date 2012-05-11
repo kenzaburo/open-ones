@@ -70,14 +70,8 @@ public class Forum implements Serializable
 	
 	// new attributes for version 2.1.9
 	private String imageUrl;
-	private String tooltip;
-
-	/**
-     * @return the imageUrl
-     */
-    public String getImageUrl() {
-        return imageUrl;
-    }
+	private String newImageUrl;
+    private String tooltip;
 
 	public Forum() { }
 	
@@ -100,6 +94,7 @@ public class Forum implements Serializable
 		this.lpi = f.getLastPostInfo();
 		//new attr
 		this.imageUrl = f.getImageUrl();
+		this.newImageUrl = f.getNewImageUrl();
 		this.tooltip = f.getTooltip();
 	}
 	
@@ -290,6 +285,29 @@ public class Forum implements Serializable
     public void setImageUrl(String imageUrl) {
         this.imageUrl = (imageUrl != null) ? imageUrl.trim() : "";
     }
+
+    /**
+     * @return the imageUrl
+     */
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    /**
+     * Get value of newImageUrl.
+     * @return the newImageUrl
+     */
+    public String getNewImageUrl() {
+        return newImageUrl;
+    }
+
+    /**
+     * Set the value for newImageUrl.
+     * @param newImageUrl the newImageUrl to set
+     */
+    public void setNewImageUrl(String newImageUrl) {
+        this.newImageUrl = newImageUrl;
+    }
+
 
     /**
      * @return the tooltip

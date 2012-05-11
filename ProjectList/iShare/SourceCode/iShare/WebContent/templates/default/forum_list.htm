@@ -40,11 +40,11 @@
 						<td class="row1" valign="middle" align="center" height="50">
 						<#if forum.unread>
 							<!-- <img src="${contextPath}/templates/${templateName}/images/folder_new_big.gif" alt="[New Folder]" /> -->
-                            <#if (forum.imageUrl == "")>
+                            <#if (forum.newImageUrl == "")>
                                 <img src="${contextPath}/templates/${templateName}/images/folder_new_big.gif" alt="[New Folder]" />
 							    
                             <#else>
-                                <img src="${forum.imageUrl}" alt="[New Folder]" />
+                                <img src="${forum.newImageUrl}" alt="[New Folder]" />
                             </#if>
 						<#else>
 							<!-- <img src="${contextPath}/templates/${templateName}/images/folder_big.gif" alt="No new topic has been created recently" />-->

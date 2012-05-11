@@ -235,11 +235,11 @@ PollModel.selectVoterByIP = SELECT vote_id, vote_user_id, vote_user_ip \
 # #############
 # ForumModel
 # #############
-ForumModel.selectById = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated, forum_tooltip, forum_img_url \
+ForumModel.selectById = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated, forum_tooltip, forum_img_url, forum_new_img_url \
 	FROM jforum_forums \
 	WHERE forum_id = ?
 
-ForumModel.selectAll = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated, forum_tooltip, forum_img_url \
+ForumModel.selectAll = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated, forum_tooltip, forum_img_url, forum_new_img_url \
 	FROM jforum_forums \
 	ORDER BY forum_order ASC
 
@@ -251,8 +251,8 @@ ForumModel.discoverForumId = SELECT forum_id FROM jforum_mail_integration WHERE 
 ForumModel.countForumPosts = SELECT COUNT(1) FROM jforum_posts WHERE forum_id = ?
 ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
-ForumModel.update = UPDATE jforum_forums SET categories_id = ?, forum_name = ?, forum_desc = ?, moderated = ?, forum_tooltip = ?, forum_img_url = ? WHERE forum_id = ?
-ForumModel.addNew = INSERT INTO jforum_forums (categories_id, forum_name, forum_desc, forum_order, moderated, forum_tooltip, forum_img_url) VALUES (?, ?, ?, ?, ?, ?, ?)
+ForumModel.update = UPDATE jforum_forums SET categories_id = ?, forum_name = ?, forum_desc = ?, moderated = ?, forum_tooltip = ?, forum_img_url = ?, forum_new_img_url = ? WHERE forum_id = ?
+ForumModel.addNew = INSERT INTO jforum_forums (categories_id, forum_name, forum_desc, forum_order, moderated, forum_tooltip, forum_img_url, forum_new_img_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 ForumModel.updateLastPost = UPDATE jforum_forums SET forum_last_post_id = ? WHERE forum_id = ?
 ForumModel.incrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_topics + ? WHERE forum_id = ?
 ForumModel.decrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_topics - ? WHERE forum_id = ?

@@ -43,7 +43,7 @@ CREATE TABLE jforum_config (
 -- Updated by Thach, May/2012
 --   + forum_tooltip: add tooltip for forum
 --   + forum_img_url: support dynamic icon for forum
---
+--   + forum_unread_img_url: support dynamic icon for forum
 DROP TABLE IF EXISTS jforum_forums;
 CREATE TABLE jforum_forums (
   forum_id INT NOT NULL auto_increment,
@@ -53,8 +53,9 @@ CREATE TABLE jforum_forums (
   forum_order INT default '1',
   forum_topics INT NOT NULL default '0',
   forum_last_post_id INT NOT NULL default '0',
-  forum_tooltip varchar(150),
+  forum_tooltip varchar(200),
   forum_img_url varchar(255) DEFAULT '${contextPath}/templates/${templateName}/images/folder_new_big.gif',
+  forum_new_img_url varchar(255) DEFAULT '${contextPath}/templates/${templateName}/images/folder_new_big.gif',
   moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (forum_id),
   KEY (categories_id),

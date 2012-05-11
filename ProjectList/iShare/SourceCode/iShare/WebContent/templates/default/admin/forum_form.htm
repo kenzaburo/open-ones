@@ -5,13 +5,25 @@
 
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js"></script>
 <script>
-  function picPreview() {
+  /**
+   *
+   */
+  function previewImage() {
 	$("#img_preview").show(300);
 	$("#img_preview").attr("src", $("#img_url").val());
+  }
+  
+  /**
+   *
+   */
+  function previewNewImage() {
+	  $("#new_img_preview").show(300);
+	  $("#new_img_preview").attr("src", $("#new_img_url").val());
   }
 
   function hide() {
 	$("#img_preview").hide(100);
+	$("#new_img_preview").hide(100);
   }
 </script>
 <form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}" onSubmit="return checkInput();" enctype="multipart/form-data">
@@ -160,8 +172,23 @@ function limitTextArea(field, limit)
 		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.ImageURL")}</span></td>
 		<td class="row2">
 		<input name="img_url" id="img_url" class="post" style="width: 50%" value="<#if forum?exists>${forum.imageUrl?default("")}</#if>"/>
-		<input type="button" name="p"  onclick="picPreview();" onblur="hide();" value="Preview"/><br/>
-		<img alt="Forum Image" height="115px" id="img_preview" />
+		<input type="button" name="p"  onclick="previewImage();" onblur="hide();" value="Preview"/><br/>
+		<img alt="Forum Image" id="img_preview" />
+		<script>
+		  $(document).ready(function() {
+		    hide();
+		  });
+		</script>
+		</td>
+	</tr>
+	
+	<!-- forum New Image URL -->
+	<tr>
+		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.NewImageURL")}</span></td>
+		<td class="row2">
+		<input name="new_img_url" id="new_img_url" class="post" style="width: 50%" value="<#if forum?exists>${forum.newImageUrl?default("")}</#if>"/>
+		<input type="button" name="p"  onclick="previewNewImage();" onblur="hide();" value="Preview"/><br/>
+		<img alt="New Forum Image" id="new_img_preview" />
 		<script>
 		  $(document).ready(function() {
 		    hide();

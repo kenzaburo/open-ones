@@ -1,4 +1,9 @@
-iShare 2.1.9
----------------------------------------------------------------------------------
+***iShare 2.1.9
+----------------
 Upgrade from jForum 2.1.8 (http://jforum.net/)
 + Allow create tooltip and icon for Forum
+
+***iShare 2.1.9.1
+----------------
+Upgrade from jForum 2.1.8 (http://jforum.net/)
++ Add a new field for forum: Unread icon
