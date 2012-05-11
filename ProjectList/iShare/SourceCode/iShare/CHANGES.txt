@@ -1,0 +1,4 @@
+iShare 2.1.9
+---------------------------------------------------------------------------------
+Upgrade from jForum 2.1.8 (http://jforum.net/)
++ Allow create tooltip and icon for Forum

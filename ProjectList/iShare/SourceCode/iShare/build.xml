@@ -1,4 +1,4 @@
-<project name="jForum" default="dist" basedir=".">
+<project name="iShare" default="dist" basedir=".">
   <description>
       Build file for the project
   </description>
