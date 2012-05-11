@@ -80,28 +80,14 @@
     <!-- Create the distribution directory -->
     <mkdir dir="${dist.home}"/>
 	
-	<!-- Copy WebContent -->
-	<copy todir="${build.home}" preservelastmodified="true">
+    <!-- Copy WebContent -->
+    <copy todir="${build.home}" preservelastmodified="true">
 	    <fileset dir="${web.content}" excludes=".svn/**,*.svn-base"/>
     </copy>
 	
-	<!-- Copy resources from folder "resource" -->
-	<copy todir="${build.home}/WEB-INF/classes" preservelastmodified="true">
-	    <fileset dir="resource" excludes=".svn/**,*.svn-base, **/*.java"/>
-    </copy>
-	
-	<!-- Copy templates -->
-	<copy todir="${build.home}/WEB-INF/classes" preservelastmodified="true">
-	    <fileset dir="templates" excludes=".svn/**,*.svn-base, **/*.java"/>
-    </copy>
-	
-	<!-- deployPortlet.bat: helps to deploy the .war into uPortal -->
-	<copy file="./deployPortlet.bat" todir="${dist.home}" preservelastmodified="true"/>
-	<!-- deployPortlet.sh: helps to deploy the .war into uPortal -->
-	<copy file="./deployPortlet.sh" todir="${dist.home}" preservelastmodified="true"/>
 
     <jar jarfile="${dist.home}/${app.name}.war" basedir="${build.home}/"/>
-	<echo message="View the result within folder ${dist.home}"/>
+    <echo message="View the result within folder ${dist.home}"/>
   </target>
   
   <target name="dist218to219" depends="compile" description="generate the distribution to upgrade from version 2.1.8 to 2.1.9" >
