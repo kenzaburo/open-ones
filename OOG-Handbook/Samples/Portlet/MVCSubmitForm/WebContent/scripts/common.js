@@ -23,8 +23,10 @@
  * @param eventId Code of event.
  * @return
  */
-function submitAction(formName, eventId) {
+function submitAction(formName, actionUrl) {
 	var frm = document.forms[formName];
-	frm.eventId.value = eventId;
+
+	frm.action = actionUrl;
+	
 	frm.submit();
 }
