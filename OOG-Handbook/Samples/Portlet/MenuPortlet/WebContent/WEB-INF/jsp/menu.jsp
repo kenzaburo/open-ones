@@ -6,13 +6,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="ctl00_Head1">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<link href="/MenuPortlet//MenuPortlet/resource_files/Advanced.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/Ajax.css" type="text/css" rel="stylesheet">
-<link href="/MenuPortlet/resource_files/AjaxJQuery.css" type="text/css" rel="stylesheet">
-<link href="/MenuPortlet/resource_files/GridView.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/menustyles.css" type="text/css" rel="stylesheet">
 <title>
 	Demo Menu - version 0.2.x
 </title>
-<link rel="shortcut icon" href="logo.ico" type="image/ico">
 <link rel="stylesheet" type="text/css" href="/MenuPortlet/resource_files/jquery.css" media="screen">
 
 <link href="/MenuPortlet/resource_files/Advanced.css" type="text/css" rel="stylesheet">
@@ -59,9 +55,9 @@
 
 
     
-    <script language="javascript" type="text/javascript" src="/MenuPortlet/resource_files/jquery.js"></script>
-    
-    <script language="javascript" src="/MenuPortlet/resource_files/dropdown_menu_hack.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="/MenuPortlet/resource_files/jquery.js"></script>
+
+<script language="javascript" src="/MenuPortlet/resource_files/dropdown_menu_hack.js" type="text/javascript"></script>
 
 <script type="text/javascript" src='/MenuPortlet/scripts/common.js'></script>
 
@@ -516,31 +512,10 @@ ctl00_MainMenu_Data.hoverHyperLinkClass = 'ctl00_MainMenu_11 dmItem1hover';
 ctl00_MainMenu_Data.staticHoverClass = 'ctl00_MainMenu_10 dmRootmenuHover';
 ctl00_MainMenu_Data.staticHoverHyperLinkClass = 'ctl00_MainMenu_9 dmRootmenuHover';
 
-var Page_ValidationActive = false;
 if (typeof(ValidatorOnLoad) == "function") {
     ValidatorOnLoad();
 }
 
-        
-theForm.oldSubmit = theForm.submit;
-theForm.submit = WebForm_SaveScrollPositionSubmit;
-
-theForm.oldOnSubmit = theForm.onsubmit;
-theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
-
-document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired').dispose = function() {
-    Array.remove(Page_Validators, document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired'));
-}
-
-document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1').dispose = function() {
-    Array.remove(Page_Validators, document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1'));
-}
-Sys.Application.add_init(function() {
-    $create(AjaxControlToolkit.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","CancelControlID":"ctl00_ContentPlaceHolder1_UITypeWork1_ibtClose","PopupControlID":"ctl00_ContentPlaceHolder1_UITypeWork1_divPopUp","PopupDragHandleControlID":"tdPopupText","dynamicServicePath":"/Pages/List/TypeOfWork.aspx","id":"mpe"}, null, null, $get("ctl00_ContentPlaceHolder1_UITypeWork1_lbtHide"));
-});
-Sys.Application.add_init(function() {
-    $create(AjaxControlToolkit.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","PopupControlID":"ctl00_ContentPlaceHolder1_UITypeWork1_UIProgressPopup1_pnlPopup","dynamicServicePath":"/Pages/List/TypeOfWork.aspx","id":"mdlPopup"}, null, null, $get("ctl00_ContentPlaceHolder1_UITypeWork1_UIProgressPopup1_pnlPopup"));
-});
 //]]>
 </script>
 </form>
