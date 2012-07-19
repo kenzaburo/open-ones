@@ -57,17 +57,33 @@
                             <tbody><tr>
                                 <td align="left" valign="middle">
                                     <div class="navigationArea">
-                                        <table id="ctl00_MainMenu" class="dmRootmenu ctl00_MainMenu_5 ctl00_MainMenu_2" border="0" cellpadding="0" cellspacing="0">
-	<tbody><tr>
-		<td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun0"><table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
+   
+   <%-- Menu Level1.START --%>
+   <table id="ctl00_MainMenu" class="dmRootmenu ctl00_MainMenu_5 ctl00_MainMenu_2" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+   
+   <tr>
+		<td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun0">
+          <table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tbody><tr>
 				<td style="white-space: nowrap;"><a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em;"><img src="/MenuPortlet/resource_files/home.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp; Trang chủ</a></td>
+			</tr></tbody>
+          </table>
+        </td>
+        <td style="width: 3px;"></td>
+        <td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun1">
+          <table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tbody>
+             <tr>
+				<td style="white-space: nowrap;">
+                 <a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/admin.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;Hệ thống</a>
+                </td>
 			</tr>
-		</tbody></table></td><td style="width: 3px;"></td><td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun1"><table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
-			<tbody><tr>
-				<td style="white-space: nowrap;"><a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/admin.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;Hệ thống</a></td>
-			</tr>
-		</tbody></table></td><td style="width: 3px;"></td><td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun2"><table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
+		   </tbody>
+         </table>
+       </td>
+       <td style="width: 3px;"></td>
+       <td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun2"><table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tbody><tr>
 				<td style="white-space: nowrap;"><a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/pupil.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;Quản lý học sinh</a></td>
 			</tr>
@@ -85,22 +101,33 @@
 			</tr>
 		</tbody></table></td>
 	</tr>
-</tbody></table><div id="ctl00_MainMenun1Items" class="ctl00_MainMenu_0 dmSubmenu ctl00_MainMenu_8">
+</tbody>
+   </table>
+   <%-- Menu Level1.END --%>
+  <div id="ctl00_MainMenun1Items" class="ctl00_MainMenu_0 dmSubmenu ctl00_MainMenu_8">
 	<table border="0" cellpadding="0" cellspacing="0">
-		<tbody><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun6">
-			<td><table class="dmItem1 ctl00_MainMenu_7" border="0" cellpadding="0" cellspacing="0" width="100%">
-				<tbody><tr>
+		<tbody>
+         <tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun6">
+			<td>
+              <table class="dmItem1 ctl00_MainMenu_7" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tbody>
+                  <tr>
 					<td style="white-space: nowrap; width: 100%;"><a class="ctl00_MainMenu_1 dmItem1 ctl00_MainMenu_6" href='<portlet:renderURL><portlet:param name="action" value="initPersonalInfo"/></portlet:renderURL>' style="border-style: none; font-size: 1em;"><img src="/MenuPortlet/resource_files/misamples2.gif" alt="" style="border-style: none; vertical-align: middle;">&nbsp;&nbsp;Thông tin cá nhân</a></td>
-				</tr>
-			</tbody></table></td>
-		</tr><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun7">
+				  </tr>
+			    </tbody>
+              </table>
+            </td>
+		</tr>
+        <tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun7">
 			<td><table class="dmItem1 ctl00_MainMenu_7" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody><tr>
 					<td style="white-space: nowrap; width: 100%;"><a class="ctl00_MainMenu_1 dmItem1 ctl00_MainMenu_6" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/misamples2.gif" alt="" style="border-style: none; vertical-align: middle;">&nbsp;&nbsp;Khởi tạo dữ liệu đầu năm</a></td><td style="width: 0px;"><img src="/MenuPortlet/resource_files/arrow1.gif" alt="Expand &amp;nbsp;&amp;nbsp;Khởi tạo dữ liệu đầu năm" style="border-style: none; vertical-align: middle;"></td>
 				</tr>
 			</tbody></table></td>
 		</tr>
-	</tbody></table><div class="dmItem1 ctl00_MainMenu_7 ctl00_MainMenu_0" id="ctl00_MainMenun1ItemsUp" onmouseover="PopOut_Up(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+	</tbody>
+  </table>
+  <div class="dmItem1 ctl00_MainMenu_7 ctl00_MainMenu_0" id="ctl00_MainMenun1ItemsUp" onmouseover="PopOut_Up(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
 		<img src="/MenuPortlet/resource_files/WebResource.gif" alt="Scroll up">
 	</div><div class="dmItem1 ctl00_MainMenu_7 ctl00_MainMenu_0" id="ctl00_MainMenun1ItemsDn" onmouseover="PopOut_Down(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
 		<img src="/MenuPortlet/resource_files/WebResource_002.gif" alt="Scroll down">
