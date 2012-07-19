@@ -611,95 +611,11 @@ Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'aspn
     }
 </style>
 
-<script type="text/javascript" language="javascript">
-
-    //  register for our events
-    Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(BeginRequestHandler);
-    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
-
-    function BeginRequestHandler(sender, args) {
-        // show the popup
-        var pop = ($find('mdlPopup') == null ? $find('ctl00_ContentPlaceHolder1_UITypeWork1_UIProgressPopup1_mdlPopup') : $find('mdlPopup'));
-        if (pop != null)
-            pop.show();
-    }
-
-    function EndRequestHandler(sender, args) {
-        //  hide the popup
-        var pop = ($find('mdlPopup') == null ? $find('ctl00_ContentPlaceHolder1_UITypeWork1_UIProgressPopup1_mdlPopup') : $find('mdlPopup'));
-        if (pop != null)
-            pop.hide();
-    }
-</script>
-
-
-<div id="ctl00_ContentPlaceHolder1_UITypeWork1_UIProgressPopup1_pnlPopup" style="height: 55px; width: 320px; background-image: url(&quot;../../images/loading_bg.png&quot;); display: none; position: fixed; z-index: 100001;">
-		
-    <div style="margin-top: 13px;" align="center">
-        <table>
-            <tbody><tr>
-                <td valign="middle">
-                    <img id="ctl00_ContentPlaceHolder1_UITypeWork1_UIProgressPopup1_imgPop" src="/MenuPortlet/resource_files/loading5.gif" style="border-width: 0px;">&nbsp;
-                </td>
-                <td valign="middle">
-                    <span id="ctl00_ContentPlaceHolder1_UITypeWork1_UIProgressPopup1_lblText" style="font-weight:bold;">Đang tải dữ liệu ...</span>
-                </td>
-            </tr>
-        </tbody></table>
-    </div>
-
-	</div>
-
     
 <div class="modalBackground" style="display: none; position: fixed; left: 0px; top: 0px; z-index: 10000;" id="mpe_backgroundElement"></div><div class="modalBackground" style="display: none; position: fixed; left: 0px; top: 0px; z-index: 10000;" id="mdlPopup_backgroundElement"></div></div>
 
-<script type="text/javascript">
-    function HideModalPopup() {
-        var modal = $find('mpe');
-        modal.hide();
-        return false;
-    }
-    function clearMessage() {
-
-        var lblMessage = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_lblMsg');
-
-        lblMessage.innerHTML = ''
-
-    }
-    function validateSave() {
-        var lblMessage = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_lblMsg');
-        lblMessage.innerHTML = ''
-        WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions('ctl00_ContentPlaceHolder1_UITypeWork1_btnSave', '', true, 'popup', '', false, false));
-        if (!WebForm_OnSubmit()) {
-            return false;
-        }
-
-        var txtDescription = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_txtDesciptionPopUp');
-        if (Page_ClientValidate()) {
-
-            return textareaCounter(txtDescription, 100, 'Mô tả');
-        }
-
-    }
-    function resetForm() {
-        var lblMessage = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_lblMsg');
-        var txtName = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_txtNamePopUp');
-        var txtDes = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_txtDesciptionPopUp');
-        var lblMsgDelete = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_lblMsgDelete');
-        var hdd = document.getElementById('ctl00_ContentPlaceHolder1_UITypeWork1_hddTypeOfWorkId');
-        lblMsgDelete.innerHTML = '';
-        lblMessage.innerHTML = '';
-        txtName.value = '';
-        txtDes.value = '';
-        hdd.value = '';
-        return false;
-    }
-</script>
 
 
-
-                            <div class="clear">
-                            </div>
                         </td>
                     </tr>
                 </tbody></table>
@@ -781,34 +697,6 @@ Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'aspn
 </script>
 
     
-    
-<script type="text/javascript">
-//<![CDATA[
-var Page_Validators =  new Array(document.getElementById("ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired"), document.getElementById("ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1"));
-//]]>
-</script>
-
-<script type="text/javascript">
-//<![CDATA[
-var ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired = document.all ? document.all["ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired"] : document.getElementById("ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired");
-ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired.controltovalidate = "ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroup";
-ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired.focusOnError = "t";
-ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired.errormessage = "Bạn chưa chọn loại công việc";
-ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired.display = "Dynamic";
-ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired.validationGroup = "a";
-ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
-ctl00_ContentPlaceHolder1_UITypeWork1_ddlTypeWorkGroupRequired.initialvalue = "";
-var ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1 = document.all ? document.all["ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1"] : document.getElementById("ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1");
-ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1.controltovalidate = "ctl00_ContentPlaceHolder1_UITypeWork1_txtNamePopUp";
-ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1.focusOnError = "t";
-ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1.errormessage = "Loại công việc phải nhập";
-ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1.display = "Dynamic";
-ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1.validationGroup = "popup";
-ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
-ctl00_ContentPlaceHolder1_UITypeWork1_RequiredFieldValidator1.initialvalue = "";
-//]]>
-</script>
-
 
 <script type="text/javascript">
 //<![CDATA[
