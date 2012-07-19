@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="portlet" uri="http://java.sun.com/portlet_2_0" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<portlet:defineObjects />
+<c:set var="portletNamespace" scope="request"><portlet:namespace/></c:set>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="ctl00_Head1">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -6,7 +12,7 @@
 <link href="/MenuPortlet/resource_files/AjaxJQuery.css" type="text/css" rel="stylesheet">
 <link href="/MenuPortlet/resource_files/GridView.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/menustyles.css" type="text/css" rel="stylesheet">
 <title>
-	Demo Menu
+	Demo Menu - version 0.2.0
 </title>
 <link rel="shortcut icon" href="logo.ico" type="image/ico">
 <link rel="stylesheet" type="text/css" href="/MenuPortlet/resource_files/jquery.css" media="screen">
@@ -148,7 +154,6 @@ Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'aspn
     
     <script language="javascript" type="text/javascript" src="/MenuPortlet/resource_files/jquery-1.js"></script>
     <script language="javascript" type="text/javascript" src="/MenuPortlet/resource_files/jquery.js"></script>
-    <script language="javascript" src="/MenuPortlet/resource_files/JScript.js" type="text/javascript"></script>
     
     <script language="javascript" src="/MenuPortlet/resource_files/dropdown_menu_hack.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -177,6 +182,7 @@ Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'aspn
             e.preventDefault();
         }
     </script>
+<script type="text/javascript" src='/MenuPortlet/scripts/common.js'></script>
 
     <div id="SMASMainPage">
         <div class="GridFull">
@@ -223,7 +229,7 @@ Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'aspn
 		<tbody><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun6">
 			<td><table class="dmItem1 ctl00_MainMenu_7" border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tbody><tr>
-					<td style="white-space: nowrap; width: 100%;"><a class="ctl00_MainMenu_1 dmItem1 ctl00_MainMenu_6" href="#" style="border-style: none; font-size: 1em;"><img src="/MenuPortlet/resource_files/misamples2.gif" alt="" style="border-style: none; vertical-align: middle;">&nbsp;&nbsp;Thông tin cá nhân</a></td>
+					<td style="white-space: nowrap; width: 100%;"><a class="ctl00_MainMenu_1 dmItem1 ctl00_MainMenu_6" href='<portlet:renderURL><portlet:param name="action" value="initPersonalInfo"/></portlet:renderURL>' style="border-style: none; font-size: 1em;"><img src="/MenuPortlet/resource_files/misamples2.gif" alt="" style="border-style: none; vertical-align: middle;">&nbsp;&nbsp;Thông tin cá nhân</a></td>
 				</tr>
 			</tbody></table></td>
 		</tr><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun7">

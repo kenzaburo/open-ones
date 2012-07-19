@@ -18,9 +18,14 @@
  */
 package openones.tms.menuportlet.controller;
 
+import javax.portlet.PortletSession;
+import javax.portlet.RenderRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 /**
  * @author Thach.Le
@@ -35,10 +40,19 @@ public class MainController {
      * Default screen.
      * @return name of view which is the name of the JSP page.
      */
-    @RequestMapping
+    @RequestMapping(value="VIEW")
     public String initScreen() {
         log.debug("initScreen.START");
         // Display menu.jsp
         return "menu";
+    }
+    
+    @RenderMapping(params = "action=initPersonalInfo")
+    public ModelAndView displayPersonalInfo(RenderRequest request, PortletSession session) {
+        log.debug("displayPersonalInfo.START");
+
+        ModelAndView mav = new ModelAndView("PersonalInfo"); // display PersonalInfo.jsp
+        
+        return mav;
     }
 }
