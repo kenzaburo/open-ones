@@ -9,8 +9,6 @@
 <title>
 	Demo Menu - version 0.2.x
 </title>
-<link rel="stylesheet" type="text/css" href="/MenuPortlet/resource_files/jquery.css" media="screen">
-
 <link href="/MenuPortlet/resource_files/Advanced.css" type="text/css" rel="stylesheet">
 <link href="/MenuPortlet/resource_files/Ajax.css" type="text/css" rel="stylesheet">
 <link href="/MenuPortlet/resource_files/AjaxJQuery.css" type="text/css" rel="stylesheet">
@@ -52,10 +50,6 @@
 <script src="/MenuPortlet/resource_files/ScriptResource_003.js" type="text/javascript"></script>
 
 <script src="/MenuPortlet/resource_files/ScriptResource.js" type="text/javascript"></script>
-
-
-    
-<script language="javascript" type="text/javascript" src="/MenuPortlet/resource_files/jquery.js"></script>
 
 <script language="javascript" src="/MenuPortlet/resource_files/dropdown_menu_hack.js" type="text/javascript"></script>
 
@@ -465,29 +459,6 @@
         
         <input name="ctl00$ContentPlaceHolder1$UITypeWork1$lbtHide" value="" id="ctl00_ContentPlaceHolder1_UITypeWork1_lbtHide" style="border-width: 0px; width: 80px; display: none;" type="submit">
         
-<style type="text/css">
-    .modalBackground
-    {
-        background-color: Gray;
-        filter: alpha(opacity=60);
-        opacity: 0.60;
-        z-index: 999;
-    }
-    .updateProgress
-    {
-        background-image: url(../../images/loading_bg.png);
-    }
-    .updateProgressMessage
-    {
-        margin: 3px;
-        font-family: Arial;
-        font-size: 12px;
-        color: Red;
-        vertical-align: middle;
-    }
-</style>
-
-    
 <div class="modalBackground" style="display: none; position: fixed; left: 0px; top: 0px; z-index: 10000;" id="mpe_backgroundElement"></div><div class="modalBackground" style="display: none; position: fixed; left: 0px; top: 0px; z-index: 10000;" id="mdlPopup_backgroundElement"></div></div>
 
 
@@ -511,10 +482,6 @@ ctl00_MainMenu_Data.hoverClass = 'ctl00_MainMenu_12 dmItem1hover';
 ctl00_MainMenu_Data.hoverHyperLinkClass = 'ctl00_MainMenu_11 dmItem1hover';
 ctl00_MainMenu_Data.staticHoverClass = 'ctl00_MainMenu_10 dmRootmenuHover';
 ctl00_MainMenu_Data.staticHoverHyperLinkClass = 'ctl00_MainMenu_9 dmRootmenuHover';
-
-if (typeof(ValidatorOnLoad) == "function") {
-    ValidatorOnLoad();
-}
 
 //]]>
 </script>
