@@ -430,10 +430,6 @@ var ctl00_MainMenu_Data = new Object();
 ctl00_MainMenu_Data.disappearAfter = 100;
 ctl00_MainMenu_Data.horizontalOffset = 0;
 ctl00_MainMenu_Data.verticalOffset = 0;
-ctl00_MainMenu_Data.hoverClass = 'ctl00_MainMenu_12 dmItem1hover';
-ctl00_MainMenu_Data.hoverHyperLinkClass = 'ctl00_MainMenu_11 dmItem1hover';
-ctl00_MainMenu_Data.staticHoverClass = 'ctl00_MainMenu_10 dmRootmenuHover';
-ctl00_MainMenu_Data.staticHoverHyperLinkClass = 'ctl00_MainMenu_9 dmRootmenuHover';
 
 //]]>
 </script>
