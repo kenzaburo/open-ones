@@ -12,7 +12,7 @@
 <link href="/MenuPortlet/resource_files/AjaxJQuery.css" type="text/css" rel="stylesheet">
 <link href="/MenuPortlet/resource_files/GridView.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/menustyles.css" type="text/css" rel="stylesheet">
 <title>
-	Demo Menu - version 0.2.0
+	Demo Menu - version 0.2.x
 </title>
 <link rel="shortcut icon" href="logo.ico" type="image/ico">
 <link rel="stylesheet" type="text/css" href="/MenuPortlet/resource_files/jquery.css" media="screen">
@@ -22,52 +22,14 @@
                             + ' Quý thầy cô vui lòng nhấn "Tiếp tục" để sử dụng chương trình hoặc nhấn "Thoát" để quay lại sau.</p>'
                             + '<p style="text-align: center;"><button id="smasContinue" style="margin-right: 10px;">Tiếp tục</button><button id="smasExit">Thoát</button></p>';
         var tmp_pending = false;
-        function checkSystem() {
-            setTimeout(function () {
-
-                $.fancybox(sys_over_load, {
-                    'keys': null,
-                    'closeBtn': false,
-                    'afterShow': function () {
-                        $('#smasContinue').click(function () {
-                            window.location = buildUrl('cnts', 'true');
-                        });
-                        $('#smasExit').click(function () {
-                            window.location = buildUrl('warning_out', 'true');
-                        });
-                    }
-                });
-            }
-            , 200);
-        }		
-        function buildUrl(key, value) {
-            key = escape(key); value = escape(value);
-            var s = document.location.search;
-            var kvp = key + "=" + value;
-            if (s.indexOf(kvp) == -1) {
-                if (s.indexOf("?") == -1) {
-                    s += "?" + kvp;
-                } else {
-                    s += "&" + kvp;
-                }
-            }
-            return s;
-        }
-        function checkTextBox() {
-            var elems = document.getElementsByTagName('input');
-            for (var i = 0; i < elems.length; i++) {
-                var obj = elems[i];
-                if (obj.type == 'text') {
-                    var regrex = new RegExp(/<\/?[a-z][a-z0-9]*[^<>]*>/ig);
-                    if (regrex.test(obj.value)) {
-                        obj.value = obj.value.replace(/<\/?[a-z][a-z0-9]*[^<>]*>/ig, "");
-                    }
-                }
-            }
-            return true;
-        }
+		
     </script>
-<link href="/MenuPortlet/resource_files/Advanced.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/Ajax.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/AjaxJQuery.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/GridView.css" type="text/css" rel="stylesheet"><link href="/MenuPortlet/resource_files/menustyles.css" type="text/css" rel="stylesheet"><style type="text/css">
+<link href="/MenuPortlet/resource_files/Advanced.css" type="text/css" rel="stylesheet">
+<link href="/MenuPortlet/resource_files/Ajax.css" type="text/css" rel="stylesheet">
+<link href="/MenuPortlet/resource_files/AjaxJQuery.css" type="text/css" rel="stylesheet">
+<link href="/MenuPortlet/resource_files/GridView.css" type="text/css" rel="stylesheet">
+<link href="/MenuPortlet/resource_files/menustyles.css" type="text/css" rel="stylesheet">
+<style type="text/css">
 	.ctl00_MainMenu_0 { background-color:white;visibility:hidden;display:none;position:absolute;left:0px;top:0px; }
 	.ctl00_MainMenu_1 { text-decoration:none; }
 	.ctl00_MainMenu_2 {  }
@@ -84,7 +46,7 @@
 
 </style></head>
 <body style="padding-bottom: 29px;">
-    <form name="aspnetForm" method="post" action="/Pages/List/TypeOfWork.aspx" onsubmit="javascript:return WebForm_OnSubmit();" id="aspnetForm" onkeyup="checkTextBox();">
+    <form action="#">
 <div>
 <input name="ctl00_ToolkitScriptManager1_HiddenField" id="ctl00_ToolkitScriptManager1_HiddenField" value=";;AjaxControlToolkit, Version=1.0.11119.41102, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e:vi-VN:b6c6a29e-a678-4f82-8215-1947249c9eb0:e2e86ef9:1df13a87:3858419b:9ea3f0e2:96741c43:c4c00916:c7c04611:cd120801:38ec41c0" type="hidden">
 <input name="__EVENTTARGET" id="__EVENTTARGET" value="" type="hidden">
@@ -129,14 +91,6 @@ if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side frame
 
 <script src="/MenuPortlet/resource_files/ScriptResource.js" type="text/javascript"></script>
 <script src="/MenuPortlet/resource_files/TypeOfWork.js" type="text/javascript"></script>
-<script type="text/javascript">
-//<![CDATA[
-function WebForm_OnSubmit() {
-if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
-return true;
-}
-//]]>
-</script>
 
 <div>
 
@@ -624,20 +578,7 @@ Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'aspn
 
 
     </div>
-    
-<div class="QuickMenu">
-    <div class="GridFix">
-        <div class="QuickBg">
-            <div class="QuickIcon">
-            </div>
-            <div class="QuickNav">
-                <ul><li class="active"><a href="#">&nbsp;&nbsp;Loại công việc</a></li><li><a href="#">&nbsp;&nbsp;Hình thức xử lý VPQC thi</a></li><li><a href="#">&nbsp;&nbsp;Sáng kiến kinh nghiệm</a></li><li><a href="#">&nbsp;&nbsp;Công việc kiêm nhiệm</a></li><li><a href="#">&nbsp;&nbsp;Hình thức khen thưởng - kỷ luật</a></li></ul>
-                <div class="clear">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script type="text/javascript">
     var _quickMenu = {
         init: function () {
@@ -714,14 +655,6 @@ if (typeof(ValidatorOnLoad) == "function") {
     ValidatorOnLoad();
 }
 
-function ValidatorOnSubmit() {
-    if (Page_ValidationActive) {
-        return ValidatorCommonOnSubmit();
-    }
-    else {
-        return true;
-    }
-}
         
 theForm.oldSubmit = theForm.submit;
 theForm.submit = WebForm_SaveScrollPositionSubmit;
