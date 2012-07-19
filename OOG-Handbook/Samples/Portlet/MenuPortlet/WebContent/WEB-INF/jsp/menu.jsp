@@ -51,70 +51,23 @@
 
 <script src="/MenuPortlet/resource_files/ScriptResource_004.js" type="text/javascript"></script>
 <script src="/MenuPortlet/resource_files/ScriptResource_002.js" type="text/javascript"></script>
-<script type="text/javascript">
-//<![CDATA[
-var __cultureInfo = {"name":"vi-VN","numberFormat":{"CurrencyDecimalDigits":2,"CurrencyDecimalSeparator":",","IsReadOnly":true,"CurrencyGroupSizes":[3],"NumberGroupSizes":[3],"PercentGroupSizes":[3],"CurrencyGroupSeparator":".","CurrencySymbol":"₫","NaNSymbol":"NaN","CurrencyNegativePattern":8,"NumberNegativePattern":1,"PercentPositivePattern":0,"PercentNegativePattern":0,"NegativeInfinitySymbol":"-Infinity","NegativeSign":"-","NumberDecimalDigits":2,"NumberDecimalSeparator":",","NumberGroupSeparator":".","CurrencyPositivePattern":3,"PositiveInfinitySymbol":"Infinity","PositiveSign":"+","PercentDecimalDigits":2,"PercentDecimalSeparator":",","PercentGroupSeparator":".","PercentSymbol":"%","PerMilleSymbol":"‰","NativeDigits":["0","1","2","3","4","5","6","7","8","9"],"DigitSubstitution":1},"dateTimeFormat":{"AMDesignator":"SA","Calendar":{"MinSupportedDateTime":"\/Date(-62135596800000)\/","MaxSupportedDateTime":"\/Date(253402275599999)\/","AlgorithmType":1,"CalendarType":1,"Eras":[1],"TwoDigitYearMax":2029,"IsReadOnly":true},"DateSeparator":"/","FirstDayOfWeek":1,"CalendarWeekRule":0,"FullDateTimePattern":"dd MMMM yyyy h:mm:ss tt","LongDatePattern":"dd MMMM yyyy","LongTimePattern":"h:mm:ss tt","MonthDayPattern":"dd MMMM","PMDesignator":"CH","RFC1123Pattern":"ddd, dd MMM yyyy HH\u0027:\u0027mm\u0027:\u0027ss \u0027GMT\u0027","ShortDatePattern":"dd/MM/yyyy","ShortTimePattern":"h:mm tt","SortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss","TimeSeparator":":","UniversalSortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd HH\u0027:\u0027mm\u0027:\u0027ss\u0027Z\u0027","YearMonthPattern":"MMMM yyyy","AbbreviatedDayNames":["CN","Hai","Ba","Tư","Năm","Sáu","Bảy"],"ShortestDayNames":["C","H","B","T","N","S","B"],"DayNames":["Chủ Nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"],"AbbreviatedMonthNames":["Thg1","Thg2","Thg3","Thg4","Thg5","Thg6","Thg7","Thg8","Thg9","Thg10","Thg11","Thg12",""],"MonthNames":["Tháng Giêng","Tháng Hai","Tháng Ba","Tháng Tư","Tháng Năm","Tháng Sáu","Tháng Bảy","Tháng Tám","Tháng Chín","Tháng Mười","Tháng Mười Một","Tháng Mười Hai",""],"IsReadOnly":true,"NativeCalendarName":"Dương Lịch","AbbreviatedMonthGenitiveNames":["Thg1","Thg2","Thg3","Thg4","Thg5","Thg6","Thg7","Thg8","Thg9","Thg10","Thg11","Thg12",""],"MonthGenitiveNames":["Tháng Giêng","Tháng Hai","Tháng Ba","Tháng Tư","Tháng Năm","Tháng Sáu","Tháng Bảy","Tháng Tám","Tháng Chín","Tháng Mười","Tháng Mười Một","Tháng Mười Hai",""]},"eras":[1,"A.D.",null,0]};//]]>
-</script>
+
 
 <script src="/MenuPortlet/resource_files/ScriptResource_003.js" type="text/javascript"></script>
-<script type="text/javascript">
-//<![CDATA[
-if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
-//]]>
-</script>
 
 <script src="/MenuPortlet/resource_files/ScriptResource.js" type="text/javascript"></script>
-
-<div>
-
-	<input name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" type="hidden">
-	<input name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" type="hidden">
-	<input name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" type="hidden">
-</div>
-    <script type="text/javascript">
-//<![CDATA[
-Sys.WebForms.PageRequestManager._initialize('ctl00$ToolkitScriptManager1', 'aspnetForm', ['tctl00$ContentPlaceHolder1$UITypeWork1$uplResult','','tctl00$ContentPlaceHolder1$UITypeWork1$uplPopUp',''], ['ctl00$ContentPlaceHolder1$UITypeWork1$btnSearch',''], [], 0, 'ctl00');
-//]]>
-</script>
 
 
     
     <script language="javascript" type="text/javascript" src="/MenuPortlet/resource_files/jquery.js"></script>
     
     <script language="javascript" src="/MenuPortlet/resource_files/dropdown_menu_hack.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        //02/02/2012 hungnd - Fix hack
 
-        function DisableSpecialKey(event) {
-            // IE
-            if (window.event) {
-                var charCode = window.event.keyCode;
-                //Dau < va dau >
-                if (charCode == 60) {
-                    window.event.returnValue = false;
-                }
-            }
-            // Safari 4, Firefox 3.0.4
-            else {
-                if (event.which == 60 || event.which == 62) {
-                    CancelKey(event);
-                }
-            }
-
-        }
-        // 02/02/2012 hungnd
-        function CancelKey(e) {
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    </script>
 <script type="text/javascript" src='/MenuPortlet/scripts/common.js'></script>
 
     <div id="SMASMainPage">
         <div class="GridFull">
-            
-            <div class="Banner">
-            </div>
+
             <div class="MenuNav">
                 <div class="GridFix">
                     <div class="bgMenu">
