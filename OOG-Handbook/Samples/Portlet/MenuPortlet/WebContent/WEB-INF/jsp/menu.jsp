@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="portlet" uri="http://java.sun.com/portlet_2_0" %>
-
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <portlet:defineObjects />
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -31,7 +32,7 @@
 
 </style></head>
 <body style="padding-bottom: 29px;">
-    <form action="#">
+
 <script src="/MenuPortlet/resource_files/WebResource.js" type="text/javascript"></script>
 
 
@@ -46,7 +47,16 @@
 <script language="javascript" src="/MenuPortlet/resource_files/dropdown_menu_hack.js" type="text/javascript"></script>
 
 <script type="text/javascript" src='/MenuPortlet/scripts/common.js'></script>
+<script type="text/javascript">
+//<![CDATA[
+var ctl00_MainMenu_Data = new Object();
+ctl00_MainMenu_Data.disappearAfter = 100;
+ctl00_MainMenu_Data.horizontalOffset = 0;
+ctl00_MainMenu_Data.verticalOffset = 0;
 
+//]]>
+</script>
+<form name="Menu" method="post" action="#">
     <div id="SMASMainPage">
         <div class="GridFull">
 
@@ -61,33 +71,43 @@
    <%-- Menu Level1.START --%>
    <table id="ctl00_MainMenu" class="dmRootmenu ctl00_MainMenu_5 ctl00_MainMenu_2" border="0" cellpadding="0" cellspacing="0">
 	<tbody>
-   
    <tr>
-		<td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun0">
+     <c:forEach var="subMenu" items="${subMenuList}">
+		<td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="${subMenu.id}">
           <table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
-			<tbody><tr>
-				<td style="white-space: nowrap;"><a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em;"><img src="/MenuPortlet/resource_files/home.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp; Trang chủ</a></td>
-			</tr></tbody>
+			<tbody>
+              <tr>
+				<td style="white-space: nowrap;">
+                 <a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href='<portlet:renderURL><portlet:param name="action" value="${subMenu.actionId}"/></portlet:renderURL>' style="border-style: none; font-size: 1em;"><img src="/MenuPortlet/resource_files/${subMenu.iconPath}" alt="" style="border-style: none; vertical-align: middle;">&nbsp; ${subMenu.name}</a>
+                </td>
+			 </tr>
+            </tbody>
           </table>
         </td>
         <td style="width: 3px;"></td>
+      </c:forEach>
+      <%-- 
         <td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun1">
           <table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tbody>
              <tr>
 				<td style="white-space: nowrap;">
-                 <a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/admin.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;Hệ thống</a>
+                 <a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/admin.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;${menu1}</a>
                 </td>
 			</tr>
 		   </tbody>
          </table>
        </td>
        <td style="width: 3px;"></td>
-       <td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun2"><table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
+       --%>
+       <td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun2">
+         <table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tbody><tr>
-				<td style="white-space: nowrap;"><a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/pupil.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;Quản lý học sinh</a></td>
+				<td style="white-space: nowrap;"><a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/pupil.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;${menu2}</a></td>
 			</tr>
-		</tbody></table></td><td style="width: 3px;"></td><td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun3"><table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
+		  </tbody></table>
+         </td>
+         <td style="width: 3px;"></td><td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun3"><table class="dmRootItem ctl00_MainMenu_4" border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tbody><tr>
 				<td style="white-space: nowrap;"><a class="ctl00_MainMenu_1 dmRootItem ctl00_MainMenu_3" href="#" style="border-style: none; font-size: 1em; cursor: text;"><img src="/MenuPortlet/resource_files/teacher.png" alt="" style="border-style: none; vertical-align: middle;">&nbsp;Quản lý cán bộ</a></td>
 			</tr>
@@ -129,9 +149,10 @@
   </table>
   <div class="dmItem1 ctl00_MainMenu_7 ctl00_MainMenu_0" id="ctl00_MainMenun1ItemsUp" onmouseover="PopOut_Up(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
 		<img src="/MenuPortlet/resource_files/WebResource.gif" alt="Scroll up">
-	</div><div class="dmItem1 ctl00_MainMenu_7 ctl00_MainMenu_0" id="ctl00_MainMenun1ItemsDn" onmouseover="PopOut_Down(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+  </div>
+  <div class="dmItem1 ctl00_MainMenu_7 ctl00_MainMenu_0" id="ctl00_MainMenun1ItemsDn" onmouseover="PopOut_Down(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
 		<img src="/MenuPortlet/resource_files/WebResource_002.gif" alt="Scroll down">
-	</div>
+  </div>
 </div><div id="ctl00_MainMenun7Items" class="ctl00_MainMenu_0 dmSubmenu ctl00_MainMenu_8">
 	<table border="0" cellpadding="0" cellspacing="0">
 		<tbody><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_MainMenun8">
@@ -446,20 +467,11 @@
                 </div>
             </div>
         </div>
-Content
+        <%--Content --%>
+
 
 
     </div>
-
-<script type="text/javascript">
-//<![CDATA[
-var ctl00_MainMenu_Data = new Object();
-ctl00_MainMenu_Data.disappearAfter = 100;
-ctl00_MainMenu_Data.horizontalOffset = 0;
-ctl00_MainMenu_Data.verticalOffset = 0;
-
-//]]>
-</script>
 </form>
 
 

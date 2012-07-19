@@ -18,8 +18,13 @@
  */
 package openones.tms.menuportlet.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
+
+import openones.tms.menuportlet.form.SubMenu;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -36,15 +41,47 @@ public class MainController {
     /** Logger for logging. */
     private static Logger log = Logger.getLogger(MainController.class);
 
+    /**  List sub menu in Menu bar . */
+    private List<SubMenu> subMenuList = null ;
+    
+    /**
+     * [Give the description for method].
+     * @return list of sub menu
+     */
+    private List<SubMenu> getMenuBar() {
+        if (subMenuList == null) {
+            subMenuList = new ArrayList<SubMenu>();
+            SubMenu subMenu1 = new SubMenu("ctl00_MainMenun0", "Trang chủ", "home.png", "initHomePage");
+            SubMenu subMenu2 = new SubMenu("ctl00_MainMenun1", "Cá nhân", "admin.png");
+            subMenu2.addMenuItem("id", "Thông tin cá nhân", "icon");
+
+            subMenuList.add(subMenu1);
+            subMenuList.add(subMenu2);
+        }
+        return subMenuList;
+    }
     /**
      * Default screen.
      * @return name of view which is the name of the JSP page.
      */
     @RequestMapping
-    public String initScreen() {
+    public ModelAndView initScreen() {
         log.debug("initScreen.START");
-        // Display menu.jsp
-        return "menu";
+        ModelAndView mav = new ModelAndView("HomePage"); // Display HomePage.jsp
+        
+        mav.addObject("subMenuList", getMenuBar());
+        return mav;
+    }
+
+    @RenderMapping(params = "action=initHomePage")
+    public ModelAndView goHomePage(RenderRequest request, PortletSession session) {
+        log.debug("goHomePage.START");
+
+        ModelAndView mav = new ModelAndView("HomePage"); // Display HomePage.jsp
+        
+        mav.addObject("subMenuList", getMenuBar());
+        
+        return mav;
     }
     
     @RenderMapping(params = "action=initPersonalInfo")
@@ -52,6 +89,7 @@ public class MainController {
         log.debug("displayPersonalInfo.START");
 
         ModelAndView mav = new ModelAndView("PersonalInfo"); // display PersonalInfo.jsp
+        mav.addObject("subMenuList", getMenuBar());
         
         return mav;
     }
