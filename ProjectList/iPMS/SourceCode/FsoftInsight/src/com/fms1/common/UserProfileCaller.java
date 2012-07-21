@@ -15,21 +15,23 @@
  
  package com.fms1.common;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.parser.Parser;
-import sun.awt.WindowClosingListener;
 
 import com.fms1.infoclass.AssignmentInfo;
 import com.fms1.infoclass.CustomerInfo;
 import com.fms1.infoclass.RolesInfo;
 import com.fms1.infoclass.UserInfo;
+import com.fms1.tools.CommonTools;
+import com.fms1.tools.ConvertString;
 import com.fms1.tools.LanguageChoose;
-import com.fms1.web.*;
-import java.util.Date;
-import com.fms1.tools.*;
+import com.fms1.web.Constants;
+import com.fms1.web.Fms1Servlet;
+import com.fms1.web.StringConstants;
 
 /**
  * User profile pages
