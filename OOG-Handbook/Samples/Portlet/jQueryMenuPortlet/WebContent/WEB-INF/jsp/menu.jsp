@@ -47,7 +47,7 @@ html .jquerycssmenu{height: 1%;} /*Holly Hack for IE7 and below*/
   </li>
   </ul>
 </li>
-<li><a href="#">Item 4</a></li>
+<li><a href='<portlet:renderURL><portlet:param name="action" value="goVerticalMenu"/></portlet:renderURL>'>Vertical Menu</a></li>
 </ul>
 <br style="clear: left" />
 </div>

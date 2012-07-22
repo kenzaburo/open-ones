@@ -78,4 +78,21 @@ public class MainController {
         mav.addObject("currTime", new Date());
         return mav;
     }
+
+    /**
+     * Process renderURL with parameter "action" is "goVerticalMenu".
+     * Demo using jquery, ddaccordion.js to display vertical menu
+     * @param request
+     * @param session
+     * @return
+     */
+    @RenderMapping(params = "action=goVerticalMenu")
+    public ModelAndView gotoVerticalMenu(RenderRequest request, PortletSession session) {
+        log.debug("gotoItem1_2.START");
+
+        ModelAndView mav = new ModelAndView("VerticalMenuWrapper"); // display Vertical-Menu.jsp
+        mav.addObject("currTime", new Date());
+        return mav;
+    }
+
 }
