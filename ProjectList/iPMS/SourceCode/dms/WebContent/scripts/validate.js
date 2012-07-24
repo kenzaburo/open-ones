@@ -1,3 +1,14 @@
+/************************************************************
+ * Last modified 24-Jul-2012
+ * Fix bug:
+ *  + Parse date in function isLessThanCurDate(txtDate) 
+ * @author Thach.Le
+ ************************************************************/
+ /** 
+  * 
+  * @param txtDate
+  * @returns {Boolean}
+  */
 function isDate(txtDate) {
     var bInvalid;
     var c1, c2, n1, n2;
@@ -195,20 +206,27 @@ function isPositiveNumberCombobox(cboNumber) {
     return true;
 }
 
+/**
+ * @param txtDate format mm/dd/yy
+ * @returns {Boolean}
+ * @author FMS, Thach.Le
+ */
 function isLessThanCurDate(txtDate) {
     var dateCurrent;
     var dateInput;
-    dateCurrent = new Date();
+    var dateParts = txtDate.value.split("/");
+    
+    dateCurrent = new Date(dateParts[2] + 2000, dateParts[1], dateParts[0]);
     dateInput = new Date(txtDate.value);
-    dateInput.setYear(dateInput.getYear() + 2000);
+    
     if (dateInput.valueOf() <= dateCurrent.valueOf()) {
         return true;
-    }
-    else {
+    } else {
         alert("Date in " + stripControlName(txtDate.name) + " cannot be a future day");
         txtDate.focus();
         return false;
     }
+
     return false;
 }
 

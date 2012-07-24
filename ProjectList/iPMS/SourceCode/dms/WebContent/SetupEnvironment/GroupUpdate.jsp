@@ -1,3 +1,6 @@
+<%--------------------------------------------------------------------------------
+ @Author FMS, Thach.Le
+ --------------------------------------------------------------------------------%>
 <%@ page language="java" import="java.util.*,javax.servlet.*, fpt.dms.bean.*, fpt.dms.bean.SetupEnvironment.*, fpt.dms.framework.util.StringUtil.*" %>
 <%@ page isThreadSafe="false" errorPage="error.jsp" %>
 <%
@@ -124,7 +127,7 @@ function doBack()
               </tr>
               <tr class="Row2">
                 <td width="65%"><input type="text"name = "txtName" value = "<%=beanGroupUpdate.getGroupList().getCell(0,0)%>"  style = "width:100%" maxLength="30">
-                	<input type="hidden"name = "hidName" value = "<%= beanGroupUpdate.getGroupList().getCell(0,0)%>"</td>
+                	<input type="hidden"name = "hidName" value = "<%= beanGroupUpdate.getGroupList().getCell(0,0)%>"></td>
                </tr>
           </table>
           </td>
