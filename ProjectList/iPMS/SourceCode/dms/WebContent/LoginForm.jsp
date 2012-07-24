@@ -88,7 +88,8 @@
     <TR>
         <TD width="10%"></TD>
         <TD width="90%"><FONT class="label1">
-        Copyright © 2002-2007 FPT-Software. Fsoft Management Suite 2006, DMS Version 3.8.2<BR>
+        Improvement by <a href="http://open-ones.com" title="Open-Ones Group" target="_blank">Open-Ones</a>, DMS 2012 - 3.8.3<BR/>
+        Copyright © 2009 FPT-Software<BR/>
         </FONT>
         </TD>
     </TR>
