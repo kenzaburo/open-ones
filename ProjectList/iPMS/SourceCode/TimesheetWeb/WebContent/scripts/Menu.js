@@ -1,3 +1,10 @@
+var isFrames;
+var secondsVisible;
+var topCount;
+var imgSrc;
+var imgSiz;
+var borWid;
+
 function go(form) {
     var where = form.hex.options[form.hex.selectedIndex].value;
     if (where.charAt(0) == "!") {

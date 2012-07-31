@@ -24,11 +24,46 @@
 <HEAD>
 <TITLE>Exemption Add</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
+
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
+<%-- 
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+--%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#txtFromDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+      $("#txtToDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+
+   });
+</script>
+
 </HEAD>
 
 <BODY bgcolor="#336699" leftmargin="0" topmargin="0" style="FONT-FAMILY: tahoma, sans-serif; FONT-SIZE: 11px" onkeypress='javascript:setKeypress_Save(event.which)'>
@@ -156,8 +191,11 @@
 		</font></strong> </TD>
 		<TD width="39%" align="center">
 		<p align="left">
-        <INPUT type="text" name="txtFromDate" size="20" maxlength="8" value="<%=(beanExemptionInfo.getFromDate() == null) ? "" : beanExemptionInfo.getFromDate() %>" class="SmallTextbox">
+           <INPUT id="txtFromDate" type="text" name="txtFromDate" size="20" maxlength="8" value="<%=(beanExemptionInfo.getFromDate() == null) ? "" : beanExemptionInfo.getFromDate() %>" class="SmallTextbox">
+        <%-- 
+          <INPUT type="text" name="txtFromDate" size="20" maxlength="8" value="<%=(beanExemptionInfo.getFromDate() == null) ? "" : beanExemptionInfo.getFromDate() %>" class="SmallTextbox">
             <IMG name="calFromDate" src="image/cal.gif" style="CURSOR:hand" onclick='if ( (document.frmExemptionList.radType[1].checked == true) || (document.frmExemptionList.radType[2].checked == true) ) showCalendar(txtFromDate, txtFromDate, "mm/dd/yy",null,1,-1,-1,true)'>
+        --%>
         </TD>
 		<TD width="28%">&nbsp;</TD>
 	</TR>
@@ -166,8 +204,11 @@
 		<font color="#ffffff">To date </font><font color="#FF0000">*</font></font></strong></TD>
 		<TD width="39%" align="center">
 		<p align="left">
+           <INPUT id="txtToDate" type="text" name="txtToDate" size="20" value="<%=(beanExemptionInfo.getToDate() == null) ? "" : beanExemptionInfo.getToDate() %>" maxlength="8" class="SmallTextbox">
+           <%-- 
             <INPUT type="text" name="txtToDate" size="20" value="<%=(beanExemptionInfo.getToDate() == null) ? "" : beanExemptionInfo.getToDate() %>" maxlength="8" class="SmallTextbox">
             <IMG name="calToDate" src="image/cal.gif" style="CURSOR:hand" onclick='if ( (document.frmExemptionList.radType[1].checked == true) || (document.frmExemptionList.radType[2].checked == true) ) showCalendar(txtToDate, txtToDate, "mm/dd/yy",null,1,-1,-1,true)'>
+           --%>
         </TD>
 		<TD width="28%">&nbsp;</TD>
 	</TR>

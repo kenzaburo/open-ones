@@ -21,11 +21,45 @@
 <HEAD>
 <TITLE>Exemption List</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
+<%-- 
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+--%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#txtFromDateList").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+      $("#txtToDateList").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+
+   });
+</script>
+
 </HEAD>
 
 <BODY bgcolor="#336699" leftmargin="0" topmargin="0" style="FONT-FAMILY: tahoma, sans-serif; FONT-SIZE: 11px" onkeypress='javascript:setKeypress_Search(event.which)'>
@@ -63,8 +97,11 @@
         <!-- FROM DATE  -->
         <TD width="11%"><STRONG><FONT color="#ffffff" class="label1">From Date</FONT></STRONG></TD>
         <TD width="17%">
+          <INPUT id="txtFromDateList" type="text" name="txtFromDateList" size="20" maxlength="8" value="<%=beanExemptionInfo.getSearchFromDate()%>" class="SmallTextbox">
+          <%-- 
         <INPUT type="text" name="txtFromDateList" size="20" maxlength="8" value="<%=beanExemptionInfo.getSearchFromDate()%>" class="SmallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(txtFromDateList, txtFromDateList, "mm/dd/yy",null,1,-1,-1,true)'>
+          --%>
         </TD>
 
         <!-- ACCOUNT  -->
@@ -89,8 +126,11 @@
         <!-- TO DATE  -->
         <TD width="11%" align="left"><STRONG><FONT color="#ffffff" class="label1">To Date</FONT></STRONG></TD>
         <TD width="17%" >
+          <INPUT id="txtToDateList" type="text" name="txtToDateList" size="20" value="<%=beanExemptionInfo.getSearchToDate()%>" maxlength="8" class="SmallTextbox">
+        <%-- 
             <INPUT type="text" name="txtToDateList" size="20" value="<%=beanExemptionInfo.getSearchToDate()%>" maxlength="8" class="SmallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(txtToDateList, txtToDateList, "mm/dd/yy",null,1,-1,-1,true)'>
+        --%>
         </TD>
         <!-- NAME  -->
         <TD width="10%" >

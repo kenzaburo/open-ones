@@ -1,5 +1,12 @@
-<SCRIPT language="JavaScript" src='scripts/HeaderPage.js'></SCRIPT>
+<%-- Thach.Le
 <SCRIPT language="JavaScript" src='scripts/Menu.js'></SCRIPT>
+ --%>
+<link rel="stylesheet" type="text/css" href="menu/jquerycssmenu.css" />
+
+<script type="text/javascript" src="menu/jquerycssmenu.js"></script>
+
+<SCRIPT language="JavaScript" src='scripts/HeaderPage.js'></SCRIPT>
+
 <BODY alink="#cc6633" bgcolor="#336699" leftmargin="0" link="#3366cc" text="black" topmargin="0" vlink="#996699" marginwidth="0" marginheight="0">
 <TABLE bgcolor="#336699" border="0" cellpadding="0" cellspacing="0" width="100%">
     <TR>
@@ -9,6 +16,8 @@
     </TR>
 </TABLE>
 <!--  MENU  -->
+<%@include file="menu/menu.jsp" %> 
+<%--
 <TABLE bgcolor="#336699" width="100%">
     <TBODY>
     <COLGROUP>
@@ -30,4 +39,5 @@
     </TR>
     </TBODY>
 </TABLE>
+ --%>
 </BODY>

@@ -25,7 +25,7 @@
 //                                    - Support short date format (but has some issues due to javascript limitations)
 //                                    - Check valid input date
 //                                    - Ignore case sensitive when compare month string values
-//                                    - Replace string 'Presione para seleccionar un año' with
+//                                    - Replace string 'Presione para seleccionar un aï¿½o' with
 //                                          'Presione para seleccionar un an~o' because sometime IE parse it wrongly so this script error
 //                                    - 21 May 2005: Replace getYear() by getFullYear()
 //  email  : tungoctrung@yahoo.com
@@ -60,32 +60,32 @@ var weekString = {
 var scrollLeftMessage = {
     en : 'Click to scroll to previous month. Hold mouse button to scroll automatically.',
     es : 'Presione para pasar al mes anterior. Deje presionado para pasar varios meses.',
-    de : 'Klicken um zum vorigen Monat zu gelangen. Gedrückt halten, um automatisch weiter zu scrollen.'
+    de : 'Klicken um zum vorigen Monat zu gelangen. Gedrï¿½ckt halten, um automatisch weiter zu scrollen.'
 };
 var scrollRightMessage = {
     en : 'Click to scroll to next month. Hold mouse button to scroll automatically.',
     es : 'Presione para pasar al siguiente mes. Deje presionado para pasar varios meses.',
-    de : 'Klicken um zum nächsten Monat zu gelangen. Gedrückt halten, um automatisch weiter zu scrollen.'
+    de : 'Klicken um zum nï¿½chsten Monat zu gelangen. Gedrï¿½ckt halten, um automatisch weiter zu scrollen.'
 };
 var selectMonthMessage = {
     en : 'Click to select a month.',
     es : 'Presione para seleccionar un mes',
-    de : 'Klicken um Monat auszuwählen'
+    de : 'Klicken um Monat auszuwï¿½hlen'
 };
 var selectYearMessage = {
     en : 'Click to select a year.',
     es : 'Presione para seleccionar un an~o',
-    de : 'Klicken um Jahr auszuwählen'
+    de : 'Klicken um Jahr auszuwï¿½hlen'
 };
 var selectDateMessage = {       // do not replace [date], it will be replaced by date.
     en : 'Select [date] as date.',
     es : 'Seleccione [date] como fecha',
-    de : 'Wähle [date] als Datum.'
+    de : 'Wï¿½hle [date] als Datum.'
 };
 var monthName = {
     en : new Array('January','February','March','April','May','June','July','August','September','October','November','December'),
     es : new Array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'),
-    de : new Array('Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember')
+    de : new Array('Januar','Februar','Mï¿½rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember')
 };
 var monthName2 = {
     en : new Array('JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'),
@@ -666,7 +666,8 @@ function selectToday() {
     constructCalendar();
 }
 function showCalendar(ctl, ctl2, format, lang, past, fx, fy, isClearInvalid) {
-    if (lang != null && lang != '') language = lang;
+    // alert("showCalendar.ctl2=" + ctl2 + ";element:" + document.getElementById('ctl2'));
+	if (lang != null && lang != '') language = lang;
     if (past != null) enablePast = past;
     else enablePast = 0;
     if (fx != null) fixedX = fx;
@@ -709,7 +710,7 @@ function popUpCalendar(ctl, ctl2, format, isClearInvalid) {
             tokensChanged = 0;
             if (formatChar != "") {
                 aData = ctl2.value.split(formatChar);           // use user's date
-
+            	//alert("aData=" + aData);
                 for (i=0; i<3; i++) {
                     if ((aFormat[i] == "d") || (aFormat[i] == "dd")) {
                         if (isInteger(aData[i])) {
@@ -802,7 +803,9 @@ function popUpCalendar(ctl, ctl2, format, isClearInvalid) {
             bShow = true;
         } else {
             hideCalendar();
-            if (ctlNow!=ctl) popUpCalendar(ctl, ctl2, format);
+            if (ctlNow != ctl) {
+            	popUpCalendar(ctl, ctl2, format);
+            }
         }
         ctlNow = ctl;
     }
@@ -817,6 +820,7 @@ function popUpCalendar(ctl, ctl2, format, isClearInvalid) {
 //-----------------------------------------------
 
 document.onkeypress = function hidecal1 () {
+	// event = event || window.event;
     if (event.keyCode == 27) hideCalendar();
 }
 document.onclick = function hidecal2 () {

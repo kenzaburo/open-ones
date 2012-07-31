@@ -277,3 +277,11 @@ A.grayLink:hover {
     font-family: tahoma, sans-serif;
     FONT-WEIGHT: bold;
 }
+/* Apply for jquery datepicker */
+.ui-datepicker {
+    background: #ffffff;
+    border: 1px solid #555;
+    color: #EEE;
+    FONT-FAMILY: verdana;
+    FONT-SIZE: 11px
+}

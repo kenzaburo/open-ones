@@ -20,13 +20,36 @@
 <HEAD>
 <TITLE>Update Timesheet</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
 <SCRIPT src='scripts/Mapping.js'></SCRIPT>
 <SCRIPT src='scripts/pr_wp_map.js'></SCRIPT>
+<%-- 
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+--%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#Date").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+</script>
 </HEAD>
 <BODY bgcolor="#336699" leftmargin="0" topmargin="0">
 <DIV align="left"><%@ include file="HeaderPage.jsp"%></DIV>
@@ -80,7 +103,10 @@
     <TR>
         <TD align="center" class="<%=strClass%>">
             <INPUT type="hidden" name="TimesheetID" value="<%=tsRow.getTimeSheetID()%>">
+            <INPUT id="Date" type="text" name="Date" class="VerySmallTextBox" value="<%=tsRow.getDate()%>" readonly="readonly">
+            <%--
             <INPUT type="text" name="Date" class="VerySmallTextBox" value="<%=tsRow.getDate()%>" readonly="readonly"><IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(Date[<%=nCount - 1%>], Date[<%=nCount - 1%>], "mm/dd/yy",null,1,-1,-1,true)'>
+             --%>
         </TD>
         <TD class="<%=strClass%>" align="center">
             <INPUT name="Duration" type="text" value="<%=tsRow.getDuration()%>" size="5" maxlength="4" class="SmallestTextbox"></TD>

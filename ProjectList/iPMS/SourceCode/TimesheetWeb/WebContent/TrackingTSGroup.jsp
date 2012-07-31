@@ -25,12 +25,58 @@
 <HEAD>
 <TITLE>Lack Timesheet Group</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
+
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <LINK rel="stylesheet" type="text/css" href="styles/locked-column.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
+<%--
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+ --%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#txtFromDateTracking").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+      
+      $("#txtToDateTracking").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+      
+      $("#txtLogDateTracking").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+</script>
+
 </HEAD>
 
 <BODY bgcolor="#336699" onkeypress='javascript:setKeypress()'>
@@ -73,8 +119,11 @@
         <TD width="11%"><STRONG><FONT color="#ffffff" class="label1">From date </FONT>
 		<FONT color="#FF0000" class="label1">*</FONT></STRONG></TD>
         <TD width="20%">
+          <INPUT id="txtFromDateTracking" type="text" name="txtFromDateTracking" size="20" value="<%=beanWeeklyReport.getSearchFromDate()%>" maxlength="8" class="smallTextbox">
+          <%--
         	<INPUT type="text" name="txtFromDateTracking" size="20" value="<%=beanWeeklyReport.getSearchFromDate()%>" maxlength="8" class="smallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(this, txtFromDateTracking, "mm/dd/yy",null,1,-1,-1,true)'>
+           --%>
         </TD>
     	<!----------------------------- REPORT ------------------------------------>
         <TD align="left" width="9%"><STRONG>
@@ -93,17 +142,23 @@
         <TD width="9%"><FONT color="#ffffff" class="label1">Log By </FONT>
 		<FONT color="#FF0000" class="label1">*</FONT></TD>
         <TD align="left" width="18%">
+          <INPUT id="txtLogDateTracking" type="text" name="txtLogDateTracking" size="8" value=<%=beanWeeklyReport.getLogDate()%> maxlength="8" class="verySmallTextbox"> 
+          <%--
         	<INPUT type="text" name="txtLogDateTracking" size="8" value=<%=beanWeeklyReport.getLogDate()%> maxlength="8" class="verySmallTextbox"> 
 			<IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(this, txtLogDateTracking, "mm/dd/yy",null,1,-1,-1,true)'><font class="label1"><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp; Time</font></font>
-			<INPUT type="text" name="txtLogTimeTracking" size="5" value=<%=beanWeeklyReport.getLogTime()%> maxlength="5" class="verySmallTextbox">
+		   --%>
+          <INPUT type="text" name="txtLogTimeTracking" size="5" value=<%=beanWeeklyReport.getLogTime()%> maxlength="5" class="verySmallTextbox">
   	    </TD>
         <TD align="left" width="11%">&nbsp;</TD>
         <!----------------------------- TO DATE ------------------------------------>
         <TD align="left" width="11%"><STRONG><FONT color="#ffffff" class="label1">To date </FONT>
 		<FONT color="#FF0000" class="label1">*</FONT></STRONG></TD>
         <TD width="20%">
+          <INPUT id="txtToDateTracking" type="text" name="txtToDateTracking" size="20" value="<%=beanWeeklyReport.getSearchToDate()%>" maxlength="8" class="smallTextbox">
+        <%--
         	<INPUT type="text" name="txtToDateTracking" size="20" value="<%=beanWeeklyReport.getSearchToDate()%>" maxlength="8" class="smallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(this, txtToDateTracking, "mm/dd/yy",null,1,-1,-1,true)'>
+         --%>
         </TD>
 	    <!----------------------------- SEARCH ------------------------------------->
 	    <TD align="left" width="9%">&nbsp;</TD>
@@ -151,7 +206,10 @@
        		strHeight = "480px";
        	}
 %>
+<%--
 <DIV id=tbl-container style="MARGIN: 0px; OVERFLOW-X: auto; OVERFLOW-Y: auto; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px; WIDTH: 95%; HEIGHT: <%=strHeight%> " align="center">
+ --%>
+ <DIV align="center">
 <TABLE border="0" cellspacing="1" bgcolor="#336699" width=<%=strWidth%> >
 <%
         //This For loop has purpose of get Title of Table 
@@ -180,7 +238,7 @@
         out.write("<THEAD>");
         out.write("<TR>");
         for (col = 0; col < nCols; col++) {
-            out.write("<TH>" +mtxReport.getCell(0, col)+"</TH>");
+            out.write("<Td class='TableHeader1'>" +mtxReport.getCell(0, col)+"</Td>");
         }
         out.println("</TR>");
         out.println("</THEAD>");

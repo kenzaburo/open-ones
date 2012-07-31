@@ -17,11 +17,45 @@
 <HEAD>
 <TITLE>Summary Report</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
+<%--
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+ --%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#FromDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+      
+      $("#ToDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+</script>
+ 
 </HEAD>
 <BODY bgcolor="#336699" onkeypress='javascript:setKeypress()'>
 <DIV align="left"><%@ include file="HeaderPage.jsp"%></DIV>
@@ -65,8 +99,12 @@
         </TD>
         <!-- FROM DATE  -->
         <TD><STRONG><FONT color="#ffffff" class="label1">From date</FONT></STRONG></TD>
-        <TD><INPUT type="text" name="FromDate" size="20" value="<%=beanSummaryReport.getFromDate()%>" maxlength="8" class="smallTextbox">
+        <TD>
+          <INPUT id="FromDate" type="text" name="FromDate" size="20" value="<%=beanSummaryReport.getFromDate()%>" maxlength="8" class="smallTextbox">
+          <%--
+            <INPUT type="text" name="FromDate" size="20" value="<%=beanSummaryReport.getFromDate()%>" maxlength="8" class="smallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(this, FromDate, "mm/dd/yy",null,1,-1,-1,true)'>
+           --%>
         </TD>
         <!-- REPORT TYPE  -->
         <TD align="left"><STRONG><FONT color="#ffffff" class="label1">Report</FONT></STRONG></TD>
@@ -101,8 +139,12 @@
         </TD>
         <!-- TO DATE  -->
         <TD align="left"><STRONG><FONT color="#ffffff" class="label1">To date</FONT></STRONG></TD>
-        <TD><INPUT type="text" name="ToDate" size="20" value="<%=beanSummaryReport.getToDate()%>" maxlength="8" class="smallTextbox">
+        <TD>
+          <INPUT id="ToDate" type="text" name="ToDate" size="20" value="<%=beanSummaryReport.getToDate()%>" maxlength="8" class="smallTextbox">
+          <%--
+          <INPUT type="text" name="ToDate" size="20" value="<%=beanSummaryReport.getToDate()%>" maxlength="8" class="smallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(this, ToDate, "mm/dd/yy",null,1,-1,-1,true)'>
+           --%>
         </TD>
         <TD align="left"><STRONG><FONT color="#ffffff" class="label1">Project type</FONT></STRONG></TD>
         <!-- PROJECT TYPE  -->

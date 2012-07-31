@@ -16,9 +16,44 @@
 <SCRIPT src='scripts/validate.js'></SCRIPT>
 <TITLE>Billable Timesheet List</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
+
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
+<%--
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+ --%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#apvFromDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+      
+      $("#apvToDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+</script>
+
 </HEAD>
 <BODY bgcolor="#336699" onkeypress='javascript:setKeypress_Search(event.which)'>
 <DIV align="left"><%@ include file="HeaderPage.jsp"%></DIV>
@@ -76,8 +111,11 @@
         <!-- FROM DATE  -->
         <TD width="12%"><STRONG><FONT color="#ffffff" class="label1">From Date</FONT></STRONG></TD>
         <TD width="26%">
+          <INPUT id="apvFromDate" type="text" name="apvFromDate" value="<%=beanPLList.getFromDate()%>" size="20" class="SmallTextbox" maxlength="8">
+        <%--
             <INPUT type="text" name="apvFromDate" value="<%=beanPLList.getFromDate()%>" size="20" class="SmallTextbox" maxlength="8">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(apvFromDate, apvFromDate, "mm/dd/yy",null,1,-1,-1,true)'>
+         --%>
         </TD>
         <!-- SORT BY  -->
         <TD width="10%"><STRONG><FONT color="red" class="label1">Sort by</FONT></STRONG></TD>
@@ -132,8 +170,11 @@
         <!-- TO DATE -->
         <TD width="12%" align="left"><STRONG><FONT color="#ffffff" class="label1">To Date</FONT></STRONG></TD>
         <TD width="25%">
+          <INPUT id="apvToDate" type="text" size="20" class="SmallTextbox" value="<%=beanPLList.getToDate()%>" maxlength="8">
+        <%-- 
             <INPUT type="text" size="20" class="SmallTextbox" name="apvToDate" value="<%=beanPLList.getToDate()%>" maxlength="8">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(apvToDate, apvToDate, "mm/dd/yy",null,1,-1,-1,true)'>
+        --%>
         </TD>
         <TD width="10%" align="left"><STRONG><FONT color="#ffffff" class="label1">Account</FONT></STRONG></TD>
         <TD width="16%">

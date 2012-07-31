@@ -17,13 +17,36 @@
 <HEAD>
 <TITLE>Update and Approve Billable Timesheet</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
 <SCRIPT src='scripts/Mapping.js'></SCRIPT>
 <SCRIPT src='scripts/pr_wp_map.js'></SCRIPT>
+<%-- 
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+--%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#Date").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+</script>
+
 </HEAD>
 <BODY bgcolor="#336699">
 <DIV align="left"><%@ include file="HeaderPage.jsp" %></DIV>
@@ -126,7 +149,10 @@
             <OPTION value="<%=sProductId%>"></OPTION>
         </SELECT></TD>
         <TD width="9%" class="<%=strClass%>" align="center">
+          <INPUT id="Date" type="text" name="Date" class="VerySmallTextBox" value="<%=sDate%>">
+            <%--
             <INPUT type="text" name="Date" class="VerySmallTextBox" value="<%=sDate%>"><IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(Date[<%=i%>], Date[<%=i%>], "mm/dd/yy",null,1,-1,-1,true)'>
+             --%>
         </TD>
         <TD width="4%" align="center" class="<%=strClass%>">
             <INPUT type="text" name="Duration" size="5" maxlength="4" class="SmallestTextbox" value="<%=sDuration%>"></TD>

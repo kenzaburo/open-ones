@@ -18,6 +18,8 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
+<script type="text/javascript" src="jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="menu/jquerycssmenu.js"></script>
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
@@ -61,7 +63,7 @@
         <!-- FROM DATE  -->
         <TD width="12%"><STRONG><FONT color="#ffffff" class="label1">From Date</FONT></STRONG></TD>
         <TD width="26%">
-        <INPUT type="text" name="FromDate" size="20" maxlength="8" value="<%=beanTSList.getSearchFromDate()%>" class="SmallTextbox">
+        <INPUT id="FromDate" type="text" name="FromDate" size="20" maxlength="8" value="<%=beanTSList.getSearchFromDate()%>" class="SmallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(FromDate, FromDate, "mm/dd/yy",null,1,-1,-1,true)'>
         </TD>
         <!-- SORT BY  -->
@@ -87,7 +89,7 @@
         <!-- TO DATE  -->
         <TD width="12%" align="left"><STRONG><FONT color="#ffffff" class="label1">To Date</FONT></STRONG></TD>
         <TD width="26%" colspan="2">
-            <INPUT type="text" name="ToDate" size="20" value="<%=beanTSList.getSearchToDate()%>" maxlength="8" class="SmallTextbox">
+            <INPUT id="ToDate" type="text" name="ToDate" size="20" value="<%=beanTSList.getSearchToDate()%>" maxlength="8" class="SmallTextbox">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(ToDate, ToDate, "mm/dd/yy",null,1,-1,-1,true)'>
         </TD>
         <!-- SEARCH button  -->

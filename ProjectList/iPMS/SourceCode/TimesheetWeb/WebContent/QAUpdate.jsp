@@ -18,13 +18,37 @@
 <HEAD>
 <TITLE>Update Timesheet by QA</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
+
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
 <SCRIPT src='scripts/Mapping.js'></SCRIPT>
 <SCRIPT src='scripts/pr_wp_map.js'></SCRIPT>
+<%-- 
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+--%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#Date").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+</script>
+
 </HEAD>
 <DIV align="left"><%@ include file="HeaderPage.jsp" %></DIV>
 <H1><IMG align="top" src="image/tit_UpdateTimesheetByQA.gif"></H1>
@@ -102,7 +126,10 @@
         <TD width="10%" class="<%=strClass%>">&nbsp;<%=sProject%></TD>
         <TD width="10%" class="<%=strClass%>">&nbsp;<%=sAccount%></TD>
         <TD width="10%" class="<%=strClass%>" align="center">
+          <INPUT id="Date" type="text" name="Date" class="VerySmallTextBox" value="<%=sDate%>">
+          <%-- 
             <INPUT type="text" name="Date" class="VerySmallTextBox" value="<%=sDate%>"><IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(Date[<%=i%>], Date[<%=i%>], "mm/dd/yy",null,1,-1,-1,true)'>
+          --%>
         </TD>
         <TD width="5%" class="<%=strClass%>">&nbsp;<%=sDuration%></TD>
         <TD width="15%" class="<%=strClass%>"><%=CommonUtil.correctHTMLError(sDescription)%></TD>

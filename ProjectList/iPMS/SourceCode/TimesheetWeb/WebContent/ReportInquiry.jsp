@@ -16,11 +16,45 @@
 <HEAD>
 <TITLE>Inquiry Report</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
+<%--
 <SCRIPT language="JavaScript" src="scripts/popcalendar.js" type="text/javascript"></SCRIPT>
+ --%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<script>
+   $(function() {
+      $("#FromDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+      
+      $("#ToDate").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+</script>
+
 </HEAD>
 <DIV align="left"><%@ include file="HeaderPage.jsp"%></DIV>
 <H1><IMG align="top" src="image/tit_ViewAllTimesheet.gif"></H1>
@@ -83,8 +117,11 @@
         <!-- FROM DATE  -->
         <TD width="12%"><STRONG><FONT color="#ffffff" class="label1">From Date</FONT></STRONG></TD>
         <TD width="26%">
+          <INPUT id="FromDate" type="text" name="FromDate" value="<%=beanInquiryReport.getFromDate()%>" size="20" class="SmallTextbox" maxlength="8">
+        <%--
             <INPUT type="text" name="FromDate" value="<%=beanInquiryReport.getFromDate()%>" size="20" class="SmallTextbox" maxlength="8">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(this, FromDate, "mm/dd/yy",null,1,-1,-1,true)'>
+         --%>
         </TD>
         <!-- SORT BY  -->
         <TD width="10%"><STRONG><FONT color="#ffffff" class="label1">Sort by</FONT></STRONG></TD>
@@ -148,8 +185,11 @@
         <!-- TO DATE -->
         <TD width="12%" align="left"><STRONG><FONT color="#ffffff" class="label1">To Date</FONT></STRONG></TD>
         <TD width="26%">
+          <INPUT id="ToDate" name="ToDate" type="text" size="20" class="SmallTextbox" value="<%=beanInquiryReport.getToDate()%>" maxlength="8">
+        <%--
             <INPUT type="text" size="20" class="SmallTextbox" name="ToDate" value="<%=beanInquiryReport.getToDate()%>" maxlength="8">
             <IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(this, ToDate, "mm/dd/yy",null,1,-1,-1,true)'>
+         --%>
         </TD>
         <!-- APPROVER -->
         <TD width="10%"><STRONG><FONT color="#ffffff" class="label1">Approver</FONT></STRONG></TD>

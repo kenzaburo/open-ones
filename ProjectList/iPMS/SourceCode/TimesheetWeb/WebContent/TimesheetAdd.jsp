@@ -17,13 +17,54 @@
 <HEAD>
 <TITLE>Add Timesheet</TITLE>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jquery/jquery.ui.core.css">
+<link rel="stylesheet" href="jquery/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="jquery/jquery.ui.theme.css">
 <LINK rel="stylesheet" type="text/css" href="styles/tsStyleSheet.css">
 <LINK rel="stylesheet" type="text/css" href="styles/pcal.css">
+
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
 <SCRIPT src='scripts/Mapping.js'></SCRIPT>
 <SCRIPT src='scripts/pr_wp_map.js'></SCRIPT>
+<%--
 <SCRIPT src='scripts/popcalendar.js'></SCRIPT>
+ --%>
+<script src="jquery/jquery-1.7.2.min.js"></script>
+<script src="jquery/ui/jquery.ui.core.js"></script>
+<script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+
+<%
+    final int nMaxRow = 14;
+    ProjectComboBO comboProject = new ProjectComboBO();
+    CommonListBO commonList = new CommonListBO();
+    StringMatrix smtProjectList = comboProject.getProjectComboList(beanUserInfo.getRole(),
+            beanUserInfo.getUserId(), 0x00, fpt.timesheet.constant.Timesheet.PROJECT_STATUS_RUNNING);
+    smtProjectList.setCell(0, 0, "0");
+
+    StringMatrix smtProcess = commonList.getProcessList();
+    StringMatrix smtTypeOfWork = commonList.getTypeOfWorkList();
+    //StringMatrix smtProduct = commonList.getProductList();
+%>
+
+<script>
+  <% for (int i = 0; i <= 14; i++) {
+  %>
+   $(function() {
+      $("#Date<%= i %>").datepicker({
+          showOn: "button",
+          buttonImage: "image/cal.gif",
+          buttonImageOnly: true,
+          showWeek: true,
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "mm/dd/y",
+          firstDay: 1
+      });
+   });
+   <% } %>
+</script>
+
 </HEAD>
 <DIV align="left"><%@ include file="HeaderPage.jsp"%></DIV>
 <H1><IMG align="top" src="image/tit_AddnewTimesheet.gif"></H1>
@@ -38,18 +79,7 @@
 &nbsp;&nbsp;<FONT class="label1" color="#ffffff">Role&nbsp;&nbsp;&nbsp;</FONT>
 <FONT class="label1" color="yellow"><%=beanUserInfo.getRoleName()%></FONT>
 <HR noshade size="1">
-<%
-    final int nMaxRow = 14;
-    ProjectComboBO comboProject = new ProjectComboBO();
-    CommonListBO commonList = new CommonListBO();
-    StringMatrix smtProjectList = comboProject.getProjectComboList(beanUserInfo.getRole(),
-            beanUserInfo.getUserId(), 0x00, fpt.timesheet.constant.Timesheet.PROJECT_STATUS_RUNNING);
-    smtProjectList.setCell(0, 0, "0");
 
-    StringMatrix smtProcess = commonList.getProcessList();
-    StringMatrix smtTypeOfWork = commonList.getTypeOfWorkList();
-    //StringMatrix smtProduct = commonList.getProductList();
-%>
 <INPUT type="hidden" name="maxRow" value="<%=nMaxRow%>">
 <TABLE border="0" cellpadding="1" cellspacing="0" bgcolor="#336699"
 	width="100%">
@@ -71,19 +101,29 @@
 			<TD class="TableHeader1">Process</TD>
 			<TD class="TableHeader1">Work</TD>
 			<TD class="TableHeader1">Product</TD>
-		</TR><%
+		</TR>
+    <%
     for (int nRows = 0x01; nRows <= nMaxRow; nRows++) {
         String strClass = "Row1";
-%>
+    %>
 		<TR>
 			<TD class="<%=strClass%>">
+      <%--
 			<CENTER><FONT face="Arial" size="2"> <INPUT type="text"
 				onchange="return dateValidate(Date[<%=nRows - 1%>]);" name="Date"
 				id="Date<%=nRows - 1%>"
 				value="<%=beanTSAdd.getCurrentDate(((nRows-1)/2)-6)%>"
 				class="VerySmallTextbox"></FONT><IMG src="image/cal.gif"
 				style="CURSOR: hand"
-				onclick='showCalendar(Date[<%=nRows - 1%>], Date[<%=nRows - 1%>], "mm/dd/yy",null,1,-1,-1,true)'></CENTER>
+				onclick='showCalendar(Date[<%=nRows - 1%>], Date<%=nRows - 1%>, "mm/dd/yy",null,1,-1,-1,true)'></CENTER>
+         --%>
+             <CENTER><FONT face="Arial" size="2"> <INPUT type="text"
+                onchange="return dateValidate(Date[<%=nRows - 1%>]);" name="Date"
+                id="Date<%=nRows - 1%>"
+                value="<%=beanTSAdd.getCurrentDate(((nRows-1)/2)-6)%>"
+                class="VerySmallTextbox"></FONT>
+             </CENTER>
+
 			</TD>
 			<TD class="<%=strClass%>">
 			<CENTER><INPUT name="Duration" type="text" size="5" maxlength="4"
