@@ -58,6 +58,7 @@ INPUT.flatTextbox {
 </STYLE>
 <SCRIPT src='scripts/CommonScript.js'></SCRIPT>
 <SCRIPT src='scripts/validate.js'></SCRIPT>
+<script src="jquery/jquery-1.7.2.min.js"></script>
 </HEAD>
 <BODY bgcolor="#336699" leftmargin="0" topmargin="0" style="FONT-FAMILY: tahoma, sans-serif; FONT-SIZE: 11px" onkeypress='javascript:setKeypress(event.which)'>
 <DIV align="left"><%@ include file="HeaderPage.jsp"%></DIV>
