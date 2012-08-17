@@ -22,25 +22,22 @@
  * @Company:      FPT - FSOFT
  * @Author:       Nguyen Thai Son
  * @Create date:  November 13, 2002
+ * @Author:       Open-Ones
+ * @Modify date:  Aug 09, 2012
  */
 
 import java.util.Collection;
-import java.util.Date;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.rmi.PortableRemoteObject;
+
 import org.apache.log4j.Logger;
 
-import fpt.dashboard.DeveloperManagementTran.ejb.Developer;
 import fpt.dashboard.DeveloperManagementTran.ejb.DeveloperEJBLocal;
 import fpt.dashboard.DeveloperManagementTran.ejb.DeveloperEJBLocalHome;
-import fpt.dashboard.DeveloperManagementTran.ejb.DeveloperHome;
-import fpt.dashboard.ProjectManagementTran.ejb.Summary;
 import fpt.dashboard.ProjectManagementTran.ejb.SummaryEJBLocal;
 import fpt.dashboard.ProjectManagementTran.ejb.SummaryEJBLocalHome;
-import fpt.dashboard.ProjectManagementTran.ejb.SummaryHome;
 import fpt.dashboard.ProjectManagementTran.ejb.SummaryInfo;
 import fpt.dashboard.bean.ResourceManagement.ResourceSummaryBean;
 import fpt.dashboard.constant.JNDINaming;
@@ -134,6 +131,17 @@ public class ResourceSummaryBO
 				if (now.getYear() > 100)	nowYear = now.getYear() - 100;
 				else									nowYear = now.getYear();
 				y = now.getYear();
+				
+				// Open-Ones
+//				Calendar nowCal = Calendar.getInstance();
+//				nowMonth = nowCal.get(Calendar.MONTH) + 1;
+//				y = nowCal.get(Calendar.YEAR);
+//				
+//                if (y > 100) {
+//                    nowYear = y - 100;
+//                } else {
+//                    nowYear = y;
+//                }				
 			}
 			else
 			{
@@ -194,7 +202,14 @@ public class ResourceSummaryBO
 				}
 				old_group = info.getGroupName();
 				old_type = info.getType();
-				type[old_type - 1] += info.getCount();
+				
+				// Open-Ones
+				logger.debug("old_type=" + old_type);
+				if (old_type >= 1) {
+				    type[old_type - 1] += info.getCount();
+				} else {
+				    logger.warn("Invalid data: old_type=" + old_type);
+				}
 				total += info.getCount();
 			}// end for
 
@@ -234,8 +249,9 @@ public class ResourceSummaryBO
 		}
 		catch (Exception ex)
 		{
-			logger.debug("Exception occurs in ResourceSummaryBO.getResourceSummary(): " + ex.toString());
-			logger.error(ex);
+			// logger.debug("Exception occurs in ResourceSummaryBO.getResourceSummary(): " + ex.toString());
+			// Open-Ones
+		    logger.error("Get resource summary", ex);
 		}
 
 		////////////////////////////////////////////
