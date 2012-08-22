@@ -1,0 +1,7 @@
+# ORACLE HOME PATH
+# ORA_HOME=C:\oracle\ora92
+# PATH=%PATH%;%ORA_HOME%\bin
+
+export DBNAME=XE
+export USERNAME=PRJ360
+export PASSWD=PRJ360

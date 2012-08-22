@@ -4,13 +4,13 @@ SET DEFINE ~
 INSERT INTO dual values (0)
 /
 INSERT INTO GROUPS a (a.group_id, a.groupname, a.isoperationgroup, a.leader, a.description)
- VALUES(32,'FSOFT','','','COMPANY NAME')
+ VALUES(32,'EVERYONE','','','COMPANY NAME')
 /
 INSERT INTO WORKUNIT a (a.workunitid, a.type, a.parentworkunitid, a.tableid,
        a.workunitname, a.protected) VALUES (0,2,'',0,'Insight Admin','')
 /
 INSERT INTO WORKUNIT a (a.workunitid, a.type, a.parentworkunitid, a.tableid,
-       a.workunitname, a.protected) VALUES (132,0,0,1,'FSOFT',1)
+       a.workunitname, a.protected) VALUES (132,0,0,1,'EVERYONE',1)
 /      
 -- a.developer_id, 
 INSERT INTO DEVELOPER a (a.name, a.group_name, a.account, a.designation,a.role, a.password, a.status, a.email, a.begin_date, a.quit_date,
@@ -19,7 +19,7 @@ INSERT INTO DEVELOPER a (a.name, a.group_name, a.account, a.designation,a.role, 
        a.password_date, a.change_pw, a.account_expired,
        a.account_locked, a.credentials_expired, a.password_backup,
        a.staff_id)
-       VALUES('System Administrator','FSOFT','SYSADMIN',
+       VALUES('System Administrator','EVERYONE','SYSADMIN',
 	   'System Administrator',1000100000,'a159b7ae81ba3552af61e9731b20870515944538',1,
 	   '',sysdate,'','QA',132,'INTERNAL_USER','','','','',0,'',0,'N','N','N','','')
 /
@@ -31,7 +31,7 @@ update DEVELOPER a set a.developer_id=1 where a.account='SYSADMIN'
  INSERT INTO rightgroupofuserbyworkunit a (a.workunitid, a.rightgroupid, a.manual, a.developerid)
 	VALUES(132,'admin','',1)
 /
-insert into organization a (a.org_id, a.orgname) values(1,'FSOFT')
+insert into organization a (a.org_id, a.orgname) values(1,'EVERYONE')
 /
 -- Thach comment.START
 -- insert into organization a (a.org_id, a.orgname) values(2,'TEMP')
@@ -722,7 +722,7 @@ INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
   VALUES(104, 'Mpp file includes only engineering tasks, management and QA tasks are planned in FI', 'It is used to cumminicate with customer.', 9, '1', '3')
 /
 INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
-  VALUES(105, 'QA tasks and review tasks are not included in Project schedule file, they are stated in Fsoft-Insight', 'Projects use Fsoft Insight for managing', 12, '1', '3')
+  VALUES(105, 'QA tasks and review tasks are not included in Project schedule file, they are stated in Project-Insight', 'Projects use Project Insight for managing', 12, '1', '3')
 /
 INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
   VALUES(106, 'Interim release need no final inspection', 'Interim might not include all the required features. Its main purpose is to discover early any requirement misunderstandings', 12, '1', '3')
@@ -755,7 +755,7 @@ INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
   VALUES(115, 'Support process: follow the process of customer''s process document', 'pure support project ', 1500, '1', '3')
 /
 INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
-  VALUES(116, 'No Solution stage in FSOFT software lifecycle', 'No need to create Architecture Design document as customer provide  their detail design', 1500, '1', '3')
+  VALUES(116, 'No Solution stage in the software lifecycle', 'No need to create Architecture Design document as customer provide  their detail design', 1500, '1', '3')
 /
 INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
   VALUES(117, 'The minutes of project progress review meetings are kept track in Excel file', 'Reduce the time for writting the meeting minutes. ', 9, '1', '3')
@@ -811,7 +811,7 @@ INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
 ', 9, '0', '3')
 /
 INSERT INTO TAILORING(TAIL_ID, TAIL_PER, APP_CRI, PROCESS_ID, STATUS, CATEGORY)
-  VALUES(129, 'Targeted value of project metrics could be different from Fsoft norm, but rationale should be documented and approved by Head of SEPG
+  VALUES(129, 'Targeted value of project metrics could be different from the Company norm, but rationale should be documented and approved by Head of SEPG
 ', 'Specific project characteristic
 ', 9, '0', '3')
 /
@@ -8951,4 +8951,14 @@ INSERT INTO QCACTIVITY_WORKPRODUCT(WP_CODE, QC_CODE)
 INSERT INTO QCACTIVITY_WORKPRODUCT(WP_CODE, QC_CODE)
   VALUES('WO', 'AFTER_RELEASE_REVIEW')
 /
+
+
+-- Open-Ones team
+INSERT INTO LIFECYCLE (LIFECYCLE_ID,NAME) VALUES (0,'Development')
+/
+INSERT INTO LIFECYCLE (LIFECYCLE_ID,NAME) VALUES (1,'Maintenance')
+/
+INSERT INTO LIFECYCLE (LIFECYCLE_ID,NAME) VALUES (2,'Other')
+/
+
 quit

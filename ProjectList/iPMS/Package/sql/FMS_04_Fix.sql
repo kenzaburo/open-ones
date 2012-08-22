@@ -67,7 +67,7 @@ INSERT INTO NCCONSTANT(CONSTANTID, TYPE, DESCRIPTION, SYSTEMTYPE, USAGE)  VALUES
 /
 INSERT INTO NCCONSTANT(CONSTANTID, TYPE, DESCRIPTION, SYSTEMTYPE, USAGE)  VALUES(28, 'DetectedBy', 'Quality control', 0, 0)
 /
-INSERT INTO NCCONSTANT(CONSTANTID, TYPE, DESCRIPTION, SYSTEMTYPE, USAGE)  VALUES(29, 'DetectedBy', 'FSOFT intenal audit', 0, 0)
+INSERT INTO NCCONSTANT(CONSTANTID, TYPE, DESCRIPTION, SYSTEMTYPE, USAGE)  VALUES(29, 'DetectedBy', 'The intenal audit', 0, 0)
 /
 INSERT INTO NCCONSTANT(CONSTANTID, TYPE, DESCRIPTION, SYSTEMTYPE, USAGE)  VALUES(30, 'DetectedBy', 'External audit', 0, 0)
 /
@@ -674,9 +674,9 @@ ADD NOTE NUMBER
 /
 
 
-INSERT INTO parameters VALUES('CONV_LAST_UPDATE','22-SEP-09')
+INSERT INTO parameters VALUES('CONV_LAST_UPDATE','19-Aug-12')
 /
-INSERT INTO parameters VALUES('LOCALHOST','http://localhost:9080')
+INSERT INTO parameters VALUES('LOCALHOST','http://localhost:8080')
 /
 INSERT INTO parameters VALUES('TIMESHEET','timesheet/TimesheetServlet')
 /
@@ -686,7 +686,7 @@ INSERT INTO parameters VALUES('DMS','dms/DMSServlet')
 /
 INSERT INTO parameters VALUES('NCMS','ncms/NcmsServlet')
 /
-INSERT INTO parameters VALUES('HELP','http://qahnsv-fms-test/FSOFTInsightWeb/help')
+INSERT INTO parameters VALUES('HELP','help')
 /
 INSERT INTO parameters VALUES('VERSION','2.4.1')
 /
@@ -696,15 +696,15 @@ INSERT INTO parameters VALUES('NORMPROCESSAUDITEFFORT','0.5')
 /
 INSERT INTO parameters VALUES('NORMPROCESSCONTROLEFFORT','2.0')
 /
-INSERT INTO parameters VALUES('LOGROOT','C:\')
+INSERT INTO parameters VALUES('LOGROOT','/tmp/')
 /
-INSERT INTO parameters VALUES('MAIL.SMTP.HOST','192.168.106.101')
+INSERT INTO parameters VALUES('MAIL.SMTP.HOST','localhost')
 /
-INSERT INTO parameters VALUES('CONNECTIONSTRING','jdbc:oracle:thin:fms/fms@qahnsv-database-test:1521:fms')
+INSERT INTO parameters VALUES('CONNECTIONSTRING','jdbc:oracle:thin:@localhost:1521:XE')
 /
 INSERT INTO parameters VALUES('DAYOFVALIDATION','01-Nov-05')
 /
-INSERT INTO parameters VALUES('URL_ADDRESS','http://qahnsv-fms-test')
+INSERT INTO parameters VALUES('URL_ADDRESS','http://localhost')
 
 /
 
