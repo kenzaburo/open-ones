@@ -1071,6 +1071,12 @@ final public class Norms {
 	}
 	
 	
+	/**
+	 * [Give the description for method].
+	 * LIFECYCLE.LIFECYCLE_ID mus be existed
+	 * @param normPlanInfo
+	 * @return
+	 */
 	public static final boolean updateNormPlan(NormPlanInfo normPlanInfo) {
 		PreparedStatement prepStmt = null;
 		PreparedStatement prepStmt2 = null;

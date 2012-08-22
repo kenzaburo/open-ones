@@ -87,7 +87,7 @@ function changeGroup() {
     var currGroup = form.cboGroup.value;
     
     var bGroupAll = false;
-   if (currGroup == "FSOFT") {
+   if (currGroup == "EVERYONE") {
       bGroupAll = true;
    }
     
@@ -118,7 +118,7 @@ function changeGroup() {
         form.cboPrj.options[0].selected = true;
     }
 	var strCurrentProject = '<%=strCurrentProject%>';
-    if (currGroup == "FSOFT" && strCurrentProject == 'null') {
+    if (currGroup == "EVERYONE" && strCurrentProject == 'null') {
     	form.cboPrj.options[0].selected = true;
     }
     if(strCurrentProject != 'null'){

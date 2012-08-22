@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@page import="java.util.List"%>
 <%@ page language="java" import="javax.servlet.*, fpt.timesheet.bean.*,
             fpt.timesheet.bean.Approval.*,
             fpt.timesheet.InputTran.ejb.TimeSheetInfo,
@@ -8,7 +9,7 @@
             fpt.timesheet.bean.Mapping.*,
             fpt.timesheet.framework.util.StringUtil.StringMatrix,
             fpt.timesheet.framework.util.CommonUtil.*,
-            java.util.Collection, java.util.Iterator" 
+            java.util.List" 
 %>
 <%@
     page isThreadSafe="true" errorPage="error.jsp" contentType="text/html; charset=UTF-8"%>
@@ -36,19 +37,32 @@
 <script src="jquery/jquery-1.7.2.min.js"></script>
 <script src="jquery/ui/jquery.ui.core.js"></script>
 <script src="jquery/ui/jquery.ui.datepicker.min.js"></script>
+<%
+    ProjectComboBO comboProject = new ProjectComboBO();
+    CommonListBO commonList = new CommonListBO();
+    StringMatrix smtCommonList = null;
+    StringMatrix smtProjectList = comboProject.getProjectComboList(beanUserInfo.getRole(),
+            beanUserInfo.getUserId(), 0x00, fpt.timesheet.constant.Timesheet.PROJECT_STATUS_RUNNING);
+    smtProjectList.setCell(0, 0, "0");
+    // Iterator itResult = beanTSUpdate.getTimesheetList().iterator();
+    List timeSheetList = beanTSUpdate.getTimesheetByList();
+%>
 <script>
    $(function() {
-      $("#Date").datepicker({
-          showOn: "button",
-          buttonImage: "image/cal.gif",
-          buttonImageOnly: true,
-          showWeek: true,
-          changeMonth: true,
-          changeYear: true,
-          dateFormat: "mm/dd/y",
-          firstDay: 1
-      });
-   });
+	   <% for (int i = 0; i < beanTSUpdate.getTimesheetList().size(); i++) {
+       %>
+	      $("#Date<%= i %>").datepicker({
+	          showOn: "button",
+	          buttonImage: "image/cal.gif",
+	          buttonImageOnly: true,
+	          showWeek: true,
+	          changeMonth: true,
+	          changeYear: true,
+	          dateFormat: "mm/dd/y",
+	          firstDay: 1
+	      });
+	   <% } %>
+	});
 </script>
 </HEAD>
 <BODY bgcolor="#336699" leftmargin="0" topmargin="0">
@@ -67,12 +81,12 @@
 <TABLE border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#336699">
     <COLGROUP>
         <COL width="9%">
-        <COL width="5%">
-        <COL width="25%">
+        <COL width="4%">
+        <COL width="22%">
+        <COL width="16%">
+        <COL width="16%">
         <COL width="10%">
-        <COL width="15%">
-        <COL width="10%">
-        <COL width="15%">
+        <COL width="16%">
     <TR>
         <TD class="TableHeader1">Date</TD>
         <TD class="TableHeader1">Time</TD>
@@ -83,27 +97,26 @@
         <TD class="TableHeader1">Product</TD>
     </TR>
 <%
-    ProjectComboBO comboProject = new ProjectComboBO();
-    CommonListBO commonList = new CommonListBO();
-    StringMatrix smtCommonList = null;
-    StringMatrix smtProjectList = comboProject.getProjectComboList(
-            beanUserInfo.getRole(), beanUserInfo.getUserId(), 0x00,
-            fpt.timesheet.constant.Timesheet.PROJECT_STATUS_RUNNING);
-    smtProjectList.setCell(0, 0, "0");
-    Iterator itResult = beanTSUpdate.getTimesheetList().iterator();
-    if (itResult != null) {
-        TimeSheetInfo tsRow;
-        int nCount = 0;
-        int nCurrentValue = 0x00;
-        while (itResult.hasNext()) {
-            tsRow = (TimeSheetInfo)itResult.next();
-            nCount ++;
-            String strClass = ((nCount % 2) == 1) ? "Row1" : "Row2";
+    int len = (timeSheetList != null) ? timeSheetList.size() : -1;
+    TimeSheetInfo tsRow;
+    int nCurrentValue = 0x00;
+    String strClass;
+    for (int nCount = 0; nCount < len; nCount++) {
+    // if (itResult != null) {
+        
+        // int nCount = 0;
+        
+        // while (itResult.hasNext()) {
+            
+            // tsRow = (TimeSheetInfo)itResult.next();
+            tsRow = (TimeSheetInfo) timeSheetList.get(nCount);
+            // nCount ++;
+            strClass = ((nCount % 2) == 1) ? "Row1" : "Row2";
 %>
     <TR>
         <TD align="center" class="<%=strClass%>">
-            <INPUT type="hidden" name="TimesheetID" value="<%=tsRow.getTimeSheetID()%>">
-            <INPUT id="Date" type="text" name="Date" class="VerySmallTextBox" value="<%=tsRow.getDate()%>" readonly="readonly">
+            <INPUT type="hidden" name="TimesheetID" value="<%= tsRow.getTimeSheetID() %>">
+            <INPUT id="Date<%= nCount %>" type="text" name="Date" class="VerySmallTextBox" value="<%=tsRow.getDate()%>" readonly="readonly">
             <%--
             <INPUT type="text" name="Date" class="VerySmallTextBox" value="<%=tsRow.getDate()%>" readonly="readonly"><IMG src="image/cal.gif" style="CURSOR:hand" onclick='showCalendar(Date[<%=nCount - 1%>], Date[<%=nCount - 1%>], "mm/dd/yy",null,1,-1,-1,true)'>
              --%>
@@ -166,8 +179,8 @@
         <TD height="1"></TD>
     </TR>
 <%
-        } //~while (itResult.hasNext())
-    } // end if
+        // } //~while (itResult.hasNext())
+    } // end for
 %>
     <INPUT type="hidden" name="TimesheetID" value="">
     <INPUT type="hidden" name="Date" value="">

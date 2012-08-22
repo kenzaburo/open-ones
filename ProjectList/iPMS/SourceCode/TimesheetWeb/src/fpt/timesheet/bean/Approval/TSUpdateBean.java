@@ -15,9 +15,12 @@
  
  package fpt.timesheet.bean.Approval;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-public class TSUpdateBean {
+public class TSUpdateBean implements Serializable {
 
     private Collection arrListing = null;
     private String strSelectedTS = "";
@@ -30,6 +33,10 @@ public class TSUpdateBean {
         return arrListing;
     }
 
+    public List getTimesheetByList() {
+        return Arrays.asList(arrListing.toArray());
+    }
+    
     /**
      * Method setTimesheetList.
      * @param arrListing

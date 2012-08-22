@@ -15,11 +15,22 @@
  
  package com.fms1.common;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.Vector;
-import java.util.Calendar;
-import com.fms1.infoclass.*;
-import com.fms1.tools.Db;
+
+import com.fms1.infoclass.AssignSubTeamInfo;
+import com.fms1.infoclass.AssignmentInfo;
+import com.fms1.infoclass.OrgTotalInfo;
+import com.fms1.infoclass.PlanInterfacesInfo;
+import com.fms1.infoclass.ProjectInfo;
+import com.fms1.infoclass.ResponsibilityInfo;
+import com.fms1.infoclass.TeamSizeInfo;
 import com.fms1.tools.CommonTools;
 import com.fms1.tools.ConvertString;
 import com.fms1.web.ServerHelper;
@@ -483,9 +494,7 @@ public class Assignments {
             //-----------------------------------------------------------------
             // Update for compatible with RMS: Project position code
             //-----------------------------------------------------------------
-            String positionCode =
-                com.fms1.integrate.Project.getProjectPositionCodeById(
-                    newInfo.responsibilityID);
+            String positionCode = com.fms1.integrate.Project.getProjectPositionCodeById(newInfo.responsibilityID);
             preStm.setString(12, positionCode);
             //-----------------------------------------------------------------
             // END: Update for compatible with RMS: Project position code
@@ -527,7 +536,8 @@ public class Assignments {
                 }
                 
 			}
-            conn.setAutoCommit(true);
+            // Open-Ones
+            // conn.setAutoCommit(true);
             conn.commit();
             
 			return returnValue;
@@ -621,7 +631,8 @@ public class Assignments {
 				}
                 
 			}
-			conn.setAutoCommit(true);
+			// Open-Ones
+			// conn.setAutoCommit(true);
 			conn.commit();
             
 			return returnValue;

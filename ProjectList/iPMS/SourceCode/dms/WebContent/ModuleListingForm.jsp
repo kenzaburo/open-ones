@@ -20,7 +20,7 @@
 <LINK rel="StyleSheet" href="styles/DMSStyleSheet.css" type="text/css">
 <SCRIPT language="javascript">
 function doAddNew() {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmSetupModuleList;
     var strValue;
     strValue = form.txtName.value;
@@ -57,7 +57,7 @@ function doAddNew() {
 }
 
 function doUpdate(id, name, planned, replanned, wpid, wpname) {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmSetupModuleList;
     form.hidMID.value = id;
     form.hidMName.value = name;
@@ -75,7 +75,7 @@ function doUpdate(id, name, planned, replanned, wpid, wpname) {
 }
 
 function doDelete() {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmSetupModuleList;
     var nCount;
     nCount = 0;

@@ -2,7 +2,7 @@
 
 var common_tai = new Array();
 
-common_tai[0] = new Array(); common_tai[0][0]=1500; common_tai[0][1]="FSOFT SLC";
+common_tai[0] = new Array(); common_tai[0][0]=1500; common_tai[0][1]="ORG SLC";
 common_tai[1] = new Array(); common_tai[1][0]=8; common_tai[1][1]="Configuration Management";
 common_tai[2] = new Array(); common_tai[2][0]=6; common_tai[2][1]="Customer Support";
 common_tai[3] = new Array(); common_tai[3][0]=3; common_tai[3][1]="Design";
@@ -19,7 +19,7 @@ common_tai[11] = new Array(); common_tai[11][0]=7; common_tai[11][1]="Test";
 
 var all_tai = new Array();
 
-all_tai[0] = new Array(); all_tai[0][0]=1500; all_tai[0][1]="FSOFT SLC";
+all_tai[0] = new Array(); all_tai[0][0]=1500; all_tai[0][1]="ORG SLC";
 all_tai[1] = new Array(); all_tai[1][0]=23; all_tai[1][1]="Administration";
 all_tai[2] = new Array(); all_tai[2][0]=4; all_tai[2][1]="Coding";
 all_tai[3] = new Array(); all_tai[3][0]=21; all_tai[3][1]="Collaborator Management";

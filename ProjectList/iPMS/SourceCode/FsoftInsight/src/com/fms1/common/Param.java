@@ -332,7 +332,7 @@ final class Param {
 				info.ProcessID=rs.getInt("F2");
                 switch (info.ProcessID) {
                     case ProcessInfo.FSOFT_SLC :
-                         info.ProcessName="FSOFT SLC";   
+                         info.ProcessName= Parameters.ORG_SLC;   
                          break;
                     case ProcessInfo.GENERAL :
                          info.ProcessName="General";   

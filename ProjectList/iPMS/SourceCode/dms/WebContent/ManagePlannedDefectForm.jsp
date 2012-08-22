@@ -23,7 +23,7 @@
 <LINK href="styles/DMSStyleSheet.css" rel="stylesheet" type="text/css">
 <SCRIPT language="javascript">
 function doAddNew() {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmDefectPlan;
     var bAdded = false;
     var strValue;
@@ -105,7 +105,7 @@ function doAddNew() {
 }
 
 function doDelete(row) {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmDefectPlan;
     var bOK = window.confirm("Are you sure to clear?");
     if (!bOK) {

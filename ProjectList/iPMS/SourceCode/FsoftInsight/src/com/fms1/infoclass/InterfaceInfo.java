@@ -40,9 +40,13 @@ public final class InterfaceInfo {
 			case 1:
 				return "Customer";
 			case 2:
-				return "FSoft interface";
+			    // Open-Ones team
+				// return "FSoft interface";
+			    return "Org interface";
 			case 3:
-				return "FPT interface";
+			    // Open-Ones team
+				// return "FPT interface";
+			    return "Super interface";
 			case 4:
 				return "Management board";
 			case 5:

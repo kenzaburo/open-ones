@@ -75,7 +75,7 @@ A:hover {
     <TR>
         <TD width="52" height="13"></TD>
         <TD width="126" class="NewsTitleRedM">Error occurs:</TD>
-        <TD width="562" class="NewsTitleGreyM"> This function have removed to FSOFTInsight, please relogin to FSOFTInsight</TD>
+        <TD width="562" class="NewsTitleGreyM"> This function have removed to ProjectInsight, please relogin to ProjectInsight</TD>
     </TR>
         <TR>
         <TD valign="top" height="51" align="left" class="Content"></TD>

@@ -5,7 +5,7 @@
 <HEAD>
 <META http-equiv="Pragma" content="no-cache">
 <META http-equiv="Cache-Control" content="no-cache">
-<TITLE>FSOFT Insight</TITLE>
+<TITLE>Project Insight</TITLE>
 <SCRIPT language="javascript" src="jscript/javaFns.js"></SCRIPT>
 <SCRIPT language="javascript">
 <%@ include file="javaFns.jsp"%>

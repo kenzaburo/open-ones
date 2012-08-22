@@ -19,7 +19,7 @@
 <LINK rel="StyleSheet" href="styles/DMSStyleSheet.css" type="text/css">
 <SCRIPT language="javascript">
 function doAddNew() {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmWorkProductSizeList;
     var strWP, strUnit, strSize;
     strWP = form.cboWorkProduct.value;
@@ -65,7 +65,7 @@ function doAddNew() {
 }
 
 function doUpdate(id, name, size, unit, planned, replanned) {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmWorkProductSizeList;
     form.hidWPID.value = id;
     form.hidWPName.value = name;
@@ -83,7 +83,7 @@ function doUpdate(id, name, size, unit, planned, replanned) {
 }
 
 function doDelete() {
-	alert("This function is deprecated and moved to FSoft Insight");
+	alert("This function is deprecated and moved to Project Insight");
 /*    var form = document.frmWorkProductSizeList;
     var nCount;
     nCount = 0;

@@ -233,7 +233,7 @@ public class Project {
         PreparedStatement preStm = null;
         try {
             conn = ServerHelper.instance().getConnection();
-            conn.setAutoCommit(false);
+            // conn.setAutoCommit(false);
             preStm = conn.prepareStatement(sql);
             // sql. DELETE condition
             preStm.setLong(1, assignment.projectID);
@@ -246,8 +246,10 @@ public class Project {
             preStm.setLong(5, assignment.devID);
             preStm.setLong(6, assignment.assID);
             preStm.executeUpdate();
-            conn.setAutoCommit(true);
-            conn.commit();
+            
+            // Open-Ones
+            // conn.setAutoCommit(true);
+            // conn.commit();
         }
         catch (SQLException e) {
             isSucceed = false;

@@ -818,24 +818,26 @@ public class WorkUnit {
 			preStm.setString(1, groupName);
 			preStm.executeUpdate();
 			preStm.close();
-						
-			sql = "DELETE CALL WHERE GROUPNAME = ?";
-			preStm = conn.prepareStatement(sql);
-			preStm.setString(1, groupName);
-			preStm.executeUpdate();
-			preStm.close();
+			
+			// Open-Ones team.START
+//			sql = "DELETE CALL WHERE GROUPNAME = ?";
+//			preStm = conn.prepareStatement(sql);
+//			preStm.setString(1, groupName);
+//			preStm.executeUpdate();
+//			preStm.close();
 
-			sql = "DELETE METRICGROUP WHERE GROUPNAME = ?";
-			preStm = conn.prepareStatement(sql);
-			preStm.setString(1, groupName);
-			preStm.executeUpdate();
-			preStm.close();
-
-			sql = "DELETE NC WHERE GROUPNAME = ?";
-			preStm = conn.prepareStatement(sql);
-			preStm.setString(1, groupName);
-			preStm.executeUpdate();
-			preStm.close();
+//			sql = "DELETE METRICGROUP WHERE GROUPNAME = ?";
+//			preStm = conn.prepareStatement(sql);
+//			preStm.setString(1, groupName);
+//			preStm.executeUpdate();
+//			preStm.close();
+//
+//			sql = "DELETE NC WHERE GROUPNAME = ?";
+//			preStm = conn.prepareStatement(sql);
+//			preStm.setString(1, groupName);
+//			preStm.executeUpdate();
+//			preStm.close();
+			// Open-Ones team.END
 
 			sql = "DELETE GROUPS WHERE GROUP_ID = ?";
 			preStm = conn.prepareStatement(sql);

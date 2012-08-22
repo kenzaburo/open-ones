@@ -39,7 +39,9 @@ public final class Parameters {
 	public static final long SEPG_WU = 133;
 	
     public static final String SQA_GROUP = "SQA";//table rightgroup
-	public static final String ORGNAME = "FSOFT";//
+    
+    // Open-Ones team changed
+	public static final String ORGNAME = "EVERYONE";//
 	
 	public static final String PQA_ROLE = "PQA";//table rightgroup
 	public static final String SQA_ROLE = "SQA";//table rightgroup
@@ -72,6 +74,9 @@ public final class Parameters {
 	public  static String localhost;
 	public  static String connectionString;
 	public  static Date dayOfValidation;
+
+    public static final String ORG_SLC = "ORG SLC";
+
 	private Parameters() { 
 		getAllParameters();//from param Table
 	}

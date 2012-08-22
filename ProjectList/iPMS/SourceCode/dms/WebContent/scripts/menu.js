@@ -1,5 +1,5 @@
 /***********************************************
-* AnyLink Drop Down Menu- © Dynamic Drive (www.dynamicdrive.com)
+* AnyLink Drop Down Menu- ï¿½ Dynamic Drive (www.dynamicdrive.com)
 * This notice MUST stay intact for legal use
 * Visit http://www.dynamicdrive.com/ for full source code
 ***********************************************/
@@ -238,7 +238,7 @@ function clearInvalidControls(form) {
 /* Check roles, allow post form or not*/
 
 function AssignUserHandler(form) {
-	alert('This function is deprecated and moved to Fsoft Insight. Please update in Fsoft Insight/WO/Team');
+	alert('This function is deprecated and moved to Project Insight. Please update in Project Insight/WO/Team');
 	/*
 	alert('This function is deprecated and moved to FSoft Ingisht. Please update in FSoft Insight/WO/Team or Dashboard/Project/UpdateAssignment.minh');
     var Role = form.CheckRole.value;
@@ -266,7 +266,7 @@ function SetupEnvironment(form) {
 }
 
 function SetupModuleAreaHandler(form) {
-	alert('This function is deprecated and moved to Fsoft Insight');
+	alert('This function is deprecated and moved to Project Insight');
 	/*
     var Role = form.CheckRole.value;
     if (Role !=null) {
@@ -296,11 +296,11 @@ function WorkProductSizeHandler(form) {
         }
     }
     */
-    alert('This function is deprecated and moved to Fsoft Insight');
+    alert('This function is deprecated and moved to Project Insight');
 }
 
 function PlannedDefectHandler(form) {
-	alert('This function is deprecated and moved to Fsoft Insight.');
+	alert('This function is deprecated and moved to Project Insight.');
 	/*
     var Role = form.CheckRole.value;
     if (Role !=null) {

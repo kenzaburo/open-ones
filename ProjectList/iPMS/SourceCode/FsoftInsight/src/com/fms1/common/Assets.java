@@ -15,18 +15,27 @@
  
  package com.fms1.common;
 
-import java.util.Vector;
-import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
 
-import com.fms1.web.*;
-import com.fms1.infoclass.*;
+import com.fms1.infoclass.DeviationInfo;
+import com.fms1.infoclass.EffortInfo;
+import com.fms1.infoclass.PracticeInfo;
+import com.fms1.infoclass.ProcessInfo;
+import com.fms1.infoclass.ProcessScheduleInfo;
+import com.fms1.infoclass.QualityActivitiesInfo;
+import com.fms1.infoclass.StageInfo;
+import com.fms1.infoclass.TailoringDeviationInfo;
+import com.fms1.infoclass.TailoringInfo;
+import com.fms1.infoclass.WeeklyReportInfo;
 import com.fms1.tools.Db;
-import com.fms1.tools.CommonTools;
+import com.fms1.web.Parameters;
+import com.fms1.web.ServerHelper;
 
 /**
 * Manages project assets.
@@ -256,7 +265,7 @@ public class Assets {
 		try {
 			conn = ServerHelper.instance().getConnection();
 			result.addElement("General");
-			result.addElement("FSOFT SLC");
+			result.addElement(Parameters.ORG_SLC);
 			sql = "select NAME from PROCESS ORDER BY NAME ";
 			stm = conn.prepareStatement(sql);
 			rs = stm.executeQuery();
@@ -343,7 +352,7 @@ public class Assets {
 			tailoringInfo.reason = rs.getString("APP_CRI");
 			switch (rs.getInt("PROCESS_ID")) {
 				case ProcessInfo.FSOFT_SLC:
-					tailoringInfo.category = "FSOFT SLC";
+					tailoringInfo.category = Parameters.ORG_SLC;
 					break;
 				case ProcessInfo.GENERAL:
 					tailoringInfo.category = "General";
@@ -409,7 +418,7 @@ public class Assets {
 				tdInfo.type = 1;
 				switch (rs.getInt("PROCESS_ID")) {
 					case ProcessInfo.FSOFT_SLC:
-						tdInfo.category = "FSOFT SLC";
+						tdInfo.category = Parameters.ORG_SLC;
 						break;
 					case ProcessInfo.GENERAL:
 						tdInfo.category = "General";
@@ -511,7 +520,7 @@ public class Assets {
 				tdInfo.type = 1;
 				switch (rs.getInt("PROCESS_ID")) {
 					case ProcessInfo.FSOFT_SLC:
-						tdInfo.category = "FSOFT SLC";
+						tdInfo.category = Parameters.ORG_SLC;
 						break;
 					case ProcessInfo.GENERAL:
 						tdInfo.category = "General";
@@ -633,7 +642,7 @@ public class Assets {
 				tdInfo.reason = rs.getString("REASON");
 				switch (rs.getInt("PROCESS_ID")) {
 					case ProcessInfo.FSOFT_SLC:
-						tdInfo.category = "FSOFT SLC";
+						tdInfo.category = Parameters.ORG_SLC;
 						break;
 					case ProcessInfo.GENERAL:
 						tdInfo.category = "General";

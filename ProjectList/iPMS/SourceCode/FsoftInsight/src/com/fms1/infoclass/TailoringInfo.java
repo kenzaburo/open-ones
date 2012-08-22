@@ -16,6 +16,8 @@
  package com.fms1.infoclass;
 import java.util.Vector;
 
+import com.fms1.web.Parameters;
+
 public class TailoringInfo {
 	public int projectID;
 	public int process_tailID;
@@ -64,7 +66,7 @@ public class TailoringInfo {
         retval.add(info);
         info = new ProcessInfo();
 		info.processId = ProcessInfo.FSOFT_SLC;
-		info.name ="FSOFT SLC";
+		info.name = Parameters.ORG_SLC;
 		info.metricConstant=ProcessInfo.getMetric(info.processId);
 		retval.add(info);
 		retval.addAll(ProcessInfo.processList);

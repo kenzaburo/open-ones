@@ -2051,7 +2051,7 @@ public class DefectBO {
 			}
 			else {
 				request.setAttribute("uploadMessage",
-									 "<FONT color=red class=\"label1\">You must use defect template of Fsoft</FONT>");
+									 "<FONT color=red class=\"label1\">You must use defect template of Project360</FONT>");
 			}
 			wb.close();
 		}
