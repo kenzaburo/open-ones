@@ -2,11 +2,11 @@ Thư mục này gồm 3 project để minh họa 1 dự án được phát tri�
 
 Nhận định:
 =======================
-- Điểm khác biệt cơ bản giữa ứng dụng web được phát triển trên nền GAE và Tomcat là tầng dữ liệu (GAE gọi là tầng Persistent, ứng dụng Web nói chung gọi là tầng DAO).
+- Điểm khác biệt cơ bản giữa ứng dụng web được phát triển trên nền GAE và Tomcat là tầng dữ liệu (GAE gọi là tầng Persistent, trong ứng dụng Web nói chung gọi là tầng DAO).
 
 Phân tích
 =======================
-- Từ nhận định trên, chúng ta có thể thiết kế tầng DAO linh hoạt bằng c chỉ định tầng DAO trong một file cấu hình.
+- Từ nhận định trên, chúng ta có thể thiết kế tầng DAO linh hoạt bằng cách chỉ định tầng DAO trong một file cấu hình.
   Xem mã nguồn của lớp "DaoManager" (/WebAccountGAETomcat/src/openones/tms/account/dao/DaoManager.java)
 - Các thao tác với CSDL được định nghĩa trong interface. Ví dụ để thao tác đối tượng tài khoản (Account), chúng ta tạo ra Interface như "/WebAccountGAETomcat/src/openones/tms/account/dao/DaoManager.java"
 - Tùy theo ứng dụng chúng ta chạy trên máy chủ nào (GAE hay Tomcat) thì sẽ cài đặt các phương thức cho Account Interface riêng.
