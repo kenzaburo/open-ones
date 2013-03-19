@@ -22,7 +22,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hslf.HSLFSlideShow;
@@ -39,56 +40,134 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
 
 import rocky.common.CommonUtil;
-import rocky.common.PropertiesManager;
 /**
- * @author linh
- * 
+ * @author ThachLe, team member
  */
 public class SizeCounterUtil {
-    static final Logger log = Logger.getLogger("ISizeCounter");
+    /** Logger. */
+    static final Logger LOG = Logger.getLogger("SizeCounterBiz");
+
+    /** Extension of document files. */
+    static final String[] WORD_EXT_FILES = {"doc", "docx"};
+
+    /** Extension of spread files. */
+    static final String[] EXCEL_EXT_FILES = {"xls", "xlsx"};
+
+    /** Extension of presentation files. */
+    static final String[] PP_EXT_FILES = {"ppt", "pptx"};
+
     /**
      * Count Word's number of page from input directory.
-     * 
-     * @param filePath
-     *            .
-     * @return page
+     * @param filePath .
+     * @return Number of A4 pages
      */
-    public int countPage(String filePath) {
-        FileInputStream is = null;
+    public static int countWordFile(String filePath) {
+        FileInputStream fis = null;
         int page = 0;
         try {
-            is = new FileInputStream(filePath);
-            // When file is .DOC
-            if (CommonUtil.getExtension(filePath).equals("doc")) {
-                HWPFDocument doc = new HWPFDocument(is);
+            fis = new FileInputStream(filePath);
+
+            if (CommonUtil.getExtension(filePath).equals("doc")) { // When file is .DOC
+                HWPFDocument doc = new HWPFDocument(fis);
                 page = doc.getDocProperties().getCPg();
-            }
-            // When file is .DOCX
-            else if (CommonUtil.getExtension(filePath).equals("docx")) {
-                XWPFDocument doc = new XWPFDocument(is);
+            } else if (CommonUtil.getExtension(filePath).equals("docx")) { // When file is .DOCX
+                XWPFDocument doc = new XWPFDocument(fis);
                 XWPFWordExtractor ex = new XWPFWordExtractor(doc);
                 page = ex.getExtendedProperties().getUnderlyingProperties().getPages();
             }
         } catch (FileNotFoundException ex) {
-            // TODO Auto-generated catch block
-            log.warn("File " + getFileName(filePath) + " not found", ex);
+            LOG.warn("File " + filePath + " not found", ex);
         } catch (IOException ex) {
-            // TODO Auto-generated catch block
-            log.warn("Invalid when reading file.", ex);
+            LOG.warn("Invalid when reading file.", ex);
         } catch (Exception ex) {
-            // TODO: handle exception
-            log.warn("Can not count file " + new File(filePath).getName(), ex);
+            LOG.warn("Can not count file " + filePath, ex);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    LOG.warn("Close the file input stream", ex);
+                }
+            }
         }
         return page;
     }
+
+    /**
+     * Count size of Excel file.
+     * @param filePath path of Excel file
+     * @return SizeMetaData
+     */
+    public static SizeMetaData countSpreadSheet(String filePath) {
+        InputStream is = null;
+        SizeMetaData sizeMD = new SizeMetaData();
+        int nmPage = 0;
+        int nmSheet;
+        try {
+            is = CommonUtil.loadResource(filePath);
+            if (CommonUtil.getExtension(filePath).equals("xls")) {
+                HSSFWorkbook doc = new HSSFWorkbook(is);
+                doc.getDocumentSummaryInformation().getLineCount();
+                nmSheet = doc.getNumberOfSheets();
+                HSSFSheet sheet;
+
+                for (int i = 0; i < doc.getNumberOfSheets(); i++) {
+                    sheet = doc.getSheetAt(i);
+
+                    // Count approximately number of page
+                    nmPage += sheet.getPrintSetup().getFitWidth() + sheet.getPrintSetup().getFitHeight();
+                }
+
+                sizeMD.setUnit(UnitType.SHEET);
+                sizeMD.setSize(nmSheet);
+
+                sizeMD.setUnit1(UnitType.PAGE);
+                sizeMD.setSize1(nmPage);
+
+            } else if (CommonUtil.getExtension(filePath).equals("xlsx")) {
+                XSSFWorkbook doc = new XSSFWorkbook(is);
+                nmSheet = doc.getNumberOfSheets();
+                XSSFSheet sheet;
+
+                for (int i = 0; i < doc.getNumberOfSheets(); i++) {
+                    sheet = doc.getSheetAt(i);
+
+                    // Count approximately number of page
+                    nmPage += sheet.getPrintSetup().getFitWidth() + sheet.getPrintSetup().getFitHeight();
+                }
+
+                sizeMD.setUnit(UnitType.SHEET);
+                sizeMD.setSize(nmSheet);
+
+                sizeMD.setUnit1(UnitType.PAGE);
+                sizeMD.setSize1(nmPage);
+            }
+        } catch (FileNotFoundException ex) {
+            LOG.warn("Invalid when reading file.", ex);
+        } catch (IOException ex) {
+            LOG.warn("Invalid when reading file.", ex);
+        } catch (Exception e) {
+            LOG.warn("Can not count file " + new File(filePath).getName(), e);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException ex) {
+                    LOG.warn("Close the file input stream", ex);
+                }
+            }
+        }
+
+        return sizeMD;
+    }
+
     /**
      * Count excel's number of sheet from input directory.
-     * 
-     * @param filePath
+     * @param filePath path of Excel file
      * @return sheet
      */
     public int countSheet(String filePath) {
-        FileInputStream fis;
+        FileInputStream fis = null;
         int sheet = 0;
         try {
             fis = new FileInputStream(filePath);
@@ -100,24 +179,30 @@ public class SizeCounterUtil {
                 sheet = doc.getNumberOfSheets();
             }
         } catch (FileNotFoundException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            LOG.warn("Invalid when reading file.", ex);
         } catch (IOException ex) {
-            // TODO Auto-generated catch block
-            log.warn("Invalid when reading file.", ex);
+            LOG.warn("Invalid when reading file.", ex);
         } catch (Exception e) {
-            // TODO: handle exception
-            log.warn("Can not count file " + new File(filePath).getName(), e);
+            LOG.warn("Can not count file " + new File(filePath).getName(), e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    LOG.warn("Close the file input stream", ex);
+                }
+            }
         }
+
         return sheet;
     }
+
     /**
-     * 
-     * @param filePath
+     * @param filePath path of PowerPoint file
      * @return slide
      */
-    public int countSlide(String filePath) {
-        FileInputStream fis;
+    public static int countSlide(String filePath) {
+        FileInputStream fis = null;
         int slide = 0;
         try {
             fis = new FileInputStream(filePath);
@@ -130,33 +215,36 @@ public class SizeCounterUtil {
                 slide = ex.getExtendedProperties().getUnderlyingProperties().getSlides();
             }
         } catch (FileNotFoundException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            LOG.warn("Invalid when reading file.", ex);
         } catch (IOException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            LOG.warn("Invalid when reading file.", ex);
         } catch (OpenXML4JException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            LOG.warn("Invalid when reading file.", ex);
         } catch (XmlException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            LOG.warn("Invalid when reading file.", ex);
         } catch (Exception e) {
-            // TODO: handle exception
-            log.warn("Can not count file " + new File(filePath).getName(), e);
+            LOG.warn("Can not count file " + new File(filePath).getName(), e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    LOG.warn("Close the file input stream", ex);
+                }
+            }
         }
         return slide;
     }
+
     /**
      * getNmTC.
-     * 
-     * @param filePath
-     *            .
+     * @param filePath path of UT file.
      * @return 0
      */
-    public int getNmTC(String filePath) {
-        FileInputStream fis;
+    public static int getNmTC(String filePath) {
+        FileInputStream fis = null;
         int tmp = 0, nmtc = 0;
+        
         try {
             fis = new FileInputStream(filePath);
             int i = 0;
@@ -171,7 +259,7 @@ public class SizeCounterUtil {
                     }
                     nmtc = (int) sheet.getRow(tmp).getCell(9).getNumericCellValue();
                 } catch (Exception e) {
-                    log.warn("Can not count number of UTC in file: " + getFileName(filePath), e);
+                    LOG.warn("Can not count number of UTC in file: " + filePath, e);
                 }
 
             } else if (CommonUtil.getExtension(filePath).equals("xlsx")) {
@@ -185,74 +273,26 @@ public class SizeCounterUtil {
                     }
                     nmtc = (int) sheet.getRow(tmp).getCell(9).getNumericCellValue();
                 } catch (Exception e) {
-                    log.warn("Can not count number of UTC in file: " + getFileName(filePath), e);
+                    LOG.warn("Can not count number of UTC in file: " + filePath, e);
                 }
             }
         } catch (FileNotFoundException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            LOG.warn("Invalid when reading file.", ex);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    LOG.warn("Close the file input stream", ex);
+                }
+            }
         }
         return nmtc;
     }
-    /**
-     * get file which is supported from ApplicationResources.properties.
-     * 
-     * @param proName
-     *            .
-     * @return extArray
-     */
-    public ArrayList<String> getResources(String proName) {
-        ArrayList<String> extArray = new ArrayList<String>();
-        PropertiesManager promanager = null;
-        try {
-            promanager = new PropertiesManager("/ApplicationResources.properties");
-
-            String fileType = promanager.getProperty(proName);
-
-            String[] exts = fileType.split(" | ");
-
-            for (String ext : exts) {
-                extArray.add(ext);
-            }
-        } catch (Exception ex) {
-            log.error("Load configuration file ApplicationResources.properties", ex);
-        }
-        return extArray;
-    }
-    /**
-     * checkFileType function.
-     * 
-     * @param proName
-     *            .
-     * @param extFile
-     *            .
-     * @return boolean
-     */
-    public boolean checkFileType(String proName, String extFile) {
-        String ext = null;
-        ArrayList<String> proArray = new ArrayList<String>();
-        proArray = getResources(proName);
-        // check file's extent is in Properties
-        if (extFile == null) {
-            return false;
-        }
-
-        int idxLastDot = extFile.lastIndexOf(".");
-        if (idxLastDot > -1) {
-            ext = extFile.substring(idxLastDot + 1); // get extension without dot
-        } else {
-            ext = extFile;
-        }
-        return proArray.contains(ext);
-    }
+    
     /**
      * get file's name from filePath without extent.
-     * 
-     * @param filePath
-     *            .
+     * @param filePath .
      * @return filename
      */
     public String getFileName(String filePath) {
@@ -265,20 +305,46 @@ public class SizeCounterUtil {
         String filename = fullname.replace("." + ext, "");
         return filename;
     }
+
     /**
-     * check file is unit test or not.
-     * 
-     * @param filename
-     *            .
-     * @return true if is unit test
+     * [Give the description for method].
+     * @param ext extension of file
+     * @return
      */
-    public boolean checkIsUnitTestFile(String filePath) {
-        String filename = getFileName(filePath);
-        ArrayList<String> unitTestFiles = getResources("UnitTestFiles");
-        for (String string : unitTestFiles) {
-            if (filename.contains(string))
-                return true;
-        }
+    public static boolean isPresentFile(String ext) {
+        return Arrays.binarySearch(PP_EXT_FILES, ext) >= 0;
+    }
+
+    /**
+     * [Give the description for method].
+     * @param filePath
+     * @return
+     */
+    public static boolean isUTCFile(String filePath) {
+        // TODO Auto-generated method stub
         return false;
     }
+
+    /**
+     * [Give the description for method].
+     * @param ext
+     * @return
+     */
+    public static boolean isExcelFile(String ext) {
+        return Arrays.binarySearch(EXCEL_EXT_FILES, ext) >= 0;
+    }
+
+    /**
+     * [Give the description for method].
+     * @param ext
+     * @return
+     */
+    public static boolean isWordFile(String ext) {
+        return Arrays.binarySearch(WORD_EXT_FILES, ext) >= 0;
+    }
+
+    public static boolean isJavaFile(String ext) {
+        return Arrays.binarySearch(WORD_EXT_FILES, ext) >= 0;
+    }
+
 }

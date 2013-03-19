@@ -5,17 +5,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import csdl.locc.measures.java.parser.javacc.ParseException;
-import csdl.locc.measures.cpp.parser.javacc.TokenMgrError;
-import csdl.locc.measures.java.parser.javacc.CompilationUnit;
-import csdl.locc.measures.java.parser.javacc.JavaParser;
-
 import rocky.common.LogService;
 import rocky.sizecounter.ISizeCounter;
 import rocky.sizecounter.SizeMetaData;
 import rocky.sizecounter.SourceMetaData;
 import rocky.sizecounter.UnsupportedFileType;
+import csdl.locc.measures.cpp.parser.javacc.TokenMgrError;
+import csdl.locc.measures.java.parser.javacc.CompilationUnit;
+import csdl.locc.measures.java.parser.javacc.JavaParser;
+import csdl.locc.measures.java.parser.javacc.ParseException;
 
+/**
+ * 
+ * @author ThachLN
+ * @deprecated Using rocky.sizecounter.SizeCounterImpl
+ */
 public class LoccUtil implements ISizeCounter {
     /*
 	public static Document parseFile(String filePath) throws FileNotFoundException, ParseException {

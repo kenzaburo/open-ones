@@ -20,63 +20,100 @@ package rocky.sizecounter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
 import rocky.common.CommonUtil;
-import rocky.common.LogService;
 import rocky.common.PropertiesManager;
 import tk.stepcounter.CountResult;
 import tk.stepcounter.StepCounter;
 import tk.stepcounter.StepCounterFactory;
-import csdl.locc.measures.cpp.parser.javacc.TokenMgrError;
 
 /**
- * @author LinhLn
+ * @author ThachLe, team member
  */
 public class SizeCounterImpl implements ISizeCounter {
-    static final SizeCounterUtil scu = new SizeCounterUtil();
-    static final Logger log = Logger.getLogger("ISizeCounter");
+    /** Logger. */
+    static final Logger LOG = Logger.getLogger("SizeCounterImpl");
+
+    /** . */
+    private static final String EXT_SEPARATOR = " | ";
+
+    // Load the configuration file: ApplicationResources.properties
+    /** List of supported extension file. It's without dot character. */
+    private static String[] supportedExtFiles = null;
+
+    /** Extension files are source code. */
+    private static String[] supportedExtSrcFiles = null;
+
+    static {
+        try {
+            Properties props = PropertiesManager.newInstanceFromProps("/ApplicationResources.properties");
+
+            String supportedExt = props.getProperty("SupportFiles");
+            supportedExtFiles = supportedExt.split(EXT_SEPARATOR);
+            Arrays.sort(supportedExtFiles);
+
+            String srcExt = props.getProperty("SourceFiles");
+            supportedExtSrcFiles = srcExt.split(EXT_SEPARATOR);
+            Arrays.sort(supportedExtSrcFiles);
+        } catch (Exception ex) {
+            LOG.error("Load configuration file ApplicationResources.properties", ex);
+        }
+    }
+
     @Override
     public SizeMetaData countSize(String filePath) {
         // TODO Auto-generated method stub
         SizeMetaData sizeMD = new SizeMetaData();
         SourceMetaData sizeMd = new SourceMetaData();
-        int sizeResult;
+        // File extension without dot character
         String ext = CommonUtil.getExtension(filePath);
-        try {
-            if (scu.checkFileType("SourceFiles" , ext)) {
-                sizeMd = countLOC(filePath);
-                sizeMD.setSize(sizeMd.getLoc());
-                sizeMD.setUnit(UnitType.LOC);
-                sizeMD.setSize1(sizeMd.getComment());
-                sizeMD.setUnit1(UnitType.COMMENT);
-            } else if (scu.checkFileType("WordFiles" , ext)) {
-                sizeResult = scu.countPage(filePath);
-                sizeMD.setSize(sizeResult);
+        int nmPage;
+
+        if (CommonUtil.isNNandNB(ext)) {
+            if (isSourceFile(ext)) {
+                try {
+                    sizeMd = countLOC(filePath);
+                    sizeMD.setSize(sizeMd.getLoc());
+                    sizeMD.setUnit(UnitType.LOC);
+                    sizeMD.setSize1(sizeMd.getComment());
+                    sizeMD.setUnit1(UnitType.COMMENT);
+                    sizeMD.setComment(sizeMd.getComment());
+                } catch (UnsupportedFileType ex) {
+                    // Skip the exception. The extension is not supported.
+                    LOG.warn("Could not support extension '" + ext + "'", ex);
+                }
+
+            } else if (SizeCounterUtil.isWordFile(ext)) {
+                nmPage = SizeCounterUtil.countWordFile(filePath);
+                sizeMD.setSize(nmPage);
                 sizeMD.setUnit(UnitType.PAGE);
-            } else if (scu.checkFileType("ExcelFiles" , ext)) {
-                sizeResult = scu.countSheet(filePath);
-                sizeMD.setSize(sizeResult);
-                sizeMD.setUnit(UnitType.SHEET);
-                if (scu.checkIsUnitTestFile(filePath)) {
-                    int nmbUTC = scu.getNmTC(filePath);
+            } else if (SizeCounterUtil.isExcelFile(ext)) {
+                sizeMD = SizeCounterUtil.countSpreadSheet(filePath);
+                if (SizeCounterUtil.isUTCFile(filePath)) {
+                    int nmbUTC = SizeCounterUtil.getNmTC(filePath);
                     sizeMD.setSize1(nmbUTC);
                 }
-            } else if (scu.checkFileType("PowerPointFiles" , ext)) {
-                sizeResult = scu.countSlide(filePath);
-                sizeMD.setSize(sizeResult);
+            } else if (SizeCounterUtil.isPresentFile(ext)) {
+                int nmSlide = SizeCounterUtil.countSlide(filePath);
+                sizeMD.setSize(nmSlide);
                 sizeMD.setUnit(UnitType.SLIDE);
             }
-        } catch (TokenMgrError tmex) {
-            LogService.logError(this.getClass(), tmex);
-        } catch (UnsupportedFileType ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
         }
 
         return sizeMD;
+    }
+
+    /**
+     * [Give the description for method].
+     * @param ext File extension without dot charater.
+     * @return true if the ext is in the support list of the configuration file.
+     */
+    private boolean isSourceFile(String ext) {
+        return Arrays.binarySearch(supportedExtSrcFiles, ext) >= 0;
     }
 
     /*
@@ -109,34 +146,31 @@ public class SizeCounterImpl implements ISizeCounter {
                     srcMd.setLoc(cntRes.getStep());
                     srcMd.setComment(cntRes.getComment());
                 } else {
-                    log.warn("Could not count file extension:"
-                            + CommonUtil.getExtension(filePath));
+                    LOG.warn("Could not count file extension:" + CommonUtil.getExtension(filePath));
                 }
 
                 return srcMd;
 
             } catch (IOException ioex) {
-                log.error("Error in counting size of file '" + filePath + "'",
-                        ioex);
+                LOG.error("Error in counting size of file '" + filePath + "'", ioex);
             }
         } else {
-            log.warn("Don't support counter for file extension:"
+            LOG.warn("Don't support counter for file extension:" + CommonUtil.getExtension(filePath));
+            throw new UnsupportedFileType("Don't support counter for file extension:"
                     + CommonUtil.getExtension(filePath));
-            throw new UnsupportedFileType(
-                    "Don't support counter for file extension:"
-                            + CommonUtil.getExtension(filePath));
         }
 
         return null;
     }
-    /*
-     * Explain the description for this method here
+
+    /**
+     * Check whether the input extFile is countable size or not.
+     * @param extFile the extension without the dot character.
+     * @return the flag notices file extension is countable or not.
      * @see rocky.sizecounter.ISizeCounter#isCountable(java.lang.String)
      */
     @Override
     public boolean isCountable(String extFile) {
-        // TODO Auto-generated method stub
-        return scu.checkFileType("SupportFiles", extFile);
+        return (Arrays.binarySearch(supportedExtFiles, extFile) >= 0);
     }
-
 }

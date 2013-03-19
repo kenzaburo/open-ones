@@ -18,10 +18,27 @@
  */
 package rocky.sizecounter;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 /**
- * @author ThachLe, team member
+ * @author ThachLN
  *
  */
-public enum UnitType {
-    Test, LOC , COMMENT , PAGE , SHEET, SLIDE, UTC
+public class SizeCounterUtilTest {
+
+    /**
+     * Test method for {@link rocky.sizecounter.SizeCounterUtil#countSpreadSheet(java.lang.String)}.
+     */
+    @Test
+    public void testCountSpreadSheet() {
+        SizeMetaData sizeMD = SizeCounterUtil.countSpreadSheet("/testdata/01_GoPortal_Overview_20101023.xls");
+        assertEquals(UnitType.PAGE, sizeMD.getUnit());
+        assertEquals(13, sizeMD.getSize());
+        
+        assertEquals(UnitType.SHEET, sizeMD.getUnit1());
+        assertEquals(7, sizeMD.getSize1());
+    }
+
 }

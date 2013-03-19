@@ -21,9 +21,15 @@ SizeCounter Distribution
 Support to count size of files:
 - .java,
 
-Refer: \\rai-server\Supports\Tools\StepCounter\stepcounter\amateras-stepcounter.tar.gz
+Refer: StepCounter\stepcounter\amateras-stepcounter.tar.gz
 Instructions
 --------------------------------------------------------------------------------
+Version 2.2.1
+- Fix bug: Null exception in case file extension is null.
+
+Version 2.2.0
+- Support to count documents: Word, Excel, PowerPoint
+
 Version 0.2
 - Upgraded StepCounter 2.0
 - Upgraded libraries:
