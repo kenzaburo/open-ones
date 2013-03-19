@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/checkstyle-5.3-all.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/rocky-common-0.1.2-201105149102007.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

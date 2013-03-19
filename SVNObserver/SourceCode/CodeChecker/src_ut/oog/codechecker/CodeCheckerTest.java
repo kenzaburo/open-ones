@@ -24,9 +24,9 @@ public class CodeCheckerTest {
     @Test
     public void testCheck() {
       //Path to file config
-      String xmlFilePath = "E:\\FSoft\\FUOJT\\checkstyle\\OpenOnes Checks_v1.0.xml";
+      String xmlFilePath = "/Checks_v1.0.xml";
       //Path to source
-      String srcPath = "E:\\FSoft\\FUOJT\\DocSearch\\src";
+      String srcPath = "/src";
       CodeChecker CodeChecker = new CodeChecker(xmlFilePath);
       Map<String, List<AuditEvent>> resultCheck = CodeChecker.check(srcPath);
 
@@ -34,7 +34,7 @@ public class CodeCheckerTest {
       assertEquals(19, resultCheck.size());
       
       
-      List<AuditEvent> file1 = resultCheck.get("E:\\FSoft\\FUOJT\\DocSearch\\src\\openones\\docsearch\\dao\\CommentDao.java");
+      List<AuditEvent> file1 = resultCheck.get("\\CommentDao.java");
       
       // Number of errors of file CommentDao.java
       assertEquals(9, file1.size());
@@ -45,7 +45,7 @@ public class CodeCheckerTest {
     @Test
     public void testCheck_CodeChecker() {
       //Path to file config
-      String xmlFilePath = "E:\\4PSuite\\SourceCode\\SVN2RDB\\src\\OpenOnes Checks_v1.0.xml";
+      String xmlFilePath = "/Checks_v1.0.xml";
       //Path to source
       String srcPath = "E:\\4PSuite\\SourceCode\\ProductIntro\\src\\control";
       CodeChecker CodeChecker = new CodeChecker(xmlFilePath);

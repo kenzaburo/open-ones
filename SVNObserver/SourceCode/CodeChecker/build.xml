@@ -1,6 +1,6 @@
 <project name="CodeChecker" default="dist" basedir=".">
   <description>
-      Build file for SizeCounter project
+      Build file for CodeChecker project
   </description>
   <!-- Load user property definition overrides -->
   <property file="build.properties"/>	
@@ -34,7 +34,7 @@
 
 -->
 
-  <property name="compile.debug"       value="false"/>
+  <property name="compile.debug"       value="true"/>
   <property name="compile.deprecation" value="false"/>
   <property name="compile.optimize"    value="true"/>
   
@@ -81,8 +81,10 @@
 		<fileset dir="lib" />
 	</copy>
 	
+	<!--
 	<copy file="OpenOnes Checks_v1.0.xml" todir="${dist.home}/bin" preservelastmodified="true">
 	</copy>
+	-->
 
 	<jar jarfile="${dist.home}/lib/${app.pkg}-${app.version}-${today}.jar" basedir="${build.home}"/>
 	<echo message="View the result within folder ${dist.home}"/>

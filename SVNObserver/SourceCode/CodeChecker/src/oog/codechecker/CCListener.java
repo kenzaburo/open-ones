@@ -11,7 +11,7 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 
 /**
  * This class is used as a listener.
- * @author MINH
+ * @author Thach Le, team members
  *
  */
 public class CCListener implements AuditListener {
