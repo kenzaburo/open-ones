@@ -19,7 +19,6 @@
 			<attribute name="javadoc_location" value="file:/D:/jPackages/eclipselink-javadocs"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/svnkit.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/juniversalchardet-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.14-bin.jar"/>
@@ -39,5 +38,6 @@
 	<classpathentry kind="lib" path="lib/rocky-common-0.1.2-201105149102007.jar"/>
 	<classpathentry kind="lib" path="lib/sizecounter-2.2.1-201112358082705.jar"/>
 	<classpathentry kind="lib" path="lib/code-checker-0.2.2-201112358081938.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.7.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

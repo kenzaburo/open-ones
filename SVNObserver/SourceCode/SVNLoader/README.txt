@@ -1,6 +1,6 @@
 SVNLoader loads statistical data from the Subversion (SVN) repository to the relational database.
 
-Current version: 0.2.1
+Current version: 0.2.2
 
 How to make the binary package and run the demo from the source code?
 =========================================
@@ -36,7 +36,15 @@ How to develop?
 - Support tools:
   + Database client: Squirrel (http://squirrel-sql.sourceforge.net/)
   + HSQL: http://hsqldb.org/
+- Libraries:
+  + svnkit: http://svnkit.com
   
 Bugs/Changes tracking
 ==============================
+* Version: 0.2.2
+#1: Could not load the URL which is not the root.
+Solution:
+Upgrade library svnkit into svnkit-1.7.8.jar
+
+*Version: 0.2.1
 #1: Violation of PRIMARY KEY constraint 'PK__SVNVersion__7DC38901'. Cannot insert duplicate key in object 'dbo.SVNVersion'.
