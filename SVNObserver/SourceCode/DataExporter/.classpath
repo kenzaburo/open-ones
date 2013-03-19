@@ -18,10 +18,9 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.14-bin.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.7-20101029.jar"/>
-	<classpathentry kind="lib" path="lib/poi-examples-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="lib/poi-scratchpad-3.7-20101029.jar"/>
-	<classpathentry kind="lib" path="lib/rocky-common-0.1.2-201106180123816.jar"/>
+	<classpathentry kind="lib" path="lib/rocky-common-0.1.2-201105149102007.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
