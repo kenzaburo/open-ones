@@ -36,8 +36,8 @@
 	<classpathentry kind="lib" path="lib/xbean.jar"/>
 	<classpathentry kind="lib" path="lib/stepcounter_2.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/rocky-common-0.1.2-201105149102007.jar"/>
-	<classpathentry kind="lib" path="lib/sizecounter-2.2.1-201112358082705.jar"/>
 	<classpathentry kind="lib" path="lib/code-checker-0.2.2-201112358081938.jar"/>
 	<classpathentry kind="lib" path="lib/svnkit-1.7.8.jar"/>
+	<classpathentry kind="lib" path="lib/sizecounter-2.2.2-20130380114156.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
