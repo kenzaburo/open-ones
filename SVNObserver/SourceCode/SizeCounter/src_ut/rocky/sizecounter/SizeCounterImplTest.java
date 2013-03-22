@@ -23,21 +23,32 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * @author ThachLN
+ * @author thachln
  */
-public class SizeCounterUtilTest {
+public class SizeCounterImplTest {
 
     /**
-     * Test method for {@link rocky.sizecounter.SizeCounterUtil#countSpreadSheet(java.lang.String)}.
+     * Test method for {@link rocky.sizecounter.SizeCounterImpl#countSize(java.lang.String)}.
      */
     @Test
-    public void testCountSpreadSheet() {
-        SizeMetaData sizeMD = SizeCounterUtil.countSpreadSheet("/testdata/01_GoPortal_Overview_20101023.xls");
-        assertEquals(UnitType.PAGE, sizeMD.getUnit());
-        assertEquals(13, sizeMD.getSize());
+    public void testCountSize() {
+        ISizeCounter scounter = new SizeCounterImpl();
+        try {
+            SizeMetaData smd = scounter
+                    .countSize("C:/UTR.xls");
+            assertEquals(UnitType.SHEET, smd.getUnit());
+            assertEquals(10, smd.getSize());
 
-        assertEquals(UnitType.SHEET, sizeMD.getUnit1());
-        assertEquals(7, sizeMD.getSize1());
+            assertEquals(UnitType.PAGE, smd.getUnit1());
+            assertEquals(20, smd.getSize1());
+
+            assertEquals(UnitType.UTC, smd.getUnit2());
+            assertEquals(62, smd.getSize2());
+
+        } catch (UnsupportedFileType ex) {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
     }
 
 }

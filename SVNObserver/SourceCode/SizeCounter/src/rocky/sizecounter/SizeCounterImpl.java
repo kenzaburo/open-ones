@@ -39,7 +39,7 @@ public class SizeCounterImpl implements ISizeCounter {
     static final Logger LOG = Logger.getLogger("SizeCounterImpl");
 
     /** . */
-    private static final String EXT_SEPARATOR = " | ";
+    private static final String EXT_SEPARATOR = ",";
 
     // Load the configuration file: ApplicationResources.properties
     /** List of supported extension file. It's without dot character. */
@@ -48,17 +48,40 @@ public class SizeCounterImpl implements ISizeCounter {
     /** Extension files are source code. */
     private static String[] supportedExtSrcFiles = null;
 
+    /** Names of sheets in UTC/UTR. */
+    private static String[] utcSheets = null;
+
+    /** Report sheet of UTC/UTR . */
+    private static String utcReportSheet = null;
+
+    /** Text of row to recognize the num of TC/TR . */
+    private static String utcLocationRow = null;
+
     static {
         try {
             Properties props = PropertiesManager.newInstanceFromProps("/ApplicationResources.properties");
 
-            String supportedExt = props.getProperty("SupportFiles");
+            // Get configuration of supported files
+            String supportedExt = props.getProperty("SupportFiles").trim();
             supportedExtFiles = supportedExt.split(EXT_SEPARATOR);
             Arrays.sort(supportedExtFiles);
 
-            String srcExt = props.getProperty("SourceFiles");
+            // Get configuration of extension of files
+            String srcExt = props.getProperty("SourceFiles").trim();
             supportedExtSrcFiles = srcExt.split(EXT_SEPARATOR);
             Arrays.sort(supportedExtSrcFiles);
+
+            // Get configuration of pattern UTC file
+            String utc = props.getProperty("UTC").trim();
+            utcSheets = utc.split(EXT_SEPARATOR);
+            Arrays.sort(utcSheets);
+
+            // Get sheet name contains report of UTC/UTR
+            utcReportSheet = props.getProperty("UTCLocation").trim();
+
+            // Get text to recognize the row which contain report
+            utcLocationRow = props.getProperty("UTCLocationRow").trim();
+
         } catch (Exception ex) {
             LOG.error("Load configuration file ApplicationResources.properties", ex);
         }
@@ -93,9 +116,12 @@ public class SizeCounterImpl implements ISizeCounter {
                 sizeMD.setUnit(UnitType.PAGE);
             } else if (SizeCounterUtil.isExcelFile(ext)) {
                 sizeMD = SizeCounterUtil.countSpreadSheet(filePath);
-                if (SizeCounterUtil.isUTCFile(filePath)) {
-                    int nmbUTC = SizeCounterUtil.getNmTC(filePath);
-                    sizeMD.setSize1(nmbUTC);
+
+                // If the excel file is the UnitTest Case or UnitTest Report
+                if (SizeCounterUtil.isUTCFile(filePath, utcSheets)) {
+                    int nmbUTC = SizeCounterUtil.countNmTC(filePath, utcReportSheet, utcLocationRow);
+                    sizeMD.setSize2(nmbUTC);
+                    sizeMD.setUnit2(UnitType.UTC);
                 }
             } else if (SizeCounterUtil.isPresentFile(ext)) {
                 int nmSlide = SizeCounterUtil.countSlide(filePath);

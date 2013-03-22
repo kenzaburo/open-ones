@@ -24,6 +24,9 @@ Support to count size of files:
 Refer: StepCounter\stepcounter\amateras-stepcounter.tar.gz
 Instructions
 --------------------------------------------------------------------------------
+Version 2.2.2
+- Support to count number of Test Case/Test Report in Excel template.
+
 Version 2.2.1
 - Fix bug: Null exception in case file extension is null.
 
@@ -33,10 +36,10 @@ Version 2.2.0
 Version 0.2
 - Upgraded StepCounter 2.0
 - Upgraded libraries:
- + Rocky Common 0.6:https://rai-server/svn/iProjects/trunk/RockyCommon/dist/rocky-common-0.6-20110210.jar
+ + Rocky Common 0.6
 
 Version 0.1
 ****
 
 Using libraries:
-- Rocky Common: https://rai-server/svn/iProjects/tags/RockyCommon/binary/rocky-common-0.4-20101122.jar
+- Rocky Common

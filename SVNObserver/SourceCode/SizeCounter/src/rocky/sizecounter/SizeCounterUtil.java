@@ -58,6 +58,7 @@ public class SizeCounterUtil {
 
     /**
      * Count Word's number of page from input directory.
+     * 
      * @param filePath .
      * @return Number of A4 pages
      */
@@ -95,8 +96,9 @@ public class SizeCounterUtil {
 
     /**
      * Count size of Excel file.
+     * 
      * @param filePath path of Excel file
-     * @return SizeMetaData
+     * @return SizeMetaData: Unit,Size: SHEET; Unit1,Size1:PAGE
      */
     public static SizeMetaData countSpreadSheet(String filePath) {
         InputStream is = null;
@@ -106,13 +108,13 @@ public class SizeCounterUtil {
         try {
             is = CommonUtil.loadResource(filePath);
             if (CommonUtil.getExtension(filePath).equals("xls")) {
-                HSSFWorkbook doc = new HSSFWorkbook(is);
-                doc.getDocumentSummaryInformation().getLineCount();
-                nmSheet = doc.getNumberOfSheets();
+                HSSFWorkbook wb = new HSSFWorkbook(is);
+                wb.getDocumentSummaryInformation().getLineCount();
+                nmSheet = wb.getNumberOfSheets();
                 HSSFSheet sheet;
 
-                for (int i = 0; i < doc.getNumberOfSheets(); i++) {
-                    sheet = doc.getSheetAt(i);
+                for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+                    sheet = wb.getSheetAt(i);
 
                     // Count approximately number of page
                     nmPage += sheet.getPrintSetup().getFitWidth() + sheet.getPrintSetup().getFitHeight();
@@ -125,12 +127,12 @@ public class SizeCounterUtil {
                 sizeMD.setSize1(nmPage);
 
             } else if (CommonUtil.getExtension(filePath).equals("xlsx")) {
-                XSSFWorkbook doc = new XSSFWorkbook(is);
-                nmSheet = doc.getNumberOfSheets();
+                XSSFWorkbook xwb = new XSSFWorkbook(is);
+                nmSheet = xwb.getNumberOfSheets();
                 XSSFSheet sheet;
 
-                for (int i = 0; i < doc.getNumberOfSheets(); i++) {
-                    sheet = doc.getSheetAt(i);
+                for (int i = 0; i < xwb.getNumberOfSheets(); i++) {
+                    sheet = xwb.getSheetAt(i);
 
                     // Count approximately number of page
                     nmPage += sheet.getPrintSetup().getFitWidth() + sheet.getPrintSetup().getFitHeight();
@@ -163,6 +165,7 @@ public class SizeCounterUtil {
 
     /**
      * Count excel's number of sheet from input directory.
+     * 
      * @param filePath path of Excel file
      * @return sheet
      */
@@ -238,26 +241,39 @@ public class SizeCounterUtil {
 
     /**
      * getNmTC.
+     * 
      * @param filePath path of UT file.
      * @return 0
      */
-    public static int getNmTC(String filePath) {
+    public static int countNmTC(String filePath, String reportSheet, String rowText) {
         FileInputStream fis = null;
-        int tmp = 0, nmtc = 0;
-        
+        int rowOfReport = 0, nmtc = -1;
+
         try {
             fis = new FileInputStream(filePath);
             int i = 0;
             if (CommonUtil.getExtension(filePath).equals("xls")) {
                 try {
                     HSSFWorkbook doc = new HSSFWorkbook(fis);
-                    HSSFSheet sheet = doc.getSheet("Test Report");
+                    HSSFSheet sheet = doc.getSheet(reportSheet);
                     for (i = 0; i <= sheet.getLastRowNum(); i++) {
-                        if (sheet.getRow(i).getCell(2).getStringCellValue().equals("Sub total")) {
-                            tmp = i;
+                        if (sheet.getRow(i) == null) {
+                            continue;
+                        }
+
+                        if (sheet.getRow(i).getCell(2) == null) {
+                            continue;
+                        }
+
+                        if (sheet.getRow(i).getCell(2).getStringCellValue() == null) {
+                            continue;
+                        }
+
+                        if (sheet.getRow(i).getCell(2).getStringCellValue().equals(rowText)) {
+                            rowOfReport = i;
                         }
                     }
-                    nmtc = (int) sheet.getRow(tmp).getCell(9).getNumericCellValue();
+                    nmtc = (int) sheet.getRow(rowOfReport).getCell(9).getNumericCellValue();
                 } catch (Exception e) {
                     LOG.warn("Can not count number of UTC in file: " + filePath, e);
                 }
@@ -265,13 +281,13 @@ public class SizeCounterUtil {
             } else if (CommonUtil.getExtension(filePath).equals("xlsx")) {
                 try {
                     XSSFWorkbook doc = new XSSFWorkbook(fis);
-                    XSSFSheet sheet = doc.getSheet("Test Report");
+                    XSSFSheet sheet = doc.getSheet(reportSheet);
                     for (i = 0; i <= sheet.getLastRowNum(); i++) {
-                        if (sheet.getRow(i).getCell(2).getStringCellValue().equals("Sub total")) {
-                            tmp = i;
+                        if (sheet.getRow(i).getCell(2).getStringCellValue().equals(rowText)) {
+                            rowOfReport = i;
                         }
                     }
-                    nmtc = (int) sheet.getRow(tmp).getCell(9).getNumericCellValue();
+                    nmtc = (int) sheet.getRow(rowOfReport).getCell(9).getNumericCellValue();
                 } catch (Exception e) {
                     LOG.warn("Can not count number of UTC in file: " + filePath, e);
                 }
@@ -289,9 +305,10 @@ public class SizeCounterUtil {
         }
         return nmtc;
     }
-    
+
     /**
      * get file's name from filePath without extent.
+     * 
      * @param filePath .
      * @return filename
      */
@@ -308,6 +325,7 @@ public class SizeCounterUtil {
 
     /**
      * [Give the description for method].
+     * 
      * @param ext extension of file
      * @return
      */
@@ -316,17 +334,45 @@ public class SizeCounterUtil {
     }
 
     /**
-     * [Give the description for method].
-     * @param filePath
-     * @return
+     * Check the input file Path is the UTC or UTR.
+     * 
+     * @param filePath path of file will be checked
+     * @param requiredSheetNames Excel file must contains these sheets
+     * @return true if the filePath is UTC or UTR
+     * @throws IOException when error reading file
      */
-    public static boolean isUTCFile(String filePath) {
-        // TODO Auto-generated method stub
-        return false;
+    public static boolean isUTCFile(String filePath, String[] requiredSheetNames) {
+        try {
+            InputStream is = CommonUtil.loadResource(filePath);
+            if (CommonUtil.getExtension(filePath).equals("xls")) {
+                HSSFWorkbook wb = new HSSFWorkbook(is);
+
+                // Check all required sheets
+                for (String sheetName : requiredSheetNames) {
+                    if (wb.getSheet(sheetName) == null) {
+                        return false;
+                    }
+                }
+            } else if (CommonUtil.getExtension(filePath).equals("xlsx")) {
+                XSSFWorkbook xwb = new XSSFWorkbook(is);
+                // Check all required sheets
+                for (String sheetName : requiredSheetNames) {
+                    if (xwb.getSheet(sheetName) == null) {
+                        return false;
+                    }
+                }
+            }
+        } catch (IOException ioEx) {
+            LOG.error("Could not check file '" + filePath + "'", ioEx);
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * [Give the description for method].
+     * 
      * @param ext
      * @return
      */
@@ -336,6 +382,7 @@ public class SizeCounterUtil {
 
     /**
      * [Give the description for method].
+     * 
      * @param ext
      * @return
      */
