@@ -84,5 +84,28 @@ public class CommonUtilTest extends TestCase {
             ex.printStackTrace();
         }
         System.out.println(strValue);
-    }    
+    }
+    
+    public void testGetFileName01() {
+        String ext = CommonUtil.getFilename("D:/Test/abc.java");
+        assertEquals("abc.java", ext);
+        
+        ext = CommonUtil.getFilename("/Test/abc.java");
+        assertEquals("abc.java", ext);
+        
+        ext = CommonUtil.getFilename("D:\\Test\\abc.java");
+        assertEquals("abc.java", ext);
+        
+        ext = CommonUtil.getFilename("abc.java");
+        assertEquals("abc.java", ext);
+        
+        ext = CommonUtil.getFilename("/");
+        assertEquals("", ext);
+        
+        ext = CommonUtil.getFilename("D:/");
+        assertEquals("", ext);
+        
+        ext = CommonUtil.getFilename(null);
+        assertNull(ext);
+    }
 }

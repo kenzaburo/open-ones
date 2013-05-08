@@ -3,7 +3,17 @@
  */
 package rocky.common;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -20,11 +29,10 @@ import java.util.regex.Pattern;
 
 /**
  * @author ThachLN
- * 
  */
 public class CommonUtil {
     /** String pattern of format string. */
-    private static final String VARIABLE_NAME_PATTERN = "[\\x24][\\{]([a-zA-Z0-9_.]+)[\\}]";
+    public static final String VARIABLE_NAME_PATTERN = "[\\x24][\\{]([a-zA-Z0-9_.]+)[\\}]";
 
     /**
      * Refer isNNNE.
@@ -37,11 +45,10 @@ public class CommonUtil {
     }
     /**
      * Kiểm tra danh sách khác rỗng.
-     * 
      * @param lst
      * @return true nếu danh sách khác rỗng
      */
-    
+
     public static boolean isNNNE(List<Object> lst) {
         return (lst != null) && (lst.size() > 0);
     }
@@ -57,7 +64,7 @@ public class CommonUtil {
     public static boolean NNandNE(Map map) {
         return (map != null) && (map.size() > 0);
     }
-    
+
     public static boolean isNNNE(Map map) {
         return (map != null) && (map.size() > 0);
     }
@@ -69,9 +76,7 @@ public class CommonUtil {
 
     /**
      * Kiểm tra chuỗi không rỗng.
-     * 
-     * @param str
-     *            chuỗi cần kiểm tra
+     * @param str chuỗi cần kiểm tra
      * @return true nếu chuỗi không rỗng
      */
     @Deprecated
@@ -82,15 +87,15 @@ public class CommonUtil {
     public static boolean isNNandNB(String str) {
         return (str != null) && (str.length() > 0);
     }
-    
+
     public static boolean isNNandNB(List objList) {
         return (objList != null) && (objList.size() > 0);
     }
-    
+
     public static boolean isNNandNB(Object strObj) {
         return (strObj != null) && (strObj.toString().length() > 0);
     }
-    
+
     public static int find(Object[] array, Object obj) {
         int len = (array != null) ? array.length : 0;
 
@@ -107,7 +112,6 @@ public class CommonUtil {
 
     /**
      * Compare dates with year, month, day
-     * 
      * @param srcDte
      * @param dstDte
      * @return
@@ -124,24 +128,22 @@ public class CommonUtil {
     }
 
     /**
-     * Adds or subtracts the specified amount of days to the given date.
-     * For example, to subtract 5 days from the current date, you can achieve it by calling:
-     * addDay(Calendar.DAY_OF_MONTH, -5).
+     * Adds or subtracts the specified amount of days to the given date. For example, to subtract 5 days from the
+     * current date, you can achieve it by calling: addDay(Calendar.DAY_OF_MONTH, -5).
      * @param dte root date
-     * @param numDays  the amount of days to be added to the field.
+     * @param numDays the amount of days to be added to the field.
      * @return
      */
     public static Date addDay(Date dte, int numDays) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(dte);
         cal.add(Calendar.DAY_OF_MONTH, numDays);
-        
+
         return cal.getTime();
     }
-    
+
     /**
      * Get year, month, day of a given date
-     * 
      * @param dte
      * @return
      */
@@ -159,7 +161,7 @@ public class CommonUtil {
     public static boolean mkdir(String path) {
         return new File(path).mkdir();
     }
-    
+
     /**
      * Get extension of file.
      * @param fileName
@@ -169,12 +171,38 @@ public class CommonUtil {
         if (!isNNandNB(fileName)) {
             return fileName;
         }
-            
+
         int idxOfDot = fileName.lastIndexOf(Constant.CHAR_DOT);
         if (idxOfDot == -1) {
             return null;
         } else {
             return fileName.substring(idxOfDot + 1);
+        }
+    }
+
+    /**
+     * Get file name from path. Ex: Input C:/folder/file.txt => Filename: file.txt Input C:\folder\file.txt => Filename:
+     * file.txt Input /folder/file.txt => Filename: file.txt
+     * @param filePath
+     * @return file name includes extension
+     */
+    public static String getFilename(String filePath) {
+        if ((filePath == null) || (filePath.isEmpty())) {
+            return filePath;
+        }
+
+        int idx = filePath.lastIndexOf(Constant.STR_RIGHTSLASH);
+
+        if (idx > -1) { // Has separator /
+            return filePath.substring(idx + 1);
+        } else {
+            idx = filePath.lastIndexOf(Constant.STR_BACKSLASH);
+
+            if (idx > -1) { // Has separator \
+                return filePath.substring(idx + 1);
+            } else {
+                return filePath;
+            }
         }
     }
 
@@ -219,9 +247,7 @@ public class CommonUtil {
 
     /**
      * Đọc nội dung của file resource với encoding cho trước
-     * 
-     * @param resourcePath
-     *            đường dẫn file trong CLASSPATH
+     * @param resourcePath đường dẫn file trong CLASSPATH
      * @param encoding
      * @return nội dung file. Nếu có lỗi thì trả lại null
      */
@@ -274,7 +300,6 @@ public class CommonUtil {
 
     /**
      * Get working directory of the application.
-     * 
      * @return String
      */
     public static String getWorkingDir() {
@@ -306,8 +331,17 @@ public class CommonUtil {
         }
     }
 
+    /**
+     * Get resource from the CLASSPATH or given file.
+     * @param resourcePath
+     * @return
+     * @throws FileNotFoundException
+     */
     public static InputStream loadResource(String resourcePath) throws FileNotFoundException {
-        if (resourcePath.startsWith("/")) { // The resource file is in the
+        if (resourcePath.startsWith("//")) { // Root path in Linux
+            String path = resourcePath.substring(1);
+            return new FileInputStream(path);
+        } if (resourcePath.startsWith("/")) { // The resource file is in the
                                             // CLASSPATH
             return (CommonUtil.class.getResourceAsStream(resourcePath));
         } else { // The resource file is the input file
@@ -373,11 +407,9 @@ public class CommonUtil {
         return sb.toString();
     }
     /**
-     * Format a string with pattern: xxxx${var[.format]}xxxx Supported
-     * variables: 1) Dated format 2) Environment variables Example: 1)
-     * formatPattern("Today is ${CURREN_DATE.YYYYMMDD}" returns
-     * "Today is 20081115" with assumption To day is 15-Nov-2008. 2)
-     * 
+     * Format a string with pattern: xxxx${var[.format]}xxxx Supported variables: 1) Dated format 2) Environment
+     * variables Example: 1) formatPattern("Today is ${CURREN_DATE.YYYYMMDD}" returns "Today is 20081115" with
+     * assumption To day is 15-Nov-2008. 2)
      * @param strPattern
      * @return
      */
@@ -421,7 +453,7 @@ public class CommonUtil {
 
         return sb.toString();
     }
-    
+
     /**
      * Parse String to Date with given pattern.
      * @param strDate
@@ -436,15 +468,13 @@ public class CommonUtil {
         } catch (ParseException e) {
             // Skip
         }
-        
+
         return dte;
     }
-    
+
     /**
      * Đọc nội dung của file resource với encoding cho trước
-     * 
-     * @param resourcePath
-     *            đường dẫn file trong CLASSPATH
+     * @param resourcePath đường dẫn file trong CLASSPATH
      * @param encoding
      * @return nội dung file. Nếu có lỗi thì trả lại null
      */
@@ -462,28 +492,26 @@ public class CommonUtil {
             while ((len = buffReader.read(buff)) != -1) {
                 sb.append(buff, 0, len);
             }
-        } catch (Exception e){
-            //e.printStackTrace();
-        }
-        finally {
-                if (buffReader != null) {
-                    buffReader.close();
-                }
-                if (isReader != null) {
-                    isReader.close();
-                }
-                if (fis != null) {
-                    fis.close();
-                }
+        } catch (Exception e) {
+            // e.printStackTrace();
+        } finally {
+            if (buffReader != null) {
+                buffReader.close();
+            }
+            if (isReader != null) {
+                isReader.close();
+            }
+            if (fis != null) {
+                fis.close();
+            }
         }
 
         return sb.toString();
-        
+
     }
-    
+
     /**
      * Chuyển mảng các object thành chuỗi.
-     * 
      * @param objs mảng các Object.
      * @param separator chuỗi phân các phần tử.
      * @return chuỗi gồm các phần tử cách nhau bởi chuỗi phân cách separator.
@@ -507,26 +535,24 @@ public class CommonUtil {
         while (tokens.hasMoreElements()) {
             lstResult.add(tokens.nextElement());
         }
-        return (String[])lstResult.toArray(Constant.BLANK_STRS);
+        return (String[]) lstResult.toArray(Constant.BLANK_STRS);
     }
-    
+
     /**
-     * Check an object whether is a primitive type or not.
-     * The primitive type include boolean, char, byte, short, int, long, double, float
+     * Check an object whether is a primitive type or not. The primitive type include boolean, char, byte, short, int,
+     * long, double, float
      * @param obj the input object will be checked
      * @return true if the obj is the primitive type.
      */
     public static boolean isPrimitive(Object obj) {
-        
-        final Class[] PRIMITIVE_CLASSES = { boolean.class, char.class, byte.class, short.class, int.class
-                                          , long.class, double.class, float.class
-                                          , Boolean.class, Character.class, Byte.class, Short.class, Integer.class
-                                          , Long.class, Double.class, Float.class
-                                          , String.class};
+
+        final Class[] PRIMITIVE_CLASSES = {boolean.class, char.class, byte.class, short.class, int.class, long.class,
+                double.class, float.class, Boolean.class, Character.class, Byte.class, Short.class, Integer.class,
+                Long.class, Double.class, Float.class, String.class};
         if (obj == null) {
             return true;
         }
-        
+
         for (Class singleClass : PRIMITIVE_CLASSES) {
             if (obj.getClass() == singleClass) {
                 return true;
@@ -534,34 +560,34 @@ public class CommonUtil {
         }
         return false;
     }
-    
+
     public static String getCurrentWorkingFolder() {
         File f = new File(".");
         String currentPath = null;
-        
+
         try {
             currentPath = f.getCanonicalPath();
         } catch (IOException ioex) {
             LogService.logError("Util", ioex);
         }
-        
+
         return currentPath;
     }
-    
+
     public static boolean existedFile(String filePath) {
         return new File(filePath).exists();
     }
-    
+
     public static boolean rename(String filePath, String newFilePath) {
         new File(filePath).renameTo(new File(newFilePath));
-        
+
         return true;
     }
 
     public static String formatDate(Date dte, String dteFormat) {
         return new SimpleDateFormat(dteFormat).format(dte);
     }
-    
+
     public static void SaveFile(String pathFile, String Content) {
         Writer output = null;
         File file = new File(pathFile);

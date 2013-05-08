@@ -5,8 +5,14 @@
 
 INTRODUCTION:
 
-This document contains the release notes for the 0.2 version of Rocky Common.
+This document contains the release notes for the Rocky Common library.
 Rocky Common is a set of utility functions and reusable components that should be of use in any Java environment.
+
+*** Version 0.1.7
+- Common.loadResource() supports path of file in Linux: //root/folder/file
+
+*** Version 0.1.5
+- Add class EvalMathString to allow evaluate the simple string Math
 *** Version 0.5
 - Fixed bug: URL Pattern of MSSQL
 *** Version 0.3
@@ -18,3 +24,4 @@ Rocky Common is a set of utility functions and reusable components that should b
 *** Version 0.1
 
 Le Ngoc Thach
+ThachLN@gmail.com
