@@ -41,6 +41,34 @@ public class PoiUtil {
         return wk;
     }
 
+    /**
+     * Set content for col conIdx of row with value of Object.
+     * @param row
+     * @param colIdx
+     * @param value
+     * @return
+     */
+    public static HSSFCell setContent(HSSFRow row, int colIdx, Object value) {
+        HSSFCell cell = row.getCell(colIdx);
+        if (cell == null) {
+            cell = row.createCell(colIdx);
+        }
+
+        if (value instanceof Date) {
+            cell.setCellValue((Date) value);
+        } else if (value instanceof Double) {
+            cell.setCellValue(((Double) value).doubleValue());
+        } else if (value instanceof Integer) {
+            cell.setCellValue(((Integer) value).doubleValue());
+        } else if (value instanceof Boolean) {
+            cell.setCellValue((Boolean) value);
+        } else {
+            cell.setCellValue(new HSSFRichTextString(value.toString()));
+        }
+
+        return cell;        
+    }
+    
     public static HSSFCell setContent(HSSFRow row, short colIdx, Object value) {
         HSSFCell cell = row.getCell(colIdx);
         if (cell == null) {

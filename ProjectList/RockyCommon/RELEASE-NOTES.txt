@@ -8,6 +8,9 @@ INTRODUCTION:
 This document contains the release notes for the Rocky Common library.
 Rocky Common is a set of utility functions and reusable components that should be of use in any Java environment.
 
+*** Version 0.1.8
+- Add FileUtil class
+
 *** Version 0.1.7
 - Common.loadResource() supports path of file in Linux: //root/folder/file
 

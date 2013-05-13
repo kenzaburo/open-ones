@@ -250,6 +250,7 @@ public class CommonUtil {
      * @param resourcePath đường dẫn file trong CLASSPATH
      * @param encoding
      * @return nội dung file. Nếu có lỗi thì trả lại null
+     * @deprecated using FileUtil.getContent(String resourcePath, boolean isResource, String encoding)
      */
     public static String getContent(String resourcePath, boolean isResource, String encoding) {
         InputStream fis = null;
@@ -477,6 +478,7 @@ public class CommonUtil {
      * @param resourcePath đường dẫn file trong CLASSPATH
      * @param encoding
      * @return nội dung file. Nếu có lỗi thì trả lại null
+     * @deprecated using FileUtil.getContent(String resourcePath, String encoding)
      */
     public static String getContent(String resourcePath, String encoding) throws IOException {
         InputStream fis = null;
