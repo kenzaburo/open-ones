@@ -1,6 +1,6 @@
-<project name="MekongSolution" default="dist" basedir=".">
+<project name="MKSS.VN" default="dist" basedir=".">
     <description>
-      Build file for the project
+      Sample to use ANT tool, SVNkit to checkout code from SVN Repository
   </description>
     <!-- Load user property definition overrides -->
     <property file="build.properties" />
@@ -12,8 +12,6 @@
     <property name="dist.home" location="dist/${app.name}-${app.version}" />
     <property name="web.content" location="WebContent" />
 
-    <property name="lib.compile" value="${web.content}/WEB-INF/lib" />
-    <property name="lib.server.compile" value="server-lib" />
     <property name="svn.lib" value="svn-lib" />
 
     <!-- Configure the custom Ant tasks for the Manager application -->
@@ -46,55 +44,6 @@
         </fileset>
     </path>
 
-    <path id="compile.classpath">
-        <fileset dir="${lib.compile}">
-            <include name="**/*.jar" />
-        </fileset>
-        <!-- Un-comment this tag your project wants external libraries from folder "server-lib" for compiling. -->
-        <fileset dir="${lib.server.compile}">
-            <include name="**/*.jar" />
-        </fileset>
-
-    </path>
-
-    <target name="init" depends="clean">
-        <!-- Create the time stamp -->
-        <tstamp />
-        <!-- Create the build directory structure used by compile -->
-        <mkdir dir="${build.home}" />
-        <mkdir dir="${build.home}/WEB-INF/classes" />
-
-    </target>
-
-    <target name="compile" depends="init" description="Compile all Java sources">
-
-        <!-- Compile Java classes as necessary -->
-        <echo message="Complie sourse folder 'src'" />
-        <javac srcdir="src" destdir="${build.home}/WEB-INF/classes" debug="${compile.debug}" deprecation="${compile.deprecation}" target="1.6" source="1.6" encoding="UTF-8" optimize="${compile.optimize}">
-            <classpath refid="compile.classpath" />
-        </javac>
-
-    </target>
-
-    <target name="dist" depends="compile" description="generate the distribution war file">
-        <!-- Create the distribution directory -->
-        <mkdir dir="${dist.home}" />
-
-        <!-- Copy WebContent -->
-        <copy todir="${build.home}" preservelastmodified="true">
-            <fileset dir="${web.content}" excludes=".svn/**,*.svn-base" />
-        </copy>
-
-        <!-- Copy resources from folder "src" -->
-        <copy todir="${build.home}/WEB-INF/classes" preservelastmodified="true">
-            <fileset dir="src" excludes=".svn/**,*.svn-base, **/*.java" />
-        </copy>
-
-
-        <jar jarfile="${dist.home}/${app.name}.war" basedir="${build.home}/" />
-        <echo message="View the result within folder ${dist.home}" />
-    </target>
-
     <target name="clean" description="clean up the build folder">
         <!-- Delete the ${build.home} and ${dist.home} directory trees -->
         <echo message="Delete the '${build.home}' and '${dist.home}' directory trees " />
@@ -104,50 +53,53 @@
     
     <target name="checkout" description="Checkout the source code from SVN">
         <property name="source-root" value="svn"/>
-	<mkdir dir="${source-root}" />
+	    <mkdir dir="${source-root}" />
         
-	<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
-            <arg value="co"/>
-            <arg value="--username"/>
-            <arg value="${username}"/>
-            <arg value="--password"/>
-            <arg value="${password}"/>
-            <arg value="${SVNURL}"/>
-	    
-	    <if>
-               <os family="windows" />
-                <then>
-                    <arg value="-r"/>
-	            <arg value="${rev}"/>
-                </then>
-                <else>
+		<if>
+                <equals arg1="${rev}" arg2="-1" />
+            <then>
+                <echo message="Checkout the latest revision" />
+				<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
+					<arg value="co"/>
+					<arg value="--username"/>
+					<arg value="${username}"/>
+					<arg value="--password"/>
+					<arg value="${password}"/>
+					<arg value="${SVNURL}"/>
+					<classpath refid="svn.classpath" />
+				</java>
+            </then>
+            <else>
+                <echo message="Checkout the revision ${rev}" />
+				<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
+					<arg value="co"/>
+					<arg value="--username"/>
+					<arg value="${username}"/>
+					<arg value="--password"/>
+					<arg value="${password}"/>
+					<arg value="${SVNURL}"/>
+					<arg value="-r"/>
+					<arg value="${rev}"/>
+					<classpath refid="svn.classpath" />
+				</java>
             </else>
-            </if>
-	        
-	    <classpath refid="svn.classpath" />
-        </java>
-    </target>
-    
-    <target name="update" description="Update the source code from SVN">
-        <property name="source-root" value="svn"/>
-	<mkdir dir="${source-root}" />
-        
-	<echo message="Update source code revision ${rev}"/>
-	<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
-            <arg value="up"/>
-            <arg value="--username"/>
-            <arg value="${username}"/>
-            <arg value="--password"/>
-            <arg value="${password}"/>
-            <arg value="${SVNURL}"/>
-	    
-	    <arg value="-r"/>
-	    <arg value="${rev}"/>
-	    
-	    <classpath refid="svn.classpath" />
-        </java>
+        </if>
     </target>
 
+    <target name="cleanup" description="Cleanup the source code">
+        <property name="source-root" value="svn"/>
+	    <mkdir dir="${source-root}" />
+        
+		<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
+			<arg value="cleanup"/>
+			<arg value="--username"/>
+			<arg value="${username}"/>
+			<arg value="--password"/>
+			<arg value="${password}"/>
+			<arg value="${SVNURL}"/>
+			<classpath refid="svn.classpath" />
+		</java>
+    </target>    
    <target name="help" description="Update the source code from SVN">
         <property name="source-root" value="svn"/>
 	<mkdir dir="${source-root}" />
@@ -158,54 +110,8 @@
 	    <classpath refid="svn.classpath" />
         </java>
     </target>
-    <!-- Stop Jboss -->
-    <target name="stop-jboss" depends="prepare-jboss" description="Stops the Application Server" >
-        <exec executable="${jboss.cmd.stop}" spawn="true">
-            <arg line="-S" />
-        </exec>
-        <echo>+-----------------------------+</echo>
-        <echo>| J B O S S   S T O P P E D   |</echo>
-        <echo>+-----------------------------+</echo>
-    </target>
-
-    <!-- Start Jboss -->
-    <target name="start-jboss" depends="prepare-jboss" description="Starts the Application Server" >
-        <exec executable="${jboss.cmd.start}" spawn="true">
-        </exec>
-        <echo>+-----------------------------+</echo>
-        <echo>| J B O S S   S T A R T E D   |</echo>
-        <echo>+-----------------------------+</echo>
-    </target>
-    <target name="deploy" description="Compile => Make .war => Stop jBoss => Deploy .war file => Start jBoss" >
-        <echo>Step 1: Make distribution</echo>
-        <antcall target="dist" />
-	
-	<echo>Step 2: Stop the Application Server</echo>
-	<antcall target="stop-jboss" />
-	
-	<echo>Step 3: Deploy the .war file into the Application Server</echo>
-        <copy file="${dist.home}/${app.name}.war" todir="${jboss.home}/server/default/deploy" preservelastmodified="true">
-        </copy>
-	
-	<echo>Step 4: Start the Application Server</echo>
-	<antcall target="start-jboss" />
-    </target>
-
-    <target name="prepare-jboss">
-         <if>
-            <os family="windows" />
-            <then>
-                <property name="jboss.cmd.start" value="${jboss.home}/bin/run.bat" />
-		<property name="jboss.cmd.stop" value="${jboss.home}/bin/shutdown.bat" />  
-            </then>
-            <else>
-                <property name="jboss.cmd.start" value="${jboss.home}/bin/run.sh" />
-		<property name="jboss.cmd.stop" value="${jboss.home}/bin/shutdown.sh" />  
-            </else>
-        </if>
-    </target>    
-
-    <taskdef resource="net/sf/antcontrib/antlib.xml">
+    
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
         <classpath>
             <pathelement location="ant-lib/ant-contrib-1.0b3.jar" />
         </classpath>
