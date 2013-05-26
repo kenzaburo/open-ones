@@ -1,0 +1,213 @@
+<project name="MekongSolution" default="dist" basedir=".">
+    <description>
+      Build file for the project
+  </description>
+    <!-- Load user property definition overrides -->
+    <property file="build.properties" />
+
+    <!-- set global properties for this build
+    web.content: Folder contain web content of application
+  -->
+    <property name="build.home" location="build" />
+    <property name="dist.home" location="dist/${app.name}-${app.version}" />
+    <property name="web.content" location="WebContent" />
+
+    <property name="lib.compile" value="${web.content}/WEB-INF/lib" />
+    <property name="lib.server.compile" value="server-lib" />
+    <property name="svn.lib" value="svn-lib" />
+
+    <!-- Configure the custom Ant tasks for the Manager application -->
+    <!--
+  <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+  <taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+  -->
+
+
+    <!--
+
+  These properties control option settings on the Javac compiler when it
+  is invoked using the <javac> task.
+
+  compile.debug        Should compilation include the debug option?
+
+  compile.deprecation  Should compilation include the deprecation option?
+
+  compile.optimize     Should compilation include the optimize option?
+
+-->
+
+    <property name="compile.debug" value="true" />
+    <property name="compile.deprecation" value="false" />
+    <property name="compile.optimize" value="true" />
+
+    <path id="svn.classpath">
+        <fileset dir="${svn.lib}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="compile.classpath">
+        <fileset dir="${lib.compile}">
+            <include name="**/*.jar" />
+        </fileset>
+        <!-- Un-comment this tag your project wants external libraries from folder "server-lib" for compiling. -->
+        <fileset dir="${lib.server.compile}">
+            <include name="**/*.jar" />
+        </fileset>
+
+    </path>
+
+    <target name="init" depends="clean">
+        <!-- Create the time stamp -->
+        <tstamp />
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build.home}" />
+        <mkdir dir="${build.home}/WEB-INF/classes" />
+
+    </target>
+
+    <target name="compile" depends="init" description="Compile all Java sources">
+
+        <!-- Compile Java classes as necessary -->
+        <echo message="Complie sourse folder 'src'" />
+        <javac srcdir="src" destdir="${build.home}/WEB-INF/classes" debug="${compile.debug}" deprecation="${compile.deprecation}" target="1.6" source="1.6" encoding="UTF-8" optimize="${compile.optimize}">
+            <classpath refid="compile.classpath" />
+        </javac>
+
+    </target>
+
+    <target name="dist" depends="compile" description="generate the distribution war file">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist.home}" />
+
+        <!-- Copy WebContent -->
+        <copy todir="${build.home}" preservelastmodified="true">
+            <fileset dir="${web.content}" excludes=".svn/**,*.svn-base" />
+        </copy>
+
+        <!-- Copy resources from folder "src" -->
+        <copy todir="${build.home}/WEB-INF/classes" preservelastmodified="true">
+            <fileset dir="src" excludes=".svn/**,*.svn-base, **/*.java" />
+        </copy>
+
+
+        <jar jarfile="${dist.home}/${app.name}.war" basedir="${build.home}/" />
+        <echo message="View the result within folder ${dist.home}" />
+    </target>
+
+    <target name="clean" description="clean up the build folder">
+        <!-- Delete the ${build.home} and ${dist.home} directory trees -->
+        <echo message="Delete the '${build.home}' and '${dist.home}' directory trees " />
+        <delete dir="${build.home}" />
+        <delete dir="${dist.home}" />
+    </target>
+    
+    <target name="checkout" description="Checkout the source code from SVN">
+        <property name="source-root" value="svn"/>
+	<mkdir dir="${source-root}" />
+        
+	<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
+            <arg value="co"/>
+            <arg value="--username"/>
+            <arg value="${username}"/>
+            <arg value="--password"/>
+            <arg value="${password}"/>
+            <arg value="${SVNURL}"/>
+	    
+	    <if>
+               <os family="windows" />
+                <then>
+                    <arg value="-r"/>
+	            <arg value="${rev}"/>
+                </then>
+                <else>
+            </else>
+            </if>
+	        
+	    <classpath refid="svn.classpath" />
+        </java>
+    </target>
+    
+    <target name="update" description="Update the source code from SVN">
+        <property name="source-root" value="svn"/>
+	<mkdir dir="${source-root}" />
+        
+	<echo message="Update source code revision ${rev}"/>
+	<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
+            <arg value="up"/>
+            <arg value="--username"/>
+            <arg value="${username}"/>
+            <arg value="--password"/>
+            <arg value="${password}"/>
+            <arg value="${SVNURL}"/>
+	    
+	    <arg value="-r"/>
+	    <arg value="${rev}"/>
+	    
+	    <classpath refid="svn.classpath" />
+        </java>
+    </target>
+
+   <target name="help" description="Update the source code from SVN">
+        <property name="source-root" value="svn"/>
+	<mkdir dir="${source-root}" />
+        
+	<java classname="org.tmatesoft.svn.cli.SVN" dir="${source-root}" fork="true">
+            <arg value="help update"/>
+	    
+	    <classpath refid="svn.classpath" />
+        </java>
+    </target>
+    <!-- Stop Jboss -->
+    <target name="stop-jboss" depends="prepare-jboss" description="Stops the Application Server" >
+        <exec executable="${jboss.cmd.stop}" spawn="true">
+            <arg line="-S" />
+        </exec>
+        <echo>+-----------------------------+</echo>
+        <echo>| J B O S S   S T O P P E D   |</echo>
+        <echo>+-----------------------------+</echo>
+    </target>
+
+    <!-- Start Jboss -->
+    <target name="start-jboss" depends="prepare-jboss" description="Starts the Application Server" >
+        <exec executable="${jboss.cmd.start}" spawn="true">
+        </exec>
+        <echo>+-----------------------------+</echo>
+        <echo>| J B O S S   S T A R T E D   |</echo>
+        <echo>+-----------------------------+</echo>
+    </target>
+    <target name="deploy" description="Compile => Make .war => Stop jBoss => Deploy .war file => Start jBoss" >
+        <echo>Step 1: Make distribution</echo>
+        <antcall target="dist" />
+	
+	<echo>Step 2: Stop the Application Server</echo>
+	<antcall target="stop-jboss" />
+	
+	<echo>Step 3: Deploy the .war file into the Application Server</echo>
+        <copy file="${dist.home}/${app.name}.war" todir="${jboss.home}/server/default/deploy" preservelastmodified="true">
+        </copy>
+	
+	<echo>Step 4: Start the Application Server</echo>
+	<antcall target="start-jboss" />
+    </target>
+
+    <target name="prepare-jboss">
+         <if>
+            <os family="windows" />
+            <then>
+                <property name="jboss.cmd.start" value="${jboss.home}/bin/run.bat" />
+		<property name="jboss.cmd.stop" value="${jboss.home}/bin/shutdown.bat" />  
+            </then>
+            <else>
+                <property name="jboss.cmd.start" value="${jboss.home}/bin/run.sh" />
+		<property name="jboss.cmd.stop" value="${jboss.home}/bin/shutdown.sh" />  
+            </else>
+        </if>
+    </target>    
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="ant-lib/ant-contrib-1.0b3.jar" />
+        </classpath>
+    </taskdef>
+</project>

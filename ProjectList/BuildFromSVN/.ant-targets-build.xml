@@ -1,0 +1,10 @@
+Build
+checkout
+clean
+compile
+deploy
+dist
+help
+start-jboss
+stop-jboss
+update
