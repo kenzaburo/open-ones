@@ -21,6 +21,10 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+/**
+ * Common utility to use POI. 
+ * @author Thach.Le
+ */
 public class PoiUtil {
     final static Logger LOG = Logger.getLogger("PoiUtil");
 
@@ -64,31 +68,6 @@ public class PoiUtil {
             cell.setCellValue(((Integer) value).doubleValue());
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
-        } else {
-            cell.setCellValue(new HSSFRichTextString(value.toString()));
-        }
-
-        return cell;        
-    }
-    
-    public static HSSFCell setContent(HSSFRow row, short colIdx, Object value) {
-        return setContent(row, (int) colIdx, value);
-    }
-
-    public static HSSFCell setContent(HSSFRow row, int colIdx, Object value) {
-        HSSFCell cell = row.getCell(colIdx);
-        if (cell == null) {
-            cell = row.createCell(colIdx);
-        }
-
-        if (value instanceof Date) {
-            cell.setCellValue((Date) value);
-        } else if (value instanceof Double) {
-            cell.setCellValue(((Double) value).doubleValue());
-        } else if (value instanceof Integer) {
-            cell.setCellValue(((Integer) value).doubleValue());
-        } else if (value instanceof Boolean) {
-            cell.setCellValue((Boolean) value);
         } else if (value instanceof Long) {
             cell.setCellValue((Long) value);
         } else if (value instanceof BigInteger) {
@@ -98,9 +77,12 @@ public class PoiUtil {
         }
 
         return cell;
-
     }
     
+    public static HSSFCell setContent(HSSFRow row, short colIdx, Object value) {
+        return setContent(row, (int) colIdx, value);
+    }
+
     /**
      * Set value for cell.
      * <b>
