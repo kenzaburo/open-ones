@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -15,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -70,6 +72,10 @@ public class PoiUtil {
     }
     
     public static HSSFCell setContent(HSSFRow row, short colIdx, Object value) {
+        return setContent(row, (int) colIdx, value);
+    }
+
+    public static HSSFCell setContent(HSSFRow row, int colIdx, Object value) {
         HSSFCell cell = row.getCell(colIdx);
         if (cell == null) {
             cell = row.createCell(colIdx);
@@ -83,6 +89,10 @@ public class PoiUtil {
             cell.setCellValue(((Integer) value).doubleValue());
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
+        } else if (value instanceof Long) {
+            cell.setCellValue((Long) value);
+        } else if (value instanceof BigInteger) {
+            cell.setCellValue(((BigInteger) value).longValue());
         } else {
             cell.setCellValue(new HSSFRichTextString(value.toString()));
         }
@@ -90,7 +100,48 @@ public class PoiUtil {
         return cell;
 
     }
+    
+    /**
+     * Set value for cell.
+     * <b>
+     * Excel 2007/2010
+     * </b>
+     * @param row
+     * @param colIdx
+     * @param value
+     * @return
+     */
+    public static XSSFCell setContent(XSSFRow row, int colIdx, Object value) {
+        XSSFCell cell = row.getCell(colIdx);
+        if (cell == null) {
+            cell = row.createCell(colIdx);
+        }
+
+        if (value instanceof Date) {
+            cell.setCellValue((Date) value);
+        } else if (value instanceof Double) {
+            cell.setCellValue(((Double) value).doubleValue());
+        } else if (value instanceof Integer) {
+            cell.setCellValue(((Integer) value).doubleValue());
+        } else if (value instanceof Boolean) {
+            cell.setCellValue((Boolean) value);
+        } else if (value instanceof Long) {
+            cell.setCellValue((Long) value);
+        } else if (value instanceof BigInteger) {
+            cell.setCellValue(((BigInteger) value).longValue());
+        } else {
+            cell.setCellValue(new XSSFRichTextString(value.toString()));
+        }
+
+        return cell;
+
+    }
+    
     public static HSSFCell setContent(HSSFSheet sheet, int rowIdx, short colIdx, Object value) {
+        return setContent(sheet, rowIdx, (int)colIdx, value);
+    }
+    
+    public static HSSFCell setContent(HSSFSheet sheet, int rowIdx, int colIdx, Object value) {
         HSSFRow row = sheet.getRow(rowIdx);
         if (row == null) {
             row = sheet.createRow(rowIdx);
@@ -108,6 +159,10 @@ public class PoiUtil {
             cell.setCellValue(((Integer) value).doubleValue());
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
+        } else if (value instanceof Long) {
+            cell.setCellValue((Long) value);
+        } else if (value instanceof BigInteger) {
+            cell.setCellValue(((BigInteger) value).longValue());
         } else {
             cell.setCellValue(new HSSFRichTextString(value.toString()));
         }
