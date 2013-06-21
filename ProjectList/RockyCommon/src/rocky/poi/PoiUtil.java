@@ -151,6 +151,14 @@ public class PoiUtil {
 
         return cell;
     }
+    
+    public static XSSFCell setContent(XSSFSheet sheet, int rowIdx, int colIdx, Object value) {
+        XSSFRow row = sheet.getRow(rowIdx);
+        if (row == null) {
+            row = sheet.createRow(rowIdx);
+        }
+        return setContent(row, colIdx, value);
+    }
 
     @Deprecated
     public static Object getValue(HSSFSheet sheet, int rowIdx, short colIdx) {

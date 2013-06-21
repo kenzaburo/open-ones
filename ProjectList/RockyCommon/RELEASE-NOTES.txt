@@ -8,6 +8,13 @@ INTRODUCTION:
 This document contains the release notes for the Rocky Common library.
 Rocky Common is a set of utility functions and reusable components that should be of use in any Java environment.
 
+*** Version 0.2.1
+- PoiUtil: setContent by Sheet for Excel 2007
+- CommonUtil: Parse value by Pattern
+
+*** Version 0.2.0
+- Comment redundant codes in PoiUtil.getValue(Cell)
+
 *** Version 0.1.9
 - Update HSSFCell.setContent to support Excel 2007
 - Fix bugs

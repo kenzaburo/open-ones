@@ -474,6 +474,25 @@ public class CommonUtil {
     }
 
     /**
+     * Get value by pattern.
+     * Pattern: xxx(value)xxxx
+     * @param text
+     * @param regular
+     * @return
+     */
+    public static String parsePattern(String text, String regular) {
+        Pattern pattern = Pattern.compile(regular);
+        Matcher matcher = pattern.matcher(text);
+        String key = null;
+
+        if (matcher.find()) {
+            key = matcher.group(1);
+        }
+
+        return key;
+    }
+
+    /**
      * Đọc nội dung của file resource với encoding cho trước
      * @param resourcePath đường dẫn file trong CLASSPATH
      * @param encoding
