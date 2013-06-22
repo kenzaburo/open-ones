@@ -491,6 +491,30 @@ public class CommonUtil {
 
         return key;
     }
+    
+    /**
+     * [Give the description for method].
+     * @param text
+     * @param regular
+     * @param valuePattern
+     * @return
+     */
+    public static List<String> parsePatterns(String text, String regular, String valuePattern) {
+        Pattern pattern = Pattern.compile(regular);
+        Matcher matcher = pattern.matcher(text);
+        String key = null;
+        List<String> lstExps = new ArrayList<String>();
+        String key1;
+        while (matcher.find()) {
+            key = matcher.group();
+            
+            if (key.matches(valuePattern)) { 
+                lstExps.add(key);
+            }
+        }
+
+        return lstExps;
+    }
 
     /**
      * Đọc nội dung của file resource với encoding cho trước

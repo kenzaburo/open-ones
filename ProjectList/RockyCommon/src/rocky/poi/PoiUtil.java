@@ -15,6 +15,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -205,28 +207,41 @@ public class PoiUtil {
      * @param colIdx
      * @return Warning: for date format cell, the Double value can be returned.
      */
-    public static Object getValue(HSSFRow row, int colIdx) {
+//    public static Object getValue(HSSFRow row, int colIdx) {
+//        Object retValue = null;
+//        HSSFCell cell = row.getCell(colIdx);
+//
+//        return getValue(cell);
+//    }
+
+    /**
+     * [Give the description for method].
+     * @param row
+     * @param colIdx
+     * @return
+     */
+    public static Object getValue(Row row, int colIdx) {
         Object retValue = null;
-        HSSFCell cell = row.getCell(colIdx);
+        Cell cell = row.getCell(colIdx);
 
         return getValue(cell);
     }
+    
+//    public static Object getValue(XSSFRow row, int colIdx) {
+//        Object retValue = null;
+//        XSSFCell cell = row.getCell(colIdx);
+//
+//        return getValue(cell);
+//    }
 
-    public static Object getValue(XSSFRow row, int colIdx) {
-        Object retValue = null;
-        XSSFCell cell = row.getCell(colIdx);
+//    @Deprecated
+//    public static Object getValue(HSSFRow row, short colIdx) {
+//        Object retValue = null;
+//        HSSFCell cell = row.getCell(colIdx);
+//        return getValue(cell);
+//    }
 
-        return getValue(cell);
-    }
-
-    @Deprecated
-    public static Object getValue(HSSFRow row, short colIdx) {
-        Object retValue = null;
-        HSSFCell cell = row.getCell(colIdx);
-        return getValue(cell);
-    }
-
-    private static Object getValue(HSSFCell cell) {
+    public static Object getValue(Cell cell) {
         Object retValue = null;
         String strVal;
 
@@ -276,56 +291,56 @@ public class PoiUtil {
         return retValue;
     }
 
-    private static Object getValue(XSSFCell cell) {
-        Object retValue = null;
-        String strVal;
-
-        if (cell != null) {
-
-            switch (cell.getCellType()) {
-                case HSSFCell.CELL_TYPE_FORMULA :
-                    // Try to get double value
-                    try {
-                        retValue = cell.getNumericCellValue();
-                        break;
-                    } catch (java.lang.IllegalStateException nfex) {
-                        // Not a double value
-                        //nfex.printStackTrace();
-                        retValue = cell.getRichStringCellValue().toString();
-                    }
-                    // Try to get Date value
-                    try {
-                        retValue = cell.getDateCellValue();
-                    } catch (Exception ex) {
-                        retValue = cell.getRichStringCellValue().toString();
-                    }
-                    break;
-                case HSSFCell.CELL_TYPE_NUMERIC :
-                    retValue = cell.getNumericCellValue();
-                    break;
-                case HSSFCell.CELL_TYPE_STRING :
-                    retValue = cell.getRichStringCellValue().toString();
-                    break;
-                case HSSFCell.CELL_TYPE_BOOLEAN :
-                    retValue = cell.getBooleanCellValue();
-                    break;
-
-                case HSSFCell.CELL_TYPE_ERROR :
-                    LOG.debug("Error (" + cell.getRowIndex() + "," + cell.getColumnIndex() + ")"
-                            + cell.getErrorCellValue());
-                    retValue = "#N/A";
-                    break;
-                default :
-                    try {
-                        retValue = cell.getDateCellValue();
-                    } catch (Exception ex) {
-                        retValue = cell.getRichStringCellValue().toString();
-                    }
-            }
-        }
-
-        return retValue;
-    }
+//    private static Object getValue(XSSFCell cell) {
+//        Object retValue = null;
+//        String strVal;
+//
+//        if (cell != null) {
+//
+//            switch (cell.getCellType()) {
+//                case HSSFCell.CELL_TYPE_FORMULA :
+//                    // Try to get double value
+//                    try {
+//                        retValue = cell.getNumericCellValue();
+//                        break;
+//                    } catch (java.lang.IllegalStateException nfex) {
+//                        // Not a double value
+//                        //nfex.printStackTrace();
+//                        retValue = cell.getRichStringCellValue().toString();
+//                    }
+//                    // Try to get Date value
+//                    try {
+//                        retValue = cell.getDateCellValue();
+//                    } catch (Exception ex) {
+//                        retValue = cell.getRichStringCellValue().toString();
+//                    }
+//                    break;
+//                case HSSFCell.CELL_TYPE_NUMERIC :
+//                    retValue = cell.getNumericCellValue();
+//                    break;
+//                case HSSFCell.CELL_TYPE_STRING :
+//                    retValue = cell.getRichStringCellValue().toString();
+//                    break;
+//                case HSSFCell.CELL_TYPE_BOOLEAN :
+//                    retValue = cell.getBooleanCellValue();
+//                    break;
+//
+//                case HSSFCell.CELL_TYPE_ERROR :
+//                    LOG.debug("Error (" + cell.getRowIndex() + "," + cell.getColumnIndex() + ")"
+//                            + cell.getErrorCellValue());
+//                    retValue = "#N/A";
+//                    break;
+//                default :
+//                    try {
+//                        retValue = cell.getDateCellValue();
+//                    } catch (Exception ex) {
+//                        retValue = cell.getRichStringCellValue().toString();
+//                    }
+//            }
+//        }
+//
+//        return retValue;
+//    }
 
     public static void writeExcelFile(HSSFWorkbook wb, String filename) throws IOException {
         FileOutputStream fileOut = null;
