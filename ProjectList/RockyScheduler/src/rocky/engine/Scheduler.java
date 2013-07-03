@@ -23,41 +23,48 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import app.Setting;
+
 /**
  * @author thachln
  */
-public class Scheduler implements Runnable {
+public class Scheduler {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> scheduleHandler;
     
-    public Scheduler() {
-        scheduleHandler = scheduler.scheduleAtFixedRate(this, 10, 10, TimeUnit.SECONDS);
+    private Runnable runner;
+    private Setting setting;
+    
+    public Scheduler(Setting setting, Runnable runner) {
+        this.setting = setting;
+        this.runner = runner;        
     }
+
     public Scheduler(ScheduledFuture<?> scheduleHandler) {
         this.scheduleHandler = scheduleHandler;
     }
     
     public static void main(String[] args) {
-        new Scheduler().beepForAnHour();
+        if (args.length < 2) {
+            usage();
+            System.exit(1);
+        }
+        
+        String settingFile = args[0];
+        String cmd  = args[0];
+        Setting setting = AppUtil.loadSetting(settingFile);
+        Runnable runner = Runner.newInstance(cmd);
+        
+        Scheduler scheduler = new Scheduler(setting, runner);
+        
     }
     
-    public void beepForAnHour() {
-        final Runnable beeper = new Runnable() {
-            public void run() {
-                System.out.println("beep");
-            }
-        };
-        
-        scheduler.schedule(this, 60 * 60, TimeUnit.SECONDS);
+    private static void usage() {
+        System.out.println("Scheduler <setting file path> <cmd line>");
     }
 
-    /**
-     * [Explain the description for this method here].
-     * 
-     * @see java.lang.Runnable#run()
-     */
-    @Override
-    public void run() {
-        scheduleHandler.cancel(true);
+    public void start() {
+        
+        scheduler.schedule(runner, 60 * 60, TimeUnit.SECONDS);
     }
 }
