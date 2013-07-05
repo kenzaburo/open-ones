@@ -21,11 +21,14 @@ package app;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * Configuration info for scheduler
  * @author thachle
  */
 public class Setting {
+    private final static Logger LOG = Logger.getLogger("Setting");
     /** Hourly flag. */
     private boolean isHourly;
 
@@ -37,4 +40,55 @@ public class Setting {
      **/
     private List<String> lstHour = new ArrayList<String>();
 
+    /**
+     * Get value of isHourly.
+     * @return the isHourly
+     */
+    public boolean isHourly() {
+        return isHourly;
+    }
+
+    /**
+     * Set the value for isHourly.
+     * @param isHourly the isHourly to set
+     */
+    public void setHourly(boolean isHourly) {
+        this.isHourly = isHourly;
+    }
+
+    /**
+     * Get value of lstHour.
+     * @return the lstHour
+     */
+    public List<String> getLstHour() {
+        return lstHour;
+    }
+
+    /**
+     * Set the value for lstHour.
+     * @param lstHour the lstHour to set
+     */
+    public void setLstHour(List<String> lstHour) {
+        this.lstHour = lstHour;
+    }
+
+    /**
+     * [Give the description for method].
+     * @param period HH:mm
+     * @return true: Add success
+     * false: parameter is null or invalid format "HH:mm" or "HH"
+     */
+    public boolean addTime(String period) {
+        if (period == null) {
+            return false;
+        }
+        
+        if (period.matches("\\d\\d?(:\\d\\d?)?")) {
+            lstHour.add(period);
+            return true;
+        } else {
+            LOG.debug(period + " did not matched with pattern HH:mm, HH");
+            return false;
+        }
+    }
 }

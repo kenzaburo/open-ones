@@ -1,0 +1,7 @@
+<app.Setting>
+  <isHourly>false</isHourly>
+  <lstHour>
+    <string>6:27</string>
+    <string>1</string>
+  </lstHour>
+</app.Setting>

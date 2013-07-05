@@ -19,6 +19,7 @@
 package rocky.engine;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 import org.apache.log4j.Logger;
 
@@ -32,7 +33,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  * @author thachle
  */
 public class AppUtil {
-    private final static Logger LOG = Logger.getLogger("Runner");
+    private final static Logger LOG = Logger.getLogger("AppUtil");
 
     public static Setting loadSetting(String settingFile) {
         XStream xs = new XStream(new DomDriver());
@@ -44,6 +45,19 @@ public class AppUtil {
         }
 
         return null;
+    }
+    
+    public static boolean saveSetting(Setting setting, String filePath) {
+        XStream xs = new XStream(new DomDriver());
+        try {
+            xs.toXML(setting, new FileOutputStream(filePath));
+
+            return true;
+        } catch (FileNotFoundException ex) {
+            LOG.error("Could not save setting file '" + filePath + "'", ex);
+        }
+        
+        return false;
     }
 
 }

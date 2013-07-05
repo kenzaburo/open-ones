@@ -18,10 +18,18 @@
  */
 package rocky.engine;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.log4j.Logger;
+
+import rocky.common.CommonUtil;
 
 import app.Setting;
 
@@ -29,6 +37,7 @@ import app.Setting;
  * @author thachln
  */
 public class Scheduler {
+    private final static Logger LOG = Logger.getLogger("Scheduler");
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> scheduleHandler;
     
@@ -44,19 +53,22 @@ public class Scheduler {
         this.scheduleHandler = scheduleHandler;
     }
     
-    public static void main(String[] args) {
+    public static int main(String[] args) {
         if (args.length < 2) {
             usage();
             System.exit(1);
         }
         
         String settingFile = args[0];
-        String cmd  = args[0];
+        String cmd  = args[1];
         Setting setting = AppUtil.loadSetting(settingFile);
         Runnable runner = Runner.newInstance(cmd);
         
         Scheduler scheduler = new Scheduler(setting, runner);
         
+        scheduler.start();
+        
+        return 0;
     }
     
     private static void usage() {
@@ -64,7 +76,48 @@ public class Scheduler {
     }
 
     public void start() {
+        List<Date> lstDate = parseSetting(setting);
         
-        scheduler.schedule(runner, 60 * 60, TimeUnit.SECONDS);
+        LOG.debug("Current time: " + new Date() + ". Check the scheduler...");
+        if (CommonUtil.isNNandNB(lstDate)) {
+            Date firstPeriod = lstDate.get(0);
+            long delayedTime = firstPeriod.getTime() - System.currentTimeMillis();
+            delayedTime = 5;
+            LOG.info("Start scheduled task at " + firstPeriod + ". Waiting " + delayedTime/1000 + " seconds..." );
+            scheduler.schedule(runner, delayedTime, TimeUnit.MILLISECONDS);
+            
+            //scheduler.scheduleAtFixedRate(runner, delayedTime, 60, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    private List<Date> parseSetting(Setting setting) {
+        List<Date> lstDte = new ArrayList<Date>();
+        List<String> lstHour = setting.getLstHour();
+        int len = (lstHour != null) ? lstHour.size(): 0;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis()); // get current date
+        cal.set(Calendar.SECOND, 0);
+        
+        String hourStr; // HH:mm, HH
+        String hour;
+        String minute;
+        for (int i = 0; i < len; i++) {
+            hourStr = lstHour.get(i);
+            hour = CommonUtil.parsePattern(hourStr, "(\\d\\d?).*");
+            minute = CommonUtil.parsePattern(hourStr, "\\d\\d?:(\\d\\d?)");
+            
+            cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+            
+            if (CommonUtil.isNNandNB(minute)) {
+                cal.set(Calendar.MINUTE, Integer.valueOf(minute));
+            } else {
+                cal.set(Calendar.MINUTE, 0);
+            }
+            
+            lstDte.add(cal.getTime());
+        }
+        
+        return lstDte;
     }
 }

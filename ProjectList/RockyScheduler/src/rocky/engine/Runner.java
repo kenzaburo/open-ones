@@ -23,6 +23,8 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import rocky.common.CommonUtil;
+
 /**
  * @author thachle
  */
@@ -38,10 +40,12 @@ public class Runner implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Current date: " + new Date());
+        LOG.info("Current date: " + new Date());
 
-        if (cmdLine != null) {
+        if (CommonUtil.isNNandNB(cmdLine)) {
             runCommand();
+        } else {
+            LOG.info("No command to run");
         }
 
     }
