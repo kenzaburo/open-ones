@@ -20,6 +20,8 @@ package rocky.engine;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.log4j.Logger;
 
@@ -34,6 +36,8 @@ public class Runner implements Runnable {
 
     private String cmdLine = null;
 
+    private ExecutorService executorService;
+    
     public Runner(String cmd) {
         this.cmdLine = cmd;
     }
@@ -48,6 +52,11 @@ public class Runner implements Runnable {
             LOG.info("No command to run");
         }
 
+        LOG.debug("executorService.isShutdown()=" + executorService.isShutdown());
+        LOG.debug("executorService.isTerminated()=" + executorService.isTerminated());
+        
+//        LOG.info("Shutdown...");
+//        executorService.shutdown();
     }
 
     private int runCommand() {
@@ -61,10 +70,25 @@ public class Runner implements Runnable {
         return ERROR;
     }
 
-    public static Runnable newInstance(String cmd) {
+    public static Runner newInstance(String cmd) {
         Runner runner = new Runner(cmd);
 
         return runner;
     }
 
+    /**
+     * Get value of executorService.
+     * @return the executorService
+     */
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    /**
+     * Set the value for executorService.
+     * @param executorService the executorService to set
+     */
+    public void setExecutorService(ScheduledExecutorService executorService) {
+        this.executorService = executorService;
+    }
 }

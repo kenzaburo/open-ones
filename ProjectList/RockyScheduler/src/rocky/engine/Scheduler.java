@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import rocky.common.CommonUtil;
-
 import app.Setting;
 
 /**
@@ -38,7 +37,8 @@ import app.Setting;
  */
 public class Scheduler {
     private final static Logger LOG = Logger.getLogger("Scheduler");
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    //private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduleHandler;
     
     private Runnable runner;
@@ -62,15 +62,23 @@ public class Scheduler {
         String settingFile = args[0];
         String cmd  = args[1];
         Setting setting = AppUtil.loadSetting(settingFile);
-        Runnable runner = Runner.newInstance(cmd);
+        Runner runner = Runner.newInstance(cmd);
+        
         
         Scheduler scheduler = new Scheduler(setting, runner);
+        runner.setExecutorService(scheduler.getExecutor());
         
         scheduler.start();
+        
+        
         
         return 0;
     }
     
+    public ScheduledExecutorService getExecutor() {
+        return executor;
+    }
+
     private static void usage() {
         System.out.println("Scheduler <setting file path> <cmd line>");
     }
@@ -81,12 +89,22 @@ public class Scheduler {
         LOG.debug("Current time: " + new Date() + ". Check the scheduler...");
         if (CommonUtil.isNNandNB(lstDate)) {
             Date firstPeriod = lstDate.get(0);
-            long delayedTime = firstPeriod.getTime() - System.currentTimeMillis();
-            delayedTime = 5;
-            LOG.info("Start scheduled task at " + firstPeriod + ". Waiting " + delayedTime/1000 + " seconds..." );
-            scheduler.schedule(runner, delayedTime, TimeUnit.MILLISECONDS);
+            long delayedTime = (firstPeriod.getTime() - System.currentTimeMillis()) / 1000;;
+            delayedTime = 1;
+            LOG.info("Start scheduled task at " + firstPeriod + ". Waiting " + delayedTime + " seconds..." );
+            runner = new Runnable() {
+                @Override
+                public void run() {
+                    LOG.debug("done");
+                }
+            };
+            scheduleHandler = executor.schedule(runner, 500, TimeUnit.MILLISECONDS);
+            //scheduleHandler = executor.scheduleAtFixedRate(runner, 1, 2, TimeUnit.SECONDS);
             
-            //scheduler.scheduleAtFixedRate(runner, delayedTime, 60, TimeUnit.MILLISECONDS);
+            LOG.debug("scheduleHandler.isCancelled()=" + scheduleHandler.isCancelled());
+            LOG.debug("scheduleHandler.isDone()=" + scheduleHandler.isDone());
+
+            // executor.scheduleAtFixedRate(runner, delayedTime, 600, TimeUnit.MILLISECONDS);
         }
     }
 
