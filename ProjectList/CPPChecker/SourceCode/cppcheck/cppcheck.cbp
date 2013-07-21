@@ -11,7 +11,7 @@
 				<Option output="cppcheck" prefix_auto="1" extension_auto="1" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="p.cpp --debug --enable=all" />
+				<Option parameters="./samples/tabCheck/tabCheck.cpp --debug --enable=all --check-config" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -108,6 +108,8 @@
 		<Unit filename="lib/check.h" />
 		<Unit filename="lib/check64bit.cpp" />
 		<Unit filename="lib/check64bit.h" />
+		<Unit filename="lib/checkTab.cpp"/>
+		<Unit filename="lib/checkTab.h"/>
 		<Unit filename="lib/checkassignif.cpp" />
 		<Unit filename="lib/checkassignif.h" />
 		<Unit filename="lib/checkautovariables.cpp" />
