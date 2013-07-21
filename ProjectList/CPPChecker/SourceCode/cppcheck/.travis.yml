@@ -1,0 +1,17 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+script:
+  - mkdir build
+  - make test SRCDIR=build VERIFY=1
+  - ./cppcheck --error-exitcode=1 -Ilib --enable=style --suppress=duplicateBranch -q cli gui lib -igui/test
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#cppcheck"
+    template:
+      - "[%{commit} : %{author}] %{message}"
+      - "%{build_url}"
+    skip_join: true
+
