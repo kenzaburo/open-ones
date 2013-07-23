@@ -10,7 +10,7 @@
 // Register this check class (by creating a static instance of it)
 namespace
 {
-    CheckTab instance;
+    static CheckTab instance;
 }
 
 
