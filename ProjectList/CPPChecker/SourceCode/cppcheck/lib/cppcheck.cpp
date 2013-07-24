@@ -18,6 +18,7 @@
 #include "cppcheck.h"
 
 #include "preprocessor.h" // Preprocessor
+#include "checkstyle.h" // Checkstyle
 #include "tokenize.h" // Tokenizer
 
 #include "check.h"
@@ -143,22 +144,37 @@ unsigned int CppCheck::processFile(const std::string& filename)
     if (_settings._errorsOnly == false) {
         std::string fixedpath = Path::simplifyPath(filename.c_str());
         fixedpath = Path::toNativeSeparators(fixedpath);
+		// Thach.START Debug
         _errorLogger.reportOut(std::string("Checking ") + fixedpath + std::string("..."));
+		// Thach.END
     }
-
+	
     try {
+		// Thach.START check styles
+		Checkstyle checkstyle(&_settings, this);
+		// Thach.END
+		
         Preprocessor preprocessor(&_settings, this);
         std::list<std::string> configurations;
         std::string filedata = "";
-
         if (!_fileContent.empty()) {
             // File content was given as a string
             std::istringstream iss(_fileContent);
-            preprocessor.preprocess(iss, filedata, configurations, filename, _settings._includePaths);
+            // Thach.START check styles
+			_errorLogger.reportOut(std::string("Call checkstyle..."));
+			checkstyle.preprocess(iss, filedata, configurations, filename, _settings._includePaths);
+			// Thach.END
+
+			preprocessor.preprocess(iss, filedata, configurations, filename, _settings._includePaths);
+			
         } else {
             // Only file name was given, read the content from file
             std::ifstream fin(filename.c_str());
             Timer t("Preprocessor::preprocess", _settings._showtime, &S_timerResults);
+			// Thach.START check styles
+			checkstyle.preprocess(fin, filedata, configurations, filename, _settings._includePaths);
+			// Thach.END
+
             preprocessor.preprocess(fin, filedata, configurations, filename, _settings._includePaths);
         }
 
