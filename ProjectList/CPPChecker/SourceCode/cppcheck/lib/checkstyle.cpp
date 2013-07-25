@@ -32,7 +32,8 @@
 #include <vector>
 #include <set>
 #include <stack>
-
+#include <regex>
+#include <string>
 bool Checkstyle::missingIncludeFlag;
 
 char Checkstyle::macroChar = char(1);
@@ -292,8 +293,26 @@ std::string Checkstyle::checkStyle(const std::string &fileContent, const std::st
     std::istringstream sstr(fileContent);
 
     std::string line;
+	unsigned int lineNo = 0;
 	while (std::getline(sstr, line)) {
-        // Trim lines..
+		lineNo++;
+		//writeError(filename, lineNo, _errorLogger, "Check line:", line);
+		// Check ==
+		/*if (line.find("") ) {
+		}*/
+		if (std::regex_match(line, std::regex(".*[a-zA-Z0-9_\")]==[a-zA-Z0-9_\")].*"))) {
+			writeError(filename, lineNo, _errorLogger, "Space", "No space before and after ==");
+		} else {
+			if (std::regex_match(line, std::regex(".*[a-zA-Z0-9_\")]==.*"))) {
+				writeError(filename, lineNo, _errorLogger, "Space", "No space before ==");
+			}
+
+			if (std::regex_match(line, std::regex(".*==[a-zA-Z0-9_\")].*"))) {
+				writeError(filename, lineNo, _errorLogger, "Space", "No space after ==");
+			}
+		}
+        code << line;
+        code << (sstr.eof()?"":"\n");
 	}
 
 	return code.str();
