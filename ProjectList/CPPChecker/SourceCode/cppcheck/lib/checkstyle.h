@@ -89,8 +89,11 @@ public:
      */
     void preprocess(std::istream &srcCodeStream, std::string &processedFile, std::list<std::string> &resultConfigurations, const std::string &filename, const std::list<std::string> &includePaths);
 
-    /** Check code */
+    /** Check simple code. Read content */
     std::string check(std::istream &istr, const std::string &filename);
+
+	/** Check style */
+	std::string checkStyle(const std::string &fileContent, const std::string &filename);
 
     /**
      * Get preprocessed code for a given configuration

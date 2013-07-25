@@ -122,7 +122,7 @@ static std::string unify(const std::string &s, char separator)
     return join(parts, separator);
 }
 
-/** Check code */
+/** Just read the code into a string. Perform simple check of the code: special character */
 std::string Checkstyle::check(std::istream &istr, const std::string &filename)
 {
     // The UTF-16 BOM is 0xfffe or 0xfeff.
@@ -139,16 +139,23 @@ std::string Checkstyle::check(std::istream &istr, const std::string &filename)
     // when this is encountered the <backslash><newline> will be "skipped".
     // on the next <newline>, extra newlines will be added
     std::ostringstream code;
-    unsigned int lineNo = 0;
-	unsigned int newlines = 0;
+    unsigned int newlines = 0;
+	unsigned int lineNo = 0;
     for (unsigned char ch = readChar(istr,bom); istr.good(); ch = readChar(istr,bom)) {
-        // Check tab character
-        if (ch == '\t') {
+		if (ch == '\n') {
+			lineNo++;
+		}
+
+		if (ch == '\t') {
 			writeError(filename, lineNo, _errorLogger, "Special character", "Tab character");
+		}
+        // Replace assorted special chars with spaces..
+        if (((ch & 0x80) == 0) && (ch != '\n') && (std::isspace(ch) || std::iscntrl(ch))) {
+            ch = ' ';
 		}
 
 
-		// <backslash><newline>..
+        // <backslash><newline>..
         // for gcc-compatibility the trailing spaces should be ignored
         // for vs-compatibility the trailing spaces should be kept
         // See tickets #640 and #1869
@@ -158,8 +165,25 @@ std::string Checkstyle::check(std::istream &istr, const std::string &filename)
 
             std::string spaces;
 
-            if (chNext == '\n') {
-                ++lineNo;
+#ifdef __GNUC__
+            // gcc-compatibility: ignore spaces
+            for (;; spaces += ' ') {
+                chNext = (unsigned char)istr.peek();
+                if (chNext != '\n' && chNext != '\r' &&
+                    (std::isspace(chNext) || std::iscntrl(chNext))) {
+                    // Skip whitespace between <backslash> and <newline>
+                    (void)readChar(istr,bom);
+                    continue;
+                }
+
+                break;
+            }
+#else
+            // keep spaces
+            chNext = (unsigned char)istr.peek();
+#endif
+            if (chNext == '\n' || chNext == '\r') {
+                ++newlines;
                 (void)readChar(istr,bom);   // Skip the "<backslash><newline>"
             } else {
                 code << "\\" << spaces;
@@ -175,10 +199,105 @@ std::string Checkstyle::check(std::istream &istr, const std::string &filename)
         }
     }
     std::string result = code.str();
+    code.str("");
+
+    //// ------------------------------------------------------------------------------------------
+    ////
+    //// Remove all comments..
+    //result = removeComments(result, filename);
+
+    //// ------------------------------------------------------------------------------------------
+    ////
+    //// Clean up all preprocessor statements
+    //result = preprocessCleanupDirectives(result);
+
+    //// ------------------------------------------------------------------------------------------
+    ////
+    //// Clean up preprocessor #if statements with Parentheses
+    //result = removeParentheses(result);
+
+    //// Remove '#if 0' blocks
+    //if (result.find("#if 0\n") != std::string::npos)
+    //    result = removeIf0(result);
 
     return result;
 }
 
+
+///** Check code */
+//std::string Checkstyle::check(std::istream &istr, const std::string &filename)
+//{
+//    // The UTF-16 BOM is 0xfffe or 0xfeff.
+//    unsigned int bom = 0;
+//    if (istr.peek() >= 0xfe) {
+//        bom = ((unsigned int)istr.get() << 8);
+//        if (istr.peek() >= 0xfe)
+//            bom |= (unsigned int)istr.get();
+//    }
+//
+//    // ------------------------------------------------------------------------------------------
+//    //
+//    // handling <backslash><newline>
+//    // when this is encountered the <backslash><newline> will be "skipped".
+//    // on the next <newline>, extra newlines will be added
+//    std::ostringstream code;
+//    unsigned int lineNo = 0;
+//	unsigned int newlines = 0;
+//	unsigned char prevCh = -1;
+//    for (unsigned char ch = readChar(istr,bom); istr.good(); ch = readChar(istr,bom)) {
+//        // Check tab character
+//        if (ch == '\t') {
+//			writeError(filename, lineNo, _errorLogger, "Special character", "Tab character");
+//		}
+//
+//		if (ch == '=') {
+//		}
+//		// <backslash><newline>..
+//        // for gcc-compatibility the trailing spaces should be ignored
+//        // for vs-compatibility the trailing spaces should be kept
+//        // See tickets #640 and #1869
+//        // The solution for now is to have a compiler-dependent behaviour.
+//        if (ch == '\\') {
+//            unsigned char chNext;
+//
+//            std::string spaces;
+//
+//            if (chNext == '\n') {
+//                ++lineNo;
+//                (void)readChar(istr,bom);   // Skip the "<backslash><newline>"
+//            } else {
+//                code << "\\" << spaces;
+//            }
+//        } else {
+//            code << char(ch);
+//
+//            // if there has been <backslash><newline> sequences, add extra newlines..
+//            if (ch == '\n' && newlines > 0) {
+//                code << std::string(newlines, '\n');
+//                newlines = 0;
+//            }
+//        }
+//		prevCh = ch;
+//    }
+//    std::string result = code.str();
+//
+//    return result;
+//}
+
+/**
+*/
+std::string Checkstyle::checkStyle(const std::string &fileContent, const std::string &filename)
+{
+	std::ostringstream code;
+    std::istringstream sstr(fileContent);
+
+    std::string line;
+	while (std::getline(sstr, line)) {
+        // Trim lines..
+	}
+
+	return code.str();
+}
 std::string Checkstyle::preprocessCleanupDirectives(const std::string &processedFile)
 {
     std::ostringstream code;
@@ -767,8 +886,12 @@ void Checkstyle::preprocess(std::istream &srcCodeStream, std::string &processedF
     if (file0.empty())
         file0 = filename;
 
+	// Check simple: special charaters such as: Tab
+	// Read content of file
     processedFile = check(srcCodeStream, filename);
 
+	// perform check styles
+	checkStyle(processedFile, filename);
  
 }
 
