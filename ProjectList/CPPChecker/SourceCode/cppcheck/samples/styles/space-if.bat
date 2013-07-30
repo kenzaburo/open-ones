@@ -1,0 +1,1 @@
+..\..\bin\debug\cppcheck.exe .\space\space-if.c --enable=style

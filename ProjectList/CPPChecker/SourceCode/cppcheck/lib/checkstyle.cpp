@@ -34,6 +34,8 @@
 #include <stack>
 #include <regex>
 #include <string>
+#include <array>
+
 bool Checkstyle::missingIncludeFlag;
 
 char Checkstyle::macroChar = char(1);
@@ -294,6 +296,8 @@ std::string Checkstyle::checkStyle(const std::string &fileContent, const std::st
 
     std::string line;
 	unsigned int lineNo = 0;
+	std::array<std::string, 5> arrKEYWORD = { "if", "switch", "for", "do", "while"};
+
 	while (std::getline(sstr, line)) {
 		lineNo++;
 		//writeError(filename, lineNo, _errorLogger, "Check line:", line);
@@ -311,6 +315,15 @@ std::string Checkstyle::checkStyle(const std::string &fileContent, const std::st
 				writeError(filename, lineNo, _errorLogger, "Space", "No space after ==");
 			}
 		}
+		// Check space after keyworks if, switch, while, do, for
+		//std::for_each(std::nth_element(arrKEYWORD), 
+		//for (std::string kw : arrKEYWORD) {
+		//if (std::regex_match(line, std::regex(".*if[a-zA-Z0-9_\"(].*"))) {
+		//	writeError(filename, lineNo, _errorLogger, "Space", "No space after if keyword");
+		//}
+		//}
+
+
         code << line;
         code << (sstr.eof()?"":"\n");
 	}
