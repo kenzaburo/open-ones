@@ -20,6 +20,7 @@ package svn.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
@@ -27,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.SVNCancelException;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
 import org.tmatesoft.svn.core.wc.ISVNEventHandler;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
@@ -38,12 +40,18 @@ import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import rocky.common.CommonUtil;
-import rocky.common.PropertiesManager;
 /**
+ * SVNClient wrapper.
+ * It loads configuration from resource file "/svn.properties"
+ *   svnpath=
+ *   username=
+ *   password=
+ *   rev=-1
+ * 
  * @author thachln
  */
 public class SVNClient implements ISVNEventHandler {
-    private final static Logger LOG = Logger.getLogger("ClientInformer");
+    private final static Logger LOG = Logger.getLogger("SVNClient");
     
     /**  . */
     public static final String DSP_DTE_FMT = "yyyy/MM/dd HH:mm";
@@ -62,19 +70,29 @@ public class SVNClient implements ISVNEventHandler {
 
     SVNWCClient wcClient = null;
 
-    static {
+    public static SVNClient newClient(String configFile) {
         try {
-            props = PropertiesManager.newInstanceFromProps("/svn.properties");
-            wcPath = props.getProperty("svnpath");
-            username = props.getProperty("username");
-            password = props.getProperty("password");
+            Properties props = new Properties();
+            props.load(CommonUtil.loadResource(configFile));
+            
+            String wcPath = props.getProperty("svnpath");
+            String username = props.getProperty("username");
+            String password = props.getProperty("password");
             String revVal = props.getProperty("rev");
-            if ((rev != null) && (!"-1".equalsIgnoreCase(revVal))) {
+            SVNClient svnClient = new SVNClient(wcPath, username, password);
+            
+            Long rev = null;
+            if ((revVal != null) && (!"-1".equalsIgnoreCase(revVal))) {
                 rev = Long.valueOf(revVal);
+                svnClient.setRev(rev);
             }
+            
+            return svnClient;
         } catch (IOException ex) {
-            LOG.error("Could not load resource file /svn.properties", ex);
+            LOG.error("Could not load resource file '" + configFile + "'", ex);
         }
+        
+        return null;
     }
 
     /**
@@ -116,7 +134,6 @@ public class SVNClient implements ISVNEventHandler {
         // TODO Auto-generated constructor stub
     }
 
-
     public SVNWCClient getSVNClient() {
         SVNClientManager clientManager = getClientManager();
         
@@ -134,8 +151,27 @@ public class SVNClient implements ISVNEventHandler {
         clientManager.setEventHandler(this);
         return clientManager;
     }
+    
+    public long doCheckout(SVNURL url) {
+        SVNUpdateClient updateClient = getClientManager().getUpdateClient();
+        File path = new File(wcPath);
+        SVNRevision svnRev = (rev == null) ? SVNRevision.UNDEFINED : SVNRevision.create(rev);
 
-    public void doCheckOut() {
+        try {
+            lastCheckDate = new Date();
+            LOG.debug("Checkout..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
+            long lastRev = updateClient.doCheckout(url, path, svnRev, svnRev, SVNDepth.INFINITY, true);
+            LOG.debug("lastRev=" + lastRev);
+            
+            return lastRev;
+        } catch (SVNException ex) {
+            LOG.error("Checkout SVN...", ex);
+        }
+        
+        return -1;
+    } 
+
+    public long doUpdate() {
         SVNUpdateClient updateClient = getClientManager().getUpdateClient();
         File path = new File(wcPath);
         SVNRevision svnRev = (rev == null) ? SVNRevision.UNDEFINED : SVNRevision.create(rev);
@@ -145,9 +181,47 @@ public class SVNClient implements ISVNEventHandler {
             LOG.debug("Update..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
             long lastRev = updateClient.doUpdate(path, svnRev,  SVNDepth.INFINITY, false, true);
             LOG.debug("lastRev=" + lastRev);
+            
+            return lastRev;
         } catch (SVNException ex) {
             LOG.error("Update SVN...", ex);
         }
+        
+        return -1;
+    }
+    
+    /**
+     * Check out at the end of date (23:59).
+     * @param endDate yyyy/MM/dd
+     */
+    public long doUpdate(String endDate, String pattern) {
+        Date dte = CommonUtil.parse(endDate, pattern);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dte);
+        
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        
+        return doUpdate(cal.getTime());
+    }
+    
+    public long doUpdate(Date endDate) {
+        SVNUpdateClient updateClient = getClientManager().getUpdateClient();
+        File path = new File(wcPath);
+        SVNRevision svnRev = SVNRevision.create(endDate);
+
+        try {
+            lastCheckDate = endDate;
+            LOG.debug("Update..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
+            long lastRev = updateClient.doUpdate(path, svnRev,  SVNDepth.INFINITY, false, true);
+            LOG.debug("lastRev=" + lastRev);
+            
+            return lastRev;
+        } catch (SVNException ex) {
+            LOG.error("Update SVN...", ex);
+        }
+        
+        return -1;
     }
     
     public SVNInfo getInfo() throws SVNException {
@@ -197,6 +271,22 @@ public class SVNClient implements ISVNEventHandler {
     @Override
     public void handleEvent(SVNEvent event, double progress) throws SVNException {
         LOG.debug(event.getAction() + " " + event.getFile().getPath());
+    }
+
+    /**
+     * Get value of rev.
+     * @return the rev
+     */
+    public static Long getRev() {
+        return rev;
+    }
+
+    /**
+     * Set the value for rev.
+     * @param rev the rev to set
+     */
+    public static void setRev(Long rev) {
+        SVNClient.rev = rev;
     }
 
 }
