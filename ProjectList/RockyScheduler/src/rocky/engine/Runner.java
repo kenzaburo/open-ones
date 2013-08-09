@@ -27,7 +27,10 @@ import org.apache.log4j.Logger;
 
 import rocky.common.CommonUtil;
 
-/**
+/*_
+ * Runner to execute:
+ * - Command line
+ * - Other program 
  * @author thachle
  */
 public class Runner implements Runnable {
@@ -37,7 +40,7 @@ public class Runner implements Runnable {
     private String cmdLine = null;
 
     private ExecutorService executorService;
-    
+
     public Runner(String cmd) {
         this.cmdLine = cmd;
     }
@@ -52,13 +55,15 @@ public class Runner implements Runnable {
             LOG.info("No command to run");
         }
 
-        LOG.debug("executorService.isShutdown()=" + executorService.isShutdown());
-        LOG.debug("executorService.isTerminated()=" + executorService.isTerminated());
-        
-//        LOG.info("Shutdown...");
-//        executorService.shutdown();
+        LOG.debug("Shutdown...");
+        executorService.shutdown();
     }
 
+    /**
+     * Execute the command line.
+     * 
+     * @return
+     */
     private int runCommand() {
         try {
             Process proc = Runtime.getRuntime().exec(cmdLine);
@@ -70,6 +75,12 @@ public class Runner implements Runnable {
         return ERROR;
     }
 
+    /**
+     * Create an instance of Runner with command line.
+     * 
+     * @param cmd command line
+     * @return instance of Runner
+     */
     public static Runner newInstance(String cmd) {
         Runner runner = new Runner(cmd);
 
@@ -78,6 +89,7 @@ public class Runner implements Runnable {
 
     /**
      * Get value of executorService.
+     * 
      * @return the executorService
      */
     public ExecutorService getExecutorService() {
@@ -86,6 +98,7 @@ public class Runner implements Runnable {
 
     /**
      * Set the value for executorService.
+     * 
      * @param executorService the executorService to set
      */
     public void setExecutorService(ScheduledExecutorService executorService) {

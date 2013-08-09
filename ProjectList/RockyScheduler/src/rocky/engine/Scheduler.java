@@ -37,7 +37,7 @@ import app.Setting;
  */
 public class Scheduler {
     private final static Logger LOG = Logger.getLogger("Scheduler");
-    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     //private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduleHandler;
     
@@ -88,23 +88,14 @@ public class Scheduler {
         
         LOG.debug("Current time: " + new Date() + ". Check the scheduler...");
         if (CommonUtil.isNNandNB(lstDate)) {
-            Date firstPeriod = lstDate.get(0);
-            long delayedTime = (firstPeriod.getTime() - System.currentTimeMillis()) / 1000;;
-            delayedTime = 1;
-            LOG.info("Start scheduled task at " + firstPeriod + ". Waiting " + delayedTime + " seconds..." );
-            runner = new Runnable() {
-                @Override
-                public void run() {
-                    LOG.debug("done");
-                }
-            };
-            scheduleHandler = executor.schedule(runner, 500, TimeUnit.MILLISECONDS);
-            //scheduleHandler = executor.scheduleAtFixedRate(runner, 1, 2, TimeUnit.SECONDS);
-            
-            LOG.debug("scheduleHandler.isCancelled()=" + scheduleHandler.isCancelled());
-            LOG.debug("scheduleHandler.isDone()=" + scheduleHandler.isDone());
+            for (Date period : lstDate) {
+                long delayedTime = (period.getTime() - System.currentTimeMillis());
+                if (delayedTime >= 0) {
+                    LOG.info("Start scheduled task at " + period + ". Waiting " + delayedTime / 1000 + " seconds...");
 
-            // executor.scheduleAtFixedRate(runner, delayedTime, 600, TimeUnit.MILLISECONDS);
+                    scheduleHandler = executor.schedule(runner, delayedTime, TimeUnit.MILLISECONDS);
+                }
+            }
         }
     }
 
