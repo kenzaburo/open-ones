@@ -16,7 +16,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -49,6 +51,32 @@ public class PoiUtil {
         return wk;
     }
 
+
+//    public static HSSFCell setContent(HSSFRow row, int colIdx, Object value) {
+//        HSSFCell cell = row.getCell(colIdx);
+//        if (cell == null) {
+//            cell = row.createCell(colIdx);
+//        }
+//
+//        if (value instanceof Date) {
+//            cell.setCellValue((Date) value);
+//        } else if (value instanceof Double) {
+//            cell.setCellValue(((Double) value).doubleValue());
+//        } else if (value instanceof Integer) {
+//            cell.setCellValue(((Integer) value).doubleValue());
+//        } else if (value instanceof Boolean) {
+//            cell.setCellValue((Boolean) value);
+//        } else if (value instanceof Long) {
+//            cell.setCellValue((Long) value);
+//        } else if (value instanceof BigInteger) {
+//            cell.setCellValue(((BigInteger) value).longValue());
+//        } else {
+//            cell.setCellValue(new HSSFRichTextString(value.toString()));
+//        }
+//
+//        return cell;
+//    }
+    
     /**
      * Set content for col conIdx of row with value of Object.
      * @param row
@@ -56,8 +84,8 @@ public class PoiUtil {
      * @param value
      * @return
      */
-    public static HSSFCell setContent(HSSFRow row, int colIdx, Object value) {
-        HSSFCell cell = row.getCell(colIdx);
+    public static Cell setContent(Row row, int colIdx, Object value) {
+        Cell cell = row.getCell(colIdx);
         if (cell == null) {
             cell = row.createCell(colIdx);
         }
@@ -75,13 +103,33 @@ public class PoiUtil {
         } else if (value instanceof BigInteger) {
             cell.setCellValue(((BigInteger) value).longValue());
         } else {
-            cell.setCellValue(new HSSFRichTextString(value.toString()));
+            if (value == null) {
+                // cell.setCellValue(Constant.BLANK); Skip
+            } else {
+                if (cell instanceof HSSFCell) {
+                    cell.setCellValue(new HSSFRichTextString(value.toString()));
+                } else {
+                    cell.setCellValue(new XSSFRichTextString(value.toString()));
+                }
+            }
         }
 
         return cell;
     }
     
-    public static HSSFCell setContent(HSSFRow row, short colIdx, Object value) {
+    public static Cell setContent(Row row, int colIdx, Object value, CellStyle style) {
+        Cell cell = row.getCell(colIdx);
+        if (cell == null) {
+            cell = row.createCell(colIdx);
+            if (style != null) {
+                cell.setCellStyle(style);
+            }
+        }
+
+        return setContent(row, colIdx, value);
+    }
+    
+    public static Cell setContent(HSSFRow row, short colIdx, Object value) {
         return setContent(row, (int) colIdx, value);
     }
 
@@ -153,7 +201,23 @@ public class PoiUtil {
 
         return cell;
     }
+
+    public static Cell setContent(SXSSFSheet sheet, int rowIdx, int colIdx, Object value, CellStyle style) {
+        Row row = sheet.getRow(rowIdx);
+        if (row == null) {
+            row = sheet.createRow(rowIdx);
+        }
+        return setContent(row, colIdx, value, style);
+    }
     
+    public static Cell setContent(SXSSFSheet sheet, int rowIdx, int colIdx, Object value) {
+        Row row = sheet.getRow(rowIdx);
+        if (row == null) {
+            row = sheet.createRow(rowIdx);
+        }
+        return setContent(row, colIdx, value);
+    }
+
     public static XSSFCell setContent(XSSFSheet sheet, int rowIdx, int colIdx, Object value) {
         XSSFRow row = sheet.getRow(rowIdx);
         if (row == null) {
