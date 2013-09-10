@@ -121,6 +121,12 @@ public class SVNClient implements ISVNEventHandler {
     }
 
     
+    /**
+     * Create an instance of SVNClient to get information from local working copy.
+     * @param wcPath path of working copy
+     * @param username
+     * @param password
+     */
     public SVNClient(String wcPath, String username, String password) {
         this.wcPath = wcPath;
         this.username = username;
@@ -130,7 +136,7 @@ public class SVNClient implements ISVNEventHandler {
     /**
      * 
      */
-    public SVNClient() {
+    private SVNClient() {
         // TODO Auto-generated constructor stub
     }
 
@@ -150,6 +156,18 @@ public class SVNClient implements ISVNEventHandler {
         
         clientManager.setEventHandler(this);
         return clientManager;
+    }
+    
+    public long doCheckout(String svnUrlPath) {
+        SVNURL svnUrl;
+        try {
+            svnUrl = SVNURL.parseURIEncoded(svnUrlPath);
+            return doCheckout(svnUrl);
+        } catch (SVNException ex) {
+            LOG.error("Parse URL path '" + svnUrlPath + "'", ex);
+        }
+        
+        return -1;
     }
     
     public long doCheckout(SVNURL url) {
@@ -234,6 +252,31 @@ public class SVNClient implements ISVNEventHandler {
         return wcClient.doInfo(path, revision);
     }
 
+    /**
+     * [Give the description for method].
+     * @param path file path or folder path
+     * @return
+     * @throws SVNException
+     */
+    public SVNInfo getInfo(String path) throws SVNException {
+        if (wcClient == null) {
+            wcClient = getSVNClient();
+        }
+
+        SVNRevision revision = SVNRevision.HEAD;
+        File file = new File(path);
+        return wcClient.doInfo(file, revision);
+    }
+    
+    public SVNInfo getInfo(File file) throws SVNException {
+        if (wcClient == null) {
+            wcClient = getSVNClient();
+        }
+
+        SVNRevision revision = SVNRevision.HEAD;
+        return wcClient.doInfo(file, revision);
+    }
+    
     /**
      * Get value of lastCheckDate.
      * @return the lastCheckDate

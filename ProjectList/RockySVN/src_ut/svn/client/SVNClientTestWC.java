@@ -18,14 +18,18 @@
  */
 package svn.client;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.wc.SVNInfo;
 
 /**
  * @author thachln
  *
  */
-public class SVNClientTest {
-
+public class SVNClientTestWC {
+    private final static Logger LOG = Logger.getLogger("SVNClientTestWC");
+    
     @Test
     public void testGetClientManager() {
         
@@ -34,17 +38,16 @@ public class SVNClientTest {
      * Test method for {@link svn.client.SVNClient#doCheckOut(java.util.Date)}.
      */
     @Test
-    public void testDoUpdateDate() {
-        SVNClient svCln = SVNClient.newClient("/svn.properties");
-        svCln.doUpdate("2013/07/02", "yyyy/MM/dd");
-    }
-
-    /**
-     * Test method for {@link svn.client.SVNClient#doCheckOut(java.util.Date)}.
-     */
-    @Test
-    public void testDoCheckOut() {
-        SVNClient svCln = SVNClient.newClient("/svn-cam.properties");
-        svCln.doCheckout("https://hcm-svn.fsoft.fpt.vn/svn/F15-HCAM/trunk/source");
+    public void testGetInfo() {
+        SVNClient svnCln = new SVNClient("D:/Project/HCAM/svn/trunk/doc", "", "");
+        svnCln.getRev();
+        try {
+            SVNInfo svnInfo = svnCln.getInfo();
+            svnInfo.getAuthor();
+            svnInfo.getRevision();
+        } catch (SVNException ex) {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
     }
 }
