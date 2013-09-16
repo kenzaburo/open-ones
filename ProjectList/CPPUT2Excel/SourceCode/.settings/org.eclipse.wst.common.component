@@ -6,6 +6,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src_ioutput"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src_exceloutput"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src_ut"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/resource"/>
         <property name="context-root" value="CPPUT2Excel"/>
         <property name="java-output-path" value="/CPPUT2Excel/build/classes"/>
     </wb-module>

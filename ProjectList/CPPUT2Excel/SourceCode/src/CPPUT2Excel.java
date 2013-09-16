@@ -24,13 +24,14 @@ import org.apache.log4j.Logger;
 
 import rocky.common.CommonUtil;
 import vn.mks.engine.ireport.IOutput;
+import vn.mkss.engine.codeauto.CPPUnitParser;
 
 /**
  * @author thachle
  */
 public class CPPUT2Excel implements FilenameFilter {
-    private final static Logger LOG = Logger.getLogger("RockyCPPChecker");
-    private final static String[] ACCEPT_EXTENSIONS = {"h", "cpp"}; 
+    private final static Logger LOG = Logger.getLogger("CPPUT2Excel");
+    private final static String[] ACCEPT_EXTENSIONS = {"h"}; 
     private String sourcePath;
     private String resourceTemplate;
     private String outputFolder;
@@ -38,6 +39,7 @@ public class CPPUT2Excel implements FilenameFilter {
     /** Optional parameter. */
     private String encoding;
 
+    CPPUnitParser cppParser = new CPPUnitParser();
     IOutput outputer = null;
     File[] lstFile;
     /**
@@ -87,9 +89,10 @@ public class CPPUT2Excel implements FilenameFilter {
 
         if (lstFile != null) {
             // Scan files
-            for (File ff : lstFile) {
-                if (ff.isFile()) {
-                    LOG.debug("File:" + ff.getPath());
+            for (File file : lstFile) {
+                if (file.isFile()) {
+                    LOG.debug("File:" + file.getPath());
+                    parse(file);
                     //report.writeBug(ff.getParent(), ff.getName(), check(ff));
                 }
             }
@@ -111,6 +114,7 @@ public class CPPUT2Excel implements FilenameFilter {
         //report = new BugReport(resourceTemplate);
 
         if (file.isFile()) {
+            parse(file);
             //List<BugInfo> lstBug = check(file);
             //report.writeBug(file.getPath(), file.getName(), lstBug);
         }
@@ -121,9 +125,9 @@ public class CPPUT2Excel implements FilenameFilter {
         //report.toFile(outputFolder);
     }
 
-//    private List<BugInfo> check(File file) {
-//        return checker.check(file); // No Processor
-//    }
+    private void parse(File file) {
+        cppParser.parseFile(file);
+    }
 
     /**
      * Implementer of FilenameFilter. Accept extension file .java (ignore case)

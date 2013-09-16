@@ -6,7 +6,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "GPS.h"
 
-class TestGPS : public CppUnit::TestFixture {
+class GPSTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestGPS);
     CPPUNIT_TEST(testOpen);
     CPPUNIT_TEST_SUITE_END();
