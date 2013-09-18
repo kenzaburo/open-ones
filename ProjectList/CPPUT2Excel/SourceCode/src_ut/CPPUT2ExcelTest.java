@@ -49,12 +49,8 @@ public class CPPUT2ExcelTest {
      */
     @Test
     public void testMain() {
-        String filePath = "testdata/TestGPS";
-
-        String template = "/CodeReport.xls";
-        String outPath = ".";
-
-        String[] args = {filePath, template, outPath};
+        String confResource = "/cpput2excel.properties";
+        String[] args = {confResource};
 
         CPPUT2Excel.main(args);
         assertTrue(true);

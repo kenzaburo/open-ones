@@ -19,10 +19,14 @@
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
 import rocky.common.CommonUtil;
+import rocky.common.Constant;
+import rocky.common.PropertiesManager;
 import vn.mks.engine.ireport.IOutput;
 import vn.mkss.engine.codeauto.CPPUnitParser;
 
@@ -32,7 +36,8 @@ import vn.mkss.engine.codeauto.CPPUnitParser;
 public class CPPUT2Excel implements FilenameFilter {
     private final static Logger LOG = Logger.getLogger("CPPUT2Excel");
     private final static String[] ACCEPT_EXTENSIONS = {"h"}; 
-    private String sourcePath;
+    private String sourceMain;
+    private String sourceTest;
     private String resourceTemplate;
     private String outputFolder;
 
@@ -42,32 +47,45 @@ public class CPPUT2Excel implements FilenameFilter {
     CPPUnitParser cppParser = new CPPUnitParser();
     IOutput outputer = null;
     File[] lstFile;
+    
+    public CPPUT2Excel(String confResource) {
+        try {
+            Properties props = PropertiesManager.newInstanceFromProps(confResource);
+            sourceMain = props.getProperty("source.main", ".");
+            sourceTest = props.getProperty("source.test", ".");
+            outputFolder = props.getProperty("output.folder", ".");
+            resourceTemplate = props.getProperty("source.test", "/TemplateReport.xls");
+            encoding = props.getProperty("source.encoding", Constant.DEF_ENCODE);
+        } catch (IOException ex) {
+            LOG.error("Error in loading configuration '" + confResource + "'", ex);
+        }
+    }
     /**
      * @param sourcePath
      * @param resourceTemplate
      * @param outputFolder
      */
-    public CPPUT2Excel(String sourcePath, String resourceTemplate, String outputFolder) {
-        super();
-        this.sourcePath = sourcePath;
-        this.resourceTemplate = resourceTemplate;
-        this.outputFolder = outputFolder;
-        //IOutput outputer = IOutput.newInstance();
-    }
+//    public CPPUT2Excel(String sourcePath, String resourceTemplate, String outputFolder) {
+//        super();
+//        this.sourceMain = sourcePath;
+//        this.resourceTemplate = resourceTemplate;
+//        this.outputFolder = outputFolder;
+//        //IOutput outputer = IOutput.newInstance();
+//    }
 
     public static void main(String[] args) {
-        if ((args == null) || (args.length < 3)) {
-            usage();
-            System.exit(1);
-        }
-
-        CPPUT2Excel checker = new CPPUT2Excel(args[0], args[1], args[2]);
-
-        if (args.length > 3) {
-            checker.setEncoding(args[3]);
-        }
-        checker.start();
-
+//        if ((args == null) || (args.length < 3)) {
+//            usage();
+//            System.exit(1);
+//        }
+//
+//        CPPUT2Excel checker = new CPPUT2Excel(args[0], args[1], args[2]);
+//
+//        if (args.length > 3) {
+//            checker.setEncoding(args[3]);
+//        }
+        CPPUT2Excel apper = new CPPUT2Excel("/cpput2excel.properties");
+        apper.start();
     }
 
     /**
@@ -110,7 +128,7 @@ public class CPPUT2Excel implements FilenameFilter {
      * Scan files Java in the folder recursively to check bugs.
      */
     public void start() {
-        File file = new File(sourcePath);
+        File file = new File(sourceMain);
         //report = new BugReport(resourceTemplate);
 
         if (file.isFile()) {
@@ -149,6 +167,6 @@ public class CPPUT2Excel implements FilenameFilter {
     }
 
     private static void usage() {
-        System.out.println("CPPUT2Excel <source-path> <resource-template> <output-folder> [encoding]");
+        System.out.println("CPPUT2Excel <resource-template>");
     }
 }
