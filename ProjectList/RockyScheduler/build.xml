@@ -88,7 +88,11 @@
         <fileset dir="." includes="*.bat, *.txt" excludes=".svn/**,*.svn-base" />
     </copy>
   	
-	<jar jarfile="${dist.home}/lib/${app.pkg}-${app.version}-${today}.jar" basedir="${build.home}"/>
+	<jar jarfile="${dist.home}/lib/${app.pkg}-${app.version}-${today}.jar" basedir="${build.home}">
+		<manifest>
+		        <attribute name="Main-Class" value="app.RockyScheduler" />
+		</manifest>
+  	</jar>
 	<echo message="View the result within folder ${dist.home}"/>
   </target>
  

@@ -53,7 +53,14 @@ public class Scheduler {
         this.scheduleHandler = scheduleHandler;
     }
     
-    public static int main(String[] args) {
+    /**
+     * [Give the description for method].
+     * @param args
+     * args[0]: configuration file
+     * args[1]: command
+     * @return
+     */
+    public static void main(String[] args) {
         if (args.length < 2) {
             usage();
             System.exit(1);
@@ -69,20 +76,15 @@ public class Scheduler {
         runner.setExecutorService(scheduler.getExecutor());
         
         scheduler.start();
-        
-        
-        
-        return 0;
     }
     
     public ScheduledExecutorService getExecutor() {
         return executor;
     }
 
-    private static void usage() {
-        System.out.println("Scheduler <setting file path> <cmd line>");
-    }
-
+    /**
+     * Load all instance of runners.
+     */
     public void start() {
         List<Date> lstDate = parseSetting(setting);
         
@@ -99,6 +101,11 @@ public class Scheduler {
         }
     }
 
+    /**
+     * [Give the description for method].
+     * @param setting
+     * @return
+     */
     private List<Date> parseSetting(Setting setting) {
         List<Date> lstDte = new ArrayList<Date>();
         List<String> lstHour = setting.getLstHour();
@@ -128,5 +135,9 @@ public class Scheduler {
         }
         
         return lstDte;
+    }
+    
+    private static void usage() {
+        System.out.println("Scheduler <setting file path> <cmd line>");
     }
 }

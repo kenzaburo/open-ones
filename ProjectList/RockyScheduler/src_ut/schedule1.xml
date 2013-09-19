@@ -1,7 +1,6 @@
 <app.Setting>
   <isHourly>false</isHourly>
   <lstHour>
-    <string>17:09</string>
-    <string>17:10</string>
+    <string>17:22</string>    
   </lstHour>
 </app.Setting>

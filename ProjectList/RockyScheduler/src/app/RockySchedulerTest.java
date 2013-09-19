@@ -18,13 +18,23 @@
  */
 package app;
 
-import rocky.engine.Scheduler;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 /**
  * @author thachln
+ *
  */
-public class RockyScheduler {
-    public static void main(String[] args) {
-        Scheduler.main(args);
+public class RockySchedulerTest {
+
+    /**
+     * Test method for {@link app.RockyScheduler#main(java.lang.String[])}.
+     */
+    @Test
+    public void testMain() {
+        String[] args = {"/scheduler1.xml", "dir"};
+        RockyScheduler.main(args);
     }
+
 }
