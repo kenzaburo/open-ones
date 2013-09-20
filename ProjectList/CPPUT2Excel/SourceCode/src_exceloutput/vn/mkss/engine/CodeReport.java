@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -33,11 +34,13 @@ import org.apache.poi.hssf.util.HSSFCellUtil;
 import rocky.common.CommonUtil;
 import rocky.poi.PoiUtil;
 import vn.mkss.engine.codeauto.info.ClassInfo;
+import vn.mkss.engine.codeauto.info.MethodInfo;
+import vn.mkss.engine.ireport.IOutput;
 
 /**
  * @author thachle
  */
-public class CodeReport {
+public class CodeReport implements IOutput {
     private final static Logger LOG = Logger.getLogger("CodeReport");
 
     private final static String SHEET_NAME = "Report";
@@ -64,7 +67,38 @@ public class CodeReport {
         }
     }
 
-    public void writeReport(String path, String fileName, Collection<ClassInfo> lstClassInfo) {
+    /**
+     * [Explain the description for this method here].
+     * @param path
+     * @param fileName
+     * @param classInfo
+     * @see vn.mkss.engine.ireport.IOutput#write(java.lang.String, java.lang.String, vn.mkss.engine.codeauto.info.ClassInfo)
+     */
+    @Override
+    public void write(String path, String fileName, ClassInfo classInfo) {
+        if (sheet == null) {
+            sheet = wbBugReport.getSheet(SHEET_NAME);
+            if (sheet == null) {
+                wbBugReport.createSheet(SHEET_NAME);
+            }
+        }
+
+        HSSFRow row;
+
+        // Write the bug list
+        if (classInfo != null) {
+            row = HSSFCellUtil.getRow(rowIdx, sheet);
+            PoiUtil.setContent(row, COLIDX_PATH, path);
+            PoiUtil.setContent(row, COLIDX_FILENAME, fileName);
+            PoiUtil.setContent(row, COLIDX_METHOD, classInfo.getName());
+
+            List<MethodInfo> lstMethod = classInfo.getMethods();
+            
+            rowIdx++;
+        }
+    }
+    
+    public void write(String path, String fileName, Collection<ClassInfo> lstClassInfo) {
 //        if ((!CommonUtil.isNNandNB(fileName)) || (!CommonUtil.isNNandNB(lstClassInfo))) {
 //            return;
 //        }
@@ -124,5 +158,16 @@ public class CodeReport {
                 }
             }
         }
+    }
+
+    /**
+     * [Explain the description for this method here].
+     * @return
+     * @see vn.mkss.engine.ireport.IOutput#newInstance()
+     */
+    @Override
+    public IOutput newInstance() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

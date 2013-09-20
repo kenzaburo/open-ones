@@ -27,7 +27,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.EScopeKind;
-import org.eclipse.cdt.core.dom.ast.ExpansionOverlapsBoundaryException;
 import org.eclipse.cdt.core.dom.ast.IASTDeclSpecifier;
 import org.eclipse.cdt.core.dom.ast.IASTDeclaration;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
@@ -50,9 +49,11 @@ import org.eclipse.core.runtime.CoreException;
 
 import rocky.common.Constant;
 import rocky.common.FileUtil;
+import vn.mkss.engine.ireport.IOutput;
 
 /*_
  * Parsing source code c++ to get information of
+ * - List of class, method, size of each method, size of class
  * - Test cases
  * @author thachle
  */
@@ -61,10 +62,24 @@ public class CPPUnitParser extends BaseCPPVisitor {
     private List<String> lstIncludeSearchPath = new ArrayList<String>();
 
     private boolean isTestFixture = false;
+    
+    private IOutput outputter = null;
+    /**
+     * @param outputter
+     */
+    public CPPUnitParser(IOutput outputter) {
+        this.outputter = outputter;
+    }
+
     public List<String> addIncludeSearchPath(String path) {
         lstIncludeSearchPath.add(path);
         return lstIncludeSearchPath;
     }
+    
+    /**
+     * Entry point to parse files: source code (.cpp); header file (.h).
+     * @param file
+     */
     public void parseFile(File file) {
         ILanguage lang = GPPLanguage.getDefault();
         char[] contents;
@@ -187,6 +202,7 @@ public class CPPUnitParser extends BaseCPPVisitor {
         
     }
     private void processClassName(String className) {
-        LOG.debug("Found class name:" + className);    
+        LOG.debug("Found class name:" + className);
+        //outputter.write(path, fileName, lstClassInfo)
     }
 }

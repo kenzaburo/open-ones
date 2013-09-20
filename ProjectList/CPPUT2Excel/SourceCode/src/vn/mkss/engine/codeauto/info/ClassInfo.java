@@ -74,4 +74,12 @@ public class ClassInfo {
         
         return matchedMethodInfo;
     }
+
+    /**
+     * [Give the description for method].
+     * @return
+     */
+    public List<MethodInfo> getMethods() {        
+        return lstMethodInfo;
+    }
 }

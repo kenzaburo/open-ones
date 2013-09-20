@@ -27,28 +27,35 @@ import org.apache.log4j.Logger;
 import rocky.common.CommonUtil;
 import rocky.common.Constant;
 import rocky.common.PropertiesManager;
-import vn.mks.engine.ireport.IOutput;
 import vn.mkss.engine.codeauto.CPPUnitParser;
+import vn.mkss.engine.ireport.IOutput;
 
 /**
+ * Entry point of the application.
+ * Input: configuration file contains:
+ *  + Path of main source code
+ *  + Path of UT source code
+ *  + ...
+ * Output: Excel-based report
  * @author thachle
  */
 public class CPPUT2Excel implements FilenameFilter {
     private final static Logger LOG = Logger.getLogger("CPPUT2Excel");
     private final static String[] ACCEPT_EXTENSIONS = {"h"}; 
-    private String sourceMain;
-    private String sourceTest;
-    private String resourceTemplate;
-    private String outputFolder;
+    private String sourceMain = null;
+    private String sourceTest = null;
+    private String resourceTemplate = null;
+    private String outputFolder = null;
 
     /** Optional parameter. */
-    private String encoding;
+    private String encoding = null;
 
-    CPPUnitParser cppParser = new CPPUnitParser();
-    IOutput outputer = null;
+    CPPUnitParser cppParser;
+    IOutput outputter = null;
     File[] lstFile;
     
     public CPPUT2Excel(String confResource) {
+        String outputClass = null;
         try {
             Properties props = PropertiesManager.newInstanceFromProps(confResource);
             sourceMain = props.getProperty("source.main", ".");
@@ -56,8 +63,20 @@ public class CPPUT2Excel implements FilenameFilter {
             outputFolder = props.getProperty("output.folder", ".");
             resourceTemplate = props.getProperty("source.test", "/TemplateReport.xls");
             encoding = props.getProperty("source.encoding", Constant.DEF_ENCODE);
+            
+            // Get Implementer
+            outputClass = props.getProperty("output.package", "vn.mkss.engine.DefaultOutputer");
+            Class clazz = Class.forName(outputClass);
+            outputter = (IOutput) clazz.newInstance();
+            cppParser = new CPPUnitParser(outputter);
         } catch (IOException ex) {
             LOG.error("Error in loading configuration '" + confResource + "'", ex);
+        } catch (ClassNotFoundException ex) {
+            LOG.error("Could not creating class instance of '" + outputClass + "'", ex);
+        } catch (InstantiationException ex) {
+            LOG.error("Could not creating object instance of '" + outputClass + "'", ex);
+        } catch (IllegalAccessException ex) {
+            LOG.error("Could not creating object instance of '" + outputClass + "'", ex);
         }
     }
     /**
