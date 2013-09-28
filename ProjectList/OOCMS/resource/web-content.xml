@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webpage>
+    <tabs default-id='0'>
+        <tab id="0" name="Trang chủ" href="index.html">Khởi tạo web-site chỉ với 999 nghìn đồng, bao tên miền 1 năm. Áp dụng cho 10 Khách hàng đầu tiên.
+        </tab>
+        <tab id="1" name="Báo giá" href="bao-gia-web-site.html">Bảng giá chi tiết web-site.
+        </tab>
+        <tab id="2" name="Dịch vụ" href="quan-ly-du-an-phan-mem.html">Tư vấn, triển khai đào tạo hệ thống quản trị dự án phần mềm đạt CMMi Level 5 do FPT Software phát triển.
+        </tab>
+        <tab id="3" name="Liên hệ" href="lien-he.html">0932 636 514
+        </tab>   
+     </tabs>
+</webpage>
