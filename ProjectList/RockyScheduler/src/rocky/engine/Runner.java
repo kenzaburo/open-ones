@@ -66,6 +66,7 @@ public class Runner implements Runnable {
      */
     private int runCommand() {
         try {
+            LOG.debug("Execute command '" + cmdLine + "'");
             Process proc = Runtime.getRuntime().exec(cmdLine);
             return proc.exitValue();
         } catch (IOException ex) {
