@@ -13,7 +13,7 @@
   <property name="lib.compile" value="lib"/>
   
   <tstamp>
-      <format property="today" pattern="yyyyMMddhhmmss"/>
+      <format property="today" pattern="yyyyMMddHHmmss"/>
   </tstamp>
   <!--<property name="lib.server.compile" value="server-lib"/> -->
   
