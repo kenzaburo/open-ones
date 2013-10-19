@@ -8,6 +8,10 @@ INTRODUCTION:
 This document contains the release notes for the Rocky Common library.
 Rocky Common is a set of utility functions and reusable components that should be of use in any Java environment.
 
+*** Version 0.2.4
+- Bug fixing
+- Update BeanUtil: support load properties to entity
+- Update PoiUtil.setContent by address
 *** Version 0.2.3
 - Bug fixing
 

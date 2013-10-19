@@ -16,23 +16,47 @@ public final class Constant {
 
     public static final String DEF_ENCODE = "UTF-8";
 
-    public static final String[] BLANK_STRS = new String[]{};
+    public static final String[] BLANK_STRS = {};
+    
 
+    public static final String DOT_XLS = ".xls";
+    
+    public static final String DOT_XLSX = ".xlsx";
+    
+    /** @deprecated use CHARA . */
     public static final String BLANK = "";
 
+    /** @deprecated use CHARA . */
     public static final String LF = "\n";
 
+    /** @deprecated use CHARA . */
     public static final String LFCR = "\n\r";
 
+    /** @deprecated use CHARA . */
     public static final String Y = "Y";
 
+    /** @deprecated use CHARA . */
     public static final char CHAR_DOT = '.';
 
+    /** @deprecated use CHARA. String of dot character . */
+    public static final String DOT = ".";
+    
+    /** String of dot character .
+     * @deprecated use CHARA
+     */
     public static final String STR_DOT = ".";
 
+    /** @deprecated use CHARA . */
     public static final String COMMA = ",";
 
+    /** @deprecated use CHARA . */
     public static final String SPACE = " ";
+    
+    /** @deprecated use CHARA . */
+    public static final String UNDERSCORE = "_";
+    
+    /** @deprecated use CHARA . */
+    public static final String HYPHEN = "-";
 
     public static final String HTML_TAG_PARA_OPEN = "<P>";
 
@@ -40,14 +64,17 @@ public final class Constant {
 
     public static final String JAVADOC_INDENT = " * ";
 
+    /** @deprecated use CHARA . */
     public static final String QUOTE = "\"";
 
     public static final String DEFAULT_NULL = "NOTHING";
 
     public static final String STR_0 = "0";
 
+    /** @deprecated use CHARA . */
     public static final String STR_BACKSLASH = "\\";
 
+    /** @deprecated use CHARA . */
     public static final String STR_RIGHTSLASH = "/";
 
     /** Success code. */

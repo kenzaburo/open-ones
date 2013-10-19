@@ -4,10 +4,12 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -124,4 +126,59 @@ public class BeanUtil {
         }
         return true;
     }
+    
+    /**
+     * Transfer data from properties into entity.
+     * @param props
+     * @return
+     */
+    public static Object propsToEntity(Properties props, Class entityClass) {
+        Method setMethod;
+        Object resultObj = null;
+
+        try {
+            resultObj = entityClass.newInstance();
+
+            // Scan properties
+            String setMethodName;
+            String strKey;
+            for (Object key : props.keySet()) {
+                strKey = (String) key;
+                setMethodName = buildSetMethod(strKey);
+
+                try {
+                    setMethod = entityClass.getDeclaredMethod(setMethodName, String.class);
+                    setMethod.invoke(resultObj, props.getProperty(strKey));
+                } catch (SecurityException ex) {
+                    LOG.warn("Have no permission for method.", ex);
+                } catch (NoSuchMethodException ex) {
+                    LOG.warn("Method not found.", ex);
+                } catch (IllegalArgumentException ex) {
+                    LOG.warn("Could not invoke method.", ex);
+                } catch (IllegalAccessException ex) {
+                    LOG.warn("Could not invoke method.", ex);
+                } catch (InvocationTargetException ex) {
+                    LOG.warn("Could not invoke method.", ex);
+                }
+            }
+        } catch (InstantiationException ex) {
+            LOG.error("Could not create instance", ex);
+        } catch (IllegalAccessException ex) {
+            LOG.error("Could not create instance", ex);
+        }
+
+        return resultObj;
+    }
+    
+    /**
+     * Build set method from property name.
+     * <br/>
+     * Rule: "set" + property name with upper first character.
+     * @param property
+     * @return set + property with first character is upper.
+     */
+    private static String buildSetMethod(String property) {
+        return "set" + String.valueOf(property.charAt(0)).toUpperCase() + property.substring(1);
+    }
+
 }

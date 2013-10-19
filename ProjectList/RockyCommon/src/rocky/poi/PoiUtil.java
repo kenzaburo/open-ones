@@ -13,17 +13,22 @@ import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import rocky.common.CommonUtil;
+import rocky.common.Constant;
 
 /**
  * Common utility to use POI. 
@@ -32,6 +37,37 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class PoiUtil {
     final static Logger LOG = Logger.getLogger("PoiUtil");
 
+    /**
+     * [Give the description for method].
+     * @param resource
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static Workbook loadWorkbookByResource(String resource) throws FileNotFoundException, IOException {
+        if (resource == null) {
+            return null;
+        }
+        
+        Workbook workbook = null;
+        if (resource.endsWith(Constant.DOT_XLS)) {
+            // Excel 2003
+            workbook = new HSSFWorkbook(new POIFSFileSystem(CommonUtil.loadResource(resource)));
+        } else if (resource.endsWith(Constant.DOT_XLSX)) {
+            // Excel 2007
+            workbook = new XSSFWorkbook(CommonUtil.loadResource(resource));
+        }
+
+        return workbook;
+    }
+    
+    /**
+     * [Give the description for method].
+     * @param is
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static HSSFWorkbook loadFile(InputStream is) throws FileNotFoundException, IOException {
         HSSFWorkbook wk = null;
         POIFSFileSystem pfs = null;
@@ -132,7 +168,7 @@ public class PoiUtil {
     public static Cell setContent(HSSFRow row, short colIdx, Object value) {
         return setContent(row, (int) colIdx, value);
     }
-
+    
     /**
      * Set value for cell.
      * <b>
@@ -142,6 +178,7 @@ public class PoiUtil {
      * @param colIdx
      * @param value
      * @return
+     * @deprecated use Cell setContent(Row row, int colIdx, Object value)
      */
     public static XSSFCell setContent(XSSFRow row, int colIdx, Object value) {
         XSSFCell cell = row.getCell(colIdx);
@@ -169,10 +206,83 @@ public class PoiUtil {
 
     }
     
+    /**
+     * Set value of object into cell(rowIdx, colIdx).
+     * @param sheet
+     * @param rowIdx row start from 0
+     * @param colIdx col start from 0
+     * @param value
+     * @return
+     */
     public static HSSFCell setContent(HSSFSheet sheet, int rowIdx, short colIdx, Object value) {
         return setContent(sheet, rowIdx, (int)colIdx, value);
     }
     
+    /**
+     * Set content to cell by address.
+     * @param sheet
+     * @param celAddr
+     * @param value
+     * @return
+     * @see setContent(Sheet sheet, int row, int col, value)
+     */
+    public static Cell setContent(Sheet sheet, String celAddr, Object value) {
+        CellReference cellRef = new CellReference(celAddr);
+        return setContent(sheet, cellRef.getRow(), cellRef.getCol(), value);
+    }
+    /**
+     * Set value of object into cell(rowIdx, colIdx).
+     * @param sheet
+     * @param rowIdx
+     * @param colIdx
+     * @param value
+     * @return
+     */
+    public static Cell setContent(Sheet sheet, int rowIdx, int colIdx, Object value) {
+        Row row = sheet.getRow(rowIdx);
+        if (row == null) {
+            row = sheet.createRow(rowIdx);
+        }
+        
+        Cell cell = row.getCell(colIdx);
+        if (cell == null) {
+            cell = row.createCell(colIdx);
+        }
+
+        if (value instanceof Date) {
+            cell.setCellValue((Date) value);
+        } else if (value instanceof Double) {
+            cell.setCellValue(((Double) value).doubleValue());
+        } else if (value instanceof Integer) {
+            cell.setCellValue(((Integer) value).doubleValue());
+        } else if (value instanceof Boolean) {
+            cell.setCellValue((Boolean) value);
+        } else if (value instanceof Long) {
+            cell.setCellValue((Long) value);
+        } else if (value instanceof BigInteger) {
+            cell.setCellValue(((BigInteger) value).longValue());
+        } else {
+            if (cell instanceof HSSFCell) {
+                cell.setCellValue(new HSSFRichTextString(value.toString()));
+            } else if (cell instanceof XSSFCell) {
+                cell.setCellValue(new XSSFRichTextString(value.toString()));
+            } else {
+                cell.setCellValue(value.toString());
+            }
+        }
+
+        return cell;        
+    }
+    
+    /**
+     * [Give the description for method].
+     * @param sheet
+     * @param rowIdx
+     * @param colIdx
+     * @param value
+     * @return
+     * @deprecated use Cell setContent(Sheet sheet, int rowIdx, int colIdx, Object value)
+     */
     public static HSSFCell setContent(HSSFSheet sheet, int rowIdx, int colIdx, Object value) {
         HSSFRow row = sheet.getRow(rowIdx);
         if (row == null) {
@@ -218,6 +328,16 @@ public class PoiUtil {
         return setContent(row, colIdx, value);
     }
 
+    
+    /**
+     * [Give the description for method].
+     * @param sheet
+     * @param rowIdx
+     * @param colIdx
+     * @param value
+     * @return
+     * @deprecated use Cell setContent(Sheet sheet, int rowIdx, int colIdx, Object value)
+     */
     public static XSSFCell setContent(XSSFSheet sheet, int rowIdx, int colIdx, Object value) {
         XSSFRow row = sheet.getRow(rowIdx);
         if (row == null) {
@@ -247,6 +367,14 @@ public class PoiUtil {
         return getValue(row, colIdx);
     }
 
+    public static Object getValue(Sheet sheet, String cellAddr) {
+        CellReference cellRef = new CellReference(cellAddr);
+        Cell cell = sheet.getRow(cellRef.getRow()).getCell(cellRef.getCol());
+
+        return getValue(cell);
+    }
+
+    
     /**
      * Get value of cell.
      * @param sheet
@@ -304,6 +432,12 @@ public class PoiUtil {
 //        HSSFCell cell = row.getCell(colIdx);
 //        return getValue(cell);
 //    }
+    public static Date getDateValue(Sheet sheet, String cellAddr) {
+        CellReference cellRef = new CellReference(cellAddr);
+        Cell cell = sheet.getRow(cellRef.getRow()).getCell(cellRef.getCol());
+
+        return cell.getDateCellValue();
+    }
 
     public static Object getValue(Cell cell) {
         Object retValue = null;
@@ -311,7 +445,7 @@ public class PoiUtil {
 
         if (cell != null) {
             switch (cell.getCellType()) {
-                case HSSFCell.CELL_TYPE_FORMULA :
+                case Cell.CELL_TYPE_FORMULA :
                     // Try to get double value
                     try {
                         retValue = cell.getNumericCellValue();
@@ -328,17 +462,17 @@ public class PoiUtil {
                         retValue = cell.getRichStringCellValue().toString();
                     }
                     break;
-                case HSSFCell.CELL_TYPE_NUMERIC :
+                case Cell.CELL_TYPE_NUMERIC :
                     retValue = cell.getNumericCellValue();
                     break;
-                case HSSFCell.CELL_TYPE_STRING :
+                case Cell.CELL_TYPE_STRING :
                     retValue = cell.getRichStringCellValue().toString();
                     break;
-                case HSSFCell.CELL_TYPE_BOOLEAN :
+                case Cell.CELL_TYPE_BOOLEAN :
                     retValue = cell.getBooleanCellValue();
                     break;
 
-                case HSSFCell.CELL_TYPE_ERROR :
+                case Cell.CELL_TYPE_ERROR :
                     LOG.debug("Error (" + cell.getRowIndex() + "," + cell.getColumnIndex() + ")"
                             + cell.getErrorCellValue());
                     retValue = "#N/A";
@@ -406,7 +540,7 @@ public class PoiUtil {
 //        return retValue;
 //    }
 
-    public static void writeExcelFile(HSSFWorkbook wb, String filename) throws IOException {
+    public static void writeExcelFile(Workbook wb, String filename) throws IOException {
         FileOutputStream fileOut = null;
         try {
             fileOut = new FileOutputStream(filename);
