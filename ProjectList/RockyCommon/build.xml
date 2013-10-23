@@ -85,7 +85,7 @@
 
 	<!-- Copy source -->
 	<copy todir="${build.home}" preservelastmodified="true">
-		<fileset dir="src" excludes="**/*.svn"/>
+		<fileset dir="src" excludes="**/*.svn, log4j.properties"/>
 	</copy>
 
 	
