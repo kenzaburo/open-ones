@@ -121,6 +121,9 @@ public class PoiUtil {
      * @return
      */
     public static Cell setContent(Row row, int colIdx, Object value) {
+        if (value == null) {
+            return null;
+        }
         Cell cell = row.getCell(colIdx);
         if (cell == null) {
             cell = row.createCell(colIdx);
@@ -239,6 +242,9 @@ public class PoiUtil {
      * @return
      */
     public static Cell setContent(Sheet sheet, int rowIdx, int colIdx, Object value) {
+        if (value == null) {
+            return null;
+        }
         Row row = sheet.getRow(rowIdx);
         if (row == null) {
             row = sheet.createRow(rowIdx);
