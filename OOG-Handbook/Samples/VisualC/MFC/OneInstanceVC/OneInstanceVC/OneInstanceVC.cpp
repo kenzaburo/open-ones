@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "OneInstanceVC.h"
 #include "OneInstanceVCDlg.h"
+#include "LimitSingleInstance.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -20,8 +21,7 @@ END_MESSAGE_MAP()
 
 // COneInstanceVCApp construction
 
-COneInstanceVCApp::COneInstanceVCApp()
-{
+COneInstanceVCApp::COneInstanceVCApp() {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 
@@ -34,11 +34,17 @@ COneInstanceVCApp::COneInstanceVCApp()
 
 COneInstanceVCApp theApp;
 
+// The one and only CLimitSingleInstance object.
+CLimitSingleInstance g_SingleInstanceObj(TEXT("Global\\{0665CF51-3BBE-42EF-87FD-41D3562047FB}"));
 
 // COneInstanceVCApp initialization
 
-BOOL COneInstanceVCApp::InitInstance()
-{
+BOOL COneInstanceVCApp::InitInstance() {
+	// Make sure only one instance of the application is created
+	if (g_SingleInstanceObj.IsAnotherInstanceRunning()) {
+		return FALSE;
+	}
+
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
@@ -70,20 +76,16 @@ BOOL COneInstanceVCApp::InitInstance()
 	COneInstanceVCDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
-	if (nResponse == IDOK)
-	{
+	if (nResponse == IDOK) {
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with OK
-	}
-	else if (nResponse == IDCANCEL)
-	{
+	} else if (nResponse == IDCANCEL) {
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with Cancel
 	}
 
 	// Delete the shell manager created above.
-	if (pShellManager != NULL)
-	{
+	if (pShellManager != NULL) {
 		delete pShellManager;
 	}
 
