@@ -16,29 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package openones.tms.annospringmvcportlet.controller;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+package openones.tms.annospringmvcportlet.form;
 
 /**
- * @author Thach.Le
+ * @author thachle
+ *
  */
-@Controller
-@RequestMapping("VIEW")
-public class HelloController {
-    /** Logger for logging. */
-    private static Logger log = Logger.getLogger(HelloController.class);
+public class ChartForm {
 
-    /**
-     * Default screen.
-     * @return name of view which is the name of the JSP page.
-     */
-    @RequestMapping
-    public String initScreen() {
-        log.debug("initScreen.START");
-        // Display hello.jsp
-        return "hello";
-    }
 }
