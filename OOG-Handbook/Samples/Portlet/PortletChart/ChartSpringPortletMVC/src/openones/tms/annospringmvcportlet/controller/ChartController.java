@@ -92,33 +92,48 @@ public class ChartController {
      */
     private String getChartData() {
         JsonArray chartData = new JsonArray();
+        
+        JsonObject serieData1 = buildDataSerie(1.0, "Plan LOC");
+        JsonObject serieData2 = buildDataSerie(0.5, "Actual LOC");
+        
+        
+        chartData.add(serieData1);
+        chartData.add(serieData2);
+
+        return chartData.toString();
+    }
+    
+    /**
+     * Create sample data for one serie.
+     * @param double rate to create sample data 0.0 ~ 1.0
+     * @return JsonObject "data" and property "label"
+     */
+    private JsonObject buildDataSerie(double rate, String label) {
         JsonObject chartSerie = new JsonObject();
         JsonArray chartSerieData = new JsonArray();
-        
+
         JsonArray chartNode;
-        
+
         int size = 10;
         for (int i = 0; i < 10; i++) {
-         // create chart node data, e.g., [0,20]
+            // create chart node data, e.g., [0,20]
             chartNode = new JsonArray();
             chartNode.add(new JsonPrimitive(i));
-            
+
             if (i % 2 == 0) {
                 size += 20;
             } else {
                 size -= 3;
             }
-            chartNode.add(new JsonPrimitive(size));
+            chartNode.add(new JsonPrimitive(size * rate));
             chartNode.add(new JsonPrimitive(0));
-            
+
             chartSerieData.add(chartNode);
         }
         chartSerie.add("data", chartSerieData);
-        chartSerie.addProperty("label", "Plan LOC"); 
-                
-        chartData.add(chartSerie);
-
-        return chartData.toString();
+        chartSerie.addProperty("label", label);
+        
+        return chartSerie;
     }
 
 }
