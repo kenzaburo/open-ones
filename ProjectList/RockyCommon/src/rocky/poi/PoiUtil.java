@@ -87,6 +87,70 @@ public class PoiUtil {
         return wk;
     }
 
+    /**
+     * Remove sheet from Excel file.
+     * @param filePath file path
+     * @param sheetName name of sheet
+     * @return false
+     * filePath of workbook is not existed
+     * sheetName is empty or not existed in the workbook
+     * @throws IOException 
+     * @throws FileNotFoundException 
+     */
+    public static boolean removeSheet(String filePath, String sheetName) throws FileNotFoundException, IOException {
+        if (!CommonUtil.isNNandNB(sheetName)) {
+            return false;
+        }
+        Workbook workbook = loadWorkbookByResource(filePath);
+        
+        if ((workbook == null)) {
+            return false;
+        }
+        
+        int len = workbook.getNumberOfSheets();
+        
+        Sheet sheet;
+        for (int i = 0; i < len; i++) {
+            sheet = workbook.getSheetAt(i);
+            if (sheetName.equals(sheet.getSheetName())) {
+                workbook.removeSheetAt(i);
+                
+                // Save file
+                workbook.write(new FileOutputStream(filePath));
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Remove sheet by index.
+     * @param filePath
+     * @param idxSheet (start from 0)
+     * @return false
+     * file path is not existed
+     * idxSheet is over index of sheet
+     * @throws IOException 
+     * @throws FileNotFoundException 
+     */
+    public static boolean removeSheet(String filePath, int idxSheet) throws FileNotFoundException, IOException {
+        Workbook workbook = loadWorkbookByResource(filePath);
+
+        if ((workbook == null)) {
+            return false;
+        }
+
+        if (idxSheet > workbook.getNumberOfSheets()) {
+            return false;
+        }
+        workbook.removeSheetAt(idxSheet);
+
+        // Save file
+        workbook.write(new FileOutputStream(filePath));
+
+        return true;
+    }
 
 //    public static HSSFCell setContent(HSSFRow row, int colIdx, Object value) {
 //        HSSFCell cell = row.getCell(colIdx);
