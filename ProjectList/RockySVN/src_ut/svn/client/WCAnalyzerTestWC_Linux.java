@@ -44,18 +44,22 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNInfo;
+import org.tmatesoft.svn.core.wc.SVNLogClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
+import org.tmatesoft.svn.core.wc.SVNStatusClient;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 /**
+ * This test is performed for Working Copy from URL HTTPS:// with authentication
  * @author thachln
  *
  */
-public class SVNClientTestWC {
+public class WCAnalyzerTestWC_Linux {
     private final static Logger LOG = Logger.getLogger("SVNClientTestWC");
-    String wcPath = "/media/truecrypt1/Project/MeKong/Solution/SVNObserver/svn/svn-mkss/svnobserver/SourceCode/SVNLoader/";
-    SVNClient svnCln = SVNClient.newClientFromWC(wcPath , "thach", "Thach2O13");
+    //String wcPath = "/media/Thach/HCAM/svn/source/PanoramaSystem/CamSysViewer/";
+    String wcPath = "/home/thachle/Projects/Open-Ones/GoogleCode/trunk/ProjectList/RockySVN/";
+    WCAnalyzer wcAnalyzer = new WCAnalyzer(wcPath , "", "");
     
 
     /**
@@ -76,28 +80,6 @@ public class SVNClientTestWC {
     }
 
 
-    
-    @Test
-    public void testGetClientManager() {
-        
-    }
-    /**
-     * Test method for {@link svn.client.SVNClient#doCheckOut(java.util.Date)}.
-     */
-    @Test
-    public void testGetInfo() {
-        SVNClient svnCln = SVNClient.newClientFromWC("D:/Project/HCAM/svn/trunk/doc", "", "");
-        svnCln.getRev();
-        try {
-            SVNInfo svnInfo = svnCln.getInfo();
-            svnInfo.getAuthor();
-            svnInfo.getRevision();
-        } catch (SVNException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
-        }
-    }
-
     /**
      * Test method for {@link svn.client.SVNClient#doCheckOut(java.util.Date)}.
      */
@@ -105,9 +87,9 @@ public class SVNClientTestWC {
     public void testGetWCInfo() {
         
         try {
-            SVNInfo svnInfo = svnCln.getInfo();
+            SVNInfo svnInfo = wcAnalyzer.getInfo();
             String lastCommitter = svnInfo.getAuthor();
-            assertEquals("thach", lastCommitter);
+            assertEquals("thachln", lastCommitter);
             
             Date lastDateCommit = svnInfo.getCommittedDate();
             LOG.debug("lastDateCommit=" + lastDateCommit);
@@ -131,7 +113,7 @@ public class SVNClientTestWC {
     private void analyzeFolder(File file) {
         try {
             LOG.debug("File:" + file.getPath());
-            SVNInfo svnInfo = svnCln.getInfo(file);
+            SVNInfo svnInfo = wcAnalyzer.getInfo(file);
             
             String lastCommitter = svnInfo.getAuthor();
             
@@ -179,7 +161,7 @@ public class SVNClientTestWC {
     private void printFile(File file) {
         try {
             LOG.debug("File:" + file.getPath());
-            SVNInfo svnInfo = svnCln.getInfo(file);
+            SVNInfo svnInfo = wcAnalyzer.getInfo(file);
             
             String lastCommitter = svnInfo.getAuthor();
             

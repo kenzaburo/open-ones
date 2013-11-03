@@ -1,4 +1,4 @@
-<project name="SizeCounter" default="dist" basedir=".">
+<project name="RockySVN" default="dist" basedir=".">
   <description>
       Build file for RockySVN project
   </description>
@@ -13,13 +13,8 @@
   <property name="lib.compile" value="WebContent/WEB-INF/lib"/>
   
   <tstamp>
-      <format property="today" pattern="yyyyMMDDhhmmss"/>
+      <format property="today" pattern="yyyyMMddHHmmss"/>
   </tstamp>
-  <!-- Configure the custom Ant tasks for the Manager application -->
-  <!--
-  <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
-  <taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
-  -->
 
 <!--
 

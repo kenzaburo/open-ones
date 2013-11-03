@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tmatesoft.svn.cli.svn.SVN;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
@@ -49,13 +50,14 @@ import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 /**
+ * This test is performed for Working Copy from URL HTTPS:// with authentication
  * @author thachln
  *
  */
-public class SVNClientTestWC {
+public class SVNClientTest_Linux {
     private final static Logger LOG = Logger.getLogger("SVNClientTestWC");
-    String wcPath = "/media/truecrypt1/Project/MeKong/Solution/SVNObserver/svn/svn-mkss/svnobserver/SourceCode/SVNLoader/";
-    SVNClient svnCln = SVNClient.newClientFromWC(wcPath , "thach", "Thach2O13");
+    String wcPath = "/media/Thach/HCAM/svn/source/PanoramaSystem/CamSysViewer/";
+    SVNClient svnCln = SVNClient.newClientFromWC(wcPath , "", "");
     
 
     /**
@@ -76,26 +78,13 @@ public class SVNClientTestWC {
     }
 
 
-    
-    @Test
-    public void testGetClientManager() {
-        
-    }
     /**
      * Test method for {@link svn.client.SVNClient#doCheckOut(java.util.Date)}.
      */
     @Test
     public void testGetInfo() {
-        SVNClient svnCln = SVNClient.newClientFromWC("D:/Project/HCAM/svn/trunk/doc", "", "");
-        svnCln.getRev();
-        try {
-            SVNInfo svnInfo = svnCln.getInfo();
-            svnInfo.getAuthor();
-            svnInfo.getRevision();
-        } catch (SVNException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
-        }
+
+
     }
 
     /**
@@ -105,7 +94,9 @@ public class SVNClientTestWC {
     public void testGetWCInfo() {
         
         try {
-            SVNInfo svnInfo = svnCln.getInfo();
+            SVNWCClient wcCln = svnCln.getSVNWCClient();
+            
+            SVNInfo svnInfo = wcCln.doInfo(new File(this.wcPath), SVNRevision.HEAD);
             String lastCommitter = svnInfo.getAuthor();
             assertEquals("thach", lastCommitter);
             

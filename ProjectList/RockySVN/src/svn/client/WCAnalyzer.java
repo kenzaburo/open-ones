@@ -30,6 +30,7 @@ import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
+import org.tmatesoft.svn.core.internal.wc17.db.SVNWCDbRoot.WCLock;
 import org.tmatesoft.svn.core.wc.ISVNEventHandler;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNEvent;
@@ -54,7 +55,7 @@ import rocky.common.CommonUtil;
  * 
  * @author thachln
  */
-public class SVNClient implements ISVNEventHandler {
+public class WCAnalyzer implements ISVNEventHandler {
     private final static Logger LOG = Logger.getLogger("SVNClient");
     
     /**  . */
@@ -77,7 +78,7 @@ public class SVNClient implements ISVNEventHandler {
     /**
      *  Avoid create instance without parameter.
      */
-    private SVNClient() {
+    private WCAnalyzer() {
         // No nothing
     }
     
@@ -87,84 +88,49 @@ public class SVNClient implements ISVNEventHandler {
      * @param username
      * @param password
      */
-    public static SVNClient newClientFromWC(String wcPath, String username, String password) {
-        SVNClient svnClient = new SVNClient();
-        svnClient.wcPath = wcPath;
-        svnClient.username = username;
-        svnClient.password = password;
-        
-        return svnClient;
+    public WCAnalyzer(String wcPath, String username, String password) {
+        this.wcPath = wcPath;
+        this.username = username;
+        this.password = password;
     }
 
-    public static SVNClient newClientFromUrl(String svnUrl, String username, String password) {
-        SVNClient svnClient = new SVNClient();
-        svnClient.svnUrl = svnUrl;
-        svnClient.username = username;
-        svnClient.password = password;
-        
-        return svnClient;
-    }
     /**
      * [Give the description for method].
      * @param configFile
      * @return
      */
-    public static SVNClient newClientFromConfiguration(String configFile) {
+    public WCAnalyzer(String configFile) {
         try {
             Properties props = new Properties();
             props.load(CommonUtil.loadResource(configFile));
             
             String revVal = props.getProperty("rev");
             
-            SVNClient svnClient = new SVNClient();
-            svnClient.svnUrl = props.getProperty("svn.url");
-            svnClient.wcPath = props.getProperty("svn.wc");
-            svnClient.username = props.getProperty("username");
-            svnClient.password = props.getProperty("password");
+            // this.svnUrl = props.getProperty("svn.url");
+            this.wcPath = props.getProperty("svn.wc");
+            this.username = props.getProperty("username");
+            this.password = props.getProperty("password");
             
             rev = null;
             if ((revVal != null) && (!"-1".equalsIgnoreCase(revVal))) {
                 rev = Long.valueOf(revVal);
-                svnClient.setRev(rev);
+                this.setRev(rev);
             }
-            
-            return svnClient;
+
         } catch (IOException ex) {
             LOG.error("Could not load resource file '" + configFile + "'", ex);
         }
-        
-        return null;
     }
 
-    /**
-     * [Give the description for method].
-     * 
-     * @param args
-     */
-    public static void main(String[] args) {
-//        SVNClientManager clientManager = getClientManager();
-//
-//        SVNWCClient wcClient = clientManager.getWCClient();
-//
-//        SVNRevision revision = SVNRevision.HEAD;
-//        File path = new File(wcPath);
-//        try {
-//            SVNInfo info = wcClient.doInfo(path, revision);
-//            LOG.debug("URL " + info.getURL());
-//            LOG.debug("CommittedDate:" + CommonUtil.formatDate(info.getCommittedDate(), "yyyy/MM/dd HH:mm"));
-//            LOG.debug("Revision:" + info.getRevision().getNumber());
-//            LOG.debug("Last Committer:" + info.getAuthor());
-//
-//        } catch (SVNException ex) {
-//            LOG.error("", ex);
-//        }
 
-    }
+    private SVNWCClient getSVNWCClient() {
+        if (wcClient == null) {
+            SVNClientManager clientManager = getClientManager();
 
-    public SVNWCClient getSVNWCClient() {
-        SVNClientManager clientManager = getClientManager();
-        
-        return clientManager.getWCClient();
+            wcClient = clientManager.getWCClient();
+        }
+
+        return wcClient;
     }
 
     /**
@@ -192,7 +158,7 @@ public class SVNClient implements ISVNEventHandler {
      * @param wcPath the wcPath to set
      */
     public static void setWcPath(String wcPath) {
-        SVNClient.wcPath = wcPath;
+        WCAnalyzer.wcPath = wcPath;
     }
 
     public long doCheckout(String svnUrlPath) {
@@ -313,6 +279,11 @@ public class SVNClient implements ISVNEventHandler {
         return -1;
     }
     
+    /**
+     * Get information of current WC folder.
+     * @return
+     * @throws SVNException
+     */
     public SVNInfo getInfo() throws SVNException {
         if (wcClient == null) {
             wcClient = getSVNWCClient();
@@ -324,28 +295,20 @@ public class SVNClient implements ISVNEventHandler {
     }
 
     /**
-     * [Give the description for method].
+     * Get information of given path of folder or file.
      * @param path file path or folder path
      * @return
      * @throws SVNException
      */
     public SVNInfo getInfo(String path) throws SVNException {
-        if (wcClient == null) {
-            wcClient = getSVNWCClient();
-        }
-
         SVNRevision revision = SVNRevision.HEAD;
         File file = new File(path);
-        return wcClient.doInfo(file, revision);
+        return getSVNWCClient().doInfo(file, revision);
     }
     
     public SVNInfo getInfo(File file) throws SVNException {
-        if (wcClient == null) {
-            wcClient = getSVNWCClient();
-        }
-
         SVNRevision revision = SVNRevision.HEAD;
-        return wcClient.doInfo(file, revision);
+        return getSVNWCClient().doInfo(file, revision);
     }
     
     /**
@@ -400,7 +363,7 @@ public class SVNClient implements ISVNEventHandler {
      * @param rev the rev to set
      */
     public static void setRev(Long rev) {
-        SVNClient.rev = rev;
+        WCAnalyzer.rev = rev;
     }
 
 }
