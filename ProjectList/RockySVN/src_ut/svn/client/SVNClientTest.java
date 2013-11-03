@@ -35,8 +35,8 @@ public class SVNClientTest {
      */
     @Test
     public void testDoUpdateDate() {
-        SVNClient svCln = SVNClient.newClient("/svn.properties");
-        svCln.doUpdate("2013/07/02", "yyyy/MM/dd");
+        SVNClient svCln = SVNClient.newClient("/svn-cam.properties");
+        svCln.doUpdate("2013/09/23", "yyyy/MM/dd");
     }
 
     /**
@@ -46,5 +46,22 @@ public class SVNClientTest {
     public void testDoCheckOut() {
         SVNClient svCln = SVNClient.newClient("/svn-cam.properties");
         svCln.doCheckout("https://hcm-svn.fsoft.fpt.vn/svn/F15-HCAM/trunk/source");
+    }
+    
+    @Test
+    public void testDoUpdateDate2() {
+        SVNClient svCln = SVNClient.newClient("/svn-cam.properties");
+        svCln.doUpdate2();
+    }
+    
+    @Test
+    public void testHttps() {
+        String svnUrl = "https://subversion.assembla.com/svn/team6capstoneprj/trunk";
+        String username = "thachln";
+        String password = "assembla1qaz";
+        SVNClient svCln = SVNClient.newClient(svnUrl, username, password);
+        svCln.setWcPath("D:/Project/MyProject/Salary3P");
+        
+        svCln.doCheckout(svnUrl);
     }
 }

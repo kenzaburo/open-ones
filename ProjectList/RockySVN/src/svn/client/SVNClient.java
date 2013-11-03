@@ -29,7 +29,12 @@ import org.tmatesoft.svn.core.SVNCancelException;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
+import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
+import org.tmatesoft.svn.core.internal.wc.DefaultSVNAuthenticationManager;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
+import org.tmatesoft.svn.core.io.SVNRepository;
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.ISVNEventHandler;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNEvent;
@@ -38,6 +43,10 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.tmatesoft.svn.core.wc2.SvnCheckout;
+import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
+import org.tmatesoft.svn.core.wc2.SvnTarget;
+import org.tmatesoft.svn.core.wc2.SvnUpdate;
 
 import rocky.common.CommonUtil;
 /**
@@ -57,10 +66,14 @@ public class SVNClient implements ISVNEventHandler {
     public static final String DSP_DTE_FMT = "yyyy/MM/dd HH:mm";
     
     private static Properties props;
-
+    private static String svnUrl = null;
     private static String wcPath = null;
     private static String username = null;
     private static String password = null;
+    private static String certFile = null;
+
+    /** to store or not this credential in a credentials cache. */
+    private static boolean storageAllowed = true;
     
     /** Null mean latest revision. */
     private static Long rev = null;
@@ -70,18 +83,49 @@ public class SVNClient implements ISVNEventHandler {
 
     SVNWCClient wcClient = null;
 
+    
+    /**
+     * Create an instance of SVNClient to get information from local working copy.
+     * @param wcPath path of working copy
+     * @param username
+     * @param password
+     */
+    private SVNClient(String wcPath, String username, String password) {
+        this.wcPath = wcPath;
+        this.username = username;
+        this.password = password;
+    }
+    
+    public static SVNClient newClient(String svnUrl, String username, String password) {
+        SVNClient svnClient = new SVNClient();
+        svnClient.svnUrl = svnUrl;
+        svnClient.username = username;
+        svnClient.password = password;
+        
+        return svnClient;
+    }
+    /**
+     * [Give the description for method].
+     * @param configFile
+     * @return
+     */
     public static SVNClient newClient(String configFile) {
         try {
             Properties props = new Properties();
             props.load(CommonUtil.loadResource(configFile));
             
-            String wcPath = props.getProperty("svnpath");
-            String username = props.getProperty("username");
-            String password = props.getProperty("password");
+            svnUrl = props.getProperty("svn.url");
+            wcPath = props.getProperty("svn.wc");
+            username = props.getProperty("username");
+            password = props.getProperty("password");
+            
+            // For SSL Authentication
+            certFile = props.getProperty("cert.file");
             String revVal = props.getProperty("rev");
+            
             SVNClient svnClient = new SVNClient(wcPath, username, password);
             
-            Long rev = null;
+            rev = null;
             if ((revVal != null) && (!"-1".equalsIgnoreCase(revVal))) {
                 rev = Long.valueOf(revVal);
                 svnClient.setRev(rev);
@@ -120,19 +164,6 @@ public class SVNClient implements ISVNEventHandler {
 
     }
 
-    
-    /**
-     * Create an instance of SVNClient to get information from local working copy.
-     * @param wcPath path of working copy
-     * @param username
-     * @param password
-     */
-    public SVNClient(String wcPath, String username, String password) {
-        this.wcPath = wcPath;
-        this.username = username;
-        this.password = password;
-    }
-
     /**
      * 
      */
@@ -152,12 +183,47 @@ public class SVNClient implements ISVNEventHandler {
      */
     public SVNClientManager getClientManager() {
         DefaultSVNOptions myOptions = SVNWCUtil.createDefaultOptions(true);;
-        SVNClientManager clientManager = SVNClientManager.newInstance(myOptions, username, password);
+//        SVNClientManager clientManager = SVNClientManager.newInstance(myOptions, username, password);
+        
+//        ISVNAuthenticationManager authManager = new DefaultSVNAuthenticationManager(SVNWCUtil.getDefaultConfigurationDirectory(), true, username, password);
+        //SVNSSLAuthentication authManager = new SVNSSLAuthentication(new File(certFile), password, storageAllowed);
+
+//        SVNClientManager clientManager = SVNClientManager.newInstance(myOptions, authManager);
+        
+        
+//        SVNRepository repository = null;
+//        try {
+//            repository = SVNRepositoryFactory.create(SVNURL.parseURIEncoded(svnUrl));
+//            ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(username, password);
+//            repository.setAuthenticationManager(authManager);
+//        } catch (SVNException ex) {
+//            LOG.error("", ex);
+//        }
+        ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(SVNWCUtil.getDefaultConfigurationDirectory(), username, password, true);
+        SVNClientManager clientManager = SVNClientManager.newInstance(myOptions, authManager);
+
+        //clientManager.setAuthenticationManager(authManager);
         
         clientManager.setEventHandler(this);
         return clientManager;
     }
     
+    /**
+     * Get value of wcPath.
+     * @return the wcPath
+     */
+    public static String getWcPath() {
+        return wcPath;
+    }
+
+    /**
+     * Set the value for wcPath.
+     * @param wcPath the wcPath to set
+     */
+    public static void setWcPath(String wcPath) {
+        SVNClient.wcPath = wcPath;
+    }
+
     public long doCheckout(String svnUrlPath) {
         SVNURL svnUrl;
         try {
@@ -189,6 +255,40 @@ public class SVNClient implements ISVNEventHandler {
         return -1;
     } 
 
+    public long checkOut2() {
+        final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
+        try {
+            final SvnCheckout checkout = svnOperationFactory.createCheckout();
+            checkout.setSingleTarget(SvnTarget.fromFile(new File(wcPath)));
+            checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(svnUrl)));
+            //... other options
+            return checkout.run();
+        } catch (SVNException ex) {
+            LOG.error("Checkout", ex);
+        } finally {
+            svnOperationFactory.dispose();
+        }
+        
+        return -1;
+    }
+    public long doUpdate2() {
+        final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
+        try {
+            final SvnUpdate update = svnOperationFactory.createUpdate();
+            update.setSingleTarget(SvnTarget.fromFile(new File(wcPath)));
+
+            //checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(svnUrl)));
+            //... other options
+            long[] retValues = update.run();
+            return retValues[0];
+        } catch (SVNException ex) {
+            LOG.error("Update", ex);
+        } finally {
+            svnOperationFactory.dispose();
+        }
+        
+        return -1;
+    }
     public long doUpdate() {
         SVNUpdateClient updateClient = getClientManager().getUpdateClient();
         File path = new File(wcPath);
