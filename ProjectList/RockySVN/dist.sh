@@ -1,3 +1,1 @@
 ant dist
-
-pause
