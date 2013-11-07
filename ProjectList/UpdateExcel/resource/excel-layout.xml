@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>Format Excel file</comment>
+
+    <entry key="startSheet">SheetName</entry>
+    <entry key="startValue">1</entry>
+    
+    <!-- Normal givenCell -->
+    <entry key="givenCell">BJ49</entry>
+    
+    <!-- Special sheet -->
+    <!-- special_SheetNo -->
+    <entry key="specialSheetNo">0,1,2</entry>
+    <entry key="specialCell">BJ59,BJ69,BJ50</entry>
+    
+    <!-- Set default focus -->
+    <entry key="focusSheetNo">0</entry>
+    <entry key="focusCell">A1</entry>
+    <!-- Output -->
+    <!-- Empty: Update files -->
+    <!-- No empty: Save files into new folder -->
+    <entry key="outputFolder"></entry>
+
+</properties>
