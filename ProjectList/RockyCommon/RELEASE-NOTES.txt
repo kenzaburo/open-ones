@@ -8,7 +8,11 @@ INTRODUCTION:
 This document contains the release notes for the Rocky Common library.
 Rocky Common is a set of utility functions and reusable components that should be of use in any Java environment.
 
-*** Version 0.2.5
+*** Version 0.2.7
+- Fixbug: CommonUtil.formatPattern(String strTemplate, Map<String, Object> mapValue)
+  In case the value contain backslash \\
+
+*** Version 0.2.6
 - Add PoiUtil: Remove sheet from Excel
 
 *** Version 0.2.5

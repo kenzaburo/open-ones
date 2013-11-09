@@ -63,6 +63,8 @@ public class CommonUtilTest extends TestCase {
         System.out.println(strValue);
     }
     
+
+    
     public void testFormatPattern10() {
         String strPattern = "$ServerName:1234";
         String varPattern = "[\\x24]([a-zA-Z0-9_.]+)";
@@ -71,6 +73,32 @@ public class CommonUtilTest extends TestCase {
         String strValue =CommonUtil.formatPattern(strPattern, varPattern, mapValue);
         
         assertEquals("localhost:1234", strValue);
+    }
+    
+    public void testFormatPattern11_ContainEscape() {
+        String strTemplate = "ABC\\AfterLeftSlash";
+        Map mapValue = new HashMap();
+        String strValue =CommonUtil.formatPattern(strTemplate, mapValue);
+        
+        assertEquals(strTemplate, strValue);
+    }
+    
+    public void testFormatPattern12_ContainEscape() {
+        String strTemplate = "ABC${value}\\AfterLeftSlash";
+        Map mapValue = new HashMap();
+        mapValue.put("value", "localhost");
+        String strValue =CommonUtil.formatPattern(strTemplate, mapValue);
+        
+        assertEquals("ABClocalhost\\AfterLeftSlash", strValue);
+    }
+    
+    public void testFormatPattern13_ContainEscape() {
+        String strTemplate = "ABC${value}\\AfterLeftSlash";
+        Map mapValue = new HashMap();
+        mapValue.put("value", "localhost\\");
+        String strValue =CommonUtil.formatPattern(strTemplate, mapValue);
+        
+        assertEquals("ABClocalhost\\\\AfterLeftSlash", strValue);
     }
     
     public void testGetContent1() {

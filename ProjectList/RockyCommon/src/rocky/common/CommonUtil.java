@@ -353,11 +353,11 @@ public class CommonUtil {
     /**
      * Format a string with pattern: xxxx${var}xxxx Supported
      * @param strTemplate
-     * @param valueMap
+     * @param mapValue
      * @return
      * @throws SQLException
      */
-    public static String formatPattern(String strTemplate, Map<String, Object> valueMap) {
+    public static String formatPattern(String strTemplate, Map<String, Object> mapValue) {
         Pattern pattern = Pattern.compile(VARIABLE_NAME_PATTERN);
         Matcher matcher = pattern.matcher(strTemplate);
         StringBuffer sb = new StringBuffer();
@@ -365,12 +365,17 @@ public class CommonUtil {
         Object objVal;
 
         // Find column name
+        String strObjVal;
         while (matcher.find()) {
             key = matcher.group(1);
-            objVal = valueMap.get(key);
+            objVal = mapValue.get(key);
             // replace the column name pattern by question mark
             if (objVal != null) {
-                matcher.appendReplacement(sb, objVal.toString());
+                strObjVal = objVal.toString();
+                if (strObjVal.contains("\\")) {
+                    strObjVal = strObjVal.replace("\\", "\\\\");
+                }
+                matcher.appendReplacement(sb, strObjVal);
             }
         }
         // append the tail of the query template to the String buffer
