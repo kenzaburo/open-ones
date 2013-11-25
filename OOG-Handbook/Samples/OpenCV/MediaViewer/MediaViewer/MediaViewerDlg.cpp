@@ -64,6 +64,8 @@ void CMediaViewerDlg::DoDataExchange(CDataExchange* pDX) {
     CDialogEx::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_EDIT_FILE_PATH, m_editFilePath);
     DDX_Control(pDX, IDC_STATIC_IMAGE_VIEWER, m_ctrlImageViewer);
+    DDX_Control(pDX, IDC_STATIC_FRAMENO, m_lblFrameNo);
+    DDX_Control(pDX, IDC_EDIT_FRAMENO, m_txtFrameNo);
 }
 
 BEGIN_MESSAGE_MAP(CMediaViewerDlg, CDialogEx)
@@ -104,6 +106,7 @@ BOOL CMediaViewerDlg::OnInitDialog() {
     SetIcon(m_hIcon, FALSE);		// Set small icon
 
     // TODO: Add extra initialization here
+    m_txtFrameNo.SetWindowText(_T("1"));
 
     return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -179,7 +182,11 @@ void CMediaViewerDlg::OnBnClickedButtonShow() {
 		// Demo: load image from file
 		MediaService::LoadImage(strMediaPath, m_ctrlImageViewer);
 	} else if (MediaAnalyzer::IsVideo(strMediaPath) != FALSE) {
-		// Demo: load image from frame no 1 of vidoe
-		MediaService::LoadFrame(strMediaPath, 1, m_ctrlImageViewer);
+		// Demo: load image from given frame no of video
+        CString strFrameNo;
+        m_txtFrameNo.GetWindowText(strFrameNo);
+        int nFrameNo = _wtoi(strFrameNo);
+
+		MediaService::LoadFrame(strMediaPath, nFrameNo, m_ctrlImageViewer);
 	}
 }

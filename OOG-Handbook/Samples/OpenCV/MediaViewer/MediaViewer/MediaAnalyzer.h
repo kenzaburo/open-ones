@@ -26,4 +26,8 @@ public:
 	static bool CaptureImageAtFrame(VideoCapture &videoCapture, const int nFrameNo, Mat &frame);
 
     static bool WriteImage(Mat &frame, string strOutputPath);
+    static bool WriteImage(IplImage &frame, string strOutputPath);
+    // static bool WriteImage(HBITMAP image, string strOutputPath);
+
+    static HBITMAP ConvertIplImage2HBITMAP(IplImage* pImage);
 };

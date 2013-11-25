@@ -31,6 +31,10 @@ CCtrlPicture::CCtrlPicture(void) : CStatic()
     GdiplusStartupInput gdiplusStartupInput;
     GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
 
+	// Initial member data
+    m_bCreatedOffScreen = FALSE;
+	m_pStream = NULL;
+	m_pImage = NULL;
     // m_imgOffScreen.Create(IMAGE_WIDTH_CONTROL, IMAGE_HEIGHT_CONTROL, 32);
 }
 
@@ -42,6 +46,11 @@ CCtrlPicture::~CCtrlPicture(void) {
     // Tidy up
     FreeData();
     GdiplusShutdown(m_gdiplusToken);
+
+	// Release image frame
+	if (m_pImage != NULL) {
+		cvReleaseImage(&m_pImage);
+	}
 }
 
 /**
@@ -245,14 +254,85 @@ BOOL CCtrlPicture::Load(const BYTE *pData, const size_t nSize) {
 * @param frame Image frame
 * @return TRUE when load success.
 * @return FALSE when load fail.
+* @output m_pImage
+* @output m_nChannelNo
 */
-BOOL CCtrlPicture::Load(Mat mat) {
+/*
+BOOL CCtrlPicture::Load(Mat &pFrame) {
 	CvSize imageSize = cvSize(IMAGE_WIDTH, IMAGE_HEIGHT);
-    IplImage *img = cvCreateImage(imageSize, IPL_DEPTH_8U, 1);
-    cvGetImage(&mat, img);
+
+	m_nChannelNo = pFrame.channels();
+	// m_pImage = cvCreateImage(imageSize, IPL_DEPTH_8U, m_nChannelNo);
+
+	m_pImage = new IplImage(pFrame);
+	//IplImage stubImage;
+	//IplImage *dstImage;
+ //   dstImage = cvGetImage(pFrame, &stubImage);
+	   
+	// Initialize the IPL image -actually not necessary
+
+    //Grayscale
+    if (m_pImage->nChannels == 1) {
+        float dx = (m_pImage->width / 256.0f);
+
+        for ( int w = 0; w < m_pImage->width; w++ )
+            for (int h = 0; h < m_pImage->height; h++) {
+                m_pImage->imageData[ m_pImage->height * w + h] = (char)(w / dx ); // Copy data to ipl
+            }
+    } else if(m_pImage->nChannels == 3) { //The image is RGB
+        IplImage* Temp = cvCreateImage( imageSize, IPL_DEPTH_8U, 1 );
+
+        int h,w;
+        float dx = (Temp->width / 256.0f) ;
+
+        for ( w = 0; w < Temp->width; w++ )
+            for (h = 0; h < Temp->height; h++)
+                Temp->imageData[ Temp->height * w + h] = (char)(w / dx ); // Copy data to ipl
+        cvSetImageCOI( m_pImage, 1); //Choose the blue channel of interest
+        cvCopy(Temp,m_pImage);
+
+        for ( w = 0; w < Temp->width; w++ )
+            for (h = 0; h < Temp->height; h++)
+                Temp->imageData[ Temp->height * w + h] = (char)(255 - w / dx ); // Copy green data to ipl
+        cvSetImageCOI( m_pImage, 2); //Choose the green channel of interest
+        cvCopy(Temp, m_pImage);
+
+        for ( w = 0; w < Temp->width; w++ )
+            for (h = 0; h < Temp->height; h++)
+                Temp->imageData[ Temp->height * w + h] = (char)(w / dx ); // Copy red data to ipl
+        cvSetImageCOI(m_pImage, 3); //Choose the red channel of interest
+        cvCopy(Temp, m_pImage);
+
+        cvReleaseImage(&Temp);
+    }
+
+
+	Invalidate();
 
     return TRUE;
 }
+*/
+
+/**
+* Load image from objct IplImage of OpenCV
+* @param pImage pointer to image
+* @return TRUE
+*/
+BOOL CCtrlPicture::Load(IplImage *pImage) {
+	m_pImage = pImage;
+
+	// Set success error state
+    SetLastError(ERROR_SUCCESS);
+    FreeData();
+
+	m_bIsPicLoaded = TRUE;
+
+    // This statement wil invoke DrawItem(..)
+	Invalidate();
+
+    return TRUE;
+}
+
 
 /**
 * This function create offscreen. Call this function before init image to control.
@@ -261,7 +341,15 @@ BOOL CCtrlPicture::Load(Mat mat) {
 * @param nHeight height of image control.
 */
 void CCtrlPicture::CreateOffScreen(const int nWidth, const int nHeight) {
-    m_imgOffScreen.Create(nWidth, nHeight, 32);
+    BOOL bResult;
+    
+    if (m_bCreatedOffScreen == FALSE) {
+        bResult = m_imgOffScreen.Create(nWidth, nHeight, 32);
+
+        if (bResult != FALSE) {
+            m_bCreatedOffScreen = TRUE;
+        }
+    }
 }
 
 /**
@@ -292,7 +380,7 @@ void CCtrlPicture::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     if (m_bIsPicLoaded != FALSE) {
 		if (m_pStream != NULL) {
 			DrawStream(CDC::FromHandle(lpDrawItemStruct->hDC));
-		} else if (m_pFrame != NULL) {
+		} else if (m_pImage != NULL) {
 			DrawFrame(CDC::FromHandle(lpDrawItemStruct->hDC));
 		}
     } else {
@@ -417,13 +505,53 @@ void CCtrlPicture::DrawStream(CDC *pScreenDC) {
 * <br/>
 * @param pScreenDC pointer of CDC.
 */
+
 void CCtrlPicture::DrawFrame(CDC *pScreenDC) {
-	// Convert frame Mat to iplImage
-
-	IplImage *imgHeader = cvCreateImage(cvSize(IMAGE_WIDTH, IMAGE_HEIGHT) , IPL_DEPTH_8U, m_pFrame->channels());
-    IplImage *img = cvGetImage(m_pFrame, imgHeader);
+	// Debug: Save m_pImage into file: OK
+    // MediaAnalyzer::WriteImage(*m_pImage, "C:\\Test2.jpg");
 
 
+    // Convert m_pImage to bitmap
+
+    HBITMAP hBitmap = MediaAnalyzer::ConvertIplImage2HBITMAP(m_pImage);
+
+    // Get Bitmap
+	Bitmap destBitMap(hBitmap, (HPALETTE) NULL);
+
+    // Prepare to draw bitmap
+	int nControlWidth = m_imgOffScreen.GetWidth();
+    int nControlHeight = m_imgOffScreen.GetHeight();
+
+	int nDrawWidth = nControlWidth;
+	int nDrawHeight = nControlHeight;
+
+	Graphics graphics(m_imgOffScreen.GetDC());
+
+
+	graphics.DrawImage(&destBitMap, ZERO_X_POSITION, ZERO_Y_POSITION, nDrawWidth, nDrawHeight);
+
+    // Copy memory DC to screen
+    m_imgOffScreen.BitBlt(pScreenDC->GetSafeHdc(), ZERO_X_POSITION, ZERO_Y_POSITION, nControlWidth,
+                          nControlHeight, ZERO_X_POSITION, ZERO_Y_POSITION, SRCCOPY);
+    // Release DC to fix memory leak
+    m_imgOffScreen.ReleaseDC();
+}
+
+
+/*
+
+void CCtrlPicture::DrawFrame(CDC *pScreenDC) {
+
+	int nControlWidth = m_imgOffScreen.GetWidth();
+    int nControlHeight = m_imgOffScreen.GetHeight();
+
+	int nDrawWidth = nControlWidth;
+	int nDrawHeight = nControlHeight;
+
+	Graphics graphics(m_imgOffScreen.GetDC());
+
+
+	
 	BITMAPINFO* bmi;
     BITMAPINFOHEADER* bmih;
     RGBQUAD* palette;
@@ -439,9 +567,9 @@ void CCtrlPicture::DrawFrame(CDC *pScreenDC) {
     bmih->biHeight = -IMAGE_HEIGHT;
     bmih->biPlanes = 1;
     bmih->biCompression = BI_RGB;
-    bmih->biBitCount = 8 * TheImage->nChannels;
+    bmih->biBitCount = 8 * m_nChannelNo;
     palette = bmi->bmiColors;
-    if (TheImage->nChannels == 1) {
+    if (m_nChannelNo == 1) {
         for( int i = 0; i < 256; i++ ) {
             palette[i].rgbBlue = palette[i].rgbGreen = palette[i].rgbRed = (BYTE)i;
             palette[i].rgbReserved = 0;
@@ -449,7 +577,7 @@ void CCtrlPicture::DrawFrame(CDC *pScreenDC) {
     }
 
 	int res = StretchDIBits(
-                  pScreenDC->GetSafeHdc(), //dc
+                  m_imgOffScreen.GetDC(), //dc
                   0, //x dest
                   0, //y dest
                   int(IMAGE_WIDTH), //x dest dims
@@ -458,10 +586,19 @@ void CCtrlPicture::DrawFrame(CDC *pScreenDC) {
                   0, // src y
                   IMAGE_WIDTH, // src dims
                   IMAGE_HEIGHT, // src dims
-                  img->imageData, // array of DIB bits
+                  m_pImage->imageData, // array of DIB bits
                   (BITMAPINFO*) bmi, // bitmap information
                   DIB_RGB_COLORS, // RGB or palette indexes
                   SRCCOPY); // raster operation code
+	
+
+    // graphics.DrawImage(&destBitMap, ZERO_X_POSITION, ZERO_Y_POSITION, nDrawWidth, nDrawHeight);
+
+    // Copy memory DC to screen
+    m_imgOffScreen.BitBlt(pScreenDC->GetSafeHdc(), ZERO_X_POSITION, ZERO_Y_POSITION, nControlWidth,
+                          nControlHeight, ZERO_X_POSITION, ZERO_Y_POSITION, SRCCOPY);
+    // Release DC to fix memory leak
+    m_imgOffScreen.ReleaseDC();
 
     // Update Window, force View to redraw.
     RedrawWindow(
@@ -470,3 +607,5 @@ void CCtrlPicture::DrawFrame(CDC *pScreenDC) {
         RDW_INVALIDATE // handle to update region
     );
 }
+
+*/

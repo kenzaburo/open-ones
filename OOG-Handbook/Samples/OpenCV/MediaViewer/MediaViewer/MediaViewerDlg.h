@@ -37,4 +37,6 @@ public:
     afx_msg void OnBnClickedButtonBrowse();
     afx_msg void OnBnClickedButtonShow();
     CCtrlPicture m_ctrlImageViewer;
+    CStatic m_lblFrameNo;
+    CEdit m_txtFrameNo;
 };

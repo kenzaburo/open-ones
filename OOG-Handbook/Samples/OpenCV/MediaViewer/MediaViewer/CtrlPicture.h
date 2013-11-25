@@ -2,6 +2,7 @@
 #pragma once
 #include "afxwin.h"
 #include "Constant.h"
+#include "MediaAnalyzer.h"
 #include "highgui.hpp"
 
 using namespace cv;
@@ -32,7 +33,8 @@ public:
     BOOL Load(const CString &szFilePath);
     BOOL Load(IStream *piStream);
     BOOL Load(const BYTE *pData, const size_t nSize);
-    BOOL Load(Mat mat);
+    // BOOL Load(Mat &pFrame);
+	BOOL Load(IplImage *pImage);
 
     void CreateOffScreen(const int nWidth, const int nHeight);
 
@@ -47,13 +49,15 @@ protected:
     virtual BOOL OnEraseBkgnd(CDC *pDC);
 
 private:
+    BOOL m_bCreatedOffScreen;
     // Offscreen device context
     CImage m_imgOffScreen;
 
     // Internal image stream buffer
     IStream *m_pStream;
 
-	Mat *m_pFrame;
+	int m_nChannelNo;
+	IplImage *m_pImage;
     // Control flag if a pic is loaded
     BOOL m_bIsPicLoaded;
 
