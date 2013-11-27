@@ -66,6 +66,7 @@ void CMediaViewerDlg::DoDataExchange(CDataExchange* pDX) {
     DDX_Control(pDX, IDC_STATIC_IMAGE_VIEWER, m_ctrlImageViewer);
     DDX_Control(pDX, IDC_STATIC_FRAMENO, m_lblFrameNo);
     DDX_Control(pDX, IDC_EDIT_FRAMENO, m_txtFrameNo);
+    DDX_Control(pDX, IDC_CHECK_VISIBLE, m_chkVisible);
 }
 
 BEGIN_MESSAGE_MAP(CMediaViewerDlg, CDialogEx)
@@ -74,6 +75,7 @@ BEGIN_MESSAGE_MAP(CMediaViewerDlg, CDialogEx)
     ON_WM_QUERYDRAGICON()
     ON_BN_CLICKED(IDC_BUTTON_BROWSE, &CMediaViewerDlg::OnBnClickedButtonBrowse)
     ON_BN_CLICKED(IDC_BUTTON_SHOW, &CMediaViewerDlg::OnBnClickedButtonShow)
+    ON_BN_CLICKED(IDC_CHECK_VISIBLE, &CMediaViewerDlg::OnBnClickedCheckVisible)
 END_MESSAGE_MAP()
 
 
@@ -107,6 +109,7 @@ BOOL CMediaViewerDlg::OnInitDialog() {
 
     // TODO: Add extra initialization here
     m_txtFrameNo.SetWindowText(_T("1"));
+    m_chkVisible.SetCheck(1);
 
     return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -189,4 +192,37 @@ void CMediaViewerDlg::OnBnClickedButtonShow() {
 
 		MediaService::LoadFrame(strMediaPath, nFrameNo, m_ctrlImageViewer);
 	}
+}
+
+
+void CMediaViewerDlg::OnBnClickedCheckVisible()
+{
+    int nCheck = m_chkVisible.GetCheck();
+    BOOL REPAINT = TRUE;
+
+    if (nCheck != 0) {
+        // Unhide the Image Control
+        // Attach(m_hCtrlImageViewer);
+        //CCtrlPicture *tmp = (CCtrlPicture *) FromHandlePermanent(m_hCtrlImageViewer);
+        //m_ctrlImageViewer = *tmp;
+        //SubclassWindow(m_hCtrlImageViewer);
+
+        m_ctrlImageViewer.UnlockWindowUpdate();
+
+        m_ctrlImageViewer.MoveWindow(0, 0,
+            m_rectImageViewer.Width(),
+            m_rectImageViewer.Height(),
+            REPAINT);
+
+        Invalidate();
+    } else {
+        // Unhide the Image Control
+        
+        // Save the current Size of Image Control
+        m_ctrlImageViewer.GetWindowRect(m_rectImageViewer);
+
+        m_ctrlImageViewer.LockWindowUpdate();
+        m_ctrlImageViewer.MoveWindow(0,0,0,0, REPAINT);
+        Invalidate();
+    }
 }

@@ -1,5 +1,9 @@
 MediaViewer uses OpenCV 2.4.6 to show the frames of image.
 
+Version 0.0.3
+- Demo hide/unhine Image Control.
+
+
 Version 0.0.2
 - Input frame no to show.
 
