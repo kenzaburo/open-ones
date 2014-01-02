@@ -49,7 +49,7 @@ public class CodeAnalyzer {
     };
     
     private static IconCache iconCache = new IconCache();
-    private static SelectionAdapter eventHandler = new AppEventHandler();
+    private static AppEventHandler eventHandler = new AppEventHandler();
     /**
      * Launch the application.
      * @param args
@@ -75,7 +75,7 @@ public class CodeAnalyzer {
         createToolBar(shlCodeAnalyzer);
         
         SashForm sashForm = new SashForm(shlCodeAnalyzer, SWT.NONE);
-        processDrag(sashForm);
+        settingProcessDrag(sashForm);
         sashForm.setOrientation(SWT.HORIZONTAL);
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
         gridData.horizontalSpan = 3;
@@ -102,14 +102,12 @@ public class CodeAnalyzer {
      * [Give the description for method].
      * @param sashForm
      */
-    private static void processDrag(SashForm sashForm) {
+    private static void settingProcessDrag(SashForm sashForm) {
         DropTarget dropTarget = new DropTarget(sashForm, DND.DROP_LINK | DND.DROP_COPY | DND.DROP_MOVE);
         Transfer[] transferType = new Transfer[]{FileTransfer.getInstance()}; 
         dropTarget.setTransfer(transferType);
         
-        DropTargetListener dropTargetListener = new DropHandler();
-        
-        dropTarget.addDropListener(dropTargetListener);
+        dropTarget.addDropListener(eventHandler);
     }
 
 
@@ -146,6 +144,7 @@ public class CodeAnalyzer {
         ToolItem tltmOpenfolder = new ToolItem(toolBar, SWT.NONE);
         tltmOpenfolder.setToolTipText("Open Folder");
         tltmOpenfolder.setImage(iconCache.stockImages[iconCache.iconOpenFolder]);
+        tltmOpenfolder.setData(Command.CMD_OPEN_FOLDER);
         //tltmOpenfolder.setText("OpenFolder");
         
         ToolItem tltmExportToExcel = new ToolItem(toolBar, SWT.NONE);

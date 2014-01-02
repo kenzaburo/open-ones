@@ -18,22 +18,52 @@
  */
 package vn.com.mks.ca.biz;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.tmatesoft.svn.core.wc.SVNInfo;
+
+import codereport.entity.FileInfo;
+
 import vn.com.mks.ca.ent.FileEntity;
+import vn.mkss.codereporter.SVNAnalyzer;
 
 /**
  * @author ThachLN
  *
  */
 public class BizProcessor {
+    private final static Logger LOG = Logger.getLogger("BizProcessor");
     /**
      * [Give the description for method].
-     * @param folderPath
+     * @param path Path of File or Folder
      * @return
      */
-    public static List<FileEntity> analyzeFolder(String folderPath) {
-        // TODO Auto-generated method stub
+    public static List<FileEntity> analyzeFolder(String path) {
+        LOG.debug("analyzeFolder:folderPath=" + path);
+        List<FileEntity> lstFileEntity = new ArrayList<FileEntity>();
+        
+        String username = null;
+        String password = null;
+        SVNAnalyzer svnAnalyzer = new SVNAnalyzer(path, username, password);
+        
+        FileEntity fe = new FileEntity();
+        fe.setParentPath(path);
+        
+        SVNInfo fileInfo = svnAnalyzer.getInfo(path);
+        fe.setRevision(fileInfo.getCommittedRevision().getNumber());
+        
+        lstFileEntity.add(fe);
+        
+        return lstFileEntity;
+    }
+    /**
+     * [Give the description for method].
+     * @param paths Path of Files or Folders
+     */
+    public static List<FileEntity> analyzeFolder(String[] paths) {
+        LOG.debug("analyzeFolder:folderPaths=" + paths);
         return null;
     }
 }
