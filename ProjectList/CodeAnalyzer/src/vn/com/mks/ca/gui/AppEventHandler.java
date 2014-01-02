@@ -19,12 +19,18 @@
 package vn.com.mks.ca.gui;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
+import rocky.common.CommonUtil;
 import vn.com.mks.ca.biz.BizProcessor;
 
 /**
@@ -57,6 +63,11 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
     }
     
     // Override method of SelectionAdapter - Start
+    @Override
+    public void widgetDefaultSelected(SelectionEvent event) {
+        widgetSelected(event);
+    }
+    
     /**
      * Process events.
      * <br/>
@@ -68,12 +79,35 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
      */
     @Override
     public void widgetSelected(SelectionEvent event) {
-        if ((event != null) && (event.item != null)) {
-            Object eventData = event.item.getData();
+        LOG.debug("Source class:" + event.getSource().getClass());
+        Item item = (Item) event.getSource();
+
+        if ((event != null) && (item != null)) {
+            
+            Object eventData = item.getData();
             LOG.info("item data:" + eventData);
             if (eventData instanceof Integer) {
                 // Maybe it's command
                 int cmdCd = (Integer) eventData;
+                Shell shell = event.display.getActiveShell();
+                switch (cmdCd) {
+                    case Command.CMD_OPEN_FOLDER:
+                        
+                        DirectoryDialog dirDlg = new DirectoryDialog(shell);
+                        // dirDlg.setFilterPath(inFolder);
+                        String selectedDir = dirDlg.open();
+
+                        if (CommonUtil.isNNandNB(selectedDir)) {
+                            processEvent(Command.CMD_OPEN_FOLDER, selectedDir);
+                        } else {
+                            // No selection
+                        }
+                        break;
+                    case Command.CMD_SETTING :
+                        SettingDlg settingDlg = new SettingDlg(shell, SWT.MODELESS);
+                        settingDlg.open();
+                        break;
+                }
             }
         }
     }

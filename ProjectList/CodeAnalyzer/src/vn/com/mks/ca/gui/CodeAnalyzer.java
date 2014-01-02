@@ -140,8 +140,10 @@ public class CodeAnalyzer {
         tltmOpenfile.setToolTipText("Open File");
         tltmOpenfile.setImage(iconCache.stockImages[iconCache.iconOpenFile]);
         // tltmOpenfile.setText("OpenFile");
+        tltmOpenfile.addSelectionListener(eventHandler);
         
         ToolItem tltmOpenfolder = new ToolItem(toolBar, SWT.NONE);
+        tltmOpenfolder.addSelectionListener(eventHandler);
         tltmOpenfolder.setToolTipText("Open Folder");
         tltmOpenfolder.setImage(iconCache.stockImages[iconCache.iconOpenFolder]);
         tltmOpenfolder.setData(Command.CMD_OPEN_FOLDER);
@@ -151,6 +153,7 @@ public class CodeAnalyzer {
         tltmExportToExcel.setToolTipText("Export to Excel");
         tltmExportToExcel.setImage(iconCache.stockImages[iconCache.iconExportToExcel]);
         //tltmExportToExcel.setText("Export to Excel");
+        tltmExportToExcel.addSelectionListener(eventHandler);
     }
 
 
@@ -194,7 +197,9 @@ public class CodeAnalyzer {
         mntmOption.setMenu(menu_1);
         
         MenuItem mntmSetting = new MenuItem(menu_1, SWT.NONE);
+        mntmSetting.addSelectionListener(eventHandler);
         mntmSetting.setText("Setting...");
+        mntmSetting.setData(Command.CMD_SETTING);
         
         MenuItem mntmHelp = new MenuItem(menuBar, SWT.CASCADE);
         mntmHelp.setText("Help");
