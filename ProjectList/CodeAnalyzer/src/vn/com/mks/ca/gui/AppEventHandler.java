@@ -18,6 +18,10 @@
  */
 package vn.com.mks.ca.gui;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTarget;
@@ -32,6 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import rocky.common.CommonUtil;
 import vn.com.mks.ca.biz.BizProcessor;
+import vn.com.mks.ca.ent.FileEntity;
 
 /**
  * @author ThachLN
@@ -41,6 +46,14 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
     final static Logger LOG = Logger.getLogger("AppEventHandler");
     
     IEventHandler eventProcessor;
+    BizProcessor bizProcessor = null;
+    
+    /** Processor to reflect data from model to presentation layer. */
+    IScreenUpdater screenUpdater;
+
+//    public AppEventHandler() {
+//        this.eventProcessor = this;
+//    }
     
     /**
      * Constructor with event handler
@@ -48,19 +61,20 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
      * <br/>
      * Drap and Drop event
      */
-    public AppEventHandler() {
+    public AppEventHandler(IScreenUpdater screenUpdater) {
+        this.screenUpdater = screenUpdater;
         this.eventProcessor = this;
     }
     
-    /**
-     * Constructor with event handler
-     * @param eventProcessor EventHandler
-     * <br/>
-     * Drap and Drop event
-     */
-    public AppEventHandler(IEventHandler eventProcessor) {
-        this.eventProcessor = eventProcessor;
-    }
+//    /**
+//     * Constructor with event handler
+//     * @param eventProcessor EventHandler
+//     * <br/>
+//     * Drap and Drop event
+//     */
+//    public AppEventHandler(IEventHandler eventProcessor) {
+//        this.eventProcessor = eventProcessor;
+//    }
     
     // Override method of SelectionAdapter - Start
     @Override
@@ -184,14 +198,22 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
      */
     @Override
     public void processEvent(int cmdCd, Object data) {
+        LOG.debug("cmdCd=" + cmdCd + ";data=" + data);
         switch (cmdCd) {
             case Command.CMD_OPEN_FOLDER :
                 if (data instanceof String) {
                     String folderPath = (String) data;
-                    BizProcessor.analyzeFolder(folderPath);
+                    List<FileEntity> lstFileEnt = BizProcessor.analyzeFolder(folderPath);
+                    
+                    Map<String, Object> resultData = new HashMap<String, Object>();
+                    resultData.put(Integer.valueOf(cmdCd).toString(), lstFileEnt);
+                    screenUpdater.postCommand(cmdCd, resultData);
                 } else if (data instanceof String[]) {
                     String[] folderPaths = (String[]) data;
-                    BizProcessor.analyzeFolder(folderPaths);
+                    List<FileEntity> lstFileEnt = BizProcessor.analyzeFolder(folderPaths);
+                    Map<String, Object> resultData = new HashMap<String, Object>();
+                    resultData.put(Integer.valueOf(cmdCd).toString(), lstFileEnt);
+                    screenUpdater.postCommand(cmdCd, resultData);
                 }
                 break;
             default :
@@ -200,4 +222,20 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
 
     }
     // Implementation of IEventHandler - End
+
+    /**
+     * Get value of bizProcessor.
+     * @return the bizProcessor
+     */
+    public BizProcessor getBizProcessor() {
+        return bizProcessor;
+    }
+
+    /**
+     * Set the value for bizProcessor.
+     * @param bizProcessor the bizProcessor to set
+     */
+    public void setBizProcessor(BizProcessor bizProcessor) {
+        this.bizProcessor = bizProcessor;
+    }
 }

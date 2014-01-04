@@ -27,6 +27,7 @@ import org.tmatesoft.svn.core.wc.SVNInfo;
 import codereport.entity.FileInfo;
 
 import vn.com.mks.ca.ent.FileEntity;
+import vn.com.mks.ca.gui.ScreenUpdater;
 import vn.mkss.codereporter.SVNAnalyzer;
 
 /**
@@ -41,7 +42,7 @@ public class BizProcessor {
      * @return
      */
     public static List<FileEntity> analyzeFolder(String path) {
-        LOG.debug("analyzeFolder:folderPath=" + path);
+        LOG.debug("folderPath=" + path);
         List<FileEntity> lstFileEntity = new ArrayList<FileEntity>();
         
         String username = null;
