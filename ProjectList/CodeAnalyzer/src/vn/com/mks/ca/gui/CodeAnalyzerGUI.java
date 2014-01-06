@@ -42,6 +42,8 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import vn.com.mks.ca.AppCons;
 import vn.com.mks.swt.IconCache;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
 /**
  * @author thachln
@@ -145,7 +147,8 @@ public class CodeAnalyzerGUI {
         createTreeView(sashForm);
         createTableView(sashForm);
         
-        sashForm.setWeights(new int[]{2,5});
+
+        sashForm.setWeights(new int[]{2, 3});
         
         createStatusBar();
 
@@ -306,25 +309,40 @@ public class CodeAnalyzerGUI {
      * @param parent SashForm
      */
     private void createTableView(Composite parent) {
-        Composite compositeTable = new Composite(parent, SWT.NONE);
+        TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
+        
+        TabItem tbtmCodeCounter = new TabItem(tabFolder, SWT.NONE);
+        tbtmCodeCounter.setText("Code Counter");
+        
+        Composite compositeTable = new Composite(tabFolder, SWT.NONE);
+        tbtmCodeCounter.setControl(compositeTable);
         GridLayout gl_compositeTable = new GridLayout();
         gl_compositeTable.numColumns = 1;
         gl_compositeTable.marginHeight = gl_compositeTable.marginWidth = 2;
         gl_compositeTable.horizontalSpacing = gl_compositeTable.verticalSpacing = 0;
         compositeTable.setLayout(gl_compositeTable);
-        Label tableContentsOfLabel = new Label(compositeTable, SWT.BORDER);
-        tableContentsOfLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-
-        table = new Table(compositeTable, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-        table.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-        table.setData(AppCons.CTL_KEY, AppCons.CTL_TABLE_VIEW);
-
+        //Label tableContentsOfLabel = new Label(compositeTable, SWT.BORDER);
+        //tableContentsOfLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+        
+                
+                
+                table = new Table(compositeTable, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+                table.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
+                table.setHeaderVisible(true);
+                
+                TabItem tbtmStaticCheck = new TabItem(tabFolder, SWT.NONE);
+                tbtmStaticCheck.setText("Static check");
+                
+                TabItem tbtmUTCounter = new TabItem(tabFolder, SWT.NONE);
+                tbtmUTCounter.setText("UT Counter");
+                
+                TabItem tbtmUTReport = new TabItem(tabFolder, SWT.NONE);
+                tbtmUTReport.setText("UTReport");
         for (int i = 0; i < 4; ++i) {
             TableColumn column = new TableColumn(table, SWT.NONE);
             column.setText(TABLEHEADERS[i]);
             column.setWidth(TABLEWIDTHS[i]);
         }
-        table.setHeaderVisible(true);
 
     }
 
