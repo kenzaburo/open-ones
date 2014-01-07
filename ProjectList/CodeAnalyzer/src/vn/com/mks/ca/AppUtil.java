@@ -45,19 +45,20 @@ public class AppUtil {
     public static String[] formatDataRow(String[] properties, FileEntity fe) {
         int len = (properties != null) ? properties.length : 0;
         String[] columns = new String[len];
-        
+        String propertyName = null;
         try {
             Map<String, Method> mapReadMethod = BeanUtil.getReadMethodMap(fe);
             Method method = null;
             Object result;
             for (int i = 0; i <  len; i++) {
-                method = mapReadMethod.get(properties[i]);
+                propertyName = properties[i];
+                method = mapReadMethod.get(propertyName);
                 result = method.invoke(fe);
                 
                 columns[i] = formatData(result);
             }
         } catch (Exception ex) {
-            LOG.error("Parse read method of FileEntity", ex);
+            LOG.error("Parse read method of FileEntity:" + propertyName, ex);
         }
 
         return columns;

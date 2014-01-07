@@ -18,6 +18,8 @@
  */
 package vn.com.mks.ca.gui;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 import vn.com.mks.ca.AppUtil;
 import vn.com.mks.ca.Setting;
@@ -56,8 +60,14 @@ public class ScreenUpdater implements IScreenUpdater {
         LOG.debug("cmdCd=" + cmdCd);
         switch (cmdCd) {
             case Command.CMD_OPEN_FOLDER:
-                String key = Integer.valueOf(cmdCd).toString();
-                List<FileEntity> lstFileEnt = (List<FileEntity>) resultData.get(key);
+                // Map(Path, List of FileEntity
+                Collection<String> keys = resultData.keySet();
+                
+                displayTreeView(keys, resultData.values());
+                
+                // Get first element
+                List<FileEntity> lstFileEnt = (List<FileEntity>) resultData.values().iterator().next();
+                
                 displayLoadFolder(lstFileEnt);
                 break;
         }
@@ -66,12 +76,63 @@ public class ScreenUpdater implements IScreenUpdater {
     }
 
     /**
+     * [Give the description for method].
+     * @param path Collection of String 
+     * @param fileEntities Collection of FileEntity
+     */
+    private void displayTreeView(Collection<String> paths, Collection<Object> fileEntities) {
+        Tree tree = window.tree;
+        clearTreeItems(tree);
+        addTreeItems(tree, paths, fileEntities);
+    }
+
+    /**
+     * [Give the description for method].
+     * @param tree
+     */
+    private void clearTreeItems(Tree tree) {
+        if (tree == null) {
+            return;
+        }
+
+        // Remove rows
+        int nItem = tree.getItemCount();
+        for (int i = nItem - 1; i >= 0; i--) {
+            tree.getItem(i).dispose();
+        }
+    }
+
+
+    /**
+     * [Give the description for method].
+     * @param tree
+     * @param paths 
+     * @param fileEntities Collection of FileEntity
+     */
+    private void addTreeItems(Tree tree, Collection<String> paths, Collection<Object> fileEntities) {
+        TreeItem trtmRoot = new TreeItem(tree, SWT.NONE);
+        trtmRoot.setText("All");
+        
+        String path;
+        TreeItem trtmFolder;
+        for (Iterator<String> it = paths.iterator(); it.hasNext(); ) {
+            path = it.next();
+            trtmFolder = new TreeItem(trtmRoot, SWT.NONE);
+            trtmFolder.setText(path);
+            trtmFolder.setData(path, fileEntities);
+        }
+        
+        trtmRoot.setExpanded(true);
+    }
+    /**
      * Display detailed information into the TableView.
      * @param lstFileEnt
      */
     private void displayLoadFolder(List<FileEntity> lstFileEnt) {
         int len = (lstFileEnt != null) ? lstFileEnt.size() : 0; 
         LOG.debug("len=" + len);
+        
+        // Display TableView
         Table table = window.table;
         // Setting headers
         
@@ -79,7 +140,7 @@ public class ScreenUpdater implements IScreenUpdater {
         
         // Add new columns
         Setting setting = new Setting();
-        String tabName = "Source counter";
+        String tabName = "Code counter";
         String[] headers = setting.getHeaders(tabName);
         String[] properties = setting.getProperties(tabName);
         int[] sizes = setting.getSizes(tabName);

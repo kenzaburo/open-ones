@@ -1,0 +1,18 @@
+<rocky.sizecounter.plugin.PluginConfiguration>
+<!--
+  <listPluginInfo>
+    <rocky.sizecounter.plugin.PluginInfo>
+      <filePattern>Sample_(.*)_TestReport(.*).xls</filePattern>
+      <pluginName>vn.mkss.sizecounter.SpecialExcelCounter</pluginName>
+    </rocky.sizecounter.plugin.PluginInfo>
+  </listPluginInfo>
+
+  <listPluginInfo>
+ 
+  <rocky.sizecounter.plugin.PluginInfo>
+      <filePattern>ITaXYZ(?)_(.*)_(.*).xlsx</filePattern>
+      <pluginName>vn.mkss.support.ita.sizecounter.ITACounter</pluginName>
+    </rocky.sizecounter.plugin.PluginInfo>
+  </listPluginInfo>  
+ -->
+</rocky.sizecounter.plugin.PluginConfiguration>

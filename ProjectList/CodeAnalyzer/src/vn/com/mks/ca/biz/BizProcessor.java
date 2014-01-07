@@ -29,6 +29,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.wc.SVNInfo;
 
+import rocky.sizecounter.ISizeCounter;
+import rocky.sizecounter.SizeMetaData;
+import rocky.sizecounter.UnitType;
+import rocky.sizecounter.UnsupportedFileType;
 import vn.com.mks.ca.ent.FileEntity;
 import vn.mkss.codereporter.SVNAnalyzer;
 
@@ -38,31 +42,20 @@ import vn.mkss.codereporter.SVNAnalyzer;
  */
 public class BizProcessor {
     private final static Logger LOG = Logger.getLogger("BizProcessor");
-    private String[] arrPath = null;
     private FileFilter fileFilter = null;
     private SVNAnalyzer svnAnalyzer = null;
+    private ISizeCounter sizeCounter = null;
     
     public BizProcessor() {
-        
     }
+    
     /**
-     * Create new instance of BizProcessor without filter.
+     * Create new instance of BizProcessor with filter.
      * <br/>
      * fileFilter is null: accept all files and folders.
      * @param paths
      */
-    public BizProcessor(String[] paths) {
-        arrPath = paths;
-    }
-
-    /**
-     * Create new instance of BizProcessor without filter.
-     * <br/>
-     * fileFilter is null: accept all files and folders.
-     * @param paths
-     */
-    public BizProcessor(String[] paths, FileFilter fileFilter) {
-        this.arrPath = paths;
+    public BizProcessor(FileFilter fileFilter) {
         this.fileFilter = fileFilter;
     }
 
@@ -80,7 +73,7 @@ public class BizProcessor {
         
         String username = null;
         String password = null;
-        SVNAnalyzer svnAnalyzer = new SVNAnalyzer(path, username, password);
+        svnAnalyzer = new SVNAnalyzer(path, username, password);
         
         return analyzeFolder(file);
     }
@@ -157,9 +150,24 @@ public class BizProcessor {
         fileEnt.setSizeKB(file.length() / 1024);
         
         if (svnAnalyzer != null) {
-            SVNInfo fileInfo = svnAnalyzer.getInfo(file);
-            if (fileInfo != null) {
-                fileEnt.setRevision(fileInfo.getCommittedRevision().getNumber());
+            try {
+                SVNInfo fileInfo = svnAnalyzer.getInfo(file);
+                if (fileInfo != null) {
+                    fileEnt.setRevision(fileInfo.getCommittedRevision().getNumber());
+                }
+            } catch (RuntimeException svnEx) {
+                LOG.warn("Error getting SVN information", svnEx);
+            }
+        }
+        // Count Step
+        if (sizeCounter != null) {
+            try {
+                SizeMetaData smd = sizeCounter.countSize(file.getPath());
+                if (smd.getUnit() == UnitType.LOC) {
+                    fileEnt.setNumStep(smd.getSize());
+                }
+            } catch (UnsupportedFileType ex) {
+                LOG.warn("Unsupported file '" + file.getPath() + "'");
             }
         }
 
@@ -186,5 +194,21 @@ public class BizProcessor {
         }
         
         return mapResult;
+    }
+
+    /**
+     * Get value of sizeCounter.
+     * @return the sizeCounter
+     */
+    public ISizeCounter getSizeCounter() {
+        return sizeCounter;
+    }
+
+    /**
+     * Set the value for sizeCounter.
+     * @param sizeCounter the sizeCounter to set
+     */
+    public void setSizeCounter(ISizeCounter sizeCounter) {
+        this.sizeCounter = sizeCounter;
     }
 }

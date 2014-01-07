@@ -34,8 +34,8 @@ public class FileEntity implements Serializable {
     private Long revision;
     private Date createdDate;
     private Date modifiedDate;
-    private Long sizeKB;
-    private int numStep;
+    private double sizeKB;
+    private long numStep;
     private int numComment;
     private int numBlank;
     
@@ -110,39 +110,25 @@ public class FileEntity implements Serializable {
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
-    /**
-     * Get value of step.
-     * @return the step
-     */
-    public int getStep() {
-        return step;
-    }
-    /**
-     * Set the value for step.
-     * @param step the step to set
-     */
-    public void setStep(int step) {
-        this.step = step;
-    }
-    private int step;
-    public Long getSizeKB() {
+    
+    public double getSizeKB() {
         return sizeKB;
     }
-    public void setSizeKB(Long sizeKB) {
+    public void setSizeKB(double sizeKB) {
         this.sizeKB = sizeKB;
     }
     /**
      * Get value of numStep.
      * @return the numStep
      */
-    public int getNumStep() {
+    public long getNumStep() {
         return numStep;
     }
     /**
      * Set the value for numStep.
      * @param numStep the numStep to set
      */
-    public void setNumStep(int numStep) {
+    public void setNumStep(long numStep) {
         this.numStep = numStep;
     }
     /**

@@ -18,7 +18,12 @@
  */
 package vn.com.mks.ca.gui;
 
+import java.io.FileFilter;
+
 import org.apache.log4j.Logger;
+
+import rocky.sizecounter.ISizeCounter;
+import rocky.sizecounter.SizeCounterImpl;
 
 import vn.com.mks.ca.biz.BizProcessor;
 
@@ -43,8 +48,12 @@ public class CodeAnalyzer {
             // Setting Event Handler
             AppEventHandler eventHandler = new AppEventHandler(screenUpdater);
             
+            // Create FileFilter
+            ISizeCounter sizeCounter = new SizeCounterImpl();
+            FileFilter fileFilter = new FileFilterImpl(sizeCounter);
             // Setting Business Processor
-            BizProcessor bizProcessor = new BizProcessor();
+            BizProcessor bizProcessor = new BizProcessor(fileFilter);
+            bizProcessor.setSizeCounter(sizeCounter);
             eventHandler.setBizProcessor(bizProcessor);
             
             window.setEventHandler(eventHandler);

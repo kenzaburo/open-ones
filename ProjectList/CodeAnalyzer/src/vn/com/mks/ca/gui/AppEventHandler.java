@@ -198,7 +198,7 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
     @Override
     public void processEvent(int cmdCd, Object data) {
         LOG.debug("cmdCd=" + cmdCd + ";data=" + data);
-        BizProcessor bizProcessor = new BizProcessor();
+
         switch (cmdCd) {
             case Command.CMD_OPEN_FOLDER :
                 if (data instanceof String) {
@@ -206,7 +206,8 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
                     List<FileEntity> lstFileEnt = bizProcessor.analyzeFolder(folderPath);
                     
                     Map<String, Object> resultData = new HashMap<String, Object>();
-                    resultData.put(Integer.valueOf(cmdCd).toString(), lstFileEnt);
+                    resultData.put(folderPath, lstFileEnt);
+                    
                     screenUpdater.postCommand(cmdCd, resultData);
                 } else if (data instanceof String[]) {
                     String[] folderPaths = (String[]) data;

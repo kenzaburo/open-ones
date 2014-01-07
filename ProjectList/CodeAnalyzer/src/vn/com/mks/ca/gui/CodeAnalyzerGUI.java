@@ -53,8 +53,11 @@ public class CodeAnalyzerGUI {
     protected Shell shell;
 
     
-
+    /** Table of TableView. */
     protected Table table = null;
+    
+    /** Tree of TreeView. */
+    protected Tree tree = null;
 
  // File: Currently visible directory
     private static final int[] TABLEWIDTHS = new int[] {250, 120, 80, 60};
@@ -273,7 +276,7 @@ public class CodeAnalyzerGUI {
      * [Give the description for method].
      * @param parent
      */
-    private static void createTreeView(SashForm parent) {
+    private void createTreeView(SashForm parent) {
         Composite compositeTree = new Composite(parent, SWT.NONE);
         GridLayout gl_compositeTree = new GridLayout();
         gl_compositeTree.marginHeight = gl_compositeTree.marginWidth = 2;
@@ -284,22 +287,22 @@ public class CodeAnalyzerGUI {
         lblSourceExplorer.setSize(87, 223);
         lblSourceExplorer.setText("Source Explorer");
         
-        Tree tree = new Tree(compositeTree, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
+        tree = new Tree(compositeTree, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
         tree.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
         
-        TreeItem trtmRoot = new TreeItem(tree, SWT.NONE);
-        trtmRoot.setText("Root");
-        
-        TreeItem trtmFolder = new TreeItem(trtmRoot, SWT.NONE);
-        trtmFolder.setText("Folder 1");
-        
-        TreeItem trtmFolder_2 = new TreeItem(trtmFolder, SWT.NONE);
-        trtmFolder_2.setText("Folder 1.1");
-        trtmFolder.setExpanded(true);
-        
-        TreeItem trtmFolder_1 = new TreeItem(trtmRoot, SWT.NONE);
-        trtmFolder_1.setText("Folder 2");
-        trtmRoot.setExpanded(true);
+//        TreeItem trtmRoot = new TreeItem(tree, SWT.NONE);
+//        trtmRoot.setText("Root");
+//        
+//        TreeItem trtmFolder = new TreeItem(trtmRoot, SWT.NONE);
+//        trtmFolder.setText("Folder 1");
+//        
+//        TreeItem trtmFolder_2 = new TreeItem(trtmFolder, SWT.NONE);
+//        trtmFolder_2.setText("Folder 1.1");
+//        trtmFolder.setExpanded(true);
+//        
+//        TreeItem trtmFolder_1 = new TreeItem(trtmRoot, SWT.NONE);
+//        trtmFolder_1.setText("Folder 2");
+//        trtmRoot.setExpanded(true);
 
     }
 
