@@ -31,7 +31,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import rocky.common.CommonUtil;
@@ -199,21 +198,22 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
     @Override
     public void processEvent(int cmdCd, Object data) {
         LOG.debug("cmdCd=" + cmdCd + ";data=" + data);
+        BizProcessor bizProcessor = new BizProcessor();
         switch (cmdCd) {
             case Command.CMD_OPEN_FOLDER :
                 if (data instanceof String) {
                     String folderPath = (String) data;
-                    List<FileEntity> lstFileEnt = BizProcessor.analyzeFolder(folderPath);
+                    List<FileEntity> lstFileEnt = bizProcessor.analyzeFolder(folderPath);
                     
                     Map<String, Object> resultData = new HashMap<String, Object>();
                     resultData.put(Integer.valueOf(cmdCd).toString(), lstFileEnt);
                     screenUpdater.postCommand(cmdCd, resultData);
                 } else if (data instanceof String[]) {
                     String[] folderPaths = (String[]) data;
-                    List<FileEntity> lstFileEnt = BizProcessor.analyzeFolder(folderPaths);
-                    Map<String, Object> resultData = new HashMap<String, Object>();
-                    resultData.put(Integer.valueOf(cmdCd).toString(), lstFileEnt);
-                    screenUpdater.postCommand(cmdCd, resultData);
+                    Map<String, List<FileEntity>> mapLstFileEnt = bizProcessor.analyzeFolder(folderPaths);
+//                    Map<String, Object> resultData = new HashMap<String, Object>();
+//                    resultData.put(Integer.valueOf(cmdCd).toString(), lstFileEnt);
+//                    screenUpdater.postCommand(cmdCd, mapLstFileEnt);
                 }
                 break;
             default :

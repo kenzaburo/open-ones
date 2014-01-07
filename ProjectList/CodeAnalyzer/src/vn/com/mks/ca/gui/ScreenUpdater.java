@@ -23,13 +23,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import vn.com.mks.ca.AppCons;
+import vn.com.mks.ca.AppUtil;
+import vn.com.mks.ca.Setting;
 import vn.com.mks.ca.ent.FileEntity;
 
 /**
@@ -74,19 +73,70 @@ public class ScreenUpdater implements IScreenUpdater {
         int len = (lstFileEnt != null) ? lstFileEnt.size() : 0; 
         LOG.debug("len=" + len);
         Table table = window.table;
+        // Setting headers
         
+        clearColumns(table);
+        
+        // Add new columns
+        Setting setting = new Setting();
+        String tabName = "Source counter";
+        String[] headers = setting.getHeaders(tabName);
+        String[] properties = setting.getProperties(tabName);
+        int[] sizes = setting.getSizes(tabName);
+        
+        addColumns(table, headers, sizes);
+        // Add data row
         FileEntity fileEnt;
         String[] rowData;
         TableItem tableItem;
         for (int i = 0; i < len; i++) {
+            
             fileEnt = lstFileEnt.get(i);
-            rowData = new String[4];
-            rowData[0] = fileEnt.getParentPath();
-            rowData[1] = fileEnt.getFileName();
-            rowData[2] = fileEnt.getRevision().toString();
-            rowData[3] = String.valueOf(fileEnt.getStep());
+            rowData = AppUtil.formatDataRow(properties, fileEnt);
+
             tableItem = new TableItem(table, SWT.NONE);
             tableItem.setText(rowData);
         }
+    }
+
+
+    /**
+     * Clear dispose all rows and columns from table.
+     * @param table to be disposed rows and columns
+     */
+    private void clearColumns(Table table) {
+        if (table == null) {
+            return;
+        }
+
+        // Remove rows
+        int nItem = table.getItemCount();
+        for (int i = nItem - 1; i >= 0; i--) {
+            table.getItem(i).dispose();
+        }
+        
+        // Clear columns
+        int nColumn = table.getColumnCount();
+        for (int i = nColumn - 1; i >= 0; i--) {
+            table.getColumn(i).dispose();
+        }
+    }
+    
+    /**
+     * Add columns to the table.
+     * @param table to be added columns
+     * @param headers header names
+     * @param sizes size of column
+     */
+    private void addColumns(Table table, String[] headers, int[] sizes) {
+        int len = (headers != null) ? headers.length : 0;
+
+        TableColumn column;
+        for (int i = 0; i < len; i++) {
+            column = new TableColumn(table, SWT.NONE);
+            column.setText(headers[i]);
+            column.setWidth(sizes[i]);
+        }
+
     }
 }

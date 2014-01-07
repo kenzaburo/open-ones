@@ -18,16 +18,18 @@
  */
 package vn.com.mks.ca.biz;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.wc.SVNInfo;
 
-import codereport.entity.FileInfo;
-
 import vn.com.mks.ca.ent.FileEntity;
-import vn.com.mks.ca.gui.ScreenUpdater;
 import vn.mkss.codereporter.SVNAnalyzer;
 
 /**
@@ -36,35 +38,153 @@ import vn.mkss.codereporter.SVNAnalyzer;
  */
 public class BizProcessor {
     private final static Logger LOG = Logger.getLogger("BizProcessor");
+    private String[] arrPath = null;
+    private FileFilter fileFilter = null;
+    private SVNAnalyzer svnAnalyzer = null;
+    
+    public BizProcessor() {
+        
+    }
     /**
-     * [Give the description for method].
+     * Create new instance of BizProcessor without filter.
+     * <br/>
+     * fileFilter is null: accept all files and folders.
+     * @param paths
+     */
+    public BizProcessor(String[] paths) {
+        arrPath = paths;
+    }
+
+    /**
+     * Create new instance of BizProcessor without filter.
+     * <br/>
+     * fileFilter is null: accept all files and folders.
+     * @param paths
+     */
+    public BizProcessor(String[] paths, FileFilter fileFilter) {
+        this.arrPath = paths;
+        this.fileFilter = fileFilter;
+    }
+
+    /**
+     * Get detailed information of folder.
+     * <br/> 
+     * 
      * @param path Path of File or Folder
      * @return
      */
-    public static List<FileEntity> analyzeFolder(String path) {
+    public List<FileEntity> analyzeFolder(String path) {
         LOG.debug("folderPath=" + path);
-        List<FileEntity> lstFileEntity = new ArrayList<FileEntity>();
+        File file = new File(path);
+
         
         String username = null;
         String password = null;
         SVNAnalyzer svnAnalyzer = new SVNAnalyzer(path, username, password);
         
-        FileEntity fe = new FileEntity();
-        fe.setParentPath(path);
-        
-        SVNInfo fileInfo = svnAnalyzer.getInfo(path);
-        fe.setRevision(fileInfo.getCommittedRevision().getNumber());
-        
-        lstFileEntity.add(fe);
-        
-        return lstFileEntity;
+        return analyzeFolder(file);
     }
+    
+    /**
+     * The entry point of analyzing file or folder.
+     * @param file File or Folder
+     */
+    private List<FileEntity> analyzeFolder(File file) {
+        List<FileEntity> lstFileEnt = null;
+        if (file.isHidden()) {
+            // Do nothing
+            // Default, skip hidden files or folders
+        } else if (file.isFile()) {
+            lstFileEnt = new ArrayList<FileEntity>();
+            parseFile(file, lstFileEnt);
+        } else if (file.isDirectory()) {
+            lstFileEnt = new ArrayList<FileEntity>();
+            scanPath(file, lstFileEnt);
+        }
+        
+        return lstFileEnt;
+    }
+
     /**
      * [Give the description for method].
-     * @param paths Path of Files or Folders
+     * <br/>
+     * The first call must transfer the file is a folder.
+     * @param file File or Folder
+     * @param lstFileEnt
      */
-    public static List<FileEntity> analyzeFolder(String[] paths) {
-        LOG.debug("analyzeFolder:folderPaths=" + paths);
-        return null;
+    private void scanPath(File file, List<FileEntity> lstFileEnt) {
+        File[] files;
+        if (fileFilter == null) {
+            files = file.listFiles();
+        } else {
+            files = file.listFiles(fileFilter);
+        }
+        
+        int len = (files != null) ? files.length : 0;
+        
+        for (int i = 0; i < len; i++) {
+            if (files[i].isHidden()) {
+                // Do nothing
+                // Default, skip hidden files or folders
+            } else if (files[i].isFile()) {
+                parseFile(files[i], lstFileEnt);
+            } else if (files[i].isDirectory()) {
+                // call recursively
+                scanPath(files[i], lstFileEnt);
+            }
+        }        
+    }
+    
+    /**
+     * [Give the description for method].
+     * @param path
+     * @param lstFileEnt output list. It's prepared from caller.
+     */
+    private void parseFile(File file, List<FileEntity> lstFileEnt) {
+        if ((file == null) || (lstFileEnt == null)) {
+            return;
+        }
+        
+        FileEntity fileEnt = new FileEntity();
+        
+        fileEnt.setParentPath(file.getParent());
+        fileEnt.setFileName(file.getName());
+        
+        long lastModified = file.lastModified();
+        if (lastModified != 0L) {
+            fileEnt.setModifiedDate(new Date(lastModified)); 
+        }
+        fileEnt.setSizeKB(file.length() / 1024);
+        
+        if (svnAnalyzer != null) {
+            SVNInfo fileInfo = svnAnalyzer.getInfo(file);
+            if (fileInfo != null) {
+                fileEnt.setRevision(fileInfo.getCommittedRevision().getNumber());
+            }
+        }
+
+        // Append to list
+        lstFileEnt.add(fileEnt);
+    }
+
+    /**
+     * [Give the description for method].
+     * <br/>
+     * List of input paths to be parsed: arrPath
+     * @param paths Path of Files or Folders
+     * @return Map of (path, list of FileEntity)
+     */
+    public Map<String, List<FileEntity>> analyzeFolder(String[] paths) {
+        Map<String, List<FileEntity>> mapResult = new HashMap<String, List<FileEntity>>();
+        LOG.debug("paths=" + paths);
+        int len = (paths != null) ? paths.length : 0;
+        
+        List<FileEntity> lstFileEnt;
+        for (int i = 0; i < len; i++) {
+            lstFileEnt = analyzeFolder(paths[i]);
+            mapResult.put(paths[i], lstFileEnt);
+        }
+        
+        return mapResult;
     }
 }

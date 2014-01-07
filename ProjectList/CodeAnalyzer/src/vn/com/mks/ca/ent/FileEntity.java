@@ -20,6 +20,9 @@ package vn.com.mks.ca.ent;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import vn.mkss.codeworker.info.MethodInfo;
 
 /**
  * @author ThachLN
@@ -31,6 +34,12 @@ public class FileEntity implements Serializable {
     private Long revision;
     private Date createdDate;
     private Date modifiedDate;
+    private Long sizeKB;
+    private int numStep;
+    private int numComment;
+    private int numBlank;
+    
+    private List<MethodInfo> lstMethod;
     /**
      * Get value of parentPath.
      * @return the parentPath
@@ -116,4 +125,52 @@ public class FileEntity implements Serializable {
         this.step = step;
     }
     private int step;
+    public Long getSizeKB() {
+        return sizeKB;
+    }
+    public void setSizeKB(Long sizeKB) {
+        this.sizeKB = sizeKB;
+    }
+    /**
+     * Get value of numStep.
+     * @return the numStep
+     */
+    public int getNumStep() {
+        return numStep;
+    }
+    /**
+     * Set the value for numStep.
+     * @param numStep the numStep to set
+     */
+    public void setNumStep(int numStep) {
+        this.numStep = numStep;
+    }
+    /**
+     * Get value of numComment.
+     * @return the numComment
+     */
+    public int getNumComment() {
+        return numComment;
+    }
+    /**
+     * Set the value for numComment.
+     * @param numComment the numComment to set
+     */
+    public void setNumComment(int numComment) {
+        this.numComment = numComment;
+    }
+    /**
+     * Get value of numBlank.
+     * @return the numBlank
+     */
+    public int getNumBlank() {
+        return numBlank;
+    }
+    /**
+     * Set the value for numBlank.
+     * @param numBlank the numBlank to set
+     */
+    public void setNumBlank(int numBlank) {
+        this.numBlank = numBlank;
+    }
 }

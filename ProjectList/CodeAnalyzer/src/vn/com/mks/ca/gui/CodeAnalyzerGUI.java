@@ -40,7 +40,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import vn.com.mks.ca.AppCons;
 import vn.com.mks.swt.IconCache;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -124,7 +123,7 @@ public class CodeAnalyzerGUI {
         
         
         shell.setImage(iconCache.stockImages[iconCache.iconShell]);
-        shell.setSize(900, 600);
+        shell.setSize(1000, 650);
         shell.setText("Code Analyzer");
         
         GridLayout gridLayout = new GridLayout();
@@ -148,7 +147,7 @@ public class CodeAnalyzerGUI {
         createTableView(sashForm);
         
 
-        sashForm.setWeights(new int[]{2, 3});
+        sashForm.setWeights(new int[]{1, 5});
         
         createStatusBar();
 
