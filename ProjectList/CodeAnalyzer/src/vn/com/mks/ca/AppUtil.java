@@ -19,14 +19,19 @@
 package vn.com.mks.ca;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import codereport.entity.FileInfo;
+
 import rocky.common.BeanUtil;
 import rocky.common.CommonUtil;
 import rocky.common.Constant;
+import rocky.sizecounter.UnitType;
 import vn.com.mks.ca.ent.FileEntity;
 
 /**
@@ -82,5 +87,52 @@ public class AppUtil {
         }
         
         return result;
+    }
+
+    /**
+     * [Give the description for method].
+     * @param lstFileInfo
+     * @return
+     */
+    public static List<FileEntity> convertFileInfos2FileEntities(List<FileInfo> lstFileInfo) {
+        List<FileEntity> lstFE = null;
+        
+        if (lstFileInfo == null) {
+            return null;
+        } else {
+            lstFE = new ArrayList<FileEntity>();
+        }
+        
+        int len = (lstFileInfo != null) ? lstFileInfo.size() : 0;
+        
+        for (int i = 0; i < len; i++) {
+            lstFE.add(convertFileInfo2FileEntity(lstFileInfo.get(i)));
+        }
+
+        return lstFE;
+    }
+
+    /**
+     * [Give the description for method].
+     * @param fileInfo
+     * @return
+     */
+    private static FileEntity convertFileInfo2FileEntity(FileInfo fileInfo) {
+        if (fileInfo == null) {
+            return null;
+        }
+        FileEntity fe = new FileEntity();
+        
+        fe.setParentPath(fileInfo.getPath());
+        fe.setFileName(fileInfo.getFilename());
+        fe.setModifiedDate(fileInfo.getCommitteddate());
+        
+        if (UnitType.LOC.toString().equalsIgnoreCase(fileInfo.getUnit0())) {
+            fe.setNumStep(fileInfo.getSize0().longValue());
+            fe.setNumComment(fileInfo.getSize1().longValue());
+            fe.setNumBlank(fileInfo.getSize2().longValue());
+        }
+        
+        return fe;
     }
 }

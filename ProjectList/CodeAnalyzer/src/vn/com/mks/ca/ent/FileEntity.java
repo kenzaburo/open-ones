@@ -36,8 +36,8 @@ public class FileEntity implements Serializable {
     private Date modifiedDate;
     private double sizeKB;
     private long numStep;
-    private int numComment;
-    private int numBlank;
+    private long numComment;
+    private long numBlank;
     
     private List<MethodInfo> lstMethod;
     /**
@@ -135,28 +135,28 @@ public class FileEntity implements Serializable {
      * Get value of numComment.
      * @return the numComment
      */
-    public int getNumComment() {
+    public long getNumComment() {
         return numComment;
     }
     /**
      * Set the value for numComment.
      * @param numComment the numComment to set
      */
-    public void setNumComment(int numComment) {
+    public void setNumComment(long numComment) {
         this.numComment = numComment;
     }
     /**
      * Get value of numBlank.
      * @return the numBlank
      */
-    public int getNumBlank() {
+    public long getNumBlank() {
         return numBlank;
     }
     /**
      * Set the value for numBlank.
      * @param numBlank the numBlank to set
      */
-    public void setNumBlank(int numBlank) {
+    public void setNumBlank(long numBlank) {
         this.numBlank = numBlank;
     }
 }

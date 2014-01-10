@@ -50,6 +50,8 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
     /** Processor to reflect data from model to presentation layer. */
     IScreenUpdater screenUpdater;
 
+    /** Item . */
+    Item item;
 //    public AppEventHandler() {
 //        this.eventProcessor = this;
 //    }
@@ -93,7 +95,7 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
     @Override
     public void widgetSelected(SelectionEvent event) {
         LOG.debug("Source class:" + event.getSource().getClass());
-        Item item = (Item) event.getSource();
+        item = (Item) event.getSource();
 
         if ((event != null) && (item != null)) {
             
@@ -120,7 +122,13 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
                         SettingDlg settingDlg = new SettingDlg(shell, SWT.MODELESS);
                         settingDlg.open();
                         break;
+                    case Command.CMD_EXPORT2EXCEL :
+                        break;
+                    default:
+                        // No statement
                 }
+            } else {
+                // No statement
             }
         }
     }
@@ -202,6 +210,12 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
         switch (cmdCd) {
             case Command.CMD_OPEN_FOLDER :
                 if (data instanceof String) {
+                    // Display progress bar
+                    NProgressBar progressBar = new NProgressBar(item.getDisplay().getActiveShell(), SWT.SMOOTH);
+                    // Boundary of ProgressBar
+                    progressBar.setBounds(20, 30, 380, 25);
+                    progressBar.setVisible(true);
+                    
                     String folderPath = (String) data;
                     List<FileEntity> lstFileEnt = bizProcessor.analyzeFolder(folderPath);
                     
@@ -209,6 +223,8 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
                     resultData.put(folderPath, lstFileEnt);
                     
                     screenUpdater.postCommand(cmdCd, resultData);
+                    progressBar.setVisible(false);
+                    progressBar.dispose();
                 } else if (data instanceof String[]) {
                     String[] folderPaths = (String[]) data;
                     Map<String, List<FileEntity>> mapLstFileEnt = bizProcessor.analyzeFolder(folderPaths);
@@ -218,6 +234,10 @@ public class AppEventHandler extends SelectionAdapter implements DropTargetListe
                 }
                 break;
             default :
+                NProgressBar progressBar = new NProgressBar(item.getDisplay().getActiveShell(), SWT.SMOOTH);
+                // Boundary of ProgressBar
+                progressBar.setBounds(20, 30, 380, 25);
+                progressBar.setVisible(true);
                 break;
         }
 

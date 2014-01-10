@@ -153,7 +153,6 @@ public class CodeAnalyzerGUI {
         sashForm.setWeights(new int[]{1, 5});
         
         createStatusBar();
-
     }
 
     /**
@@ -211,6 +210,7 @@ public class CodeAnalyzerGUI {
         tltmExportToExcel.setToolTipText("Export to Excel");
         tltmExportToExcel.setImage(iconCache.stockImages[iconCache.iconExportToExcel]);
         //tltmExportToExcel.setText("Export to Excel");
+        tltmExportToExcel.setData(Command.CMD_EXPORT2EXCEL);
         tltmExportToExcel.addSelectionListener(eventHandler);
     }
 

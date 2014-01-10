@@ -33,6 +33,7 @@ import rocky.sizecounter.ISizeCounter;
 import rocky.sizecounter.SizeMetaData;
 import rocky.sizecounter.UnitType;
 import rocky.sizecounter.UnsupportedFileType;
+import vn.com.mks.ca.dao.MainSourceDao;
 import vn.com.mks.ca.ent.FileEntity;
 import vn.mkss.codereporter.SVNAnalyzer;
 
@@ -69,13 +70,14 @@ public class BizProcessor {
     public List<FileEntity> analyzeFolder(String path) {
         LOG.debug("folderPath=" + path);
         File file = new File(path);
+        String projectName = "ProjectName";
+        
+        // Call dao to parse information into database
+        MainSourceDao.analyzeFolder(projectName, path, fileFilter);
 
+        return MainSourceDao.getFileInfo(projectName);
         
-        String username = null;
-        String password = null;
-        svnAnalyzer = new SVNAnalyzer(path, username, password);
-        
-        return analyzeFolder(file);
+        // return analyzeFolder(file);
     }
     
     /**
@@ -163,8 +165,11 @@ public class BizProcessor {
         if (sizeCounter != null) {
             try {
                 SizeMetaData smd = sizeCounter.countSize(file.getPath());
+
                 if (smd.getUnit() == UnitType.LOC) {
                     fileEnt.setNumStep(smd.getSize());
+                    fileEnt.setNumComment(smd.getComment());
+                    fileEnt.setNumBlank(smd.getBlank());
                 }
             } catch (UnsupportedFileType ex) {
                 LOG.warn("Unsupported file '" + file.getPath() + "'");

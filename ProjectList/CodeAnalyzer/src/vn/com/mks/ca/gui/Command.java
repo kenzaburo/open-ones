@@ -25,5 +25,6 @@ package vn.com.mks.ca.gui;
 public class Command {
     public final static int CMD_OPEN_FILE = 0;
     public final static int CMD_OPEN_FOLDER = 1;
+    public final static int CMD_EXPORT2EXCEL = 2;
     public static final int CMD_SETTING = 30;
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="DaoGeneratePU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>codereport.entity.MainCode</class>
+    <class>codereport.entity.UTCode</class>
+    <class>codereport.entity.UTClass</class>
+    <class>codereport.entity.UTMethod</class>
+    <class>codereport.entity.UTCase</class>
+    <class>codereport.entity.FileInfo</class>
+	<!-- Oracle -->
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.88.16.75:1521:MAPDB"/>
+      <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+      <property name="javax.persistence.jdbc.user" value="CODEREPORT"/>
+      <property name="javax.persistence.jdbc.password" value="CODEREPORT"/>
+      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+    </properties>
+    
+    <!--  For MYSQL   
+	<properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/CODEREPORT"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="CODEREPORT"/>
+      <property name="javax.persistence.jdbc.password" value="CODEREPORT"/>
+       
+	  <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+	   
+    </properties>
+     -->
+     <!-- HSQL 
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:file:localdb/CodeReportDB"/>
+      <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver"/>
+      <property name="javax.persistence.jdbc.user" value="SA"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+    </properties>
+    -->
+  </persistence-unit>
+</persistence>
