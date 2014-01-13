@@ -20,6 +20,7 @@ package vn.com.mks.ca.biz;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -215,5 +216,91 @@ public class BizProcessor {
      */
     public void setSizeCounter(ISizeCounter sizeCounter) {
         this.sizeCounter = sizeCounter;
+    }
+    
+    /**
+     * [Give the description for method].
+     * <br/>
+     * Execute external batch to update svn
+     * @param wcPath
+     * @param revision
+     * @return 0 no error.
+     * 1: error
+     */
+    public static int updateSVN(String wcPath, long revision) {
+        // Call svn-update.bat to update the source code
+        Runtime runtime = Runtime.getRuntime();
+        String rootPath = new File("").getAbsolutePath();
+        
+        String svnUpdateCmd = rootPath + "\\svn-cmd\\svn-update.bat ";
+        
+        String command = "cmd /c start /wait " + " " + svnUpdateCmd + wcPath + " " + revision;
+
+        String[] envp = null;
+
+        try {
+            LOG.debug("Updating revision " + revision + " ...");
+            LOG.debug("Executing command '" + command + "'");
+            Process proc = runtime.exec(command, envp);
+            int exitVal = proc.waitFor();
+            LOG.debug("Updated revision " + revision + ". Exited code:" + exitVal);
+            return exitVal;
+        } catch (IOException ex) {
+            LOG.error("Could not start svn-update.bat", ex);
+        } catch (InterruptedException ex) {
+            LOG.error("Could not wait command svn-update.bat", ex);
+        }
+        
+        return -1;
+    }
+    
+    /**
+     * Update next revision of working copy path.
+     * @param wcPath
+     * @return
+     */
+    public static int updateNext(String wcPath) {
+        // Call svn-update.bat to update the source code
+        Runtime runtime = Runtime.getRuntime();
+        String rootPath = new File("").getAbsolutePath();
+        
+        String svnUpdateCmd = rootPath + "\\svn-cmd\\svn-update.bat ";
+        
+        long nextRevision = getNextRevision(wcPath);
+        String command = "cmd /c start /wait " + " " + svnUpdateCmd + wcPath + " " + nextRevision;
+
+        String[] envp = null;
+
+        try {
+            LOG.debug("Updating revision " + nextRevision + " ...");
+            Process proc = runtime.exec(command, envp);
+            int exitVal = proc.waitFor();
+            LOG.debug("Updated revision " + nextRevision + ". Exited code:" + exitVal);
+            return exitVal;
+        } catch (IOException ex) {
+            LOG.error("Could not start svn-update.bat", ex);
+        } catch (InterruptedException ex) {
+            LOG.error("Could not wait command svn-update.bat", ex);
+        }
+        
+        return -1;
+    }
+
+    /**
+     * [Give the description for method].
+     * @param wcPath
+     * @return
+     */
+    public static long getNextRevision(String wcPath) {
+        String password = null;
+        String username = null;
+        SVNAnalyzer svnAnalyzer = new SVNAnalyzer(wcPath, username, password);
+        
+        SVNInfo svnInfo = svnAnalyzer.getInfo();
+        if (svnInfo == null) {
+            return -1;
+        } else {
+            return svnAnalyzer.getInfo().getCommittedRevision().getNumber() + 1;
+        }
     }
 }

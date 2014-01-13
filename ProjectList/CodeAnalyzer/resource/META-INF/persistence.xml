@@ -8,7 +8,7 @@
     <class>codereport.entity.UTMethod</class>
     <class>codereport.entity.UTCase</class>
     <class>codereport.entity.FileInfo</class>
-	<!-- Oracle -->
+	<!-- Oracle 
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.88.16.75:1521:MAPDB"/>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
@@ -16,7 +16,7 @@
       <property name="javax.persistence.jdbc.password" value="CODEREPORT"/>
       <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
     </properties>
-    
+    -->
     <!--  For MYSQL   
 	<properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/CODEREPORT"/>
@@ -28,14 +28,13 @@
 	   
     </properties>
      -->
-     <!-- HSQL 
+     <!-- HSQL -->
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:file:localdb/CodeReportDB"/>
       <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver"/>
       <property name="javax.persistence.jdbc.user" value="SA"/>
       <property name="javax.persistence.jdbc.password" value=""/>
-      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
     </properties>
-    -->
+    
   </persistence-unit>
 </persistence>

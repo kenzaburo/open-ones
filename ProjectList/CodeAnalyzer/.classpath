@@ -65,6 +65,7 @@
 	<classpathentry kind="lib" path="lib/org.eclipse.cdt.make.core_7.2.0.201306112328.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.cdt.msw.build_1.0.0.201306112328.jar"/>
 	<classpathentry kind="lib" path="lib/sizecounter-2.2.6-20140110155820.jar"/>
-	<classpathentry kind="lib" path="lib/cpp-rockychecker-0.1.5-20140110160029.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/cpp-rockychecker-0.1.6-20140113202357.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
