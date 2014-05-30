@@ -1,0 +1,20 @@
+                        Rocky Mail Package
+                            
+                           Release Notes
+
+
+INTRODUCTION:
+
+This document contains the release notes for candidate version 0.1 of RockyMail.
+
+For Mail server requires SSL
+---------------------------
+First at all, you "must" add certification of to your JDK:
+Refer sample batch script .\guide\import.bat.
+
+For Portlet Container:
+---------------------------
+You must replace mail.jar from your GlassFish at X:\GlassFish\AppServer\lib by mail.jar from this project.
+
+---
+Thach.Le@mks.com.vn
