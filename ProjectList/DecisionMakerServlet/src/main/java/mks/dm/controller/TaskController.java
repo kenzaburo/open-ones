@@ -40,4 +40,13 @@ public class TaskController {
         
         return mav;
     }
+    
+    @RequestMapping(value="detailTask" , method = RequestMethod.GET)
+    public ModelAndView detailTask(Model model){
+        ModelAndView mav = new ModelAndView("detailTask");
+        
+        model.addAttribute("page", "detailTask");
+        
+        return mav;
+    }
 }

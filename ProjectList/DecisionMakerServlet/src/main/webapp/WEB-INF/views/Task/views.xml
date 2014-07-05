@@ -13,4 +13,8 @@
     <definition extends="default" name="searchTask">
         <put-attribute name="body" value="/WEB-INF/views/Task/searchTask.jsp" />
     </definition>
+    
+     <definition extends="default" name="detailTask">
+        <put-attribute name="body" value="/WEB-INF/views/Task/detailTask.jsp" />
+    </definition>
 </tiles-definitions>
