@@ -2,8 +2,8 @@
 <!-- Menu Horizontal -->
 <ul class="menu">
 <li class="current"><a href=""><i class="icon-home"></i>Trang chủ</a></li>
-<li><a href="announcement"><i class="icon-bullhorn"></i>Thông báo</a></li>
-<li><a href="rule"><i class="icon-legal"></i>Quy định</a></li>
+<li><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>
+<li><a href="listRule"><i class="icon-legal"></i>Quy định</a></li>
 <li><a href="listTask"><i class="icon-eye-open"></i>Công việc</a>
     <ul>
     <li><a href="createTask"><i class="icon-magic"></i>Tạo việc mới</a></li>

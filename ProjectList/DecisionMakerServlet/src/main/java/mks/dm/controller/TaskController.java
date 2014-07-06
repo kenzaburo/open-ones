@@ -32,6 +32,24 @@ public class TaskController {
         return mav;
     }
 
+    @RequestMapping(value="listAnnouncement" , method = RequestMethod.GET)
+    public ModelAndView listAnnouncement(Model model){
+        ModelAndView mav = new ModelAndView("listAnnouncement");
+        
+        model.addAttribute("page", "listAnnouncement");
+        
+        return mav;
+    }
+
+    @RequestMapping(value="listRule" , method = RequestMethod.GET)
+    public ModelAndView listRule(Model model){
+        ModelAndView mav = new ModelAndView("listRule");
+        
+        model.addAttribute("page", "listRule");
+        
+        return mav;
+    }
+    
     @RequestMapping(value="searchTask" , method = RequestMethod.GET)
     public ModelAndView searchTask(Model model){
         ModelAndView mav = new ModelAndView("searchTask");

@@ -4,5 +4,21 @@
 }
 
 .view-pager {
-  float: left
+  float: left;
+  display: inline;
+}
+
+.view-pager-ui > ul > li {
+  display: inline;
+}
+
+.view-pager-previous {
+  display: inline;
+}
+
+.view-pager-links {
+  display: inline;
+}
+.view-pager-links > li {
+  display: inline;
 }
