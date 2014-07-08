@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Implementation-Vendor: Jasig
+Implementation-Title: Jasig CAS - Uber WAR
+Implementation-Version: 4.1.0-SNAPSHOT
+Implementation-Vendor-Id: org.jasig.cas
+Built-By: ThachLe
+Build-Jdk: 1.7.0_55
+Specification-Vendor: Jasig
+Specification-Title: Jasig CAS - Uber WAR
+Created-By: Apache Maven 3.1.1
+Specification-Version: 4.1.0-SNAPSHOT
+Archiver-Version: Plexus Archiver
+
