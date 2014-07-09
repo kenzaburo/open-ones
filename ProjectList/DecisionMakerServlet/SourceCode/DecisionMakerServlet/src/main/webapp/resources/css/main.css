@@ -22,3 +22,11 @@
 .view-pager-links > li {
   display: inline;
 }
+
+.nav-left {
+  display: inline;
+}
+.navbar-right .dropdown-menu:before {
+  display: inline;
+  right: 15px;
+}

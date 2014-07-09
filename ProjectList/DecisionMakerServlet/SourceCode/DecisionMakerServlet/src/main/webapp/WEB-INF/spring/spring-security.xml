@@ -72,5 +72,6 @@
     <security:user-service id="userService">
         <security:user name="user" password="user" authorities="ROLE_USER"></security:user>
         <security:user name="admin" password="admin" authorities="ROLE_USER"></security:user>
+        <security:user name="manager" password="manager" authorities="ROLE_USER"></security:user>
     </security:user-service>
 </beans>
