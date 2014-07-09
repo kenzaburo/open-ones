@@ -8,7 +8,7 @@
 <link rel="stylesheet" media="screen" href="resources/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
 
         <div>
-          <div class="fl-col view-filter">
+          <div class="col_6 column">
             <label for="unit">Phòng ban</label>
             <select id="scopes">
               <option value="">Tất cả</option>
@@ -18,7 +18,7 @@
               <option value="">Kho</option>
             </select>
           </div>
-          <div class="fl-col flc-pager-top view-pager">
+          <div class="col_6 column view-pager">
             <ul id="pager-top" class="fl-pager-ui">
               <li class="flc-pager-previous"><a href="javascript:;">&lt; Trước</a></li>
               <li>

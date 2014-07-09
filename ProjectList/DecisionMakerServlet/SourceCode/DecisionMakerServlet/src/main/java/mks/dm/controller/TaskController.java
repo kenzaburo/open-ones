@@ -49,6 +49,15 @@ public class TaskController {
         
         return mav;
     }
+
+    @RequestMapping(value="myOpenTask" , method = RequestMethod.GET)
+    public ModelAndView myOpenTask(Model model){
+        ModelAndView mav = new ModelAndView("myOpenTask");
+        
+        model.addAttribute("page", "myOpenTask");
+        
+        return mav;
+    }
     
     @RequestMapping(value="searchTask" , method = RequestMethod.GET)
     public ModelAndView searchTask(Model model){
