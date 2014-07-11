@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<clay-model clay-version="2.0.0">
+<database-model author="" begin-script="" end-script="" id="1341456:147243eca99:-8000" name="DMDBModel" sql-dialect-id="jp.azzurri.clay.dialect.MySQL_5_0_Dialect" version="1.0">
+<schema-list>
+<schema id="1341456:147243eca99:-7ffd" name="DEFAULT_SCHEMA">
+<table-list>
+<table id="1341456:147243eca99:-7fff" name="REQUEST">
+<table-description>Contain information of Request (Announcement, Rule, Task, Leave)</table-description>
+<column-list>
+<column auto-increment="true" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7ff8" mandatory="true" name="ID">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e4b" mandatory="false" name="TYPE" remarks="1=Announcement; 2=Rule; 3=Task; 4=Leave">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="200" decimal-digits="0" default-value="" id="1341456:147243eca99:-7ff7" mandatory="true" name="TITLE" remarks="Announcement | Rule | Task | Leave">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="4000" decimal-digits="0" default-value="" id="1341456:147243eca99:-7ff6" mandatory="false" name="CONTENT">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7ff3" mandatory="false" name="STARTDATE" remarks="Announcement | Rule | Task | Leave">
+<data-type name="DATETIME" selected-variant-pattern="DATETIME"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7ff2" mandatory="false" name="ENDATE" remarks="Task | Leave">
+<data-type name="DATETIME" selected-variant-pattern="DATETIME"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7ff1" mandatory="false" name="ASSIGNED_ID" remarks="Task">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e5a" mandatory="false" name="ASSIGNED_ACCOUNT" remarks="Task">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="100" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e5b" mandatory="false" name="ASSIGNED_NAME" remarks="Task">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7ff0" mandatory="false" name="WATCHERS" remarks="Task">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fee" mandatory="false" name="MANAGER_ID" remarks="Task">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fef" mandatory="false" name="MANAGER_ACCOUNT" remarks="Task">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="100" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fed" mandatory="false" name="MANAGER_NAME" remarks="Task">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="30" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e59" mandatory="false" name="STATUS">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e58" mandatory="false" name="ATTACHMENT1">
+<data-type name="BLOB" selected-variant-pattern="BLOB"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e57" mandatory="false" name="ATTACHMENT2">
+<data-type name="BLOB" selected-variant-pattern="BLOB"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e54" mandatory="false" name="ATTACHMENT3">
+<data-type name="BLOB" selected-variant-pattern="BLOB"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fec" mandatory="true" name="CREATED" remarks="ALL">
+<data-type name="DATETIME" selected-variant-pattern="DATETIME"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7feb" mandatory="false" name="CREATEDBY_ID" remarks="ALL">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fe9" mandatory="false" name="CREATEDBY_ACCOUNT" remarks="ALL">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="100" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fea" mandatory="false" name="CREATEDBY_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fe8" mandatory="false" name="LASTMODIFIED" remarks="ALL">
+<data-type name="DATETIME" selected-variant-pattern="DATETIME"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fe7" mandatory="false" name="LASTMODIFIEDBY_ID" remarks="ALL">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="100" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fe6" mandatory="false" name="LASTMODIFIEDBY_NAME" remarks="ALL">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fe5" mandatory="false" name="LASTMODIFIEDBY_ACCOUNT" remarks="ALL">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="1341456:147243eca99:-7ffe" name="PK_REQUEST">
+<primary-key-column name="ID"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1341456:147243eca99:-7eca" name="FK_REQUEST_USER" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_USER" referenced-table="USER" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..1" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="ASSIGNED_ID" referenced-key-column-name="ID"/>
+</foreign-key>
+<foreign-key id="1341456:147243eca99:-7e96" name="FK_REQUEST_USER_MANAGER" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_USER" referenced-table="USER" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="MANAGER_ID" referenced-key-column-name="ID"/>
+</foreign-key>
+<foreign-key id="1341456:147243eca99:-7e6f" name="FK_REQUEST_USER_CREATEDBY" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_USER" referenced-table="USER" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="CREATEDBY_ID" referenced-key-column-name="ID"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="1341456:147243eca99:-7fe4" name="USER">
+<column-list>
+<column auto-increment="true" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fde" mandatory="true" name="ID">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fdd" mandatory="false" name="USERNAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fdc" mandatory="false" name="ENABLED">
+<data-type name="BOOLEAN" selected-variant-pattern="BOOLEAN"/>
+</column>
+</column-list>
+<primary-key id="1341456:147243eca99:-7fe3" name="PK_USER">
+<primary-key-column name="ID"/>
+</primary-key>
+</table>
+<table id="1341456:147243eca99:-7fdb" name="ROLE">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fd7" mandatory="true" name="ID">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fd6" mandatory="false" name="USER_ID">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="1341456:147243eca99:-7fd5" mandatory="false" name="ROLE">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="1341456:147243eca99:-7fda" name="PK_ROLE">
+<primary-key-column name="ID"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1341456:147243eca99:-7f7d" name="FK_USER_ROLE" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_USER" referenced-table="USER" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="USER_ID" referenced-key-column-name="ID"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="1341456:147243eca99:-7e51" name="WATCHER">
+<table-description>For Task</table-description>
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e46" mandatory="true" name="ID">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e45" mandatory="true" name="REQ_ID" remarks="Request ID">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e41" mandatory="false" name="USER_ID">
+<data-type name="INT" selected-variant-pattern="INT"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e40" mandatory="false" name="USER_ACCOUNT">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="100" decimal-digits="0" default-value="" id="1341456:147243eca99:-7e3f" mandatory="false" name="USER_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="1341456:147243eca99:-7e50" name="PK_WATCHER">
+<primary-key-column name="ID"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="1341456:147243eca99:-7de3" name="FK_WATCHER_REQUEST" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_REQUEST" referenced-table="REQUEST" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="REQ_ID" referenced-key-column-name="ID"/>
+</foreign-key>
+<foreign-key id="1341456:147243eca99:-7da5" name="FK_WATCHER_USER" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_USER" referenced-table="USER" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="USER_ID" referenced-key-column-name="ID"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+</table-list>
+</schema>
+</schema-list>
+</database-model>
+<diagram>
+<table-figure height="344" refid="1341456:147243eca99:-7fff" width="260" x="90" y="49"/>
+<fk-figure refid="1341456:147243eca99:-7e96">
+<target-terminal x="0" y="24"/>
+</fk-figure>
+<table-figure refid="1341456:147243eca99:-7fe4" x="484" y="60"/>
+<table-figure refid="1341456:147243eca99:-7fdb" x="597" y="244"/>
+<table-figure refid="1341456:147243eca99:-7e51" x="481" y="362"/>
+</diagram>
+</clay-model>
