@@ -6,6 +6,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="DaoGen/src"/>
 	<classpathentry including="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
@@ -23,7 +24,6 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ldap.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/rocky-common-0.2.7-20131109154751.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/openldap-api-0.0.1rev88-20140528094047.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-core-asl-1.9.13.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-xc-1.9.13.jar"/>
@@ -37,5 +37,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/javax.persistence_2.1.0.v201304241213.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

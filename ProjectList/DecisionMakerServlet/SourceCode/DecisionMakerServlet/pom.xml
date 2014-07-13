@@ -2,7 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>vn.com.mks</groupId>
+  <groupId>mks-service</groupId>
+  <artifactId>DecisionMaker</artifactId>
   <name>DecisionMaker</name>
   <packaging>war</packaging>
   <version>0.0.1</version>
@@ -34,6 +35,37 @@
       <version>${org.springframework-version}</version>
     </dependency>
   
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+
+    <!-- Spring Hibernate/Eclipselink -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+      <version>1.4.1.RELEASE</version>
+    </dependency>
+        
     <!-- AspectJ -->
     <dependency>
       <groupId>org.aspectj</groupId>
@@ -159,6 +191,7 @@
       <artifactId>spring-boot-starter-remote-shell</artifactId>
       <version>1.0.0.RELEASE</version>
     </dependency>
+
     <!-- Spring Security -->
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -212,21 +245,15 @@
     </dependency>    
 
      
-     <!-- Spring Hibernate -->
-    <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-orm</artifactId>
-    <version>3.2.3.RELEASE</version>
-   </dependency>
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.18</version>
+      <version>5.1.30</version>
     </dependency>
             <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>3.6.0.Final</version>
+            <version>3.6.8.Final</version>
         </dependency>
   </dependencies>
   <build>
@@ -267,5 +294,5 @@
       </plugin>
     </plugins>
   </build>
-  <artifactId>am</artifactId>
+
 </project>

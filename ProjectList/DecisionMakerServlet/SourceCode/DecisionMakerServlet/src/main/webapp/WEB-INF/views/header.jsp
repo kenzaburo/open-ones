@@ -10,7 +10,7 @@
       <li><a href="searchTask"><i class="icon-search"></i>Tìm công việc</a></li>
       <li class="divider"><a href="myOpenTask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
     </ul></li>
-  <li><a href="createTask"><i class="icon-magic"></i>Tạo việc mới</a></li>
+  <li><a href="createTask"><i class="icon-magic"></i>Tạo yêu cầu</a></li>
 
   <li class="right"><a href=""><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
     <ul>

@@ -147,7 +147,7 @@
         </div>
         <div>
             <label for="content" class="col_2">Lý do</label>
-            <textarea cols="60" id="taskContent" name="taskContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></textarea>
+            <textarea style="display:inline; position: relative; top:6px; left:10px;" cols="100" id="taskContent" name="taskContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></textarea>
         </div>
 
         <div>
@@ -155,7 +155,7 @@
             <input id="text2" type="text"  class="col_8" />
         </div>
         <div>
-            <label for="scopes" class="col_2">Người theo dõi</label>
+            <label for="scopes" class="col_2">Chia sẻ</label>
             <input id="text2" type="text"  class="col_8" />
         </div>
         <div>

@@ -63,7 +63,7 @@
 		</textarea>
 		<br>
 		<br>
-		<button>Submit</button>
+		<button>Cập nhật</button>
 	</div>
 	<br>
 	<br>

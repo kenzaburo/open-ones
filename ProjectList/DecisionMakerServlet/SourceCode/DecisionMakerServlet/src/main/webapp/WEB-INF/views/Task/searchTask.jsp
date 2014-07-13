@@ -49,8 +49,6 @@
             <a id="ViewDetail" class="button" href="detailTask">Xem chi tiết</a>
         </div>
 
-      
-      </div>
 
         
 

@@ -6,10 +6,13 @@
 .view-pager {
   float: left;
   display: inline;
+  list-style-type: none;
 }
 
-.view-pager-ui > ul > li {
+.view-pager > ul > li > ul > li {
+  float: left;
   display: inline;
+  list-style-type: none;
 }
 
 .view-pager-previous {

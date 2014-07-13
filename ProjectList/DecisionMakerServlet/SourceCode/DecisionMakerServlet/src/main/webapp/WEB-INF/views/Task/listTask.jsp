@@ -22,10 +22,10 @@
             <ul id="pager-top" class="fl-pager-ui">
               <li class="flc-pager-previous"><a href="javascript:;">&lt; Trước</a></li>
               <li>
-                <ul class="fl-pager-links flc-pager-links" style="margin:0; display:inline">
+                <ul class="fl-pager-links flc-pager-links">
                   <li class="flc-pager-pageLink"><a href="javascript:;">1</a></li>
-                  <%-- <li class="flc-pager-pageLink-disabled">2</li>
-                  <li class="flc-pager-pageLink"><a href="javascript:;">3</a></li>--%>
+                   <li class="flc-pager-pageLink-disabled">2</li>
+                   <li class="flc-pager-pageLink"><a href="javascript:;">3</a></li>
                 </ul>
               </li>
               <li class="flc-pager-next"><a href="javascript:;">Tiếp &gt;</a></li>
