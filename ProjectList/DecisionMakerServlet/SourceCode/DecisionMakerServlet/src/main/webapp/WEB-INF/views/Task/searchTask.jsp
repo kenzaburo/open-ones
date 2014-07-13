@@ -18,11 +18,11 @@
               <option value="">Kho</option>
             </select>
           </div>
-          <div class="fl-col flc-pager-top view-pager">
+          <div class="col_6 column view-pager">
             <ul id="pager-top" class="fl-pager-ui">
               <li class="flc-pager-previous"><a href="javascript:;">&lt; Trước</a></li>
               <li>
-                <ul class="fl-pager-links flc-pager-links" style="margin:0; display:inline">
+                <ul class="pager-links" style="margin:0; display:inline">
                   <li class="flc-pager-pageLink"><a href="javascript:;">1</a></li>
                   <%-- <li class="flc-pager-pageLink-disabled">2</li>
                   <li class="flc-pager-pageLink"><a href="javascript:;">3</a></li>--%>

@@ -17,10 +17,12 @@ public class TaskController {
 	private static final Logger LOG = Logger.getLogger(TaskController.class);
 	
     @RequestMapping(value="createTask" , method = RequestMethod.GET)
-    public String createTask(Model model){
-    	model.addAttribute("page", "createTask");
+    public ModelAndView createTask(Model model){
+        ModelAndView mav = new ModelAndView("createRequest");
     	
-    	return "createTask";
+    	mav.addObject("reqType", "Task");
+
+    	return mav;
     }
 
     @RequestMapping(value="listTask" , method = RequestMethod.GET)

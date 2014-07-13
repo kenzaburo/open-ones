@@ -3,7 +3,7 @@
 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
 	<definition name="createTask" extends="default">
-		<put-attribute name="body" value="/WEB-INF/views/Task/createTask.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/Request/createRequest.jsp" />
 	</definition>
   
     <definition name="listTask" extends="default">

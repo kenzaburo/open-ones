@@ -22,7 +22,7 @@
             <ul id="pager-top" class="fl-pager-ui">
               <li class="flc-pager-previous"><a href="javascript:;">&lt; Trước</a></li>
               <li>
-                <ul class="fl-pager-links flc-pager-links">
+                <ul class="pager-links">
                   <li class="flc-pager-pageLink"><a href="javascript:;">1</a></li>
                    <li class="flc-pager-pageLink-disabled">2</li>
                    <li class="flc-pager-pageLink"><a href="javascript:;">3</a></li>

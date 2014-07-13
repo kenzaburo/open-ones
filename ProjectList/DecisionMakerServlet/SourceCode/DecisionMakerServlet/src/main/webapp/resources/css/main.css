@@ -9,7 +9,13 @@
   list-style-type: none;
 }
 
-.view-pager > ul > li > ul > li {
+.view-pager > ul > li {
+  float: left;
+  display: inline;
+  list-style-type: none;
+}
+
+.pager-links > li {
   float: left;
   display: inline;
   list-style-type: none;
