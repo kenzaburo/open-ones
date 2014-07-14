@@ -12,7 +12,7 @@
     </ul></li>
   <li><a href="createRequest"><i class="icon-magic"></i>Tạo yêu cầu</a></li>
 
-  <li class="right"><a href=""><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
+  <li class="right" style="display: inline-block;"><a href=""><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
     <ul>
       <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i>Thoát</a></li>
     </ul></li>
