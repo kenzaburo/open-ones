@@ -7,23 +7,16 @@
 package mks.dms.dao.controller;
 
 import java.io.Serializable;
-
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import mks.dms.dao.entity.Request;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-
-import org.springframework.stereotype.Repository;
-
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Role;
 import mks.dms.dao.entity.User;
@@ -33,7 +26,6 @@ import mks.dms.dao.entity.Watcher;
  *
  * @author ThachLe
  */
-@Repository
 public class UserJpaController implements Serializable {
 
     public UserJpaController(EntityManagerFactory emf) {
@@ -41,12 +33,6 @@ public class UserJpaController implements Serializable {
     }
     private EntityManagerFactory emf = null;
 
-    public UserJpaController() {
-        
-    }
-    public void init() {
-        
-    }
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }

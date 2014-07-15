@@ -45,10 +45,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByEndate", query = "SELECT r FROM Request r WHERE r.endate = :endate"),
     @NamedQuery(name = "Request.findByAssignedAccount", query = "SELECT r FROM Request r WHERE r.assignedAccount = :assignedAccount"),
     @NamedQuery(name = "Request.findByAssignedName", query = "SELECT r FROM Request r WHERE r.assignedName = :assignedName"),
-    @NamedQuery(name = "Request.findByWatchers", query = "SELECT r FROM Request r WHERE r.watchers = :watchers"),
+    @NamedQuery(name = "Request.findByWatchersId", query = "SELECT r FROM Request r WHERE r.watchersId = :watchersId"),
     @NamedQuery(name = "Request.findByManagerAccount", query = "SELECT r FROM Request r WHERE r.managerAccount = :managerAccount"),
     @NamedQuery(name = "Request.findByManagerName", query = "SELECT r FROM Request r WHERE r.managerName = :managerName"),
+    @NamedQuery(name = "Request.findByLabelsId", query = "SELECT r FROM Request r WHERE r.labelsId = :labelsId"),
     @NamedQuery(name = "Request.findByStatus", query = "SELECT r FROM Request r WHERE r.status = :status"),
+    @NamedQuery(name = "Request.findByPlaneffort", query = "SELECT r FROM Request r WHERE r.planeffort = :planeffort"),
+    @NamedQuery(name = "Request.findByPlanunit", query = "SELECT r FROM Request r WHERE r.planunit = :planunit"),
     @NamedQuery(name = "Request.findByCreated", query = "SELECT r FROM Request r WHERE r.created = :created"),
     @NamedQuery(name = "Request.findByCreatedbyAccount", query = "SELECT r FROM Request r WHERE r.createdbyAccount = :createdbyAccount"),
     @NamedQuery(name = "Request.findByCreatedbyName", query = "SELECT r FROM Request r WHERE r.createdbyName = :createdbyName"),
@@ -80,14 +83,20 @@ public class Request implements Serializable {
     private String assignedAccount;
     @Column(name = "ASSIGNED_NAME")
     private String assignedName;
-    @Column(name = "WATCHERS")
-    private Integer watchers;
+    @Column(name = "WATCHERS_ID")
+    private Integer watchersId;
     @Column(name = "MANAGER_ACCOUNT")
     private String managerAccount;
     @Column(name = "MANAGER_NAME")
     private String managerName;
+    @Column(name = "LABELS_ID")
+    private Integer labelsId;
     @Column(name = "STATUS")
     private String status;
+    @Column(name = "PLANEFFORT")
+    private Integer planeffort;
+    @Column(name = "PLANUNIT")
+    private String planunit;
     @Lob
     @Column(name = "ATTACHMENT1")
     private byte[] attachment1;
@@ -114,6 +123,9 @@ public class Request implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_ACCOUNT")
     private String lastmodifiedbyAccount;
+    @JoinColumn(name = "DEPARTMENTS_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private Department departmentsId;
     @JoinColumn(name = "CREATEDBY_ID", referencedColumnName = "ID")
     @ManyToOne
     private User createdbyId;
@@ -203,12 +215,12 @@ public class Request implements Serializable {
         this.assignedName = assignedName;
     }
 
-    public Integer getWatchers() {
-        return watchers;
+    public Integer getWatchersId() {
+        return watchersId;
     }
 
-    public void setWatchers(Integer watchers) {
-        this.watchers = watchers;
+    public void setWatchersId(Integer watchersId) {
+        this.watchersId = watchersId;
     }
 
     public String getManagerAccount() {
@@ -227,12 +239,36 @@ public class Request implements Serializable {
         this.managerName = managerName;
     }
 
+    public Integer getLabelsId() {
+        return labelsId;
+    }
+
+    public void setLabelsId(Integer labelsId) {
+        this.labelsId = labelsId;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getPlaneffort() {
+        return planeffort;
+    }
+
+    public void setPlaneffort(Integer planeffort) {
+        this.planeffort = planeffort;
+    }
+
+    public String getPlanunit() {
+        return planunit;
+    }
+
+    public void setPlanunit(String planunit) {
+        this.planunit = planunit;
     }
 
     public byte[] getAttachment1() {
@@ -313,6 +349,14 @@ public class Request implements Serializable {
 
     public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
         this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    }
+
+    public Department getDepartmentsId() {
+        return departmentsId;
+    }
+
+    public void setDepartmentsId(Department departmentsId) {
+        this.departmentsId = departmentsId;
     }
 
     public User getCreatedbyId() {

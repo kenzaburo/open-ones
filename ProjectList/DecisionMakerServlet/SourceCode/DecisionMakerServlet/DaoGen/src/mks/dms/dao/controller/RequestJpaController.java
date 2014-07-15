@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.User;
 import mks.dms.dao.entity.Watcher;
 import java.util.ArrayList;
@@ -45,6 +46,11 @@ public class RequestJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Department departmentsId = request.getDepartmentsId();
+            if (departmentsId != null) {
+                departmentsId = em.getReference(departmentsId.getClass(), departmentsId.getId());
+                request.setDepartmentsId(departmentsId);
+            }
             User createdbyId = request.getCreatedbyId();
             if (createdbyId != null) {
                 createdbyId = em.getReference(createdbyId.getClass(), createdbyId.getId());
@@ -67,6 +73,10 @@ public class RequestJpaController implements Serializable {
             }
             request.setWatcherCollection(attachedWatcherCollection);
             em.persist(request);
+            if (departmentsId != null) {
+                departmentsId.getRequestCollection().add(request);
+                departmentsId = em.merge(departmentsId);
+            }
             if (createdbyId != null) {
                 createdbyId.getRequestCollection().add(request);
                 createdbyId = em.merge(createdbyId);
@@ -102,6 +112,8 @@ public class RequestJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Request persistentRequest = em.find(Request.class, request.getId());
+            Department departmentsIdOld = persistentRequest.getDepartmentsId();
+            Department departmentsIdNew = request.getDepartmentsId();
             User createdbyIdOld = persistentRequest.getCreatedbyId();
             User createdbyIdNew = request.getCreatedbyId();
             User managerIdOld = persistentRequest.getManagerId();
@@ -121,6 +133,10 @@ public class RequestJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            if (departmentsIdNew != null) {
+                departmentsIdNew = em.getReference(departmentsIdNew.getClass(), departmentsIdNew.getId());
+                request.setDepartmentsId(departmentsIdNew);
             }
             if (createdbyIdNew != null) {
                 createdbyIdNew = em.getReference(createdbyIdNew.getClass(), createdbyIdNew.getId());
@@ -142,6 +158,14 @@ public class RequestJpaController implements Serializable {
             watcherCollectionNew = attachedWatcherCollectionNew;
             request.setWatcherCollection(watcherCollectionNew);
             request = em.merge(request);
+            if (departmentsIdOld != null && !departmentsIdOld.equals(departmentsIdNew)) {
+                departmentsIdOld.getRequestCollection().remove(request);
+                departmentsIdOld = em.merge(departmentsIdOld);
+            }
+            if (departmentsIdNew != null && !departmentsIdNew.equals(departmentsIdOld)) {
+                departmentsIdNew.getRequestCollection().add(request);
+                departmentsIdNew = em.merge(departmentsIdNew);
+            }
             if (createdbyIdOld != null && !createdbyIdOld.equals(createdbyIdNew)) {
                 createdbyIdOld.getRequestCollection().remove(request);
                 createdbyIdOld = em.merge(createdbyIdOld);
@@ -216,6 +240,11 @@ public class RequestJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Department departmentsId = request.getDepartmentsId();
+            if (departmentsId != null) {
+                departmentsId.getRequestCollection().remove(request);
+                departmentsId = em.merge(departmentsId);
             }
             User createdbyId = request.getCreatedbyId();
             if (createdbyId != null) {

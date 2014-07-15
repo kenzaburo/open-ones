@@ -18,6 +18,7 @@
     under the License.
 
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
       </div> <!-- END #content -->
@@ -25,7 +26,10 @@
       <footer>
         <div id="copyright">
           <p>Copyright &copy; 2014 MKS. All rights reserved.</p>
+          <p>MKS giữ bản quyền nội dung ứng dụng.</p>
+          <!--
           <p>Powered by <a href="http://www.jasig.org/cas">Jasig Central Authentication Service <%=org.jasig.cas.CasVersion.getVersion()%></a></p>
+          -->
         </div>
       </footer>
 

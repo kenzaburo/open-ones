@@ -1,0 +1,9 @@
+1) Login with root account
+#mysql -h localhost -u root -p
+
+2) With the mysql prompt, execute
+create database dms default character set utf8;
+
+
+
+jdbc:mysql://localhost:3306/dms?useUnicode=true&characterEncoding=UTF-8

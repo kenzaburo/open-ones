@@ -96,15 +96,15 @@
 		</div>
 
 		<div>
-		 	<label for="scopes" class="col_2">Người làm</label>
+		 	<label for="scopes" class="col_2">Người thực hiện</label>
 		 	<input id="text2" type="text"  class="col_8" />
 		</div>
 		<div>
-		 	<label for="scopes" class="col_2">Người nhận báo cáo</label>
+		 	<label for="scopes" class="col_2">Người duyệt</label>
 		 	<input id="text2" type="text"  class="col_8" />
 		</div>
 		<div>
-		 	<label for="scopes" class="col_2">Người theo dõi</label>
+		 	<label for="scopes" class="col_2">Chia sẻ</label>
 		 	<input id="text2" type="text"  class="col_8" />
 		</div>
 		<div>

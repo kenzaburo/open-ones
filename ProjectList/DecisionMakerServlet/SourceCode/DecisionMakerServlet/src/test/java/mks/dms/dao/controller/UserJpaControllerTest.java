@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.User;
 
 import org.junit.After;
@@ -68,14 +69,22 @@ public class UserJpaControllerTest {
     @Test
     public void testCreate_001() {
         System.out.println("create");
-        User user = new User(1);
-        user.setUsername("user1");
+        User user = new User();
+        user.setUsername("Test User1");
+        user.setEnabled(true);
+        
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
-        UserJpaController instance = new UserJpaController(emf);
-        instance.create(user);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        UserJpaController daoCtrl = new UserJpaController(emf);
+        daoCtrl.create(user);
+        
+        System.out.println("Created user id:" + user.getId());
+        try {
+            daoCtrl.destroy(user.getId());
+        } catch (NonexistentEntityException ex) {
+            fail(ex.getMessage());
+        }
+        
     }
 
     @Test
