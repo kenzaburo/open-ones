@@ -1,4 +1,4 @@
-package mks.dm.controller;
+package mks.dms.controller;
 
 import java.security.Principal;
 

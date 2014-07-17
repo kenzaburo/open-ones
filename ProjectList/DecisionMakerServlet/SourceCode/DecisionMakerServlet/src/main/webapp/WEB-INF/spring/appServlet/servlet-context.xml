@@ -29,6 +29,6 @@
 		</beans:property>
 	</beans:bean>
 
-	<context:component-scan base-package="mks.dm.controller" />
+	<context:component-scan base-package="mks.dms.controller" />
 
 </beans:beans>

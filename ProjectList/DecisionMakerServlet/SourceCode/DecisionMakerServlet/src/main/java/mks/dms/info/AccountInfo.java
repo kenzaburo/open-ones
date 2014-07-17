@@ -1,4 +1,4 @@
-package mks.dm.info;
+package mks.dms.info;
 
 public class AccountInfo {
 

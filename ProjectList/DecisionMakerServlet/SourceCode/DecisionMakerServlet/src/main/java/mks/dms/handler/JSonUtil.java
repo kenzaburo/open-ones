@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package mks.dm.handler;
+package mks.dms.handler;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mks.dm.info.AccountInfo;
+import mks.dms.info.AccountInfo;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
