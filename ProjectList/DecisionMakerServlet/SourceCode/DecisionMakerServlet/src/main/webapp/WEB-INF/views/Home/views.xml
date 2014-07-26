@@ -2,7 +2,12 @@
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration
 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
-	<definition extends="default" name="home">
+	<definition name="home" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Home/home.jsp" />
 	</definition>
+  
+    <definition name="home-admin" extends="default">
+        <put-attribute name="header" value="/WEB-INF/views/header-admin.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/Home/home-admin.jsp" />
+    </definition>
 </tiles-definitions>
