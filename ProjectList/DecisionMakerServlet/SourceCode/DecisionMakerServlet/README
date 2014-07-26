@@ -1,4 +1,25 @@
+DecisionMaker is a web application with technologies:
+- Spring
+- JPA Eclipselink
+
+Status: prototype
+
+Development tools
+------------------------------------
+- IDE: Eclipse JEE Kepler
+- JPA Eclipselink
+
 How to run the project?
 ------------------------------------
+Step 1) Open the project by Eclipse
 
-WEB-INF/Spring/Spring-Security
+Step 2) Prepare CAS for authentication
+The project use CAS (http://www.jasig.org/cas) for authentication.
+So it needs to setup into the Eclipse.
+
+View guidelines in folder "../Doc/DMS_Guideline_Development in Eclipse.ods"
+
+Le Ngoc Thach
+MKS Group
+Make your work better.
+http://mks.com.vn
