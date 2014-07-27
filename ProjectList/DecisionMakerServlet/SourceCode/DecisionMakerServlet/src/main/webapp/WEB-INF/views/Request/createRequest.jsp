@@ -3,16 +3,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
-<script type="text/javascript" src="resources/js/createTask.js"></script>
+<script type="text/javascript" src="resources/js/createRequest.js"></script>
 <form class="horizontal" enctype="application/x-www-form-urlencoded">
 	<div>
 	  <label for="type" class="col_2">Loại yêu cầu</label>
 	   <select id="reqType" class="col_3">
-	    <option value="0">-- Lựa chọn --</option>
-	    <option value="1">Thông báo</option>
-	    <option value="2">Quy định</option>
-	    <option value="3" selected="selected">Công việc</option>
-      <option value="4" >Nghỉ phép</option>
+         <option value="0">-- Lựa chọn --</option>
+         <c:forEach var="reqType" items="${lstReqTypes}">
+            <option value="${reqType.cd}">${reqType.name}</option>
+         </c:forEach>
 	  </select>
 	</div>
 <!-- 	Announcement -->

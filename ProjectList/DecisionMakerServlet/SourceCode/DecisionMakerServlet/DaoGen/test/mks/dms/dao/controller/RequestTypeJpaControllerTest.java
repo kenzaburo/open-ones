@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
  * @author ThachLe
  */
 public class RequestTypeJpaControllerTest {
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
     
     public RequestTypeJpaControllerTest() {
     }
@@ -68,7 +69,7 @@ public class RequestTypeJpaControllerTest {
     public void testCreate() {
         System.out.println("create");
         RequestType requestType = new RequestType();
-        requestType.setCd("CV");
+        requestType.setCd("Task");
         requestType.setName("Công việc");
         requestType.setEnabled(true);
         
@@ -78,17 +79,17 @@ public class RequestTypeJpaControllerTest {
         daoCtrl.create(requestType);
         
         requestType.setId(null);
-        requestType.setCd("QD");
+        requestType.setCd("Rule");
         requestType.setName("Quy định");
         daoCtrl.create(requestType);
 
         requestType.setId(null);
-        requestType.setCd("TB");
+        requestType.setCd("Announcement");
         requestType.setName("Thông báo");
         daoCtrl.create(requestType);
         
         requestType.setId(null);
-        requestType.setCd("NP");
+        requestType.setCd("Leave");
         requestType.setName("Nghỉ phép");
         daoCtrl.create(requestType);
         
@@ -131,12 +132,15 @@ public class RequestTypeJpaControllerTest {
     @Test
     public void testFindRequestTypeEntities_0args() {
         System.out.println("findRequestTypeEntities");
-        RequestTypeJpaController instance = null;
-        List<RequestType> expResult = null;
+        
+        
+        RequestTypeJpaController instance = new RequestTypeJpaController(emf);
+        //List<RequestType> expResult = null;
         List<RequestType> result = instance.findRequestTypeEntities();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //assertEquals(expResult, result);
+        assertNotNull(result);
+        assertEquals(4, result.size());
+
     }
 
     /**

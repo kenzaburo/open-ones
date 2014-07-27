@@ -8,6 +8,7 @@
     <class>mks.dms.dao.entity.Role</class>
     <class>mks.dms.dao.entity.Department</class>
     <class>mks.dms.dao.entity.RequestType</class>
+    <class>mks.dms.dao.entity.Parameter</class>
     <!-- For MySQL -->
 <!--     <properties> -->
 <!--       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dms?useUnicode=true&amp;characterEncoding=UTF-8"/> -->
@@ -17,20 +18,20 @@
 <!--     </properties> -->
     
     <!--  For HSQL Server Mode--> 
-<!--     <properties> -->
-<!--       <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost/dms"/> -->
-<!--       <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/> -->
-<!--       <property name="javax.persistence.jdbc.user" value="sa"/> -->
-<!--       <property name="javax.persistence.jdbc.password" value=""/> -->
-<!--       <property name="eclipselink.ddl-generation" value="create-tables"/> -->
-<!--     </properties>  -->
-    <!--  For HSQL File Mode-->
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:file:./localdb/dms"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost/dms"/>
       <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
       <property name="javax.persistence.jdbc.password" value=""/>
       <property name="eclipselink.ddl-generation" value="create-tables"/>
     </properties> 
+    <!--  For HSQL File Mode-->
+<!--     <properties> -->
+<!--       <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:file:./localdb/dms"/> -->
+<!--       <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/> -->
+<!--       <property name="javax.persistence.jdbc.user" value="sa"/> -->
+<!--       <property name="javax.persistence.jdbc.password" value=""/> -->
+<!--       <property name="eclipselink.ddl-generation" value="create-tables"/> -->
+<!--     </properties>  -->
   </persistence-unit>
 </persistence>

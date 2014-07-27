@@ -19,6 +19,12 @@ So it needs to setup into the Eclipse.
 
 View guidelines in folder "../Doc/DMS_Guideline_Development in Eclipse.ods"
 
+Step 3) Review and adjust database configuration
+The project uses database configuration at folder "DecisionMaker/src/main/resources/META-INF/persistence.xml"
+
+For development, you can use HSQL Server at "DecisionMakerServlet/Deployment/hsqldb/".
+
+---------
 Le Ngoc Thach
 MKS Group
 Make your work better.

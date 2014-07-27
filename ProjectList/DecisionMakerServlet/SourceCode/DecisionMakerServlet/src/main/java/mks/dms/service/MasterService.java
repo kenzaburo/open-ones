@@ -41,6 +41,11 @@ public class MasterService {
         return jsonData;
     }
     
+    /**
+    * Get types of request.
+    * <br/>
+    * @return list of RequestType
+    */
     public List<RequestType> getRequestTypes() {
         List<RequestType> lstRequestTypes;
         
