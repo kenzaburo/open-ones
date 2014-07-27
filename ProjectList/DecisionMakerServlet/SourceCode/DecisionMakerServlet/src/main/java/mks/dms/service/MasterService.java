@@ -18,6 +18,14 @@
  */
 package mks.dms.service;
 
+import java.util.List;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import mks.dms.dao.controller.RequestTypeJpaController;
+import mks.dms.dao.entity.RequestType;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -32,5 +40,17 @@ public class MasterService {
         
         return jsonData;
     }
+    
+    public List<RequestType> getRequestTypes() {
+        List<RequestType> lstRequestTypes;
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
+        RequestTypeJpaController daoCtrl = new RequestTypeJpaController(emf);
+        
+        lstRequestTypes = daoCtrl.findRequestTypeEntities();
+        
+        return lstRequestTypes;
+    }
+    
 
 }

@@ -12,8 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.User;
+import mks.dms.dao.entity.RequestType;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -27,9 +26,9 @@ import static org.junit.Assert.*;
  *
  * @author ThachLe
  */
-public class UserJpaControllerTest {
+public class RequestTypeJpaControllerTest {
     
-    public UserJpaControllerTest() {
+    public RequestTypeJpaControllerTest() {
     }
     
     @BeforeClass
@@ -49,12 +48,12 @@ public class UserJpaControllerTest {
     }
 
     /**
-     * Test of getEntityManager method, of class UserJpaController.
+     * Test of getEntityManager method, of class RequestTypeJpaController.
      */
     @Test
     public void testGetEntityManager() {
         System.out.println("getEntityManager");
-        UserJpaController instance = null;
+        RequestTypeJpaController instance = null;
         EntityManager expResult = null;
         EntityManager result = instance.getEntityManager();
         assertEquals(expResult, result);
@@ -63,118 +62,123 @@ public class UserJpaControllerTest {
     }
 
     /**
-     * Test of create method, of class UserJpaController.
+     * Test of create method, of class RequestTypeJpaController.
      */
     @Test
     public void testCreate() {
         System.out.println("create");
-        String username = "Test User1";
-        boolean isEnable = true;
-        User user = new User();
-        user.setUsername(username);
-        user.setEnabled(isEnable);
+        RequestType requestType = new RequestType();
+        requestType.setCd("CV");
+        requestType.setName("Công việc");
+        requestType.setEnabled(true);
         
-        
+
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
-        UserJpaController daoCtrl = new UserJpaController(emf);
-        daoCtrl.create(user);
+        RequestTypeJpaController daoCtrl = new RequestTypeJpaController(emf);
+        daoCtrl.create(requestType);
         
-        System.out.println("Created user id:" + user.getId());
-        assertNotNull(user.getId());
+        requestType.setId(null);
+        requestType.setCd("QD");
+        requestType.setName("Quy định");
+        daoCtrl.create(requestType);
+
+        requestType.setId(null);
+        requestType.setCd("TB");
+        requestType.setName("Thông báo");
+        daoCtrl.create(requestType);
         
-        // Find created user
-        User createdUser = daoCtrl.findUser(user.getId());
-        assertEquals(username, createdUser.getUsername());
-        assertEquals(isEnable, createdUser.getEnabled());
-        // Expected
+        requestType.setId(null);
+        requestType.setCd("NP");
+        requestType.setName("Nghỉ phép");
+        daoCtrl.create(requestType);
         
-        try {
-            daoCtrl.destroy(user.getId());
-        } catch (NonexistentEntityException ex) {
-            fail(ex.getMessage());
-        }
+        // Find created request types
+        List<RequestType> requestTypes = daoCtrl.findRequestTypeEntities();
+        assertNotNull(requestTypes);
+        assertEquals(4, requestTypes.size());
+
     }
 
     /**
-     * Test of edit method, of class UserJpaController.
+     * Test of edit method, of class RequestTypeJpaController.
      */
     @Test
     public void testEdit() throws Exception {
         System.out.println("edit");
-        User user = null;
-        UserJpaController instance = null;
-        instance.edit(user);
+        RequestType requestType = null;
+        RequestTypeJpaController instance = null;
+        instance.edit(requestType);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of destroy method, of class UserJpaController.
+     * Test of destroy method, of class RequestTypeJpaController.
      */
     @Test
     public void testDestroy() throws Exception {
         System.out.println("destroy");
         Integer id = null;
-        UserJpaController instance = null;
+        RequestTypeJpaController instance = null;
         instance.destroy(id);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of findUserEntities method, of class UserJpaController.
+     * Test of findRequestTypeEntities method, of class RequestTypeJpaController.
      */
     @Test
-    public void testFindUserEntities_0args() {
-        System.out.println("findUserEntities");
-        UserJpaController instance = null;
-        List<User> expResult = null;
-        List<User> result = instance.findUserEntities();
+    public void testFindRequestTypeEntities_0args() {
+        System.out.println("findRequestTypeEntities");
+        RequestTypeJpaController instance = null;
+        List<RequestType> expResult = null;
+        List<RequestType> result = instance.findRequestTypeEntities();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of findUserEntities method, of class UserJpaController.
+     * Test of findRequestTypeEntities method, of class RequestTypeJpaController.
      */
     @Test
-    public void testFindUserEntities_int_int() {
-        System.out.println("findUserEntities");
+    public void testFindRequestTypeEntities_int_int() {
+        System.out.println("findRequestTypeEntities");
         int maxResults = 0;
         int firstResult = 0;
-        UserJpaController instance = null;
-        List<User> expResult = null;
-        List<User> result = instance.findUserEntities(maxResults, firstResult);
+        RequestTypeJpaController instance = null;
+        List<RequestType> expResult = null;
+        List<RequestType> result = instance.findRequestTypeEntities(maxResults, firstResult);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of findUser method, of class UserJpaController.
+     * Test of findRequestType method, of class RequestTypeJpaController.
      */
     @Test
-    public void testFindUser() {
-        System.out.println("findUser");
+    public void testFindRequestType() {
+        System.out.println("findRequestType");
         Integer id = null;
-        UserJpaController instance = null;
-        User expResult = null;
-        User result = instance.findUser(id);
+        RequestTypeJpaController instance = null;
+        RequestType expResult = null;
+        RequestType result = instance.findRequestType(id);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of getUserCount method, of class UserJpaController.
+     * Test of getRequestTypeCount method, of class RequestTypeJpaController.
      */
     @Test
-    public void testGetUserCount() {
-        System.out.println("getUserCount");
-        UserJpaController instance = null;
+    public void testGetRequestTypeCount() {
+        System.out.println("getRequestTypeCount");
+        RequestTypeJpaController instance = null;
         int expResult = 0;
-        int result = instance.getUserCount();
+        int result = instance.getRequestTypeCount();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

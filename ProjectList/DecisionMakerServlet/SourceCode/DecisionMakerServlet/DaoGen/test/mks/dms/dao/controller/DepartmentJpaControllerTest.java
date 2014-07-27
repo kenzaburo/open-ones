@@ -7,29 +7,22 @@
 package mks.dms.dao.controller;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.User;
-
+import mks.dms.dao.entity.Department;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 /**
  *
  * @author ThachLe
  */
-public class UserJpaControllerTest {
+public class DepartmentJpaControllerTest {
     
-    public UserJpaControllerTest() {
+    public DepartmentJpaControllerTest() {
     }
     
     @BeforeClass
@@ -49,12 +42,12 @@ public class UserJpaControllerTest {
     }
 
     /**
-     * Test of getEntityManager method, of class UserJpaController.
+     * Test of getEntityManager method, of class DepartmentJpaController.
      */
     @Test
     public void testGetEntityManager() {
         System.out.println("getEntityManager");
-        UserJpaController instance = null;
+        DepartmentJpaController instance = null;
         EntityManager expResult = null;
         EntityManager result = instance.getEntityManager();
         assertEquals(expResult, result);
@@ -63,118 +56,98 @@ public class UserJpaControllerTest {
     }
 
     /**
-     * Test of create method, of class UserJpaController.
+     * Test of create method, of class DepartmentJpaController.
      */
     @Test
     public void testCreate() {
         System.out.println("create");
-        String username = "Test User1";
-        boolean isEnable = true;
-        User user = new User();
-        user.setUsername(username);
-        user.setEnabled(isEnable);
-        
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
-        UserJpaController daoCtrl = new UserJpaController(emf);
-        daoCtrl.create(user);
-        
-        System.out.println("Created user id:" + user.getId());
-        assertNotNull(user.getId());
-        
-        // Find created user
-        User createdUser = daoCtrl.findUser(user.getId());
-        assertEquals(username, createdUser.getUsername());
-        assertEquals(isEnable, createdUser.getEnabled());
-        // Expected
-        
-        try {
-            daoCtrl.destroy(user.getId());
-        } catch (NonexistentEntityException ex) {
-            fail(ex.getMessage());
-        }
-    }
-
-    /**
-     * Test of edit method, of class UserJpaController.
-     */
-    @Test
-    public void testEdit() throws Exception {
-        System.out.println("edit");
-        User user = null;
-        UserJpaController instance = null;
-        instance.edit(user);
+        Department department = null;
+        DepartmentJpaController instance = null;
+        instance.create(department);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of destroy method, of class UserJpaController.
+     * Test of edit method, of class DepartmentJpaController.
+     */
+    @Test
+    public void testEdit() throws Exception {
+        System.out.println("edit");
+        Department department = null;
+        DepartmentJpaController instance = null;
+        instance.edit(department);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of destroy method, of class DepartmentJpaController.
      */
     @Test
     public void testDestroy() throws Exception {
         System.out.println("destroy");
         Integer id = null;
-        UserJpaController instance = null;
+        DepartmentJpaController instance = null;
         instance.destroy(id);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of findUserEntities method, of class UserJpaController.
+     * Test of findDepartmentEntities method, of class DepartmentJpaController.
      */
     @Test
-    public void testFindUserEntities_0args() {
-        System.out.println("findUserEntities");
-        UserJpaController instance = null;
-        List<User> expResult = null;
-        List<User> result = instance.findUserEntities();
+    public void testFindDepartmentEntities_0args() {
+        System.out.println("findDepartmentEntities");
+        DepartmentJpaController instance = null;
+        List<Department> expResult = null;
+        List<Department> result = instance.findDepartmentEntities();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of findUserEntities method, of class UserJpaController.
+     * Test of findDepartmentEntities method, of class DepartmentJpaController.
      */
     @Test
-    public void testFindUserEntities_int_int() {
-        System.out.println("findUserEntities");
+    public void testFindDepartmentEntities_int_int() {
+        System.out.println("findDepartmentEntities");
         int maxResults = 0;
         int firstResult = 0;
-        UserJpaController instance = null;
-        List<User> expResult = null;
-        List<User> result = instance.findUserEntities(maxResults, firstResult);
+        DepartmentJpaController instance = null;
+        List<Department> expResult = null;
+        List<Department> result = instance.findDepartmentEntities(maxResults, firstResult);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of findUser method, of class UserJpaController.
+     * Test of findDepartment method, of class DepartmentJpaController.
      */
     @Test
-    public void testFindUser() {
-        System.out.println("findUser");
+    public void testFindDepartment() {
+        System.out.println("findDepartment");
         Integer id = null;
-        UserJpaController instance = null;
-        User expResult = null;
-        User result = instance.findUser(id);
+        DepartmentJpaController instance = null;
+        Department expResult = null;
+        Department result = instance.findDepartment(id);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of getUserCount method, of class UserJpaController.
+     * Test of getDepartmentCount method, of class DepartmentJpaController.
      */
     @Test
-    public void testGetUserCount() {
-        System.out.println("getUserCount");
-        UserJpaController instance = null;
+    public void testGetDepartmentCount() {
+        System.out.println("getDepartmentCount");
+        DepartmentJpaController instance = null;
         int expResult = 0;
-        int result = instance.getUserCount();
+        int result = instance.getDepartmentCount();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
