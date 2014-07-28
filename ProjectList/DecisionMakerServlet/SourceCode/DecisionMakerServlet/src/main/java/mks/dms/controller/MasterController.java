@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,4 +59,17 @@ public class MasterController {
         return result;
     }
 
+    @RequestMapping(value = "master.department.getNodeRoot", method = RequestMethod.GET)
+    public @ResponseBody String getRootDepartment() {
+        String jsonData = masterService.getRootDepartmentJson();
+        
+        return jsonData;
+    }
+    
+    @RequestMapping(value = "master.department.getNodeChildren", method = RequestMethod.GET)
+    public @ResponseBody String returnNode(@RequestParam("parentId") String parentDepartmentId) {
+        String jsonData = masterService.getDepartmentJson(parentDepartmentId);
+        
+        return jsonData;
+    }
 }

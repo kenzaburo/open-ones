@@ -18,6 +18,7 @@
  */
 package mks.dms.service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,8 +30,11 @@ import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.model.DepartmentModel;
+import mks.dms.model.MasterNode;
 
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
 
 /**
  * @author ThachLN
@@ -96,6 +100,38 @@ public class MasterService {
         }
         
         return false;
+    }
+
+    public String getRootDepartmentJson() {
+        List<MasterNode> beans = new ArrayList<MasterNode>();
+
+        MasterNode department = new MasterNode();
+        department.setId("root");
+        department.setType("#");
+        department.setChildren(null);
+        department.setText("MyCompany");
+        beans.add(department);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(beans);;
+
+        return json;
+    }
+
+    public String getDepartmentJson(String parentDepartmentId) {
+        List<MasterNode> beans = new ArrayList<MasterNode>();
+
+        MasterNode department = new MasterNode();
+        department.setId("sub-department");
+        department.setType("file");
+        department.setChildren(null);
+        department.setText("Sub department");
+        beans.add(department);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(beans);;
+
+        return json;
     }
     
 

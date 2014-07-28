@@ -11,12 +11,12 @@
 <link rel="stylesheet" media="screen" href="resources/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
 
 <link rel="stylesheet" href="resources/jstree/themes/default/style.min.css" />
-
+<script src="resources/jstree/jstree.min.js"></script>
 
 <form:form action="saveMasterDepartment" method="POST">
-  <div id="jstree_demo_div">
+  <div id="jstree_demo_div" class="col_3">
   </div>
-  <div>
+  <div class="col_9">
     <div>
       <label for="parentDepartment">Chọn phòng ban</label>
        <form:select id="parentDepartment" path="parentDepartment">
@@ -31,6 +31,51 @@
     </div>
   </div>
 </form:form>
+<script>
+  $(function () {
+    $('#jstree_demo_div').jstree({
+    		  "core" : {
+    			    "animation" : 0,
+    			    "check_callback" : true,
+    			    "themes" : { "stripes" : true },
+    			    'data' : {
+    			      'url' : function (node) {
+    			        return node.id === '#' ?
+    			          'master.department.getNodeRoot' : 'master.department.getNodeChildren';
+    			      },
+    			      'dataType' : 'JSON',
+    			      'data' : function (node) {
+    			        return { 'id' : node.id };
+    			      }
+    			    }
+    			  },
+    			  "types" : {
+    			    "#" : {
+    			      "max_children" : 1, 
+    			      "max_depth" : 4, 
+    			      "valid_children" : ["root"]
+    			    },
+    			    "root" : {
+    			      "icon" : "/static/3.0.2/assets/images/tree_icon.png",
+    			      "valid_children" : ["default"]
+    			    },
+    			    "default" : {
+    			      "valid_children" : ["default","file"]
+    			    },
+    			    "file" : {
+    			      "icon" : "glyphicon glyphicon-file",
+    			      "valid_children" : []
+    			    }
+    			  },
+    			  "plugins" : [
+    			    "contextmenu", "dnd", "search",
+    			    "state", "types", "wholerow"
+    			  ]
+    }      
+    );
+    }
+  );
+</script>
 
 <script>
     $(document).ready(function() {
