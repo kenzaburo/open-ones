@@ -9,7 +9,14 @@
 
 <link rel="stylesheet" media="screen" href="resources/handsontable/jquery.handsontable.full.css">
 <link rel="stylesheet" media="screen" href="resources/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
+
+<link rel="stylesheet" href="resources/jstree/themes/default/style.min.css" />
+
+
 <form:form action="saveMasterDepartment" method="POST">
+  <div id="jstree_demo_div">
+  </div>
+  <div>
     <div>
       <label for="parentDepartment">Chọn phòng ban</label>
        <form:select id="parentDepartment" path="parentDepartment">
@@ -22,7 +29,8 @@
         <div id="separator"></div>
         <a id="save" class="button" href="master.department">Lưu</a>
     </div>
-</</form:form>
+  </div>
+</form:form>
 
 <script>
     $(document).ready(function() {

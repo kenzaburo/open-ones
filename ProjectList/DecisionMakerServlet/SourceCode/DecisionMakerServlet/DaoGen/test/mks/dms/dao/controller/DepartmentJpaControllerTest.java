@@ -7,13 +7,19 @@
 package mks.dms.dao.controller;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import mks.dms.dao.entity.Department;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -21,6 +27,7 @@ import static org.junit.Assert.*;
  * @author ThachLe
  */
 public class DepartmentJpaControllerTest {
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
     
     public DepartmentJpaControllerTest() {
     }
@@ -61,11 +68,10 @@ public class DepartmentJpaControllerTest {
     @Test
     public void testCreate() {
         System.out.println("create");
-        Department department = null;
-        DepartmentJpaController instance = null;
-        instance.create(department);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Department department = new Department();
+        DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
+        
+        daoCtrl.create(department);
     }
 
     /**

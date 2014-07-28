@@ -49,6 +49,8 @@ public class MasterController {
         List<Object[]> data = request.getData();
         String parentDepartment = request.getParentDepartment();
 
+        boolean createOK = masterService.createDepartment(parentDepartment, data);
+        
         MasterDepartmentResult result = new MasterDepartmentResult(parentDepartment, data);
         LOG.debug("parentDepartment=" + parentDepartment);
         LOG.debug("data=" + data);
