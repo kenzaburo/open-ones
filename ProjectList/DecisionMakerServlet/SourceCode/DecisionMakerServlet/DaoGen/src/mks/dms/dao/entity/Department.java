@@ -36,6 +36,17 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Department.findByDescription", query = "SELECT d FROM Department d WHERE d.description = :description"),
     @NamedQuery(name = "Department.findByEnabled", query = "SELECT d FROM Department d WHERE d.enabled = :enabled")})
 public class Department implements Serializable {
+    @Column(name = "MANAGER_ID")
+    private Integer managerId;
+    @Column(name = "MANAGER_ACCOUNT")
+    private String managerAccount;
+    @Column(name = "MANAGER_NAME")
+    private String managerName;
+    @Basic(optional = false)
+    @Column(name = "PARENTID")
+    private int parentid;
+    @Column(name = "PARENTCD")
+    private String parentcd;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -132,6 +143,46 @@ public class Department implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.Department[ id=" + id + " ]";
+    }
+
+    public int getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(int parentid) {
+        this.parentid = parentid;
+    }
+
+    public String getParentcd() {
+        return parentcd;
+    }
+
+    public void setParentcd(String parentcd) {
+        this.parentcd = parentcd;
+    }
+
+    public Integer getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Integer managerId) {
+        this.managerId = managerId;
+    }
+
+    public String getManagerAccount() {
+        return managerAccount;
+    }
+
+    public void setManagerAccount(String managerAccount) {
+        this.managerAccount = managerAccount;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
     }
     
 }
