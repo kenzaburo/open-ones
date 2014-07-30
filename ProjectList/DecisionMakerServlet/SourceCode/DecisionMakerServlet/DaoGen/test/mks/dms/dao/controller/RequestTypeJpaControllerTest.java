@@ -74,7 +74,6 @@ public class RequestTypeJpaControllerTest {
         requestType.setEnabled(true);
         
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
         RequestTypeJpaController daoCtrl = new RequestTypeJpaController(emf);
         daoCtrl.create(requestType);
         
