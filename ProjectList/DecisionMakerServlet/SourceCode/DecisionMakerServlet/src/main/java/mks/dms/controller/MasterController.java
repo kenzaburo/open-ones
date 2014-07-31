@@ -2,6 +2,7 @@ package mks.dms.controller;
 
 import java.util.List;
 
+import mks.dms.dao.entity.Department;
 import mks.dms.model.DepartmentModel;
 import mks.dms.model.MasterDepartmentRequest;
 import mks.dms.model.MasterDepartmentResult;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.Gson;
 
 /**
  * @author ThachLe
@@ -38,8 +41,15 @@ public class MasterController {
         DepartmentModel departModel = new DepartmentModel(); 
         ModelAndView mav = new ModelAndView("master.department", "command", departModel);
 
-        String jsonData = masterService.getMasters();
-        mav.addObject("jsonData", jsonData);
+        List<Department> lstDepartments = masterService.getDepartments();
+        Gson gson = new Gson();
+        String jsonDepartments = gson.toJson(lstDepartments);
+        
+        LOG.debug("jsonDepartments=" + jsonDepartments);
+        
+        departModel.setDepartments(lstDepartments);
+        
+        mav.addObject("jsonDepartments", jsonDepartments);
         
         return mav;
     }

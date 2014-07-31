@@ -26,6 +26,8 @@
 
     <div>
         <div id="dataTable"></div>
+<%--         <form:input type="hidden" id="initDepartmentData" path="jsonDepartments"/> --%>
+<input type="hidden" id="initDepartmentData" value="[['','','','']]"/>
         <div id="separator"></div>
         <a id="save" class="button" href="master.department">Lưu</a>
     </div>
@@ -79,27 +81,10 @@
 
 <script>
     $(document).ready(function() {
-      var departmentData = [
-                  ['', '', '', ''],
-              ];
-//         function createJsonSection(json) {
-//             var jsonObj = [];
-
-//             for (var i in json) {
-//                 var obj = {};
-//                 obj["cd"] = json[i]["cd"];
-//                 obj["name"] = json[i]["name"];
-//                 obj["manager"] = json[i]["manager"];
-//                 obj["note"] = json[i]["note"];
-
-//                 // Skip the empty lines
-//                 if ((obj["cd"]) != null && (obj["name"] != null)) {
-//                   jsonObj.push(obj);
-//                 }
-//             }
-
-//             return jsonObj;
-//         }
+      // var departmentData = $('#initDepartmentData').val();
+      var departmentData = [['','','','']];
+      
+      alert("departmentData=" + departmentData);
 
         var container = $("#dataTable");
         var parent = container.parent();
@@ -114,6 +99,7 @@
             manualColumnResize: true,
             minSpareRows: 1
         });
+
         $("#save").click(function() {
             var tableData = container.handsontable('getData');
 

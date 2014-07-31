@@ -50,11 +50,12 @@ public class MasterService {
     
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
     
-    public String getMasters() {
-        String jsonData = "        ['1', '', '', '']," +
-        "['2008', '10', '11', '2']";
+    public List<Department> getDepartments() {
+        DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
         
-        return jsonData;
+        List<Department> lstDepartments = daoCtrl.findDepartmentEntities();
+        
+        return lstDepartments;
     }
 
     public boolean createDepartment(DepartmentModel departmentModel) {

@@ -19,15 +19,22 @@
 package mks.dms.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import mks.dms.dao.entity.Department;
+import rocky.common.CHARA;
+
+import com.google.gson.Gson;
 
 /**
  * @author ThachLN
  */
 public class DepartmentModel implements Serializable {
     private String parentDepartment;
-    private List<Object[]> data;
-
+    private List<Object[]> data = null;
+    
     public DepartmentModel() {
         // TODO Auto-generated constructor stub
     }
@@ -37,7 +44,15 @@ public class DepartmentModel implements Serializable {
         this.data = data;
     }
 
+    public String getJsonDepartments() {
+        Gson gson = new Gson();
+        
+        String jsonData;
 
+        jsonData = gson.toJson(data);
+        
+        return jsonData;
+    }
     public List<Object[]> getData() {
         return data;
     }
@@ -63,4 +78,37 @@ public class DepartmentModel implements Serializable {
     public void setParentDepartment(String parentDepartment) {
         this.parentDepartment = parentDepartment;
     }
+
+    public void setDepartments(List<Department> lstDepartments) {
+        Iterator<Department> itDepartment = lstDepartments.iterator();
+        
+        Department department;
+        
+        if (data == null) {
+            data = new ArrayList<Object[]>(lstDepartments.size());
+        }
+        Object[] arrObjs;
+        while (itDepartment.hasNext()) {
+            department = itDepartment.next();
+            
+            arrObjs = new Object[4];
+            arrObjs[0] = formatJson(department.getCd());
+            arrObjs[1] = formatJson(department.getName());
+            arrObjs[2] = formatJson(department.getManagerName());
+            arrObjs[3] = formatJson(department.getDescription());
+            
+            data.add(arrObjs);
+        }        
+    }
+
+    private Object formatJson(String text) {
+        if (text == null) {
+            text = CHARA.BLANK;
+        }
+        
+        return text;
+    }
+
+    
+    
 }
