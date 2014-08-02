@@ -113,10 +113,11 @@
                 url: "saveMasterDepartment",
                 data: formDataJson,
                 success: function(res) {
-                    alert(res.data);
+                    alert("After save:" + res.data);
                     window.location = "master.department";
                 },
-                error: function() {
+                error: function(res) {
+                	alert("Lỗi khi lưu dữ liệu. Hãy liên hệ người quản trị hệ thống.Data:" + res.data);
                     window.location = "master.department";
                 }
             });

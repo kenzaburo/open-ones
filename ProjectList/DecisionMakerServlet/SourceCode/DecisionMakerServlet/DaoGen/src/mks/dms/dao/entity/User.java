@@ -34,6 +34,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = "User.findByEnabled", query = "SELECT u FROM User u WHERE u.enabled = :enabled")})
 public class User implements Serializable {
+    @Column(name = "CD")
+    private String cd;
+    @Column(name = "EMAIL")
+    private String email;
+    @Column(name = "DEPARTMENT_ID")
+    private Integer departmentId;
+    @Column(name = "DEPARTMENT_CD")
+    private String departmentCd;
+    @Column(name = "DEPARTMENT_NAME")
+    private String departmentName;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -154,6 +164,46 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.User[ id=" + id + " ]";
+    }
+
+    public String getCd() {
+        return cd;
+    }
+
+    public void setCd(String cd) {
+        this.cd = cd;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentCd() {
+        return departmentCd;
+    }
+
+    public void setDepartmentCd(String departmentCd) {
+        this.departmentCd = departmentCd;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
     
 }

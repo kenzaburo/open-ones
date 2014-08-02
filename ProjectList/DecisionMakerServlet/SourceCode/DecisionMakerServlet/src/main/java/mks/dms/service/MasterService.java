@@ -28,7 +28,6 @@ import javax.persistence.Persistence;
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
-import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.model.DepartmentModel;
@@ -163,29 +162,28 @@ public class MasterService {
         rootDepartment.setChildren(beans);
         rootDepartment.setText("MyCompany");
 
-
-        MasterNode subDepartment = new MasterNode();
-        subDepartment.setId("node1.1");
-        subDepartment.setType("file");
-        subDepartment.setChildren(null);
-        subDepartment.setText("Phòng Kế Toán");
-        
-        beans.add(subDepartment);
-        
-        // Node 1.2
-        subDepartment = new MasterNode();
-        subDepartment.setId("node1.2");
-        subDepartment.setType("file");
-        subDepartment.setChildren(null);
-        subDepartment.setText("Kho");
-        
-        beans.add(subDepartment);
-        // Add sub node
-        //
+        // Get departments
+        List<Department> lstDepartments = getDepartments();
+        Iterator<Department> itDepartment = lstDepartments.iterator();
+        Department department;
+        MasterNode subDepartment;
+        while (itDepartment.hasNext()) {
+            department = itDepartment.next();
+            
+            // Convert entity to node
+            subDepartment = new MasterNode();
+            subDepartment.setId(String.valueOf(department.getId()));
+            subDepartment.setType("file");
+            subDepartment.setChildren(null);
+            subDepartment.setText(department.getName());
+            
+            beans.add(subDepartment);
+        }
+        // Parse object to json data
         Gson gson = new Gson();
-        String json = gson.toJson(rootDepartment);;
+        String jsonData = gson.toJson(rootDepartment);;
 
-        return json;
+        return jsonData;
     }
 
     public String getDepartmentJson(String parentDepartmentId) {

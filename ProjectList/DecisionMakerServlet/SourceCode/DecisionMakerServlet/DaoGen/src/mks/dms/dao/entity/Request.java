@@ -60,6 +60,15 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByLastmodifiedbyName", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
     @NamedQuery(name = "Request.findByLastmodifiedbyAccount", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Request implements Serializable {
+    @Lob
+    @Column(name = "ATTACHMENT1")
+    private byte[] attachment1;
+    @Lob
+    @Column(name = "ATTACHMENT2")
+    private byte[] attachment2;
+    @Lob
+    @Column(name = "ATTACHMENT3")
+    private byte[] attachment3;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,15 +106,6 @@ public class Request implements Serializable {
     private Integer planeffort;
     @Column(name = "PLANUNIT")
     private String planunit;
-    @Lob
-    @Column(name = "ATTACHMENT1")
-    private byte[] attachment1;
-    @Lob
-    @Column(name = "ATTACHMENT2")
-    private byte[] attachment2;
-    @Lob
-    @Column(name = "ATTACHMENT3")
-    private byte[] attachment3;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -271,29 +271,6 @@ public class Request implements Serializable {
         this.planunit = planunit;
     }
 
-    public byte[] getAttachment1() {
-        return attachment1;
-    }
-
-    public void setAttachment1(byte[] attachment1) {
-        this.attachment1 = attachment1;
-    }
-
-    public byte[] getAttachment2() {
-        return attachment2;
-    }
-
-    public void setAttachment2(byte[] attachment2) {
-        this.attachment2 = attachment2;
-    }
-
-    public byte[] getAttachment3() {
-        return attachment3;
-    }
-
-    public void setAttachment3(byte[] attachment3) {
-        this.attachment3 = attachment3;
-    }
 
     public Date getCreated() {
         return created;
@@ -415,6 +392,30 @@ public class Request implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.Request[ id=" + id + " ]";
+    }
+
+    public byte[] getAttachment1() {
+        return attachment1;
+    }
+
+    public void setAttachment1(byte[] attachment1) {
+        this.attachment1 = attachment1;
+    }
+
+    public byte[] getAttachment2() {
+        return attachment2;
+    }
+
+    public void setAttachment2(byte[] attachment2) {
+        this.attachment2 = attachment2;
+    }
+
+    public byte[] getAttachment3() {
+        return attachment3;
+    }
+
+    public void setAttachment3(byte[] attachment3) {
+        this.attachment3 = attachment3;
     }
     
 }

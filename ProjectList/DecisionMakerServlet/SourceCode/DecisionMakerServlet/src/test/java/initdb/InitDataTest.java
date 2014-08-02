@@ -8,6 +8,7 @@ package initdb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -15,7 +16,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import mks.dms.dao.controller.RequestTypeJpaController;
+import mks.dms.dao.controller.UserJpaController;
+import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.RequestType;
+import mks.dms.dao.entity.User;
 
 import org.junit.Test;
 
@@ -63,6 +67,30 @@ public class InitDataTest {
         List<RequestType> requestTypes = daoCtrl.findRequestTypeEntities();
         assertNotNull(requestTypes);
         assertEquals(4, requestTypes.size());
+
+    }
+
+    @Test
+    public void testInitCreateUser() {
+        System.out.println("create");
+        String username = "user";
+        boolean isEnable = true;
+        User user = new User();
+        user.setCd("001");
+        user.setUsername(username);
+        user.setEnabled(isEnable);
+        user.setEmail("abc@gmail.com");
+        
+        UserJpaController daoCtrl = new UserJpaController(emf);
+        daoCtrl.create(user);
+
+        System.out.println("Created user id:" + user.getId());
+        assertNotNull(user.getId());
+        
+        // Find created user
+        User createdUser = daoCtrl.findUser(user.getId());
+        assertEquals(username, createdUser.getUsername());
+        assertEquals(isEnable, createdUser.getEnabled());
 
     }
 
