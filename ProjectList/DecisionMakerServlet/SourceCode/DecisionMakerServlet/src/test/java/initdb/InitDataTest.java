@@ -79,7 +79,7 @@ public class InitDataTest {
         user.setCd("001");
         user.setUsername(username);
         user.setEnabled(isEnable);
-        user.setEmail("abc@gmail.com");
+        user.setEmail("user@gmail.com");
         
         UserJpaController daoCtrl = new UserJpaController(emf);
         daoCtrl.create(user);
