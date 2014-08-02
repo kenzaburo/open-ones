@@ -117,7 +117,7 @@
                     window.location = "master.department";
                 },
                 error: function(res) {
-                	alert("Lỗi khi lưu dữ liệu. Hãy liên hệ người quản trị hệ thống.Data:" + res.data);
+                	// alert("Lỗi khi lưu dữ liệu. Hãy liên hệ người quản trị hệ thống.Data:" + res.data);
                     window.location = "master.department";
                 }
             });
