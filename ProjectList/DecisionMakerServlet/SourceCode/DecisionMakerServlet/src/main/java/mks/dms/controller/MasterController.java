@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import rocky.common.CHARA;
+import rocky.common.CommonUtil;
+
 import com.google.gson.Gson;
 
 /**
@@ -40,23 +43,13 @@ public class MasterController {
     public ModelAndView masterDepartment(Model model) {
         DepartmentModel departModel = new DepartmentModel(); 
         ModelAndView mav = new ModelAndView("master.department", "command", departModel);
-
-        List<Department> lstDepartments = masterService.getDepartments();
-        Gson gson = new Gson();
-        String jsonDepartments = gson.toJson(lstDepartments);
-        
-        LOG.debug("jsonDepartments=" + jsonDepartments);
-        
-        departModel.setDepartments(lstDepartments);
-        
-        mav.addObject("jsonDepartments", jsonDepartments);
         
         return mav;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "saveMasterDepartment")
     @ResponseBody
-    public MasterDepartmentResult process(@RequestBody MasterDepartmentRequest request) {
+    public MasterDepartmentResult processSaveDepartment(@RequestBody MasterDepartmentRequest request) {
         List<Object[]> data = request.getData();
         String parentDepartment = request.getParentDepartment();
 
@@ -69,6 +62,32 @@ public class MasterController {
         return result;
     }
 
+    /**
+    * Provide array of department.
+    * @return
+    */
+    @RequestMapping(value = "master.department.load", method = RequestMethod.GET)
+    public @ResponseBody String loadDepartment() {
+        DepartmentModel departModel = new DepartmentModel(); 
+
+        List<Department> lstDepartments = masterService.getDepartments();
+        
+        if (!CommonUtil.isNNandNB(lstDepartments)) {
+            Department department = new Department();
+            department.setCd(CHARA.BLANK);
+            department.setName(CHARA.BLANK);
+            // Add an empty
+            lstDepartments.add(department );
+        }
+        departModel.setDepartments(lstDepartments);
+
+        String jsonData = departModel.getJsonDepartments();
+
+        LOG.debug("jsonData=" + jsonData);
+        
+        return jsonData;
+    }
+    
     @RequestMapping(value = "master.department.getNodeRoot", method = RequestMethod.GET)
     public @ResponseBody String getRootDepartment() {
         String jsonData = masterService.getRootDepartmentJson();

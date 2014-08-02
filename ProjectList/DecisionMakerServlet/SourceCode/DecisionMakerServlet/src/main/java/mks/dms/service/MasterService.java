@@ -37,6 +37,8 @@ import mks.dms.model.MasterNode;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import rocky.common.CHARA;
+
 import com.google.gson.Gson;
 
 /**
@@ -97,27 +99,26 @@ public class MasterService {
     * @return
     */
     public boolean createDepartment(String parentCd, List<Object[]> data) {
-        Object[] rowData;
         Iterator<Object[]> itRowData = data.iterator();
         
         ExDepartmentJpaController daoCtrl = new ExDepartmentJpaController(emf);
 
+        List<Department> lstDepartment = new ArrayList<Department>();
         Department department;
         String cd;
         String name;
         String manager;
         String note;
         Object[] dataRow;
-        boolean isExisted;
+
         while (itRowData.hasNext()) {
             dataRow = itRowData.next();
             
             if (isNotEmptyRow(dataRow)) {
-                rowData = itRowData.next();
-                cd = (String) rowData[0];
-                name = (String) rowData[1];
-                manager = (String) rowData[2];
-                note = (String) rowData[3];
+                cd = (String) dataRow[0];
+                name = (String) dataRow[1];
+                manager = (String) dataRow[2];
+                note = (String) dataRow[3];
 
                 department = new Department();
                 department.setCd(cd);
@@ -125,22 +126,15 @@ public class MasterService {
                 department.setDescription(note);
                 department.setParentcd(parentCd);
 
-                isExisted = daoCtrl.findDepartmentByCd(cd);
-                if (isExisted) {
-                    try {
-                        daoCtrl.edit(department);
-                    } catch (NonexistentEntityException ex) {
-                        LOG.error("Could not update department", ex);
-                    } catch (Exception ex) {
-                        LOG.error("Could not update department", ex);
-                    }
-                } else {
-                    daoCtrl.create(department);
-                }
+                lstDepartment.add(department);
             }
         }
         
-        return true;
+        //
+        boolean createdOK = daoCtrl.recreateAll(lstDepartment);
+        
+        
+        return createdOK;
     }
     
     /**
@@ -152,7 +146,7 @@ public class MasterService {
         int len = (dataRow != null) ? dataRow.length : 0;
         
         for (int i = 0; i < len; i++) {
-            if (dataRow[i] != null) {
+            if ((dataRow[i] != null) && !CHARA.BLANK.equals(dataRow[i])) {
                 return true;
             }
         }
@@ -163,15 +157,33 @@ public class MasterService {
     public String getRootDepartmentJson() {
         List<MasterNode> beans = new ArrayList<MasterNode>();
 
-        MasterNode department = new MasterNode();
-        department.setId("root");
-        department.setType("#");
-        department.setChildren(null);
-        department.setText("MyCompany");
-        beans.add(department);
+        MasterNode rootDepartment = new MasterNode();
+        rootDepartment.setId("root");
+        rootDepartment.setType("#");
+        rootDepartment.setChildren(beans);
+        rootDepartment.setText("MyCompany");
 
+
+        MasterNode subDepartment = new MasterNode();
+        subDepartment.setId("node1.1");
+        subDepartment.setType("file");
+        subDepartment.setChildren(null);
+        subDepartment.setText("Phòng Kế Toán");
+        
+        beans.add(subDepartment);
+        
+        // Node 1.2
+        subDepartment = new MasterNode();
+        subDepartment.setId("node1.2");
+        subDepartment.setType("file");
+        subDepartment.setChildren(null);
+        subDepartment.setText("Kho");
+        
+        beans.add(subDepartment);
+        // Add sub node
+        //
         Gson gson = new Gson();
-        String json = gson.toJson(beans);;
+        String json = gson.toJson(rootDepartment);;
 
         return json;
     }

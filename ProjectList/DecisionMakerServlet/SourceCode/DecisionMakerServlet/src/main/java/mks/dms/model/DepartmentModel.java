@@ -51,6 +51,14 @@ public class DepartmentModel implements Serializable {
 
         jsonData = gson.toJson(data);
         
+        // add prefix
+        StringBuffer sb = new StringBuffer();
+        sb.append("{ \"data\": ")
+          .append(jsonData)
+          .append("}");
+        
+        jsonData = sb.toString();
+
         return jsonData;
     }
     public List<Object[]> getData() {

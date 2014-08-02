@@ -27,7 +27,7 @@
     <div>
         <div id="dataTable"></div>
 <%--         <form:input type="hidden" id="initDepartmentData" path="jsonDepartments"/> --%>
-<input type="hidden" id="initDepartmentData" value="[['','','','']]"/>
+<!-- <input type="hidden" id="initDepartmentData" value="[['','','','']]"/> -->
         <div id="separator"></div>
         <a id="save" class="button" href="master.department">Lưu</a>
     </div>
@@ -82,14 +82,13 @@
 <script>
     $(document).ready(function() {
       // var departmentData = $('#initDepartmentData').val();
-      var departmentData = [['','','','']];
+//       var departmentData = [['','','','']];
       
-      alert("departmentData=" + departmentData);
+//       alert("departmentData=" + departmentData);
 
         var container = $("#dataTable");
         var parent = container.parent();
         container.handsontable({
-            data: departmentData,
             startRows: 5,
             // dataShema: [cd: null, name: null, manager: null, note: null],
             startCols: 4,
@@ -106,8 +105,6 @@
             var parentDepartment = $('#parentDepartment').val();
 
             var formDataJson = JSON.stringify({"parentDepartment": parentDepartment,  "data":tableData});
-
-            alert("formDataJson=" + formDataJson);
             
             $.ajax({
                 type: "POST",
@@ -124,5 +121,21 @@
                 }
             });
         });
+
+        // Load current data of department
+        $.ajax({
+            url: "master.department.load",
+            dataType: 'json',
+            type: 'GET',
+            success: function (res) {
+              var handsontable = container.data('handsontable');
+              handsontable.loadData(res.data);
+            },
+            error: function() {
+            	alert("Không thể lấy dữ liệu của Phòng ban. Hãy liên hệ người quản trị hệ thống.");
+            }
+          });
     });
+
+
 </script>
