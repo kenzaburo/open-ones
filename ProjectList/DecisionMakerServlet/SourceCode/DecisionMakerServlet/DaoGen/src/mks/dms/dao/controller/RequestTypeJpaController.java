@@ -19,7 +19,7 @@ import mks.dms.dao.entity.RequestType;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 public class RequestTypeJpaController implements Serializable {
 

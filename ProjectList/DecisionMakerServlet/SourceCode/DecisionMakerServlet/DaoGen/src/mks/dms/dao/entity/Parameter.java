@@ -7,6 +7,7 @@
 package mks.dms.dao.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,6 +37,25 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Parameter.findByDescription", query = "SELECT p FROM Parameter p WHERE p.description = :description"),
     @NamedQuery(name = "Parameter.findByEnabled", query = "SELECT p FROM Parameter p WHERE p.enabled = :enabled")})
 public class Parameter implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "CREATED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+    @Column(name = "CREATEDBY_ID")
+    private Integer createdbyId;
+    @Column(name = "CREATEDBY_ACCOUNT")
+    private String createdbyAccount;
+    @Column(name = "CREATEDBY_NAME")
+    private String createdbyName;
+    @Column(name = "LASTMODIFIED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastmodified;
+    @Column(name = "LASTMODIFIEDBY_ID")
+    private Integer lastmodifiedbyId;
+    @Column(name = "LASTMODIFIEDBY_NAME")
+    private String lastmodifiedbyName;
+    @Column(name = "LASTMODIFIEDBY_ACCOUNT")
+    private String lastmodifiedbyAccount;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -129,6 +151,70 @@ public class Parameter implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.Parameter[ id=" + id + " ]";
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Integer getCreatedbyId() {
+        return createdbyId;
+    }
+
+    public void setCreatedbyId(Integer createdbyId) {
+        this.createdbyId = createdbyId;
+    }
+
+    public String getCreatedbyAccount() {
+        return createdbyAccount;
+    }
+
+    public void setCreatedbyAccount(String createdbyAccount) {
+        this.createdbyAccount = createdbyAccount;
+    }
+
+    public String getCreatedbyName() {
+        return createdbyName;
+    }
+
+    public void setCreatedbyName(String createdbyName) {
+        this.createdbyName = createdbyName;
+    }
+
+    public Date getLastmodified() {
+        return lastmodified;
+    }
+
+    public void setLastmodified(Date lastmodified) {
+        this.lastmodified = lastmodified;
+    }
+
+    public Integer getLastmodifiedbyId() {
+        return lastmodifiedbyId;
+    }
+
+    public void setLastmodifiedbyId(Integer lastmodifiedbyId) {
+        this.lastmodifiedbyId = lastmodifiedbyId;
+    }
+
+    public String getLastmodifiedbyName() {
+        return lastmodifiedbyName;
+    }
+
+    public void setLastmodifiedbyName(String lastmodifiedbyName) {
+        this.lastmodifiedbyName = lastmodifiedbyName;
+    }
+
+    public String getLastmodifiedbyAccount() {
+        return lastmodifiedbyAccount;
+    }
+
+    public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
+        this.lastmodifiedbyAccount = lastmodifiedbyAccount;
     }
     
 }

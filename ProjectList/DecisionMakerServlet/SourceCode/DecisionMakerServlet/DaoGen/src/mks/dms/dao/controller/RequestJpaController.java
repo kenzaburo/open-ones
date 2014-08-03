@@ -25,7 +25,7 @@ import mks.dms.dao.entity.Request;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 public class RequestJpaController implements Serializable {
 

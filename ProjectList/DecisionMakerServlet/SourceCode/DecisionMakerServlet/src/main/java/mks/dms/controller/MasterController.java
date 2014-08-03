@@ -5,7 +5,6 @@ import java.util.List;
 import mks.dms.dao.entity.Department;
 import mks.dms.model.DepartmentModel;
 import mks.dms.model.MasterDepartmentRequest;
-import mks.dms.model.MasterDepartmentResult;
 import mks.dms.service.MasterService;
 
 import org.apache.log4j.Logger;
@@ -21,8 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import rocky.common.CHARA;
 import rocky.common.CommonUtil;
-
-import com.google.gson.Gson;
 
 /**
  * @author ThachLe
@@ -49,17 +46,18 @@ public class MasterController {
 
     @RequestMapping(method = RequestMethod.POST, value = "saveMasterDepartment")
     @ResponseBody
-    public MasterDepartmentResult processSaveDepartment(@RequestBody MasterDepartmentRequest request) {
+    public String processSaveDepartment(@RequestBody MasterDepartmentRequest request) {
         List<Object[]> data = request.getData();
         String parentDepartment = request.getParentDepartment();
 
         boolean createOK = masterService.createDepartment(parentDepartment, data);
         
-        MasterDepartmentResult result = new MasterDepartmentResult(parentDepartment, data);
         LOG.debug("parentDepartment=" + parentDepartment);
-        LOG.debug("data=" + data);
+        
+        String jsonRefreshDepartment = getJsonDepartments();
+        LOG.debug("jsonRefreshDepartment=" + jsonRefreshDepartment);
 
-        return result;
+        return jsonRefreshDepartment;
     }
 
     /**
@@ -68,6 +66,10 @@ public class MasterController {
     */
     @RequestMapping(value = "master.department.load", method = RequestMethod.GET)
     public @ResponseBody String loadDepartment() {
+        return getJsonDepartments();
+    }
+    
+    private String getJsonDepartments() {
         DepartmentModel departModel = new DepartmentModel(); 
 
         List<Department> lstDepartments = masterService.getDepartments();
