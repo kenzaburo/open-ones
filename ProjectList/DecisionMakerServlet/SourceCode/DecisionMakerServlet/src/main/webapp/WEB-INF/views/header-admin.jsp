@@ -22,6 +22,7 @@
   <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i>Cấu hình</a>
     <ul>
       <li class="left"><a href="master.department"><i class="icon-sitemap"></i>Phòng ban</a></li>
+      <li class="left"><a href="master.template"><i class="icon-bookmark-empty"></i>Biểu mẫu</a></li>
     </ul>
   </li>
   
