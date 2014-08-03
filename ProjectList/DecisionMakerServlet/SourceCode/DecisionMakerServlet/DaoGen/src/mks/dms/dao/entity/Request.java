@@ -69,6 +69,8 @@ public class Request implements Serializable {
     @Lob
     @Column(name = "ATTACHMENT3")
     private byte[] attachment3;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestId")
+    private Collection<LabelRequest> labelRequestCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -416,6 +418,15 @@ public class Request implements Serializable {
 
     public void setAttachment3(byte[] attachment3) {
         this.attachment3 = attachment3;
+    }
+
+    @XmlTransient
+    public Collection<LabelRequest> getLabelRequestCollection() {
+        return labelRequestCollection;
+    }
+
+    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
+        this.labelRequestCollection = labelRequestCollection;
     }
     
 }

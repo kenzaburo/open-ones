@@ -17,19 +17,12 @@
   <div id="jstree_demo_div" class="col_3">
   </div>
   <div class="col_9">
-    <div>
-      <label for="parentDepartment">Chọn phòng ban</label>
-       <form:select id="parentDepartment" path="parentDepartment">
-        <option value="0">Công ty</option>
-      </form:select>
-    </div>
 
     <div>
+      <label for="templates">Danh sách biểu mẫu</label>
         <div id="dataTable"></div>
-<%--         <form:input type="hidden" id="initDepartmentData" path="jsonDepartments"/> --%>
-<!-- <input type="hidden" id="initDepartmentData" value="[['','','','']]"/> -->
         <div id="separator"></div>
-        <a id="save" class="button" href="master.department">Lưu</a>
+        <a id="save" class="button" href="master.template">Lưu</a>
     </div>
   </div>
 </form:form>
@@ -96,7 +89,7 @@
         $("#save").click(function() {
             var tableData = container.handsontable('getData');
 
-            var parentDepartment = $('#parentDepartment').val();
+            var parentDepartment = '';
 
             var formDataJson = JSON.stringify({"parentDepartment": parentDepartment,  "data":tableData});
             

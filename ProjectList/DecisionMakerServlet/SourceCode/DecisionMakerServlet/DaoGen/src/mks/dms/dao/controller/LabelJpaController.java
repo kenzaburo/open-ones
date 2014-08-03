@@ -7,13 +7,17 @@
 package mks.dms.dao.controller;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import mks.dms.dao.entity.LabelRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Label;
 
@@ -33,11 +37,29 @@ public class LabelJpaController implements Serializable {
     }
 
     public void create(Label label) {
+        if (label.getLabelRequestCollection() == null) {
+            label.setLabelRequestCollection(new ArrayList<LabelRequest>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Collection<LabelRequest> attachedLabelRequestCollection = new ArrayList<LabelRequest>();
+            for (LabelRequest labelRequestCollectionLabelRequestToAttach : label.getLabelRequestCollection()) {
+                labelRequestCollectionLabelRequestToAttach = em.getReference(labelRequestCollectionLabelRequestToAttach.getClass(), labelRequestCollectionLabelRequestToAttach.getId());
+                attachedLabelRequestCollection.add(labelRequestCollectionLabelRequestToAttach);
+            }
+            label.setLabelRequestCollection(attachedLabelRequestCollection);
             em.persist(label);
+            for (LabelRequest labelRequestCollectionLabelRequest : label.getLabelRequestCollection()) {
+                Label oldLabelIdOfLabelRequestCollectionLabelRequest = labelRequestCollectionLabelRequest.getLabelId();
+                labelRequestCollectionLabelRequest.setLabelId(label);
+                labelRequestCollectionLabelRequest = em.merge(labelRequestCollectionLabelRequest);
+                if (oldLabelIdOfLabelRequestCollectionLabelRequest != null) {
+                    oldLabelIdOfLabelRequestCollectionLabelRequest.getLabelRequestCollection().remove(labelRequestCollectionLabelRequest);
+                    oldLabelIdOfLabelRequestCollectionLabelRequest = em.merge(oldLabelIdOfLabelRequestCollectionLabelRequest);
+                }
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -46,12 +68,45 @@ public class LabelJpaController implements Serializable {
         }
     }
 
-    public void edit(Label label) throws NonexistentEntityException, Exception {
+    public void edit(Label label) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Label persistentLabel = em.find(Label.class, label.getId());
+            Collection<LabelRequest> labelRequestCollectionOld = persistentLabel.getLabelRequestCollection();
+            Collection<LabelRequest> labelRequestCollectionNew = label.getLabelRequestCollection();
+            List<String> illegalOrphanMessages = null;
+            for (LabelRequest labelRequestCollectionOldLabelRequest : labelRequestCollectionOld) {
+                if (!labelRequestCollectionNew.contains(labelRequestCollectionOldLabelRequest)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain LabelRequest " + labelRequestCollectionOldLabelRequest + " since its labelId field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Collection<LabelRequest> attachedLabelRequestCollectionNew = new ArrayList<LabelRequest>();
+            for (LabelRequest labelRequestCollectionNewLabelRequestToAttach : labelRequestCollectionNew) {
+                labelRequestCollectionNewLabelRequestToAttach = em.getReference(labelRequestCollectionNewLabelRequestToAttach.getClass(), labelRequestCollectionNewLabelRequestToAttach.getId());
+                attachedLabelRequestCollectionNew.add(labelRequestCollectionNewLabelRequestToAttach);
+            }
+            labelRequestCollectionNew = attachedLabelRequestCollectionNew;
+            label.setLabelRequestCollection(labelRequestCollectionNew);
             label = em.merge(label);
+            for (LabelRequest labelRequestCollectionNewLabelRequest : labelRequestCollectionNew) {
+                if (!labelRequestCollectionOld.contains(labelRequestCollectionNewLabelRequest)) {
+                    Label oldLabelIdOfLabelRequestCollectionNewLabelRequest = labelRequestCollectionNewLabelRequest.getLabelId();
+                    labelRequestCollectionNewLabelRequest.setLabelId(label);
+                    labelRequestCollectionNewLabelRequest = em.merge(labelRequestCollectionNewLabelRequest);
+                    if (oldLabelIdOfLabelRequestCollectionNewLabelRequest != null && !oldLabelIdOfLabelRequestCollectionNewLabelRequest.equals(label)) {
+                        oldLabelIdOfLabelRequestCollectionNewLabelRequest.getLabelRequestCollection().remove(labelRequestCollectionNewLabelRequest);
+                        oldLabelIdOfLabelRequestCollectionNewLabelRequest = em.merge(oldLabelIdOfLabelRequestCollectionNewLabelRequest);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -69,7 +124,7 @@ public class LabelJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -80,6 +135,17 @@ public class LabelJpaController implements Serializable {
                 label.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The label with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            Collection<LabelRequest> labelRequestCollectionOrphanCheck = label.getLabelRequestCollection();
+            for (LabelRequest labelRequestCollectionOrphanCheckLabelRequest : labelRequestCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Label (" + label + ") cannot be destroyed since the LabelRequest " + labelRequestCollectionOrphanCheckLabelRequest + " in its labelRequestCollection field has a non-nullable labelId field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(label);
             em.getTransaction().commit();

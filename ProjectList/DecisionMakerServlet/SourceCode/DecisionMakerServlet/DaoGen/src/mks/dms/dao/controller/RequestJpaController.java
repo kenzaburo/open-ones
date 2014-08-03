@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.LabelRequest;
 import mks.dms.dao.entity.Request;
 
 /**
@@ -41,6 +42,9 @@ public class RequestJpaController implements Serializable {
     public void create(Request request) {
         if (request.getWatcherCollection() == null) {
             request.setWatcherCollection(new ArrayList<Watcher>());
+        }
+        if (request.getLabelRequestCollection() == null) {
+            request.setLabelRequestCollection(new ArrayList<LabelRequest>());
         }
         EntityManager em = null;
         try {
@@ -72,6 +76,12 @@ public class RequestJpaController implements Serializable {
                 attachedWatcherCollection.add(watcherCollectionWatcherToAttach);
             }
             request.setWatcherCollection(attachedWatcherCollection);
+            Collection<LabelRequest> attachedLabelRequestCollection = new ArrayList<LabelRequest>();
+            for (LabelRequest labelRequestCollectionLabelRequestToAttach : request.getLabelRequestCollection()) {
+                labelRequestCollectionLabelRequestToAttach = em.getReference(labelRequestCollectionLabelRequestToAttach.getClass(), labelRequestCollectionLabelRequestToAttach.getId());
+                attachedLabelRequestCollection.add(labelRequestCollectionLabelRequestToAttach);
+            }
+            request.setLabelRequestCollection(attachedLabelRequestCollection);
             em.persist(request);
             if (departmentsId != null) {
                 departmentsId.getRequestCollection().add(request);
@@ -98,6 +108,15 @@ public class RequestJpaController implements Serializable {
                     oldReqIdOfWatcherCollectionWatcher = em.merge(oldReqIdOfWatcherCollectionWatcher);
                 }
             }
+            for (LabelRequest labelRequestCollectionLabelRequest : request.getLabelRequestCollection()) {
+                Request oldRequestIdOfLabelRequestCollectionLabelRequest = labelRequestCollectionLabelRequest.getRequestId();
+                labelRequestCollectionLabelRequest.setRequestId(request);
+                labelRequestCollectionLabelRequest = em.merge(labelRequestCollectionLabelRequest);
+                if (oldRequestIdOfLabelRequestCollectionLabelRequest != null) {
+                    oldRequestIdOfLabelRequestCollectionLabelRequest.getLabelRequestCollection().remove(labelRequestCollectionLabelRequest);
+                    oldRequestIdOfLabelRequestCollectionLabelRequest = em.merge(oldRequestIdOfLabelRequestCollectionLabelRequest);
+                }
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -122,6 +141,8 @@ public class RequestJpaController implements Serializable {
             User assignedIdNew = request.getAssignedId();
             Collection<Watcher> watcherCollectionOld = persistentRequest.getWatcherCollection();
             Collection<Watcher> watcherCollectionNew = request.getWatcherCollection();
+            Collection<LabelRequest> labelRequestCollectionOld = persistentRequest.getLabelRequestCollection();
+            Collection<LabelRequest> labelRequestCollectionNew = request.getLabelRequestCollection();
             List<String> illegalOrphanMessages = null;
             for (Watcher watcherCollectionOldWatcher : watcherCollectionOld) {
                 if (!watcherCollectionNew.contains(watcherCollectionOldWatcher)) {
@@ -129,6 +150,14 @@ public class RequestJpaController implements Serializable {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain Watcher " + watcherCollectionOldWatcher + " since its reqId field is not nullable.");
+                }
+            }
+            for (LabelRequest labelRequestCollectionOldLabelRequest : labelRequestCollectionOld) {
+                if (!labelRequestCollectionNew.contains(labelRequestCollectionOldLabelRequest)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain LabelRequest " + labelRequestCollectionOldLabelRequest + " since its requestId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -157,6 +186,13 @@ public class RequestJpaController implements Serializable {
             }
             watcherCollectionNew = attachedWatcherCollectionNew;
             request.setWatcherCollection(watcherCollectionNew);
+            Collection<LabelRequest> attachedLabelRequestCollectionNew = new ArrayList<LabelRequest>();
+            for (LabelRequest labelRequestCollectionNewLabelRequestToAttach : labelRequestCollectionNew) {
+                labelRequestCollectionNewLabelRequestToAttach = em.getReference(labelRequestCollectionNewLabelRequestToAttach.getClass(), labelRequestCollectionNewLabelRequestToAttach.getId());
+                attachedLabelRequestCollectionNew.add(labelRequestCollectionNewLabelRequestToAttach);
+            }
+            labelRequestCollectionNew = attachedLabelRequestCollectionNew;
+            request.setLabelRequestCollection(labelRequestCollectionNew);
             request = em.merge(request);
             if (departmentsIdOld != null && !departmentsIdOld.equals(departmentsIdNew)) {
                 departmentsIdOld.getRequestCollection().remove(request);
@@ -201,6 +237,17 @@ public class RequestJpaController implements Serializable {
                     }
                 }
             }
+            for (LabelRequest labelRequestCollectionNewLabelRequest : labelRequestCollectionNew) {
+                if (!labelRequestCollectionOld.contains(labelRequestCollectionNewLabelRequest)) {
+                    Request oldRequestIdOfLabelRequestCollectionNewLabelRequest = labelRequestCollectionNewLabelRequest.getRequestId();
+                    labelRequestCollectionNewLabelRequest.setRequestId(request);
+                    labelRequestCollectionNewLabelRequest = em.merge(labelRequestCollectionNewLabelRequest);
+                    if (oldRequestIdOfLabelRequestCollectionNewLabelRequest != null && !oldRequestIdOfLabelRequestCollectionNewLabelRequest.equals(request)) {
+                        oldRequestIdOfLabelRequestCollectionNewLabelRequest.getLabelRequestCollection().remove(labelRequestCollectionNewLabelRequest);
+                        oldRequestIdOfLabelRequestCollectionNewLabelRequest = em.merge(oldRequestIdOfLabelRequestCollectionNewLabelRequest);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -237,6 +284,13 @@ public class RequestJpaController implements Serializable {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Request (" + request + ") cannot be destroyed since the Watcher " + watcherCollectionOrphanCheckWatcher + " in its watcherCollection field has a non-nullable reqId field.");
+            }
+            Collection<LabelRequest> labelRequestCollectionOrphanCheck = request.getLabelRequestCollection();
+            for (LabelRequest labelRequestCollectionOrphanCheckLabelRequest : labelRequestCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Request (" + request + ") cannot be destroyed since the LabelRequest " + labelRequestCollectionOrphanCheckLabelRequest + " in its labelRequestCollection field has a non-nullable requestId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

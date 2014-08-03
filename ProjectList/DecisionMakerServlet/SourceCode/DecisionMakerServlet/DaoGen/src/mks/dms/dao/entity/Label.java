@@ -7,8 +7,10 @@
 package mks.dms.dao.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,10 +18,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,6 +47,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Label.findByLastmodifiedbyName", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyName = :lastmodifiedbyName"),
     @NamedQuery(name = "Label.findByLastmodifiedbyAccount", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Label implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "labelId")
+    private Collection<LabelRequest> labelRequestCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -212,6 +218,15 @@ public class Label implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.Label[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Collection<LabelRequest> getLabelRequestCollection() {
+        return labelRequestCollection;
+    }
+
+    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
+        this.labelRequestCollection = labelRequestCollection;
     }
     
 }
