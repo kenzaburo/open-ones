@@ -39,7 +39,7 @@ public class MasterTemplateController {
     @RequestMapping(value = "master.template", method = RequestMethod.GET)
     public ModelAndView masterDepartment(Model model) {
         DepartmentModel departModel = new DepartmentModel(); 
-        ModelAndView mav = new ModelAndView("master.department", "command", departModel);
+        ModelAndView mav = new ModelAndView("master.template", "command", departModel);
         
         return mav;
     }
