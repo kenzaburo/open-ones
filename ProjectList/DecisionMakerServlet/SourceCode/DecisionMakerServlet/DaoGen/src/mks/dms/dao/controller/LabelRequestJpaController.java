@@ -49,6 +49,11 @@ public class LabelRequestJpaController implements Serializable {
                 labelId = em.getReference(labelId.getClass(), labelId.getId());
                 labelRequest.setLabelId(labelId);
             }
+            Request reqId = labelRequest.getReqId();
+            if (reqId != null) {
+                reqId = em.getReference(reqId.getClass(), reqId.getId());
+                labelRequest.setReqId(reqId);
+            }
             em.persist(labelRequest);
             if (requestId != null) {
                 requestId.getLabelRequestCollection().add(labelRequest);
@@ -57,6 +62,10 @@ public class LabelRequestJpaController implements Serializable {
             if (labelId != null) {
                 labelId.getLabelRequestCollection().add(labelRequest);
                 labelId = em.merge(labelId);
+            }
+            if (reqId != null) {
+                reqId.getLabelRequestCollection().add(labelRequest);
+                reqId = em.merge(reqId);
             }
             em.getTransaction().commit();
         } finally {
@@ -76,6 +85,8 @@ public class LabelRequestJpaController implements Serializable {
             Request requestIdNew = labelRequest.getRequestId();
             Label labelIdOld = persistentLabelRequest.getLabelId();
             Label labelIdNew = labelRequest.getLabelId();
+            Request reqIdOld = persistentLabelRequest.getReqId();
+            Request reqIdNew = labelRequest.getReqId();
             if (requestIdNew != null) {
                 requestIdNew = em.getReference(requestIdNew.getClass(), requestIdNew.getId());
                 labelRequest.setRequestId(requestIdNew);
@@ -83,6 +94,10 @@ public class LabelRequestJpaController implements Serializable {
             if (labelIdNew != null) {
                 labelIdNew = em.getReference(labelIdNew.getClass(), labelIdNew.getId());
                 labelRequest.setLabelId(labelIdNew);
+            }
+            if (reqIdNew != null) {
+                reqIdNew = em.getReference(reqIdNew.getClass(), reqIdNew.getId());
+                labelRequest.setReqId(reqIdNew);
             }
             labelRequest = em.merge(labelRequest);
             if (requestIdOld != null && !requestIdOld.equals(requestIdNew)) {
@@ -100,6 +115,14 @@ public class LabelRequestJpaController implements Serializable {
             if (labelIdNew != null && !labelIdNew.equals(labelIdOld)) {
                 labelIdNew.getLabelRequestCollection().add(labelRequest);
                 labelIdNew = em.merge(labelIdNew);
+            }
+            if (reqIdOld != null && !reqIdOld.equals(reqIdNew)) {
+                reqIdOld.getLabelRequestCollection().remove(labelRequest);
+                reqIdOld = em.merge(reqIdOld);
+            }
+            if (reqIdNew != null && !reqIdNew.equals(reqIdOld)) {
+                reqIdNew.getLabelRequestCollection().add(labelRequest);
+                reqIdNew = em.merge(reqIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -139,6 +162,11 @@ public class LabelRequestJpaController implements Serializable {
             if (labelId != null) {
                 labelId.getLabelRequestCollection().remove(labelRequest);
                 labelId = em.merge(labelId);
+            }
+            Request reqId = labelRequest.getReqId();
+            if (reqId != null) {
+                reqId.getLabelRequestCollection().remove(labelRequest);
+                reqId = em.merge(reqId);
             }
             em.remove(labelRequest);
             em.getTransaction().commit();

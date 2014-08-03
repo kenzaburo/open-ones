@@ -44,7 +44,7 @@ public class MasterTemplateController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "saveMasterDepartment")
+    @RequestMapping(method = RequestMethod.POST, value = "saveMasterTemplate")
     @ResponseBody
     public String processSaveDepartment(@RequestBody MasterDepartmentRequest request) {
         List<Object[]> data = request.getData();
@@ -64,7 +64,7 @@ public class MasterTemplateController {
     * Provide array of department.
     * @return
     */
-    @RequestMapping(value = "master.department.load", method = RequestMethod.GET)
+    @RequestMapping(value = "master.template.load", method = RequestMethod.GET)
     public @ResponseBody String loadDepartment() {
         return getJsonDepartments();
     }
@@ -89,18 +89,5 @@ public class MasterTemplateController {
         
         return jsonData;
     }
-    
-    @RequestMapping(value = "master.department.getNodeRoot", method = RequestMethod.GET)
-    public @ResponseBody String getRootDepartment() {
-        String jsonData = masterService.getRootDepartmentJson();
-        
-        return jsonData;
-    }
-    
-    @RequestMapping(value = "master.department.getNodeChildren", method = RequestMethod.GET)
-    public @ResponseBody String returnNode(@RequestParam("parentId") String parentDepartmentId) {
-        String jsonData = masterService.getDepartmentJson(parentDepartmentId);
-        
-        return jsonData;
-    }
+
 }

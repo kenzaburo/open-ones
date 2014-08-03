@@ -31,6 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LabelRequest.findAll", query = "SELECT l FROM LabelRequest l"),
     @NamedQuery(name = "LabelRequest.findById", query = "SELECT l FROM LabelRequest l WHERE l.id = :id")})
 public class LabelRequest implements Serializable {
+    @JoinColumn(name = "REQ_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Request reqId;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,6 +101,14 @@ public class LabelRequest implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.LabelRequest[ id=" + id + " ]";
+    }
+
+    public Request getReqId() {
+        return reqId;
+    }
+
+    public void setReqId(Request reqId) {
+        this.reqId = reqId;
     }
     
 }

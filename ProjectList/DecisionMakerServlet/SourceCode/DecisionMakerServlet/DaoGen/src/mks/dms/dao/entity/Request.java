@@ -396,6 +396,16 @@ public class Request implements Serializable {
         return "mks.dms.dao.entity.Request[ id=" + id + " ]";
     }
 
+
+    @XmlTransient
+    public Collection<LabelRequest> getLabelRequestCollection() {
+        return labelRequestCollection;
+    }
+
+    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
+        this.labelRequestCollection = labelRequestCollection;
+    }
+
     public byte[] getAttachment1() {
         return attachment1;
     }
@@ -418,15 +428,6 @@ public class Request implements Serializable {
 
     public void setAttachment3(byte[] attachment3) {
         this.attachment3 = attachment3;
-    }
-
-    @XmlTransient
-    public Collection<LabelRequest> getLabelRequestCollection() {
-        return labelRequestCollection;
-    }
-
-    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
-        this.labelRequestCollection = labelRequestCollection;
     }
     
 }
