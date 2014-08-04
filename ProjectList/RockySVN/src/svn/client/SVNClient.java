@@ -348,12 +348,31 @@ public class SVNClient implements ISVNEventHandler {
 		return -1;
 	}
 
+
+	/**
+	 * @return SVNInfo of the lastest svn Revision
+	 * @throws SVNException
+	 */
 	public SVNInfo getInfo() throws SVNException {
 		if (wcClient == null) {
 			wcClient = getSVNWCClient();
 		}
 
 		SVNRevision revision = SVNRevision.HEAD;
+		File path = new File(wcPath);
+		return wcClient.doInfo(path, revision);
+	}
+	
+	/**
+	 * @return Svninfo of local working directory
+	 * @throws SVNException
+	 */
+	public SVNInfo getLocalInfo() throws SVNException{
+		if (wcClient == null) {
+			wcClient = getSVNWCClient();
+		}
+
+		SVNRevision revision = SVNRevision.WORKING;
 		File path = new File(wcPath);
 		return wcClient.doInfo(path, revision);
 	}

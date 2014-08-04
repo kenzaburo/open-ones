@@ -11,5 +11,10 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/antlr-runtime-3.4.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/rocky-common-0.2.6-20131030135954.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sequence-library-1.0.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/svnkit-1.7.9.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
