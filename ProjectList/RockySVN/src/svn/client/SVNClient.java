@@ -29,6 +29,7 @@ import org.tmatesoft.svn.core.SVNCancelException;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.internal.util.SVNURLUtil;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
 import org.tmatesoft.svn.core.internal.wc17.db.statement.SVNWCDbSchema.WORKING_NODE__Fields;
 import org.tmatesoft.svn.core.wc.ISVNEventHandler;
@@ -40,6 +41,7 @@ import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc2.SvnCheckout;
+import org.tmatesoft.svn.core.wc2.SvnInfo;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 import org.tmatesoft.svn.core.wc2.SvnUpdate;
@@ -357,14 +359,22 @@ public class SVNClient implements ISVNEventHandler {
 		if (wcClient == null) {
 			wcClient = getSVNWCClient();
 		}
-
+		
 		SVNRevision revision = SVNRevision.HEAD;
 		File path = new File(wcPath);
 		return wcClient.doInfo(path, revision);
 	}
 	
+	public Long getLattestRevision() throws SVNException{
+	    if (wcClient == null) {
+            wcClient = getSVNWCClient();
+        }
+	    
+	    return wcClient.doGetRevisionProperty(SVNURL.parseURIEncoded(svnUrl), null, SVNRevision.HEAD, null);
+	}
+	
 	/**
-	 * @return Svninfo of local working directory
+	 * @return SvnInfo of local working directory
 	 * @throws SVNException
 	 */
 	public SVNInfo getLocalInfo() throws SVNException{

@@ -112,6 +112,8 @@ public class SVNClientTest_Linux {
         }
     }
     
+   
+    
     private void analyzeFolder(File file) {
         try {
             LOG.debug("File:" + file.getPath());

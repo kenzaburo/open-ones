@@ -18,7 +18,9 @@
  */
 package svn.client;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.tmatesoft.svn.core.SVNException;
 
 /**
  * @author thachln
@@ -63,5 +65,61 @@ public class SVNClientTest {
         svCln.setWcPath("D:/Project/MyProject/Salary3P");
         
         svCln.doCheckout(svnUrl);
+    }
+    
+    @Test
+    public void testgetLattestRevision() {
+        String svnUrl = "http://gst.fsoft.com.vn/svn/SVNObserver/";
+        String username = "manhp@gmail.com";
+        String password = "abc";
+       SVNClient svnClient = SVNClient.newClientFromUrl(svnUrl, username, password);
+       long r;
+    try {
+        r = svnClient.getLattestRevision();
+        System.out.println("Revision " + r);
+        Assert.assertEquals(5, r);
+    } catch (SVNException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+       
+    }
+   
+    @Test
+    public void testgetInfo() {
+        String svnUrl = "http://gst.fsoft.com.vn/svn/SVNObserver/";
+        String username = "manhp@gmail.com";
+        String password = "abc";
+       SVNClient svnClient = SVNClient.newClientFromUrl(svnUrl, username, password);
+       svnClient.setWcPath("/home/admin/Downloads/SVNObserver/SVN/SVNObserver/trunk/source/SVNObserver/SVNLoader");
+       long r;
+    try {
+        r = svnClient.getInfo().getRevision().getNumber();
+        System.out.println("Revision " + r);
+        Assert.assertEquals(5, r);
+    } catch (SVNException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+       
+    }
+    
+    @Test
+    public void testgetLocalInfo() {
+        String svnUrl = "http://gst.fsoft.com.vn/svn/SVNObserver/";
+        String username = "manhp@gmail.com";
+        String password = "abc";
+       SVNClient svnClient = SVNClient.newClientFromUrl(svnUrl, username, password);
+       svnClient.setWcPath("/home/admin/Downloads/SVNObserver/SVN/SVNObserver/trunk/source/SVNObserver/SVNLoader");
+       long r;
+    try {
+        r = svnClient.getLocalInfo().getRevision().getNumber();
+        System.out.println("Revision " + r);
+        Assert.assertEquals(5, r);
+    } catch (SVNException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+       
     }
 }

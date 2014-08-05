@@ -16,5 +16,7 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/rocky-common-0.2.6-20131030135954.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sequence-library-1.0.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/svnkit-1.7.9.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sqljet-1.1.7.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/svnkit-cli-1.7.9.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
