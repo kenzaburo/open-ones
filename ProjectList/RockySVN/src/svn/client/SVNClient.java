@@ -99,6 +99,13 @@ public class SVNClient implements ISVNEventHandler {
 
 		return svnClient;
 	}
+	
+	   public static SVNClient newClientFromWC(String wcPath) {
+	        SVNClient svnClient = new SVNClient();
+	        svnClient.wcPath = wcPath;
+
+	        return svnClient;
+	    }
 
 	public static SVNClient newClientFromUrl(String svnUrl, String username,
 			String password) {
