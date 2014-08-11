@@ -16,13 +16,18 @@ import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
+import mks.dms.dao.controller.RoleJpaController;
 import mks.dms.dao.controller.TemplateJpaController;
 import mks.dms.dao.controller.UserJpaController;
+import mks.dms.dao.controller.UserRoleJpaController;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.Template;
 import mks.dms.dao.entity.User;
+import mks.dms.dao.entity.UserRole;
 
 import org.junit.Test;
 
@@ -124,6 +129,63 @@ public class InitDataTest {
 
     }
     
+    public void testInitCreateUserSystem() {
+        boolean isEnable = true;
+        User user = new User();
+        user.setCd("000");
+        user.setUsername("admin");
+        user.setEnabled(isEnable);
+        user.setEmail("admin@gmail.com");
+        user.setDepartmentId(0);
+        user.setDepartmentCd("System");
+        user.setDepartmentName("System");
+        
+        UserJpaController daoCtrl = new UserJpaController(emf);
+        RoleJpaController daoRoleCtrl = new RoleJpaController(emf);
+        daoCtrl.create(user);
+
+        user = new User();
+        user.setCd("010");
+        user.setUsername("manager");
+        user.setEnabled(isEnable);
+        user.setEmail("manager@gmail.com");
+        daoCtrl.create(user);
+    }
+    
+    @Test
+    public void testInitCreateUserRoleSystem() {
+        boolean isEnable = true;
+        UserRole userRole = new UserRole();
+        userRole.setUsername("admin");
+        userRole.setEnabled(isEnable);
+        userRole.setRole("Admin");
+
+        
+        UserRoleJpaController daoCtrl = new UserRoleJpaController(emf);
+        daoCtrl.create(userRole);
+
+        userRole = new UserRole();
+        userRole.setUsername("manager");
+        userRole.setEnabled(isEnable);
+        userRole.setRole("Manager");
+        
+        daoCtrl.create(userRole);
+    }
+    
+    @Test
+    public void testInitCreateDepartmentSystem() {
+        boolean isEnable = true;
+        Department department = new Department();
+        department.setCd("System");
+        department.setEnabled(isEnable);
+        department.setName("System");
+        
+        DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
+        
+        daoCtrl.create(department);
+    }
+
+
     @Test
     public void testInitGetAllUser() {
     	 UserJpaController daoCtrl = new UserJpaController(emf);
