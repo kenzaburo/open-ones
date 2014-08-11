@@ -27,9 +27,13 @@ import javax.persistence.Persistence;
 
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
+import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
+import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.entity.Department;
+import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
+import mks.dms.dao.entity.User;
 import mks.dms.model.DepartmentModel;
 import mks.dms.model.MasterNode;
 
@@ -90,10 +94,52 @@ public class MasterService {
         
         return lstRequestTypes;
     }
+    
+    /**
+     * Get User By Cd.
+     * <br/>
+     * @return User
+     */
+    public User getUserByCd(int cd) {
+    	User user;
+    	
+    	UserJpaController daoCtrl = new UserJpaController(emf);
+    	
+    	user = daoCtrl.findUser(cd);
+    	
+    	return user;
+    }
+    
+    /**
+     * Get all of User.
+     * <br/>
+     * @return list of User
+     */
+    public List<User> getAllUser() {
+    	List<User> listUsers;
+    	
+    	UserJpaController userDaoCtrl = new UserJpaController(emf);
+    	
+    	listUsers = userDaoCtrl.findUserEntities();
+    	
+    	return listUsers;
+    }
+    
+    /**
+     * Create Request.
+     * @param parentDepartment
+     * @param data
+     * @return
+     */
+    public boolean createRequest(Request request) {
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    	daoCtrl.create(request);
+    	return true;
+    }
 
     /**
     * [Give the description for method].
-    * @param parentDepartment
+    * @param request
     * @param data
     * @return
     */

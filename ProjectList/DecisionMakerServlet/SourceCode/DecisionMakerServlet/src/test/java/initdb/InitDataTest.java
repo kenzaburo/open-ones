@@ -123,6 +123,12 @@ public class InitDataTest {
         assertEquals(isEnable, createdUser.getEnabled());
 
     }
+    
+    @Test
+    public void testInitGetAllUser() {
+    	 UserJpaController daoCtrl = new UserJpaController(emf);
+    	 assertEquals(2, daoCtrl.findUserEntities().size());
+    }
     @Test
     public void testInitCreateTemplate() {
         Template template = new Template();

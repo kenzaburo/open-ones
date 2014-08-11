@@ -4,10 +4,17 @@
 <%@ page session="false"%>
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
 <script type="text/javascript" src="resources/js/createRequest.js"></script>
-<form class="horizontal" enctype="application/x-www-form-urlencoded">
+<script>
+	$(function() {
+		if ("${result}" == 1) {
+			alert("Yeu cau khoi tao thanh cong");
+		}
+	});
+</script>
+<form class="horizontal" enctype="application/x-www-form-urlencoded" action="createNewRequest">
 	<div>
 	  <label for="type" class="col_2">Loại yêu cầu</label>
-	   <select id="reqType" class="col_3">
+	   <select id="reqType" class="col_3" name="reqType">
          <option value="0">-- Lựa chọn --</option>
          <c:forEach var="reqType" items="${lstReqTypes}">
             <option value="${reqType.cd}">${reqType.name}</option>
@@ -95,12 +102,18 @@
 		</div>
 
 		<div>
+			
 		 	<label for="scopes" class="col_2">Người thực hiện</label>
 		 	<input id="text2" type="text"  class="col_8" />
 		</div>
 		<div>
-		 	<label for="scopes" class="col_2">Người duyệt</label>
-		 	<input id="text2" type="text"  class="col_8" />
+		 	<label for="scopes" class="col_2">Người nhận</label>
+		 	<select name="receiveUser" class="col_3">
+         		<option value="0">-- Người nhận --</option>
+         		<c:forEach var="receiveUser" items="${listUsers}">
+            		<option value="${receiveUser.cd}">${receiveUser.username}</option>
+         		</c:forEach>
+	  		</select>
 		</div>
 		<div>
 		 	<label for="scopes" class="col_2">Chia sẻ</label>
@@ -142,42 +155,42 @@
     <div id="make-leave">
         <div>
           <label for="title" class="col_2">Tiêu đề</label>
-          <input id="title" type="text" class="col_8" />
+          <input name="leaveTitle" type="text" class="col_8" />
         </div>
         <div>
             <label for="content" class="col_2">Lý do</label>
-            <textarea style="display:inline; position: relative; top:6px; left:10px;" cols="100" id="taskContent" name="taskContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></textarea>
+            <textarea style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="leaveContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></textarea>
         </div>
 
         <div>
-            <label for="scopes" class="col_2">Người duyệt</label>
-            <input id="text2" type="text"  class="col_8" />
-        </div>
-        <div>
-            <label for="scopes" class="col_2">Chia sẻ</label>
-            <input id="text2" type="text"  class="col_8" />
-        </div>
+		 	<label for="scopes" class="col_2">Người nhận</label>
+		 	<select name="leaveReceiveUser" class="col_3">
+         		<option value="0">-- Người nhận --</option>
+         		<c:forEach var="receiveUser" items="${listUsers}">
+            		<option value="${receiveUser.cd}">${receiveUser.username}</option>
+         		</c:forEach>
+	  		</select>
+		</div>
         <div>
             <label for="scopes" class="col_2">Ngày bắt đầu</label>
-            <input id="text2" type="date" class="col_2"/>
+            <input name="leaveStartDay" type="date" class="col_2"/>
         </div>
         <div>
             <label for="scopes" class="col_2">Ngày kết thúc</label>
-            <input id="text2" type="date" class="col_2"/>
+            <input name="leaveEndDay" type="date" class="col_2"/>
         </div>
         <div>
             <label for="scopes" class="col_2">Nhãn</label>
-            <input id="text2" type="text" class="col_8"/>
+            <input name="leaveLabel" type="text" class="col_8"/>
         </div>
-
         <div>
           <label for="attachment" class="col_2">Đính kèm</label>
-          <input id="attachment" type="file" class="col_8"/>
+          <input name="leaveAttachment" type="file" class="col_8"/>
         </div>
-
       <div>
-          <a class="button" href="">Lưu</a>
-          <a class="button" href="">Hủy</a>
+      		<input type="submit" value="Send" class="button" />
+			<input type="reset" value="Reset" class="button"  />
+
       </div>
     </div>
 </form>
