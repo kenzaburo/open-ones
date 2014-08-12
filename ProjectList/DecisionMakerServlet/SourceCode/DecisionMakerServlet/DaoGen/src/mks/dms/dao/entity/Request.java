@@ -60,6 +60,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByLastmodifiedbyName", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
     @NamedQuery(name = "Request.findByLastmodifiedbyAccount", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Request implements Serializable {
+    @Column(name = "REQUESTTYPE_ID")
+    private Integer requesttypeId;
+    @Column(name = "REQUESTTYPE_CD")
+    private String requesttypeCd;
+    @Column(name = "REQUESTTYPE_NAME")
+    private String requesttypeName;
     @Lob
     @Column(name = "ATTACHMENT1")
     private byte[] attachment1;
@@ -404,6 +410,30 @@ public class Request implements Serializable {
 
     public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
         this.labelRequestCollection = labelRequestCollection;
+    }
+
+    public Integer getRequesttypeId() {
+        return requesttypeId;
+    }
+
+    public void setRequesttypeId(Integer requesttypeId) {
+        this.requesttypeId = requesttypeId;
+    }
+
+    public String getRequesttypeCd() {
+        return requesttypeCd;
+    }
+
+    public void setRequesttypeCd(String requesttypeCd) {
+        this.requesttypeCd = requesttypeCd;
+    }
+
+    public String getRequesttypeName() {
+        return requesttypeName;
+    }
+
+    public void setRequesttypeName(String requesttypeName) {
+        this.requesttypeName = requesttypeName;
     }
 
     public byte[] getAttachment1() {
