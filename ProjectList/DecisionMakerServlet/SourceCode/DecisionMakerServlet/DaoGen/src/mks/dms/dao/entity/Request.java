@@ -60,12 +60,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByLastmodifiedbyName", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
     @NamedQuery(name = "Request.findByLastmodifiedbyAccount", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Request implements Serializable {
-    @Column(name = "REQUESTTYPE_ID")
-    private Integer requesttypeId;
-    @Column(name = "REQUESTTYPE_CD")
-    private String requesttypeCd;
-    @Column(name = "REQUESTTYPE_NAME")
-    private String requesttypeName;
+    @Column(name = "READSTATUS")
+    private Integer readstatus;
     @Lob
     @Column(name = "ATTACHMENT1")
     private byte[] attachment1;
@@ -75,6 +71,12 @@ public class Request implements Serializable {
     @Lob
     @Column(name = "ATTACHMENT3")
     private byte[] attachment3;
+    @Column(name = "REQUESTTYPE_ID")
+    private Integer requesttypeId;
+    @Column(name = "REQUESTTYPE_CD")
+    private String requesttypeCd;
+    @Column(name = "REQUESTTYPE_NAME")
+    private String requesttypeName;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestId")
     private Collection<LabelRequest> labelRequestCollection;
     private static final long serialVersionUID = 1L;
@@ -434,6 +436,14 @@ public class Request implements Serializable {
 
     public void setRequesttypeName(String requesttypeName) {
         this.requesttypeName = requesttypeName;
+    }
+
+    public Integer getReadstatus() {
+        return readstatus;
+    }
+
+    public void setReadstatus(Integer readstatus) {
+        this.readstatus = readstatus;
     }
 
     public byte[] getAttachment1() {
