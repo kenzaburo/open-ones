@@ -176,7 +176,8 @@ CREATE TABLE REQUEST (
      , LABELS_ID INT
      , DEPARTMENTS_ID INT
      , STATUS VARCHAR(30)        -- Created | Rejected | Approved | Updated
-     , READSTATUS INT            -- 1: New; 2: After manager read; 3: After manager responsed; 4: After creator read the response
+	 , COMMENT TEXT
+     , READSTATUS INT            -- 1: New; 2: After manager read; 3: After manager responded; 4: After creator read the response
      , PLANEFFORT INT
      , PLANUNIT VARCHAR(50)
      , ATTACHMENT1 BLOB
