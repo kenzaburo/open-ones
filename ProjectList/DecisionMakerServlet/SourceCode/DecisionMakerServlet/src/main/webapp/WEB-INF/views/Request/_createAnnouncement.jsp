@@ -3,9 +3,6 @@
 
 <!--    Announcement -->
     <div id="make-announcement">
-<form class="horizontal" enctype="multipart/form-data" action="createNewRequest">
-
-       <jsp:include page="_commonPart.jsp"></jsp:include>
 
 		<div>
 		  <label for="title" class="col_2">Thông báo</label>
@@ -37,6 +34,5 @@
           <a class="button" href="">Lưu</a>
           <a class="button" href="">Hủy</a>
       </div>
-	
-</form>
+
 </div>

@@ -5,5 +5,8 @@
 	<definition name="createRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/createRequest.jsp" />
 	</definition>
+	<definition name="detailRequest" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Request/detailRequest.jsp" />
+	</definition>
   
 </tiles-definitions>

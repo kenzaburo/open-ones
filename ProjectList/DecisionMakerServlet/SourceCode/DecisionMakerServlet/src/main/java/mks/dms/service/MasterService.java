@@ -30,6 +30,8 @@ import mks.dms.dao.controller.ExDepartmentJpaController;
 import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.controller.UserJpaController;
+import mks.dms.dao.controller.exceptions.IllegalOrphanException;
+import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
@@ -95,6 +97,35 @@ public class MasterService {
         return lstRequestTypes;
     }
     
+    /**
+     * Get Request By Cd.
+     * <br/>
+     * @return Request
+     */
+    public Request getRequestById(int id) {
+    	Request request;
+    	
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    
+    	request = daoCtrl.findRequest(id);
+    	
+    	return request;
+    }
+    
+    /**
+     * Get Update Request.
+     * @Param request
+     * @return 
+     * @throws Exception 
+     * @throws NonexistentEntityException 
+     * @throws IllegalOrphanException 
+     */
+    public void updateRequest(Request request) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    	
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    
+    	daoCtrl.edit(request);
+    }
     /**
      * Get User By Cd.
      * <br/>

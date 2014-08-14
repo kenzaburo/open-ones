@@ -11,12 +11,15 @@
 		}
 	});
 </script>
-
-<!-- 	Announcement -->
-   <jsp:include page="_createAnnouncement.jsp"></jsp:include>
-<!--    Rule -->
-    <jsp:include page="_createRule.jsp"></jsp:include>
-<!-- 	Task -->
-    <jsp:include page="_createTask.jsp"></jsp:include>  
-<!--    Leave -->
-    <jsp:include page="_createLeave.jsp"></jsp:include>
+<form class="horizontal" enctype="multipart/form-data" action="createNewRequest">
+	<!-- 	Select type Request -->
+		<jsp:include page="_commonPart.jsp"></jsp:include>
+	<!-- 	Announcement -->
+	   <jsp:include page="_createAnnouncement.jsp"></jsp:include>
+	<!--    Rule -->
+	    <jsp:include page="_createRule.jsp"></jsp:include>
+	<!-- 	Task -->
+	    <jsp:include page="_createTask.jsp"></jsp:include>  
+	<!--    Leave -->
+	    <jsp:include page="_createLeave.jsp"></jsp:include>
+</form>

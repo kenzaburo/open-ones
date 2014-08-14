@@ -21,13 +21,13 @@ import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.controller.RoleJpaController;
 import mks.dms.dao.controller.TemplateJpaController;
 import mks.dms.dao.controller.UserJpaController;
-import mks.dms.dao.controller.UserRoleJpaController;
+//import mks.dms.dao.controller.UserRoleJpaController;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.Template;
 import mks.dms.dao.entity.User;
-import mks.dms.dao.entity.UserRole;
+//import mks.dms.dao.entity.UserRole;
 
 import org.junit.Test;
 
@@ -152,25 +152,25 @@ public class InitDataTest {
         daoCtrl.create(user);
     }
     
-    @Test
-    public void testInitCreateUserRoleSystem() {
-        boolean isEnable = true;
-        UserRole userRole = new UserRole();
-        userRole.setUsername("admin");
-        userRole.setEnabled(isEnable);
-        userRole.setRole("Admin");
-
-        
-        UserRoleJpaController daoCtrl = new UserRoleJpaController(emf);
-        daoCtrl.create(userRole);
-
-        userRole = new UserRole();
-        userRole.setUsername("manager");
-        userRole.setEnabled(isEnable);
-        userRole.setRole("Manager");
-        
-        daoCtrl.create(userRole);
-    }
+//    @Test
+//    public void testInitCreateUserRoleSystem() {
+//        boolean isEnable = true;
+//        UserRole userRole = new UserRole();
+//        userRole.setUsername("admin");
+//        userRole.setEnabled(isEnable);
+//        userRole.setRole("Admin");
+//
+//        
+//        UserRoleJpaController daoCtrl = new UserRoleJpaController(emf);
+//        daoCtrl.create(userRole);
+//
+//        userRole = new UserRole();
+//        userRole.setUsername("manager");
+//        userRole.setEnabled(isEnable);
+//        userRole.setRole("Manager");
+//        
+//        daoCtrl.create(userRole);
+//    }
     
     @Test
     public void testInitCreateDepartmentSystem() {

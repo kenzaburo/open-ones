@@ -2,8 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!--    Leave -->
     <div id="make-leave">
-<form class="horizontal" enctype="multipart/form-data" action="createNewRequest">
-	<jsp:include page="_commonPart.jsp"></jsp:include>
+
 
         <div>
           <label for="title" class="col_2">Tiêu đề</label>
@@ -44,6 +43,4 @@
 			<input type="reset" value="Reset" class="button"  />
 
       </div>
-    
-</form>
 </div>

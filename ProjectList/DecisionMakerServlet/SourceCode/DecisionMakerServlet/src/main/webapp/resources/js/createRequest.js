@@ -1,7 +1,7 @@
-$(document).ready ( function() {
+$(function() {
+	$("#make-task").show();
 	$("#make-announcement").hide();
 	$("#make-rule").hide();
-	$("#make-task").show();
 	$("#make-leave").hide();
 	
 	
