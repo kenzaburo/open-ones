@@ -42,10 +42,9 @@
           <label for="attachment" class="col_2">Đính kèm</label>
           <input name="leaveAttachment" type="file" class="col_8"/>
         </div>
-      <div>
+      	<div>
       		<input type="submit" value="Send" class="button" />
 			<input type="reset" value="Reset" class="button"  />
-
-      </div>
+      	</div>
   </form>
 </div>

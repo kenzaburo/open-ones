@@ -8,5 +8,8 @@
 	<definition name="detailRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/detailRequest.jsp" />
 	</definition>
+	<definition name="editRequest" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Request/editRequest.jsp" />
+	</definition>
   
 </tiles-definitions>

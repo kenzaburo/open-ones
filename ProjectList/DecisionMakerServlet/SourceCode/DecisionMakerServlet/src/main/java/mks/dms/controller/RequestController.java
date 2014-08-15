@@ -165,6 +165,7 @@ public class RequestController {
     		request.setEndate(leaveEndDay);
     		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = masterService.getUserByCd(userCd);
+//        	request.setManagerId(receiveUser);
         	
         	masterService.createRequest(request);
         	
@@ -262,7 +263,9 @@ public class RequestController {
 //    	Neu phai
     	ModelAndView mav = new ModelAndView("editRequest");
     	Request request = masterService.getRequestById(id);
+    	User manager = request.getManagerId();
     	mav.addObject("request", request);
+//    	mav.addObject("manager", manager);
     	return mav;
     }
     
@@ -317,33 +320,24 @@ public class RequestController {
     		
     		request.setStartdate(leaveStartDay);
     		request.setEndate(leaveEndDay);
-    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
-        	
-        	
-        	
-        	String emailContent = "Đơn xin nghỉ việc của " + 
-//        							 createdbyName + 
-        							 "<br>" + 
-        							 "Xin nghỉ từ " + req.getParameter("leaveStartDay") + " đến " + req.getParameter("leaveEndDay") +
-        							 "<br> " +
-        							 "Lý do: " + leaveContent;
-        	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
+//    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
+//        	User receiveUser = masterService.getUserByCd(userCd);
+//        	
+//        	
+//        	
+//        	String emailContent = "Đơn xin nghỉ việc của " + 
+////        							 createdbyName + 
+//        							 "<br>" + 
+//        							 "Xin nghỉ từ " + req.getParameter("leaveStartDay") + " đến " + req.getParameter("leaveEndDay") +
+//        							 "<br> " +
+//        							 "Lý do: " + leaveContent;
+//        	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
     	}
     	masterService.updateRequest(request);
     	request.setLastmodified(today);
     	ModelAndView mav = new ModelAndView("detailRequest");
     	mav.addObject("request", request);
-        mav.addObject("result", 1);
+        mav.addObject("result", 2);
     	return mav;
-    }
-    /**
-     * Process update Request
-     **/
-    
-    @RequestMapping(value="testsendemail")
-    public String sendEmail() {
-    	sendMail("truongtho88.nl@gmail.com", "Email thử nghiệm", "Email test");
-    	return "home";
     }
 }
