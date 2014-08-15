@@ -7,7 +7,7 @@
 	</definition>
   
     <definition name="home-admin" extends="default">
-        <put-attribute name="header" value="/WEB-INF/views/header-admin.jsp" />
+        <put-attribute name="header" value="/WEB-INF/views/header.jsp" />
         <put-attribute name="body" value="/WEB-INF/views/Home/home-admin.jsp" />
     </definition>
 </tiles-definitions>

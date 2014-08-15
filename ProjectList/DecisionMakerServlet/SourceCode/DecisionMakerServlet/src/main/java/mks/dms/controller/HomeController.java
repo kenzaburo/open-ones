@@ -25,8 +25,18 @@ public class HomeController {
 //		return "home";
 //	}
     
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String root(Model model, Principal principal) {
+        LOG.debug("User=" + principal.getName());
+        
+        if (ADMIN_USER.equalsIgnoreCase(principal.getName())) {
+            return "home-admin";
+        } else {
+            return "home";
+        }
+    }
     
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String home(Model model, Principal principal) {
 	    LOG.debug("User=" + principal.getName());
 	    
