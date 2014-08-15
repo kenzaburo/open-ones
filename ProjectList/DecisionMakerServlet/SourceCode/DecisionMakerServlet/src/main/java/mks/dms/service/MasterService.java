@@ -51,11 +51,15 @@ import com.google.gson.Gson;
  *
  */
 @Service
-public class MasterService {
-    /** Loger. */
+public class MasterService extends BaseService {
+    /** Logger. */
     private final static Logger LOG = Logger.getLogger(MasterService.class);
     
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
+    /* Watcher service to work with watcher */
+    private WatcherService watcherService = null;
+    
+    /* Request service to work with request */
+    private RequestService requestService = null;
     
     public List<Department> getDepartments() {
         DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
@@ -64,7 +68,23 @@ public class MasterService {
         
         return lstDepartments;
     }
-
+    /* Get watcher service to work with watcher */
+    public WatcherService getWatcherService() {
+        // check service is null
+        if (watcherService == null) {
+            watcherService = new WatcherService(emf);
+        }
+        return watcherService;
+    }
+    
+    /* Get request service to work with service */
+    public RequestService getRequestService() {
+        // check service with null
+        if (requestService == null) {
+            requestService = new RequestService(emf);
+        }
+        return requestService;
+    } 
     public boolean createDepartment(DepartmentModel departmentModel) {
         boolean createOK = true;
         
@@ -279,5 +299,11 @@ public class MasterService {
         return json;
     }
     
-
+    /* Get all user from database */
+    public List<User> getUsers() {
+        // Initialize entity manager factory
+        UserJpaController controller = new UserJpaController(emf);
+        
+        return controller.findUserEntities();
+    }
 }

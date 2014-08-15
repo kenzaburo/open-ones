@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!--    Rule -->
-    <div id="make-rule">
-
+<div id="make-rule">
+  <form name="createRule" class="horizontal" enctype="multipart/form-data" action="createNewRequest">
+    <!--  Select type Request -->
+    <jsp:include page="_commonPart.jsp">
+      <jsp:param name="formName" value="createRule" />
+    </jsp:include>
         <div>
           <label for="title" class="col_2">Quy định</label>
           <input id="title" type="text" class="col_8" />
@@ -33,5 +37,5 @@
           <a class="button" href="">Lưu</a>
           <a class="button" href="">Hủy</a>
       </div>
-
+  </form>
 </div>

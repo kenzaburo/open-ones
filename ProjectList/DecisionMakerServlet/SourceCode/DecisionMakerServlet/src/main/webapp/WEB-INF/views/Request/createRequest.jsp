@@ -4,6 +4,7 @@
 <%@ page session="false"%>
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
 <script type="text/javascript" src="resources/js/createRequest.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/chosen/chosen.min.css" />
 <script>
 	$(function() {
 		if ("${result}" == 1) {
@@ -11,9 +12,7 @@
 		}
 	});
 </script>
-<form class="horizontal" enctype="multipart/form-data" action="createNewRequest">
-	<!-- 	Select type Request -->
-		<jsp:include page="_commonPart.jsp"></jsp:include>
+
 	<!-- 	Announcement -->
 	   <jsp:include page="_createAnnouncement.jsp"></jsp:include>
 	<!--    Rule -->
@@ -22,4 +21,3 @@
 	    <jsp:include page="_createTask.jsp"></jsp:include>  
 	<!--    Leave -->
 	    <jsp:include page="_createLeave.jsp"></jsp:include>
-</form>

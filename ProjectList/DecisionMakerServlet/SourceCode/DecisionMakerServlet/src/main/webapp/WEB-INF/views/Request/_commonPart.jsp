@@ -3,8 +3,8 @@
 
 <!-- Common part of creating Request -->
 	<div>
-	  <label for="type" class="col_2">Loại yêu cầu</label>
-	   <select id="reqType" class="col_3" name="reqType">
+	  <label for="reqType" class="col_2">Loại yêu cầu</label>
+	   <select id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('${param.formName}');">
          <option value="0">-- Lựa chọn --</option>
          <c:forEach var="reqType" items="${lstReqTypes}">
             <option value="${reqType.cd}">${reqType.name}</option>

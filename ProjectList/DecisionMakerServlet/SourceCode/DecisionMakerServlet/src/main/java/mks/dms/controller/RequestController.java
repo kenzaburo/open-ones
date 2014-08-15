@@ -11,7 +11,9 @@ import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
+import mks.dms.model.RequestCreateModel;
 import mks.dms.service.MasterService;
+import mks.dms.service.RequestControllerService;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -89,13 +92,20 @@ public class RequestController {
     @RequestMapping(value="createRequest" , method = RequestMethod.GET)
     public ModelAndView createTask(Model model){
         ModelAndView mav = new ModelAndView("createRequest");
+        // Get RequestCreateModel from service
+        RequestCreateModel requestCreateModel = (new RequestControllerService()).getRequestCreateModel(masterService);
+
+        LOG.debug("CreateRequest controller init data: " + requestCreateModel.getListRequestType().size());
+
+        // Add object to modelandview
+        mav.addObject("model", requestCreateModel);
         
         List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         LOG.debug("lstRequestTypes=" + lstRequestTypes);
         mav.addObject("lstReqTypes", lstRequestTypes);
         List<User> listUsers = masterService.getAllUser();
         mav.addObject("listUsers", listUsers);
-        mav.addObject("result", 0);
+//        mav.addObject("result", 0);
     	return mav;
     }
     

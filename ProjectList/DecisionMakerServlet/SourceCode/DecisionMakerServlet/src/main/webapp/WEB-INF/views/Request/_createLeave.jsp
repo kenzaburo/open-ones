@@ -1,9 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!--    Leave -->
-    <div id="make-leave">
-
-
+<div id="make-leave">
+  <form name="createLeave" class="horizontal" enctype="multipart/form-data" action="createNewRequest">
+    <!--  Select type Request -->
+    <jsp:include page="_commonPart.jsp">
+      <jsp:param name="formName" value="createLeave"/>
+    </jsp:include>
         <div>
           <label for="title" class="col_2">Tiêu đề</label>
           <input name="leaveTitle" type="text" class="col_8" />
@@ -43,4 +46,5 @@
 			<input type="reset" value="Reset" class="button"  />
 
       </div>
+  </form>
 </div>
