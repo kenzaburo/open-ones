@@ -3,12 +3,12 @@
 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
 	<definition name="master.department" extends="default">
-        <put-attribute name="header" value="/WEB-INF/views/header-admin.jsp" />
+        <put-attribute name="header" value="/WEB-INF/views/header.jsp" />
 		<put-attribute name="body" value="/WEB-INF/views/Master/master.department.jsp" />
 	</definition>
   
     <definition name="master.template" extends="default">
-        <put-attribute name="header" value="/WEB-INF/views/header-admin.jsp" />
+        <put-attribute name="header" value="/WEB-INF/views/header.jsp" />
         <put-attribute name="body" value="/WEB-INF/views/Master/master.template.jsp" />
     </definition>  
 </tiles-definitions>
