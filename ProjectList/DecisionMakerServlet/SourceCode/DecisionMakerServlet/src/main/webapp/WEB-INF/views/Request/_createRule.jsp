@@ -6,6 +6,7 @@
     <!--  Select type Request -->
     <jsp:include page="_commonPart.jsp">
       <jsp:param name="formName" value="createRule" />
+      <jsp:param name="newReqType" value="Rule"/>
     </jsp:include>
         <div>
           <label for="title" class="col_2">Quy định</label>

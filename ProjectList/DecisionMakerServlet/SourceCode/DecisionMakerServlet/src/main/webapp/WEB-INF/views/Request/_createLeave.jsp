@@ -6,6 +6,7 @@
     <!--  Select type Request -->
     <jsp:include page="_commonPart.jsp">
       <jsp:param name="formName" value="createLeave"/>
+      <jsp:param name="newReqType" value="Leave"/>
     </jsp:include>
         <div>
           <label for="title" class="col_2">Tiêu đề</label>

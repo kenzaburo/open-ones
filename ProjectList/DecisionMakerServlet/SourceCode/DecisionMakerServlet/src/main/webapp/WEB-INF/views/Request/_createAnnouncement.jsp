@@ -7,6 +7,7 @@
     <!--  Select type Request -->
     <jsp:include page="_commonPart.jsp">
       <jsp:param name="formName" value="createAnnouncement"/>
+      <jsp:param name="newReqType" value="Announcement"/>
     </jsp:include>
 		<div>
 		  <label for="title" class="col_2">Thông báo</label>
@@ -15,7 +16,7 @@
 		
 		<div>
 			<label for="content" class="col_2">Nội dung</label>
-			<textarea class="ckeditor col_2" id="annContent" name="editor1" rows="10">
+			<textarea class="ckeditor" id="annContent" name="editor1" rows="10">
 			</textarea>
 		</div>
 		
