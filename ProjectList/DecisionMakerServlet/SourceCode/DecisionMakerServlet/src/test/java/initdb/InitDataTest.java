@@ -131,6 +131,7 @@ public class InitDataTest {
 
     }
     
+    @Test
     public void testInitCreateUserSystem() {
         boolean isEnable = true;
         User user = new User();
@@ -187,12 +188,6 @@ public class InitDataTest {
         daoCtrl.create(department);
     }
 
-
-    @Test
-    public void testInitGetAllUser() {
-    	 UserJpaController daoCtrl = new UserJpaController(emf);
-    	 assertEquals(2, daoCtrl.findUserEntities().size());
-    }
     @Test
     public void testInitCreateTemplate() {
         Template template = new Template();

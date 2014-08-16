@@ -17,8 +17,13 @@ import mks.dms.service.RequestControllerService;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +42,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 /**
- * @author ThachLe
+ * @author ThachLe, TruongTho
  *
  */
 @Controller
@@ -47,6 +52,27 @@ public class RequestController {
 	
 	private final MasterService masterService;
 	
+	private final RequestControllerService requestService;
+	
+    @Autowired
+    public RequestController(MasterService masterService, RequestControllerService requestService) {
+        this.masterService = masterService;
+        this.requestService = requestService;
+    }
+	
+    /**
+    * This method is called when binding the HTTP parameter to bean (or model).
+    * @param binder
+    */
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+
+        // true passed to CustomDateEditor constructor means convert empty String to null
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));        
+    }
+    
 	private static String username = "softeksolutionreport@gmail.com";
 	private static String password = "softeksolutionreport1";
 	
@@ -84,16 +110,21 @@ public class RequestController {
 		}
 	}
 	
-    @Autowired
-    public RequestController(MasterService masterService) {
-        this.masterService = masterService;
-    }
+//    @Autowired
+//    public RequestController(MasterService masterService) {
+//        this.masterService = masterService;
+//    }
     
+    /**
+    * Prepare to display the screen of "Create a request".
+    * @param model
+    * @return
+    */
     @RequestMapping(value="createRequest" , method = RequestMethod.GET)
-    public ModelAndView createTask(Model model){
+    public ModelAndView createRequest(Model model){
         ModelAndView mav = new ModelAndView("createRequest");
         // Get RequestCreateModel from service
-        RequestCreateModel requestCreateModel = (new RequestControllerService()).getRequestCreateModel(masterService);
+        RequestCreateModel requestCreateModel = requestService.getRequestCreateModel(masterService);
 
         LOG.debug("CreateRequest controller init data: " + requestCreateModel.getListRequestType().size());
 
@@ -107,6 +138,41 @@ public class RequestController {
         mav.addObject("listUsers", listUsers);
 //        mav.addObject("result", 0);
     	return mav;
+    }
+    
+    /**
+    * This method process saving a request from client.
+    * @param model contains data are submitted from client
+    * @return the current view with result of saving
+    * @author ThachLe
+    * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
+    */
+    @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
+    public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result) {
+        // Model to re-display the saved request
+        ModelAndView mav = new ModelAndView("createRequest");
+        
+        
+        // Debug data of model
+        Request request = model.getRequest();
+        LOG.debug("Binding result; hasError=" + result.hasErrors());
+        LOG.debug("type=" + request.getType());
+        LOG.debug("title=" + request.getTitle());
+        LOG.debug("content=" + request.getContent());
+        LOG.debug("assigned id=" + request.getAssignedId().getId());
+        LOG.debug("assigned cd=" + request.getAssignedId().getCd());
+        LOG.debug("assigned username=" + request.getAssignedId().getUsername());
+        
+        LOG.debug("manager id=" + request.getManagerId().getId());
+        LOG.debug("manager cd=" + request.getManagerId().getCd());
+        LOG.debug("manager username=" + request.getManagerId().getUsername());
+        
+        // Save request by call to request controller service
+        requestService.saveRequest(model, masterService);;
+                
+        LOG.debug("SaveRequest controller init data: " + model.getRequest());
+        
+        return mav;
     }
     
     /** 

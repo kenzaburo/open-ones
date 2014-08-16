@@ -60,9 +60,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByLastmodifiedbyName", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
     @NamedQuery(name = "Request.findByLastmodifiedbyAccount", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Request implements Serializable {
-    @Lob()
-    @Column(name = "COMMENT")
-    private String comment;
     @Lob
     @Column(name = "ATTACHMENT1")
     private byte[] attachment1;
@@ -72,6 +69,13 @@ public class Request implements Serializable {
     @Lob
     @Column(name = "ATTACHMENT3")
     private byte[] attachment3;
+    @Column(name = "DURATION")
+    private Integer duration;
+    @Column(name = "DURATIONUNIT")
+    private Integer durationunit;
+    @Lob()
+    @Column(name = "COMMENT")
+    private String comment;
     @Column(name = "READSTATUS")
     private Integer readstatus;
     @Column(name = "REQUESTTYPE_ID")
@@ -455,6 +459,22 @@ public class Request implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public Integer getDurationunit() {
+        return durationunit;
+    }
+
+    public void setDurationunit(Integer durationunit) {
+        this.durationunit = durationunit;
     }
 
     public byte[] getAttachment1() {

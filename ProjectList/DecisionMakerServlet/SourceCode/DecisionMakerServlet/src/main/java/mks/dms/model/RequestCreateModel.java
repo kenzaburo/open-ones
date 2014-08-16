@@ -1,6 +1,8 @@
 package mks.dms.model;
 
+import java.io.Serializable;
 import java.util.List;
+
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
@@ -8,9 +10,9 @@ import mks.dms.dao.entity.User;
 
 /**
  * @description Contains request model, which work on view
- * @author TriLVH
+ * @author TriLVH, ThachLe
  */
-public class RequestCreateModel {
+public class RequestCreateModel implements Serializable {
     /* List of current request type get on database */
     private List<RequestType> listRequestType;
     /* List of current user from database */
@@ -21,6 +23,8 @@ public class RequestCreateModel {
     private String requestTitle;
     /* Content of create request */
     private String requestContent;
+    
+    private String labels;
     /* created request */
     private Request request;
     /* List user watch request */
@@ -80,6 +84,22 @@ public class RequestCreateModel {
 
     public void setListWatcher(Integer[] listWatcher) {
         this.listWatcher = listWatcher;
+    }
+
+    /**
+     * Get value of labels.
+     * @return the labels
+     */
+    public String getLabels() {
+        return labels;
+    }
+
+    /**
+     * Set the value for labels.
+     * @param labels the labels to set
+     */
+    public void setLabels(String labels) {
+        this.labels = labels;
     }
     
 }

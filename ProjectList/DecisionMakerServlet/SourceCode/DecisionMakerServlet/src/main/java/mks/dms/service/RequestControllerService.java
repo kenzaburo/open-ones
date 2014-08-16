@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
@@ -15,8 +16,9 @@ import mks.dms.model.RequestCreateModel;
 
 /**
  * @description Get data from database and map to model controller
- * @author TriLVH
+ * @author TriLVH, ThachLe
  */
+@Service
 public class RequestControllerService {
     // Logger to log information to console.
     private final static Logger LOG = Logger.getLogger(RequestControllerService.class);
@@ -70,24 +72,27 @@ public class RequestControllerService {
     /* Create list watcher from request and user ids */
     private void createRequestWatchers(Request request, RequestCreateModel model, MasterService service) {
     	// LOG start watcher creating
-    	LOG.debug("Creating watcher, size of watcher: " + model.getListWatcher().length);
+    	LOG.debug("Creating watcher, size of watcher: " + 
+    	        ((model.getListWatcher() != null) ? model.getListWatcher().length : -1));
     	
     	// Init watcher model to save to database
     	Watcher watcher;
     	// Create watcher class from request id and userid
-    	for(Integer id : model.getListWatcher()) {
-    		// Create watcher from request id and userid
-    		watcher = new Watcher();
-    		watcher.setUserId(new User(id));
-    		watcher.setReqId(new Request(request.getId()));
-    		
-    		// LOG created watcher id by database
-    		LOG.debug("Created watcher id: " + watcher.getId());
-    		
-    		// save watcher to database
-    		service.getWatcherService().saveOrUpdate(watcher);
-    		// add watcher to request
-    		request.getWatcherCollection().add(watcher);
-    	}
+        if (model.getListWatcher() != null) {
+            for (Integer id : model.getListWatcher()) {
+                // Create watcher from request id and userid
+                watcher = new Watcher();
+                watcher.setUserId(new User(id));
+                watcher.setReqId(new Request(request.getId()));
+
+                // LOG created watcher id by database
+                LOG.debug("Created watcher id: " + watcher.getId());
+
+                // save watcher to database
+                service.getWatcherService().saveOrUpdate(watcher);
+                // add watcher to request
+                request.getWatcherCollection().add(watcher);
+            }
+        }
     }
 }
