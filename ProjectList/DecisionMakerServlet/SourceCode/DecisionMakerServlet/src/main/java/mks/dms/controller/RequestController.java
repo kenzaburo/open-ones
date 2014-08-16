@@ -1,5 +1,9 @@
 package mks.dms.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +21,8 @@ import mks.dms.service.MasterService;
 import mks.dms.service.RequestControllerService;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -42,6 +48,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 /**
  * @author ThachLe, TruongTho
  *
@@ -421,5 +428,87 @@ public class RequestController {
     	masterService.updateRequest(request);
     	
     	return "redirect:detailRequest?id=" + id;
+    }
+    
+    /**
+     * Show listSendRequest page
+     **/
+    @RequestMapping(value="listSendRequest")
+    public ModelAndView showPageListSendRequest(@RequestParam("username") String username) {
+    	List<Request> listRequest = masterService.getListRequestByCreatedbyName(username);
+    	ModelAndView mav = new ModelAndView("listSendRequest");
+    	mav.addObject("listRequest", listRequest);
+    	return mav;
+    }
+    
+    /**
+     * Show listReceiveRequest page
+     **/
+    @RequestMapping(value="listReceiveRequest")
+    public ModelAndView showPageListReceiveRequest(@RequestParam("username") String username) {
+    	List<Request> listRequest = masterService.getListRequestByManagerName(username);
+    	ModelAndView mav = new ModelAndView("listReceiveRequest");
+    	mav.addObject("listRequest", listRequest);
+    	return mav;
+    }
+    
+    /**
+     * Process count new Request
+     * @throws IOException 
+     * @throws JSONException 
+     **/
+    @RequestMapping(value="countSendRequest")
+    public String countSendRequest(HttpServletRequest req, HttpServletResponse response) throws IOException, JSONException {
+    	BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+		String json = "";
+	        if (br != null) {
+	            json = br.readLine();
+	        }
+	    JSONObject jsonObject = new JSONObject(json);
+	    String username = (String) jsonObject.get("username");
+	    
+	    List<Request> listRejectedRequest = masterService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Rejected", 3);
+	    List<Request> listApproveRequest = masterService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Approved", 3);
+	    int count = 0;
+	    count = listApproveRequest.size() + listRejectedRequest.size();
+	    
+	    response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out;
+        out = response.getWriter();
+        out.println("<div id='countSendRequest'>");
+        out.println(count);
+        out.println("</div>");
+        out.flush();
+        return "home";
+    }
+    
+    /**
+     * Process count new Request
+     * @throws IOException 
+     * @throws JSONException 
+     **/
+    @RequestMapping(value="countReceiveRequest")
+    public String countReceiveRequest(HttpServletRequest req, HttpServletResponse response) throws IOException, JSONException {
+    	BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+		String json = "";
+	        if (br != null) {
+	            json = br.readLine();
+	        }
+	    JSONObject jsonObject = new JSONObject(json);
+	    String username = (String) jsonObject.get("username");
+	    
+	    List<Request> listRejectedRequest = masterService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Created", 1);
+	    List<Request> listApproveRequest = masterService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Updated", 1);
+	    int count = 0;
+	    count = listApproveRequest.size() + listRejectedRequest.size();
+	    
+	    response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out;
+        out = response.getWriter();
+        out.println("<div id='countReceiveRequest'>");
+        out.println(count);
+        out.println("</div>");
+        out.flush();
+        return "home";
     }
 }

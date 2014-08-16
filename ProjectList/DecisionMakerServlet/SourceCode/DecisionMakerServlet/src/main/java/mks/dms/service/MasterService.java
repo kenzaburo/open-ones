@@ -27,6 +27,7 @@ import javax.persistence.Persistence;
 
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
+import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
@@ -131,6 +132,66 @@ public class MasterService extends BaseService {
     	request = daoCtrl.findRequest(id);
     	
     	return request;
+    }
+    
+    /**
+     * Get List<Request> By createdbyName.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByCreatedbyName(String createdbyName) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByCreatename(createdbyName);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By managerName.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByManagerName(String managerName) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByManagername(managerName);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By createdbyName, status and readstatus.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByCreatedbyNameAndStatusAndReadstatus(String createdbyName, String status, int readstatus) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByCreatenameAndStatusAndReadstatus(createdbyName, status, readstatus);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By managerName.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByManagerNameAndStatusAndReadstatus(String managerName, String status, int readstatus) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByManagernameAndStatusAndReadstatus(managerName, status, readstatus);
+    	
+    	return listRequest;
     }
     
     /**
