@@ -3,7 +3,7 @@
 
 <!--    Announcement -->
 <div id="make-announcement">
-  <form name="createAnnouncement" class="horizontal" enctype="multipart/form-data" action="createNewRequest">
+  <form name="createAnnouncement" class="horizontal" enctype="multipart/form-data" action="createNewRequest" onclick='return validateLeaveFunction()'>
     <!--  Select type Request -->
     <jsp:include page="_commonPart.jsp">
       <jsp:param name="formName" value="createAnnouncement"/>

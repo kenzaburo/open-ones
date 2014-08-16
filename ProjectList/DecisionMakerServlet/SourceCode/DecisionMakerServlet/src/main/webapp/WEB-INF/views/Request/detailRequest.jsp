@@ -28,10 +28,6 @@ $(function(){
 	$("#reason").submit(function( event ) {
   		$( "#reason" ).hide("fast");
 	});
-	
-	if ("${result}" == 2) {
-		alert("Yeu cau chinh sua thanh cong");
-	}
 });
 </script>
 <c:if test="${request.requesttypeCd == 'Leave'}">
@@ -39,10 +35,26 @@ $(function(){
 		<div>
 			<label for="title" class="col_2">Tiêu đề: </label>
 			<input id="title" type="text" disabled="disabled" value="${request.title}" class="col_3 column"/>
+			<c:if test="${request.status == 'Created'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small blue">Created</button>
+			</c:if>
+			<c:if test="${request.status == 'Updated'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small orange">Updated</button>
+			</c:if>
+			<c:if test="${request.status == 'Rejected'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small red">Updated</button>
+			</c:if>
+			<c:if test="${request.status == 'Approved'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small green">Updated</button>
+			</c:if>
 		</div>
 		<div>
-			<label for="title" class="col_2">Người gửi: </label>
-			<input id="title" type="text" disabled="disabled" value="Người gửi" class="col_3 column"/>
+			<label for="title" class="col_2">Người nhận: </label>
+			<input id="title" type="text" disabled="disabled" value="${request.managerName}" class="col_3 column"/>
 		</div>
 		<div>
 			<label for="title" class="col_2">Ngày bắt đầu nghỉ: </label>
@@ -59,24 +71,24 @@ $(function(){
 	</div>
 	
 <!-- 	Kiem tra tai khoan dang nhap co phai tai khoan tao yeu cau khong -->
-<%-- 	<c:if> --%>
-	<div>
-		<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
-	</div>
-<%-- 	</c:if> --%>
-
+	<c:if test="${pageContext.request.userPrincipal.name == request.createdbyName}">
+		<div>
+			<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
+		</div>
+	</c:if>
 <!-- 	Kiem tra tai khoan dang nhap co phai tai khoan nhan yeu cau khong -->
-<%-- 	<c:if> --%>
-	<div>
-		<a class="button" href="approveRequest?id=${request.id}">Duyệt</a>
-		<a class="button" id="reject">Từ chối</a>
-		<form action="rejectRequest" onclick='return confirmRejectFunction()' id="reason">
-			<input type="hidden" name="requestId" value="${request.id}">
-			<label for="content" class="col_2">Lý do: </label>
-			<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="rejectContent" rows="5" placeholder="Lý do từ chối"></textarea>
-			<input type="submit" value="Xác nhận">
-		</form>
-	</div>
+	<c:if test="${pageContext.request.userPrincipal.name == request.managerName}">
+		<div>
+			<a class="button" href="approveRequest?id=${request.id}">Duyệt</a>
+			<a class="button" id="reject">Từ chối</a>
+			<form action="rejectRequest" onclick='return confirmRejectFunction()' id="reason">
+				<input type="hidden" name="requestId" value="${request.id}">
+				<label for="content" class="col_2">Lý do: </label>
+				<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="rejectContent" rows="5" placeholder="Lý do từ chối"></textarea>
+				<input type="submit" value="Xác nhận">
+			</form>
+		</div>
+	</c:if>
 	
 <%-- 	</c:if> --%>
 </c:if>

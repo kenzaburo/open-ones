@@ -27,6 +27,7 @@ import javax.persistence.Persistence;
 
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
+import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.controller.UserJpaController;
@@ -148,18 +149,34 @@ public class MasterService extends BaseService {
     }
     /**
      * Get User By Cd.
-     * <br/>
+     * @param cd
      * @return User
      */
-    public User getUserByCd(int cd) {
+    public User getUserById(int id) {
     	User user;
     	
     	UserJpaController daoCtrl = new UserJpaController(emf);
     	
-    	user = daoCtrl.findUser(cd);
+    	user = daoCtrl.findUser(id);
     	
     	return user;
     }
+    
+    /**
+     * Get User By Cd.
+     * @param username
+     * @return User
+     */
+    public User getUserByUsername(String username) {
+    	User user;
+    	
+    	ExUserJpaController daoCtrl = new ExUserJpaController(emf);
+    	
+    	user = daoCtrl.findUserByUsername(username);
+    	
+    	return user;
+    }
+    
     
     /**
      * Get all of User.
@@ -248,6 +265,21 @@ public class MasterService extends BaseService {
         }
         
         return false;
+    }
+    
+    /**
+     * Get Department By Cd.
+     * @param cd
+     * @return Department
+     */
+    public Department getDepartmentByCd(int cd) {
+    	Department department;
+    	
+    	DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
+    	
+    	department = daoCtrl.findDepartment(cd);
+    	
+    	return department;
     }
 
     public String getRootDepartmentJson() {

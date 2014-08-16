@@ -90,6 +90,11 @@ public class InitDataTest {
         boolean isEnable = true;
         User user = new User();
         user.setCd("001");
+        
+        user.setDepartmentCd("System");
+        user.setDepartmentName("System");
+        user.setDepartmentId(1);
+        
         user.setUsername(username);
         user.setFirstname("User");
         user.setLastname("Mr");
@@ -115,6 +120,9 @@ public class InitDataTest {
         String username = "user01";
         boolean isEnable = true;
         User user = new User();
+        user.setDepartmentCd("System");
+        user.setDepartmentName("System");
+        user.setDepartmentId(1);
         user.setCd("002");
         user.setUsername(username);
         user.setEnabled(isEnable);

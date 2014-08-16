@@ -63,5 +63,4 @@ public class ExUserJpaControllerTest {
         assertEquals("manager", user.getUsername());
         assertEquals("manager@gmail.com", user.getEmail());
     }
-
 }

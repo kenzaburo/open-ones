@@ -28,7 +28,7 @@ public class HomeController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String root(Model model, Principal principal) {
         LOG.debug("User=" + principal.getName());
-        
+      
         if (ADMIN_USER.equalsIgnoreCase(principal.getName())) {
             return "home-admin";
         } else {

@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<script type="text/javascript" src="resources/js/validateFunction.js"></script>
 <!--    Leave -->
 <div id="make-leave">
-  <form name="createLeave" class="horizontal" enctype="multipart/form-data" action="createNewRequest">
+  <form id="createLeave" class="horizontal" enctype="multipart/form-data" action="createNewRequest">
     <!--  Select type Request -->
     <jsp:include page="_commonPart.jsp">
       <jsp:param name="formName" value="createLeave"/>
@@ -14,15 +15,19 @@
         </div>
         <div>
             <label for="content" class="col_2">Lý do</label>
-            <textarea style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="leaveContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></textarea>
+            <textarea style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="leaveContent" id="leaveContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></textarea>
         </div>
-
+        <div>
+          <input name="leaveCreate" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
+        </div>	
         <div>
 		 	<label for="scopes" class="col_2">Người nhận</label>
-		 	<select name="leaveReceiveUser" class="col_3">
+		 	<select name="leaveReceiveUser" class="col_3" id="leaveReceiveUser">
          		<option value="0">-- Người nhận --</option>
          		<c:forEach var="receiveUser" items="${listUsers}">
-            		<option value="${receiveUser.cd}">${receiveUser.username}</option>
+         			<c:if test="${receiveUser.username != pageContext.request.userPrincipal.name}">
+            			<option value="${receiveUser.id}">${receiveUser.username}</option>
+            		</c:if>
          		</c:forEach>
 	  		</select>
 		</div>

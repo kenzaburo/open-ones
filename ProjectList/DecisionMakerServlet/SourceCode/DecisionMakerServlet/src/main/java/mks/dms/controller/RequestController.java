@@ -8,6 +8,7 @@ import java.util.List;
 
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
@@ -178,7 +179,7 @@ public class RequestController {
      * process when click submit in form createRequest
      *  */
     @RequestMapping(value="createNewRequest")
-    public ModelAndView createNewRequest(HttpServletRequest req) throws ParseException {
+    public String createNewRequest(HttpServletRequest req) throws ParseException {
     	Date today = new Date();
     	Request request = new Request();
     	String requestType = req.getParameter("reqType");
@@ -186,20 +187,20 @@ public class RequestController {
 		
     	if (requestType.equals("Task")) {
     		request.setType(1);
-    		int userCd = Integer.parseInt(req.getParameter("taskReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
+    		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
+        	User receiveUser = masterService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Rule")) {
     		request.setType(2);
-    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
+    		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
+        	User receiveUser = masterService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Announcement")) {
     		request.setType(3);
-    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
+    		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
+        	User receiveUser = masterService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Leave")) {
@@ -209,14 +210,15 @@ public class RequestController {
     		Date leaveStartDay = formater.parse(req.getParameter("leaveStartDay"));
     		Date leaveEndDay = formater.parse(req.getParameter("leaveEndDay"));
     		String leaveLabel = req.getParameter("leaveLabel");
-    		
+    		String leaveCreate = req.getParameter("leaveCreate");
 //    		System.out.println(req.getParameter("leaveStartDay"));
     		
-//    		lấy thông tin từ account đăng nhập
-//    		request.setCreatedbyAccount(createdbyAccount);
-//    		request.setCreatedbyId(createdbyId);
-//    		request.setCreatedbyName(createdbyName);
-//    		request.setDepartmentsId(departmentsId);
+    		User createUser = masterService.getUserByUsername(leaveCreate);
+    		Department createDepartmentId = masterService.getDepartmentByCd(createUser.getDepartmentId());
+    		request.setCreatedbyAccount(createUser.getUsername());
+    		request.setCreatedbyId(createUser);
+    		request.setCreatedbyName(createUser.getUsername());
+    		request.setDepartmentsId(createDepartmentId);
     		
     		request.setCreated(today);
     		request.setContent(leaveContent);
@@ -230,13 +232,15 @@ public class RequestController {
     		request.setEndate(leaveEndDay);
     		request.setReadstatus(1);
     		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
-//        	request.setManagerId(receiveUser);
+        	User receiveUser = masterService.getUserById(userCd);
+        	request.setManagerId(receiveUser);
+        	request.setManagerAccount(receiveUser.getUsername());
+        	request.setManagerName(receiveUser.getUsername());
         	
         	masterService.createRequest(request);
         	
         	String emailContent = "Đơn xin nghỉ việc của " + 
-//        							 createdbyName + 
+        							 leaveCreate + 
         							 "<br>" + 
         							 "Xin nghỉ từ " + req.getParameter("leaveStartDay") + " đến " + req.getParameter("leaveEndDay") +
         							 "<br> " +
@@ -244,14 +248,97 @@ public class RequestController {
         	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
     	}
     	
-    	ModelAndView mav = new ModelAndView("createRequest");
-    	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
-        LOG.debug("lstRequestTypes=" + lstRequestTypes);
-        mav.addObject("lstReqTypes", lstRequestTypes);
-        List<User> listUsers = masterService.getAllUser();
+    	return "redirect:detailRequest?id="+ request.getId();
+    }
+    
+    /**
+     * Show page editRequest
+     **/
+    @RequestMapping(value="editRequest")
+    public ModelAndView editRequest(@RequestParam("id") int id) {
+    	
+//    	Lay thong tin tai khoan dang nhap
+//    	Kiem tra tai khoan dang nhap phai tai khoan khoi tao yeu cau khong
+//    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
+    	
+//    	Neu phai
+    	ModelAndView mav = new ModelAndView("editRequest");
+    	Request request = masterService.getRequestById(id);
+    	List<User> listUsers = masterService.getAllUser();
         mav.addObject("listUsers", listUsers);
-        mav.addObject("result", 1);
+    	mav.addObject("request", request);
     	return mav;
+    }
+    
+    @RequestMapping(value="updateRequest")
+    public String processUpdateRequest(HttpServletRequest req) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    	Date today = new Date();
+    	String requestType = req.getParameter("reqType");
+    	int requestId = Integer.parseInt(req.getParameter("requestId"));
+    	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+    	Request request = masterService.getRequestById(requestId);
+    	String leaveCreate = req.getParameter("leaveCreate");
+    	if (request.getCreatedbyName().equals(leaveCreate)) {
+    		if (requestType.equals("Task")) {
+        		request.setType(1);
+        		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
+            	User receiveUser = masterService.getUserById(userId);
+            	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
+        	}
+        	if (requestType.equals("Rule")) {
+        		request.setType(2);
+        		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
+            	User receiveUser = masterService.getUserById(userId);
+            	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
+        	}
+        	if (requestType.equals("Announcement")) {
+        		request.setType(3);
+        		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
+            	User receiveUser = masterService.getUserById(userId);
+            	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
+        	}
+        	if (requestType.equals("Leave")) {
+        		request.setType(4);
+        		String leaveContent = req.getParameter("leaveContent");
+        		String leaveTitle = req.getParameter("leaveTitle");
+        		Date leaveStartDay = formater.parse(req.getParameter("leaveStartDay"));
+        		Date leaveEndDay = formater.parse(req.getParameter("leaveEndDay"));
+        		String leaveLabel = req.getParameter("leaveLabel");
+        		
+        		request.setLastmodified(today);
+        		request.setContent(leaveContent);
+        		request.setTitle(leaveTitle);
+        		request.setStatus("Updated");
+        		request.setReadstatus(1);
+        		
+//        		set label
+        		
+        		request.setStartdate(leaveStartDay);
+        		request.setEndate(leaveEndDay);
+        		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
+            	User receiveUser = masterService.getUserById(userCd);
+            	request.setManagerId(receiveUser);
+            	request.setManagerAccount(receiveUser.getUsername());
+            	request.setManagerName(receiveUser.getUsername());
+            	
+            	
+            	
+            	String emailContent = "Đơn xin nghỉ việc của " + 
+            							leaveCreate + 
+            							 "<br>" + 
+            							 "Xin nghỉ từ " + req.getParameter("leaveStartDay") + " đến " + req.getParameter("leaveEndDay") +
+            							 "<br> " +
+            							 "Lý do: " + leaveContent;
+            	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
+        	}
+        	masterService.updateRequest(request);
+        	request.setLastmodified(today);
+        	return "redirect:detailRequest?id=" + request.getId();
+    	}
+    	else {
+    		return "redirect:detailRequest?id=" + request.getId();
+    	}
+    	
     }
     
     @RequestMapping(value="detailRequest")
@@ -334,98 +421,5 @@ public class RequestController {
     	masterService.updateRequest(request);
     	
     	return "redirect:detailRequest?id=" + id;
-    }
-    
-    /**
-     * Show page editRequest
-     **/
-    @RequestMapping(value="editRequest")
-    public ModelAndView editRequest(@RequestParam("id") int id) {
-    	
-//    	Lay thong tin tai khoan dang nhap
-//    	Kiem tra tai khoan dang nhap phai tai khoan khoi tao yeu cau khong
-//    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
-    	
-//    	Neu phai
-    	ModelAndView mav = new ModelAndView("editRequest");
-    	Request request = masterService.getRequestById(id);
-//    	User manager = request.getManagerId();
-    	mav.addObject("request", request);
-//    	mav.addObject("manager", manager);
-    	return mav;
-    }
-    
-    @RequestMapping(value="updateRequest")
-    public ModelAndView processUpdateRequest(HttpServletRequest req) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	Date today = new Date();
-    	String requestType = req.getParameter("reqType");
-    	int requestId = Integer.parseInt(req.getParameter("requestId"));
-    	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-    	Request request = masterService.getRequestById(requestId);
-    	if (requestType.equals("Task")) {
-    		request.setType(1);
-    		int userCd = Integer.parseInt(req.getParameter("taskReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
-        	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-    	}
-    	if (requestType.equals("Rule")) {
-    		request.setType(2);
-    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
-        	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-    	}
-    	if (requestType.equals("Announcement")) {
-    		request.setType(3);
-    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserByCd(userCd);
-        	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-    	}
-    	if (requestType.equals("Leave")) {
-    		request.setType(4);
-    		String leaveContent = req.getParameter("leaveContent");
-    		String leaveTitle = req.getParameter("leaveTitle");
-    		Date leaveStartDay = formater.parse(req.getParameter("leaveStartDay"));
-    		Date leaveEndDay = formater.parse(req.getParameter("leaveEndDay"));
-    		String leaveLabel = req.getParameter("leaveLabel");
-    		
-//    		System.out.println(req.getParameter("leaveStartDay"));
-    		
-//    		lấy thông tin từ account đăng nhập
-//    		request.setCreatedbyAccount(createdbyAccount);
-//    		request.setCreatedbyId(createdbyId);
-//    		request.setCreatedbyName(createdbyName);
-//    		request.setDepartmentsId(departmentsId);
-    		
-    		request.setCreated(today);
-    		request.setContent(leaveContent);
-    		request.setContent(leaveContent);
-    		request.setTitle(leaveTitle);
-    		request.setStatus("Created");
-    		request.setReadstatus(1);
-    		
-//    		set label
-    		
-    		request.setStartdate(leaveStartDay);
-    		request.setEndate(leaveEndDay);
-//    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-//        	User receiveUser = masterService.getUserByCd(userCd);
-//        	
-//        	
-//        	
-//        	String emailContent = "Đơn xin nghỉ việc của " + 
-////        							 createdbyName + 
-//        							 "<br>" + 
-//        							 "Xin nghỉ từ " + req.getParameter("leaveStartDay") + " đến " + req.getParameter("leaveEndDay") +
-//        							 "<br> " +
-//        							 "Lý do: " + leaveContent;
-//        	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
-    	}
-    	
-    	masterService.updateRequest(request);
-    	request.setLastmodified(today);
-    	ModelAndView mav = new ModelAndView("detailRequest");
-    	mav.addObject("request", request);
-        mav.addObject("result", 2);
-    	return mav;
     }
 }

@@ -7,9 +7,7 @@
 <link rel="stylesheet" type="text/css" href="resources/chosen/chosen.min.css" />
 <script>
 	$(function() {
-		if ("${result}" == 1) {
-			alert("Yeu cau khoi tao thanh cong");
-		}
+
 	});
 </script>
 
