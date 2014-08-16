@@ -163,6 +163,7 @@ public class RequestController {
     		
     		request.setStartdate(leaveStartDay);
     		request.setEndate(leaveEndDay);
+    		request.setReadstatus(1);
     		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = masterService.getUserByCd(userCd);
 //        	request.setManagerId(receiveUser);
@@ -189,10 +190,23 @@ public class RequestController {
     }
     
     @RequestMapping(value="detailRequest")
-    public ModelAndView showDetailRequestPage(@RequestParam("id") int id) {
+    public ModelAndView showDetailRequestPage(@RequestParam("id") int id) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	Request request = masterService.getRequestById(id);
     	ModelAndView mav = new ModelAndView("detailRequest");
     	mav.addObject("request", request);
+//    	kiem tra tai khoan dang nhap phai tai khoan duoc nhan request ko
+//    	neu phai
+    	if (request.getReadstatus() == 1) {
+    		request.setReadstatus(2);
+    		masterService.updateRequest(request);
+    	}
+    	
+//    	kiem tra tai khoan dang nhap phai tai khoan tao request ko
+//    	neu phai
+    	if (request.getReadstatus() == 3) {
+    		request.setReadstatus(4);
+    		masterService.updateRequest(request);
+    	}
     	return mav;
     }
     
@@ -210,6 +224,7 @@ public class RequestController {
     	Request request = masterService.getRequestById(id);
     	request.setStatus("Approved");
     	request.setLastmodified(today);
+    	request.setReadstatus(3);
     	
 //    	Bo sung them thong tin sau
 //    	request.setLastmodifiedbyAccount(lastmodifiedbyAccount);
@@ -226,6 +241,7 @@ public class RequestController {
      **/
     @RequestMapping(value="rejectRequest")
     public String rejectRequest(HttpServletRequest req) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
     	Date today = new Date();
     	int id = Integer.parseInt(req.getParameter("requestId"));
     	String reasonReject = req.getParameter("rejectContent");
@@ -237,7 +253,12 @@ public class RequestController {
 //    	Neu phai
     	Request request = masterService.getRequestById(id);
     	request.setStatus("Rejected");
+    	request.setReadstatus(3);
+    	
 //    	luu lý do reject
+    	String fullReasonReject = "Ten tai khoan comment" + formater.format(today) + reasonReject;
+    	request.setComment(fullReasonReject);
+    	
     	request.setLastmodified(today);
     	
 //    	Bo sung them thong tin sau
@@ -263,7 +284,7 @@ public class RequestController {
 //    	Neu phai
     	ModelAndView mav = new ModelAndView("editRequest");
     	Request request = masterService.getRequestById(id);
-    	User manager = request.getManagerId();
+//    	User manager = request.getManagerId();
     	mav.addObject("request", request);
 //    	mav.addObject("manager", manager);
     	return mav;
@@ -315,6 +336,7 @@ public class RequestController {
     		request.setContent(leaveContent);
     		request.setTitle(leaveTitle);
     		request.setStatus("Created");
+    		request.setReadstatus(1);
     		
 //    		set label
     		
@@ -333,6 +355,7 @@ public class RequestController {
 //        							 "Lý do: " + leaveContent;
 //        	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
     	}
+    	
     	masterService.updateRequest(request);
     	request.setLastmodified(today);
     	ModelAndView mav = new ModelAndView("detailRequest");

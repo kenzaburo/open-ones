@@ -11,6 +11,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -212,5 +214,11 @@ public class InitDataTest {
         }
 
 
+    }
+    @Test
+    public void testDate() {
+    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+    	Date today = new Date();
+    	System.out.println(formater.format(today));
     }
 }
