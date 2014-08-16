@@ -19,14 +19,11 @@ public class RequestCreateModel implements Serializable {
     private List<User> listUser;
     /* List of  Deparment from databse*/
     private List<Department> listDepartment;
-    /* Title of created request */
-    private String requestTitle;
-    /* Content of create request */
-    private String requestContent;
-    
+
     private String labels;
     /* created request */
     private Request request;
+
     /* List user watch request */
     private Integer[] listWatcher;
 
@@ -44,22 +41,6 @@ public class RequestCreateModel implements Serializable {
 
     public void setListUser(List<User> listUser) {
         this.listUser = listUser;
-    }
-
-    public String getRequestTitle() {
-        return requestTitle;
-    }
-
-    public void setRequestTitle(String requestTitle) {
-        this.requestTitle = requestTitle;
-    }
-
-    public String getRequestContent() {
-        return requestContent;
-    }
-
-    public void setRequestContent(String requestContent) {
-        this.requestContent = requestContent;
     }
 
     public Request getRequest() {

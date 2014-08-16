@@ -151,8 +151,7 @@ public class RequestController {
     public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result) {
         // Model to re-display the saved request
         ModelAndView mav = new ModelAndView("createRequest");
-        
-        
+
         // Debug data of model
         Request request = model.getRequest();
         LOG.debug("Binding result; hasError=" + result.hasErrors());

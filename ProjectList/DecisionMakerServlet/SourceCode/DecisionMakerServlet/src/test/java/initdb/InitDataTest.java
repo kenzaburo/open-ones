@@ -91,6 +91,8 @@ public class InitDataTest {
         User user = new User();
         user.setCd("001");
         user.setUsername(username);
+        user.setFirstname("User");
+        user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("user@gmail.com");
         
@@ -137,6 +139,8 @@ public class InitDataTest {
         User user = new User();
         user.setCd("000");
         user.setUsername("admin");
+        user.setFirstname("Admin");
+        user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("admin@gmail.com");
         user.setDepartmentId(0);
@@ -150,6 +154,8 @@ public class InitDataTest {
         user = new User();
         user.setCd("010");
         user.setUsername("manager");
+        user.setFirstname("Manager");
+        user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("manager@gmail.com");
         daoCtrl.create(user);

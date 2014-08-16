@@ -7,11 +7,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.Watcher;
 import mks.dms.dao.entity.User;
+import mks.dms.extentity.ExUser;
 import mks.dms.model.RequestCreateModel;
 
 /**
@@ -46,7 +48,31 @@ public class RequestControllerService {
         // Get request from model
     	Request request = model.getRequest();
     	// Create request with all default value.
-    	this.initialize(request);
+//    	this.initialize(request);
+    	
+    	// Get code, name of assigned member by id
+    	User assignedUser = model.getRequest().getAssignedId();
+    	Integer userId = assignedUser.getId();
+    	if (userId != null) {
+    	    UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
+    	    assignedUser = userDaoCtrl.findUser(userId);
+    	    
+    	    request.setAssignedAccount(assignedUser.getUsername());
+    	    request.setAssignedName(ExUser.getFullname(assignedUser));
+    	}
+    	
+    	// Get code, name of manager by id
+    	User managerUser = model.getRequest().getManagerId();
+    	Integer managerUserId = managerUser.getId();
+    	if (managerUserId != null) {
+    	    UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
+    	    managerUser = userDaoCtrl.findUser(userId);
+            
+            request.setManagerAccount(managerUser.getUsername());
+            request.setManagerName(ExUser.getFullname(managerUser));
+    	}
+    	
+    	LOG.debug("Assigned user=" + model.getRequest().getAssignedId().getUsername());
     	// Save request with empty list watcher to get request id
     	masterService.getRequestService().saveOrUpdate(request);
     	
@@ -62,12 +88,12 @@ public class RequestControllerService {
     	LOG.debug("RequestControllerService create success: " + request);
     }
     
-    /* Initialize model if it null*/
-    private void initialize(Request model) {
-    	// check valid and return valid data to model
-    	// create defautl list watcher
-    	model.setWatcherCollection(new ArrayList<Watcher>());
-    }
+//    /* Initialize model if it null*/
+//    private void initialize(Request model) {
+//    	// check valid and return valid data to model
+//    	// create defautl list watcher
+//    	model.setWatcherCollection(new ArrayList<Watcher>());
+//    }
     
     /* Create list watcher from request and user ids */
     private void createRequestWatchers(Request request, RequestCreateModel model, MasterService service) {

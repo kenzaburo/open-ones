@@ -16,20 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package mks.dms.service;
+package mks.dms.extentity;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import mks.dms.dao.entity.User;
+import rocky.common.CHARA;
 
 /**
  * @author ThachLe
  *
  */
-public class BaseService {
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
+public class ExUser extends User {
     
-    public static EntityManagerFactory getEmf() {
-        return emf;
+    /**
+    * Get full name from first name and last name.
+    * </br>
+    * The first name is appended to last name as Vietnamese
+    * @return
+    */
+    public String getFullname() {
+        return this.getLastname() + CHARA.SPACE + this.getFirstname(); 
     }
-
+    
+    /**
+    * Get full name from given first name and last name.
+    * </br>
+    * The first name is appended to last name as Vietnamese
+    * @param user
+    * @return
+    */
+    public static String getFullname(User user) {
+        return user.getLastname() + CHARA.SPACE + user.getFirstname();
+    }
 }
