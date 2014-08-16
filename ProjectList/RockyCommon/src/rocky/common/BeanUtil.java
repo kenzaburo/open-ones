@@ -14,7 +14,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 public class BeanUtil {
-    final static Logger LOG = Logger.getLogger("BeanUtil");
+    final static Logger LOG = Logger.getLogger(BeanUtil.class);
 
     /**
      * @param entity

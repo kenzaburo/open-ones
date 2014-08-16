@@ -35,7 +35,7 @@ import rocky.common.Constant;
  * @author Thach.Le
  */
 public class PoiUtil {
-    final static Logger LOG = Logger.getLogger("PoiUtil");
+    final static Logger LOG = Logger.getLogger(PoiUtil.class);
 
     /**
      * [Give the description for method].

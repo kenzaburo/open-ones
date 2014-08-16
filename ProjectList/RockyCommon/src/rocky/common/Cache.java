@@ -35,7 +35,7 @@ import rocky.common.PropertiesManager;
  *
  */
 public class Cache {
-    static final private Logger LOG = Logger.getLogger("Cache");
+    static final private Logger LOG = Logger.getLogger(Cache.class);
     
     /** Current folder is as default . */
     private static String cacheFilePath = "CacheFile.xml";

@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  * @author thachle
  */
 public class FileUtil {
-    private final static Logger LOG = Logger.getLogger("FileUtil");
+    private final static Logger LOG = Logger.getLogger(FileUtil.class);
 
     /**
      * Đọc nội dung của file resource với encoding cho trước
