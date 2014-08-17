@@ -480,6 +480,7 @@ public class RequestController {
     		json.put("endDate", dateFormat.format(request.getEndate()));
     		json.put("reason", request.getContent());
     		json.put("readStatus", request.getReadstatus());
+    		json.put("status", request.getStatus());
     		listJson.add(json);
     	}
 //    	System.out.println("Chuoi Json la " + listJson.toString());
@@ -502,6 +503,7 @@ public class RequestController {
     		json.put("endDate", dateFormat.format(request.getEndate()));
     		json.put("reason", request.getContent());
     		json.put("readStatus", request.getReadstatus());
+    		json.put("status", request.getStatus());
     		listJson.add(json);
     	}
     	return listJson.toString();

@@ -21,6 +21,7 @@
             			obj.managerName = "<strong>" + res[i].managerName + "</strong>";
             			obj.time = "<strong><span style='color:blue'>" + res[i].startDate + "</span> - <span style='color:red'>" + res[i].endDate + "</span></strong>";
             			obj.reason = "<strong>" + res[i].reason + "</strong>";
+            			obj.status = "<strong>" + res[i].status + "</strong>";
             		}
             		else {
             			var obj = new Object();
@@ -28,6 +29,7 @@
             			obj.managerName = res[i].managerName;
             			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
             			obj.reason = res[i].reason;
+            			obj.status = res[i].status;
             		}
             		var jsonIn = JSON.stringify(obj);
             		jsonArr.push(obj);
@@ -68,13 +70,14 @@
             	     	  var $container = $("#example1");
             	     	  $container.handsontable({
             	     	  	data: jsonArr,
-            	     	    colWidths: [150, 100, 200, 300],
-            	     	    colHeaders: ["Tiêu đề", "Người nhận", "Thời gian", "Lý do"],
+            	     	    colWidths: [150, 100, 200, 300, 100],
+            	     	    colHeaders: ["Tiêu đề", "Người nhận", "Thời gian", "Lý do", "Trạng thái"],
             	     	    columns: [
             	     	      	{data: "requestId", renderer: "html"},
             	     	      	{data: "managerName", renderer: "html"},
             	     	     	{data: "time", renderer: "html"},
             	     	     	{data: "reason", renderer: "html"},
+            	     	     	{data: "status", renderer: "html"},
             	     	    ],
             	     	   cells: function(r,c, prop) {
             	     	        var cellProperties = {};
