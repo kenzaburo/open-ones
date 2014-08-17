@@ -3,14 +3,11 @@
 <!-- Menu Horizontal -->
 <script type="text/javascript">
 $(document).ready(function () {
-	var user = $("#loginUser").html();
 	$.ajax({
 	    url: "response.request.count",
-	    data: {username: user},
 	    dataType: 'json',
 	    type: 'GET',
 	    success: function (res) {
-	    	alert(res.countResponseRequest);
 	    	if (res.countResponseRequest > 0) {
 	    		$("#countResponse").html("<a class='button blue small' href='listSendRequest' >" + res.countResponseRequest + " New Response </a>");
 	    	}
@@ -24,11 +21,9 @@ $(document).ready(function () {
     });
 	$.ajax({
 	    url: "request.count",
-	    data: {username: user},
 	    dataType: 'json',
 	    type: 'GET',
 	    success: function (res) {
-	    	alert(res.countRequest);
 	    	if (res.countRequest > 0) {
 	    		$("#countRequest").html("<a class='button red small' href='listReceiveRequest' >" + res.countRequest + " New Request </a>");
 	    	}
@@ -54,7 +49,13 @@ $(document).ready(function () {
 	      <li class="divider"><a href="myOpenTask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
 	  	</ul></li>
 	  <li><a href="createRequest"><i class="icon-magic"></i>Tạo yêu cầu</a></li>
-	  <li style="display: inline-block;" id="countRequest"></li>
+	  <li><a href=""><i class="icon-edit"></i>Danh sách yêu cầu</a>
+	  	<ul>
+	      <li class="left"><a href="listSendRequest"><i class="icon-envelope"></i>Yêu cầu của bạn</a></li>
+	      <li class="left"><a href="listReceiveRequest"><i class="icon-envelope-alt"></i>Yêu cầu được nhận</a></li>
+	    </ul>
+	  </li>
+	  <li style="display: inline-block;" id="countRequest">
 	  <li style="display: inline-block; margin-left:10px;" id="countResponse"></li>
 	  <li class="right" style="display: inline-block;"><a href=""><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
 	    <ul>

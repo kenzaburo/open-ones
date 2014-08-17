@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -353,22 +354,29 @@ public class RequestController {
     }
     
     @RequestMapping(value="detailRequest")
-    public ModelAndView showDetailRequestPage(@RequestParam("id") int id) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public ModelAndView showDetailRequestPage(@RequestParam("id") int id, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	Request request = requestService.getRequestById(id);
     	ModelAndView mav = new ModelAndView("detailRequest");
     	mav.addObject("request", request);
 //    	kiem tra tai khoan dang nhap phai tai khoan duoc nhan request ko
 //    	neu phai
-    	if (request.getReadstatus() == 1) {
-//    		request.setReadstatus(2);
-//    		requestService.updateRequest(request);
+    	
+//    	User user = requestService.getUserByUsername(principal.getName());
+    	if (request.getManagerName().equals(principal.getName())) {
+    		if (request.getReadstatus() == 1) {
+        		request.setReadstatus(2);
+        		requestService.updateRequest(request);
+        	}
     	}
+    	
     	
 //    	kiem tra tai khoan dang nhap phai tai khoan tao request ko
 //    	neu phai
-    	if (request.getReadstatus() == 3) {
-    		request.setReadstatus(4);
-    		requestService.updateRequest(request);
+    	if (request.getCreatedbyName().equals(principal.getName())) {
+	    	if (request.getReadstatus() == 3) {
+	    		request.setReadstatus(4);
+	    		requestService.updateRequest(request);
+	    	}
     	}
     	return mav;
     }
@@ -458,11 +466,10 @@ public class RequestController {
     
     
     @RequestMapping(value="send.request.load", method = RequestMethod.GET)
-    public @ResponseBody String loadSendRequest(@RequestParam("username") String username) throws JSONException{
+    public @ResponseBody String loadSendRequest(Principal principal) throws JSONException{
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
-    	List<Request> listRequest = requestService.getListRequestByCreatedbyName(username);
-    	System.out.println("USERNAME la " + username);
+    	List<Request> listRequest = requestService.getListRequestByCreatedbyName(principal.getName());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
     		JSONObject json = new JSONObject();
@@ -472,6 +479,7 @@ public class RequestController {
     		json.put("startDate", dateFormat.format(request.getStartdate()));
     		json.put("endDate", dateFormat.format(request.getEndate()));
     		json.put("reason", request.getContent());
+    		json.put("readStatus", request.getReadstatus());
     		listJson.add(json);
     	}
 //    	System.out.println("Chuoi Json la " + listJson.toString());
@@ -479,10 +487,10 @@ public class RequestController {
     } 
     
     @RequestMapping(value="receive.request.load", method = RequestMethod.GET)
-    public @ResponseBody String loadReceiveRequest(@RequestParam("username") String username) throws JSONException{
+    public @ResponseBody String loadReceiveRequest(Principal principal) throws JSONException{
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
-    	List<Request> listRequest = requestService.getListRequestByManagerName(username);
+    	List<Request> listRequest = requestService.getListRequestByManagerName(principal.getName());
     	System.out.println("USERNAME la " + username);
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
@@ -493,17 +501,18 @@ public class RequestController {
     		json.put("startDate", dateFormat.format(request.getStartdate()));
     		json.put("endDate", dateFormat.format(request.getEndate()));
     		json.put("reason", request.getContent());
+    		json.put("readStatus", request.getReadstatus());
     		listJson.add(json);
     	}
     	return listJson.toString();
     } 
     
     @RequestMapping(value="response.request.count", method = RequestMethod.GET)
-    public @ResponseBody String countResponseRequest(@RequestParam("username") String username) throws JSONException{
+    public @ResponseBody String countResponseRequest(Principal principal) throws JSONException{
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
-        List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Rejected", 3);
-	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Approved", 3);
+        List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(principal.getName(), "Rejected", 3);
+	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(principal.getName(), "Approved", 3);
 	    int count = 0;
 	    count = listApproveRequest.size() + listRejectedRequest.size();
     	
@@ -514,11 +523,11 @@ public class RequestController {
     } 
     
     @RequestMapping(value="request.count", method = RequestMethod.GET)
-    public @ResponseBody String countRequest(@RequestParam("username") String username) throws JSONException{
+    public @ResponseBody String countRequest(Principal principal) throws JSONException{
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
-        List<Request> listCreatedRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Created", 1);
-	    List<Request> listUpdateRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Updated", 1);
+        List<Request> listCreatedRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(principal.getName(), "Created", 1);
+	    List<Request> listUpdateRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(principal.getName(), "Updated", 1);
 	    int count = 0;
 	    count = listCreatedRequest.size() + listUpdateRequest.size();
     	

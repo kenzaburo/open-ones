@@ -9,20 +9,26 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		var jsonArr = [];
-		var user = $("#loginUser").html();
-		alert(user);
 		$.ajax({
             url: "receive.request.load",
-            data: {username: user},
             dataType: 'json',
             type: 'GET',
             success: function (res) {
             	for (var i = 0; i < res.length; i++) {
-            		var obj = new Object();
+            		if (res[i].readStatus == 1) {
+            			var obj = new Object();
+            			obj.requestId = "<strong><a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a></strong>" ;
+            			obj.createName = "<strong>" + res[i].createName + "</strong>";
+            			obj.time = "<strong><span style='color:blue'>" + res[i].startDate + "</span> - <span style='color:red'>" + res[i].endDate + "</span></strong>";
+            			obj.reason = "<strong>" + res[i].reason + "</strong>";
+            		}
+            		else {
+            			var obj = new Object();
             			obj.requestId = "<a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
             			obj.createName = res[i].createName;
             			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
             			obj.reason = res[i].reason;
+            		}
             		var jsonIn = JSON.stringify(obj);
             		jsonArr.push(obj);
             	}  
@@ -101,6 +107,4 @@
          });
 	});
 </script>
-
-<p id="loginUser" hidden="hidden">${pageContext.request.userPrincipal.name}</p>
 <div id="example1" class="handsontable"></div>
