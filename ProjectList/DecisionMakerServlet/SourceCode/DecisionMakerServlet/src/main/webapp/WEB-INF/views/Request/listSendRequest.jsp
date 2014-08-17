@@ -10,7 +10,6 @@
 	$(document).ready(function () {
 		var jsonArr = [];
 		var user = $("#loginUser").html();
-		alert(user);
 		$.ajax({
             url: "send.request.load",
             data: {username: user},

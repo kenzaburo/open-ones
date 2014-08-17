@@ -1,6 +1,48 @@
 ﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <!-- Menu Horizontal -->
+<script type="text/javascript">
+$(document).ready(function () {
+	var user = $("#loginUser").html();
+	$.ajax({
+	    url: "response.request.count",
+	    data: {username: user},
+	    dataType: 'json',
+	    type: 'GET',
+	    success: function (res) {
+	    	alert(res.countResponseRequest);
+	    	if (res.countResponseRequest > 0) {
+	    		$("#countResponse").html("<a class='button blue small' href='listSendRequest' >" + res.countResponseRequest + " New Response </a>");
+	    	}
+	    	else {
+	    		$("#countResponse").html();
+	    	}
+	    },
+	    fail: function() {
+	    	alert("FAIL");
+	    }
+    });
+	$.ajax({
+	    url: "request.count",
+	    data: {username: user},
+	    dataType: 'json',
+	    type: 'GET',
+	    success: function (res) {
+	    	alert(res.countRequest);
+	    	if (res.countRequest > 0) {
+	    		$("#countRequest").html("<a class='button red small' href='listReceiveRequest' >" + res.countRequest + " New Request </a>");
+	    	}
+	    	else {
+	    		$("#countRequest").html("");
+	    	}
+	    },
+	    fail: function() {
+	    	alert("FAIL");
+	    }
+    });
+});
+</script>
+<p id="loginUser" hidden="hidden">${pageContext.request.userPrincipal.name}</p>
 <ul class="menu">
 	<li class="current"><a href=""><i class="icon-home"></i>Trang chủ</a></li>
   	<li><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>
@@ -12,7 +54,8 @@
 	      <li class="divider"><a href="myOpenTask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
 	  	</ul></li>
 	  <li><a href="createRequest"><i class="icon-magic"></i>Tạo yêu cầu</a></li>
-	  <li style="display: inline-block;"><a class="button red small" href="" >1 New Request</a></li>
+	  <li style="display: inline-block;" id="countRequest"></li>
+	  <li style="display: inline-block; margin-left:10px;" id="countResponse"></li>
 	  <li class="right" style="display: inline-block;"><a href=""><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
 	    <ul>
 	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i>Thoát</a></li>

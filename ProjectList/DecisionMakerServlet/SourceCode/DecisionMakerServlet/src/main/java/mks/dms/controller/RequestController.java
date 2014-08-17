@@ -360,8 +360,8 @@ public class RequestController {
 //    	kiem tra tai khoan dang nhap phai tai khoan duoc nhan request ko
 //    	neu phai
     	if (request.getReadstatus() == 1) {
-    		request.setReadstatus(2);
-    		requestService.updateRequest(request);
+//    		request.setReadstatus(2);
+//    		requestService.updateRequest(request);
     	}
     	
 //    	kiem tra tai khoan dang nhap phai tai khoan tao request ko
@@ -456,65 +456,6 @@ public class RequestController {
     	return mav;
     }
     
-    /**
-     * Process count new Request
-     * @throws IOException 
-     * @throws JSONException 
-     **/
-    @RequestMapping(value="countSendRequest")
-    public String countSendRequest(HttpServletRequest req, HttpServletResponse response) throws IOException, JSONException {
-    	BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-		String json = "";
-	        if (br != null) {
-	            json = br.readLine();
-	        }
-	    JSONObject jsonObject = new JSONObject(json);
-	    String username = (String) jsonObject.get("username");
-	    
-	    List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Rejected", 3);
-	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Approved", 3);
-	    int count = 0;
-	    count = listApproveRequest.size() + listRejectedRequest.size();
-	    
-	    response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out;
-        out = response.getWriter();
-        out.println("<div id='countSendRequest'>");
-        out.println(count);
-        out.println("</div>");
-        out.flush();
-        return "home";
-    }
-    
-    /**
-     * Process count new Request
-     * @throws IOException 
-     * @throws JSONException 
-     **/
-    @RequestMapping(value="countReceiveRequest")
-    public String countReceiveRequest(HttpServletRequest req, HttpServletResponse response) throws IOException, JSONException {
-    	BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-		String json = "";
-	        if (br != null) {
-	            json = br.readLine();
-	        }
-	    JSONObject jsonObject = new JSONObject(json);
-	    String username = (String) jsonObject.get("username");
-	    
-	    List<Request> listRejectedRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Created", 1);
-	    List<Request> listApproveRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Updated", 1);
-	    int count = 0;
-	    count = listApproveRequest.size() + listRejectedRequest.size();
-	    
-	    response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out;
-        out = response.getWriter();
-        out.println("<div id='countReceiveRequest'>");
-        out.println(count);
-        out.println("</div>");
-        out.flush();
-        return "home";
-    }
     
     @RequestMapping(value="send.request.load", method = RequestMethod.GET)
     public @ResponseBody String loadSendRequest(@RequestParam("username") String username) throws JSONException{
@@ -554,7 +495,36 @@ public class RequestController {
     		json.put("reason", request.getContent());
     		listJson.add(json);
     	}
-//    	System.out.println("Chuoi Json la " + listJson.toString());
     	return listJson.toString();
     } 
+    
+    @RequestMapping(value="response.request.count", method = RequestMethod.GET)
+    public @ResponseBody String countResponseRequest(@RequestParam("username") String username) throws JSONException{
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+        List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Rejected", 3);
+	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Approved", 3);
+	    int count = 0;
+	    count = listApproveRequest.size() + listRejectedRequest.size();
+    	
+		JSONObject json = new JSONObject();
+		json.put("countResponseRequest", count);
+    		
+    	return json.toString();
+    } 
+    
+    @RequestMapping(value="request.count", method = RequestMethod.GET)
+    public @ResponseBody String countRequest(@RequestParam("username") String username) throws JSONException{
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+        List<Request> listCreatedRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Created", 1);
+	    List<Request> listUpdateRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Updated", 1);
+	    int count = 0;
+	    count = listCreatedRequest.size() + listUpdateRequest.size();
+    	
+		JSONObject json = new JSONObject();
+		json.put("countRequest", count);
+    		
+    	return json.toString();
+    }
 }
