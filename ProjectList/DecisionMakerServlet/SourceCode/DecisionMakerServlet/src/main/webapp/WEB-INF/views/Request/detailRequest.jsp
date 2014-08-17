@@ -7,7 +7,7 @@
 <fmt:formatDate value="${request.endate}" pattern="yyyy-MM-dd" var="endDate"/>
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
 <script type="text/javascript" src="resources/js/createRequest.js"></script>
-<script type="text/javascript" src="resources/js/confirmFunction.js"></script>
+<script type="text/javascript" src="resources/js/validateFunction.js"></script>
 <script>
 $(function(){
 	var status = 0;
@@ -15,10 +15,12 @@ $(function(){
 	function showHideForm() {
 		if (status == 0) {
 			$("#reason").show("slow");
+			$("#approve").hide("slow");
 			status = 1;
 		}
 		else {
-			$("#reason").hide("fast");
+			$("#reason").hide("slow");
+			$("#approve").show("slow");
 			status = 0;
 		}
 	}
@@ -45,11 +47,11 @@ $(function(){
 			</c:if>
 			<c:if test="${request.status == 'Rejected'}">
 				<label for="title" class="col_1">Trạng thái: </label>
-				<button class="small red">Updated</button>
+				<button class="small red">Rejected</button>
 			</c:if>
 			<c:if test="${request.status == 'Approved'}">
 				<label for="title" class="col_1">Trạng thái: </label>
-				<button class="small green">Updated</button>
+				<button class="small green">Approved</button>
 			</c:if>
 		</div>
 		<div>
@@ -79,12 +81,13 @@ $(function(){
 <!-- 	Kiem tra tai khoan dang nhap co phai tai khoan nhan yeu cau khong -->
 	<c:if test="${pageContext.request.userPrincipal.name == request.managerName}">
 		<div>
-			<a class="button" href="approveRequest?id=${request.id}">Duyệt</a>
+			<a class="button" href="approveRequest?id=${request.id}" id="approve">Duyệt</a>
 			<a class="button" id="reject">Từ chối</a>
-			<form action="rejectRequest" onclick='return confirmRejectFunction()' id="reason">
+			<form action="rejectRequest" id="reason">
 				<input type="hidden" name="requestId" value="${request.id}">
 				<label for="content" class="col_2">Lý do: </label>
 				<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="rejectContent" rows="5" placeholder="Lý do từ chối"></textarea>
+				<br>
 				<input type="submit" value="Xác nhận">
 			</form>
 		</div>

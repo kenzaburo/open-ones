@@ -11,5 +11,11 @@
 	<definition name="editRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/editRequest.jsp" />
 	</definition>
+	<definition name="listSendRequest" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Request/listSendRequest.jsp" />
+	</definition>
+	<definition name="listReceiveRequest" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Request/listReceiveRequest.jsp" />
+	</definition>
   
 </tiles-definitions>

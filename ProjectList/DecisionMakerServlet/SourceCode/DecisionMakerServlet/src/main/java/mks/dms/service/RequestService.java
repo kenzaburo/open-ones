@@ -1,12 +1,16 @@
 package mks.dms.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.log4j.Logger;
 
+import mks.dms.dao.controller.ExRequestJpaController;
+import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.controller.RequestJpaController;
+import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.*;
@@ -52,5 +56,4 @@ public class RequestService {
 			controller.create(request);
 		}
 	}
-	
 }

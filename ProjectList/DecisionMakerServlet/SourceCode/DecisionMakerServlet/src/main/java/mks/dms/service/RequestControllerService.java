@@ -7,7 +7,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import mks.dms.dao.controller.ExRequestJpaController;
+import mks.dms.dao.controller.ExUserJpaController;
+import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.controller.UserJpaController;
+import mks.dms.dao.controller.exceptions.IllegalOrphanException;
+import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
@@ -21,7 +26,7 @@ import mks.dms.model.RequestCreateModel;
  * @author TriLVH, ThachLe
  */
 @Service
-public class RequestControllerService {
+public class RequestControllerService extends BaseService{
     // Logger to log information to console.
     private final static Logger LOG = Logger.getLogger(RequestControllerService.class);
     
@@ -120,5 +125,152 @@ public class RequestControllerService {
                 request.getWatcherCollection().add(watcher);
             }
         }
+    }
+    
+    /**
+     * Get Request By Cd.
+     * <br/>
+     * @return Request
+     */
+    public Request getRequestById(int id) {
+    	Request request;
+    	
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    
+    	request = daoCtrl.findRequest(id);
+    	
+    	return request;
+    }
+    
+    /**
+     * Get List<Request> By createdbyName.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByCreatedbyName(String createdbyName) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByCreatename(createdbyName);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By managerName.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByManagerName(String managerName) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByManagername(managerName);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By createdbyName, status and readstatus.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByCreatedbyNameAndStatusAndReadstatus(String createdbyName, String status, int readstatus) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByCreatenameAndStatusAndReadstatus(createdbyName, status, readstatus);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By managerName.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByManagerNameAndStatusAndReadstatus(String managerName, String status, int readstatus) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByManagernameAndStatusAndReadstatus(managerName, status, readstatus);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get Update Request.
+     * @Param request
+     * @return 
+     * @throws Exception 
+     * @throws NonexistentEntityException 
+     * @throws IllegalOrphanException 
+     */
+    public void updateRequest(Request request) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    	
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    
+    	daoCtrl.edit(request);
+    }
+    /**
+     * Get User By Cd.
+     * @param cd
+     * @return User
+     */
+    public User getUserById(int id) {
+    	User user;
+    	
+    	UserJpaController daoCtrl = new UserJpaController(emf);
+    	
+    	user = daoCtrl.findUser(id);
+    	
+    	return user;
+    }
+    
+    /**
+     * Get User By Cd.
+     * @param username
+     * @return User
+     */
+    public User getUserByUsername(String username) {
+    	User user;
+    	
+    	ExUserJpaController daoCtrl = new ExUserJpaController(emf);
+    	
+    	user = daoCtrl.findUserByUsername(username);
+    	
+    	return user;
+    }
+    
+    
+    /**
+     * Get all of User.
+     * <br/>
+     * @return list of User
+     */
+    public List<User> getAllUser() {
+    	List<User> listUsers;
+    	
+    	UserJpaController userDaoCtrl = new UserJpaController(emf);
+    	
+    	listUsers = userDaoCtrl.findUserEntities();
+    	
+    	return listUsers;
+    }
+    
+    /**
+     * Create Request.
+     * @param parentDepartment
+     * @param data
+     * @return
+     */
+    public boolean createRequest(Request request) {
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    	daoCtrl.create(request);
+    	return true;
     }
 }

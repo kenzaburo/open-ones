@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.JsonObject;
 
 import java.util.Properties;
 
@@ -142,7 +146,7 @@ public class RequestController {
         List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         LOG.debug("lstRequestTypes=" + lstRequestTypes);
         mav.addObject("lstReqTypes", lstRequestTypes);
-        List<User> listUsers = masterService.getAllUser();
+        List<User> listUsers = requestService.getAllUser();
         mav.addObject("listUsers", listUsers);
 //        mav.addObject("result", 0);
     	return mav;
@@ -195,19 +199,19 @@ public class RequestController {
     	if (requestType.equals("Task")) {
     		request.setType(1);
     		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
-        	User receiveUser = masterService.getUserById(userId);
+        	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Rule")) {
     		request.setType(2);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserById(userId);
+        	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Announcement")) {
     		request.setType(3);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserById(userId);
+        	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Leave")) {
@@ -220,12 +224,12 @@ public class RequestController {
     		String leaveCreate = req.getParameter("leaveCreate");
 //    		System.out.println(req.getParameter("leaveStartDay"));
     		
-    		User createUser = masterService.getUserByUsername(leaveCreate);
-    		Department createDepartmentId = masterService.getDepartmentByCd(createUser.getDepartmentId());
+    		User createUser = requestService.getUserByUsername(leaveCreate);
+//    		Department createDepartmentId = requestService.getDepartmentByCd(createUser.getDepartmentId());
     		request.setCreatedbyAccount(createUser.getUsername());
     		request.setCreatedbyId(createUser);
     		request.setCreatedbyName(createUser.getUsername());
-    		request.setDepartmentsId(createDepartmentId);
+//    		request.setDepartmentsId(createDepartmentId);
     		
     		request.setCreated(today);
     		request.setContent(leaveContent);
@@ -239,12 +243,12 @@ public class RequestController {
     		request.setEndate(leaveEndDay);
     		request.setReadstatus(1);
     		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = masterService.getUserById(userCd);
+        	User receiveUser = requestService.getUserById(userCd);
         	request.setManagerId(receiveUser);
         	request.setManagerAccount(receiveUser.getUsername());
         	request.setManagerName(receiveUser.getUsername());
-        	
-        	masterService.createRequest(request);
+
+        	requestService.createRequest(request);
         	
         	String emailContent = "Đơn xin nghỉ việc của " + 
         							 leaveCreate + 
@@ -270,8 +274,8 @@ public class RequestController {
     	
 //    	Neu phai
     	ModelAndView mav = new ModelAndView("editRequest");
-    	Request request = masterService.getRequestById(id);
-    	List<User> listUsers = masterService.getAllUser();
+    	Request request = requestService.getRequestById(id);
+    	List<User> listUsers = requestService.getAllUser();
         mav.addObject("listUsers", listUsers);
     	mav.addObject("request", request);
     	return mav;
@@ -283,25 +287,25 @@ public class RequestController {
     	String requestType = req.getParameter("reqType");
     	int requestId = Integer.parseInt(req.getParameter("requestId"));
     	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-    	Request request = masterService.getRequestById(requestId);
+    	Request request = requestService.getRequestById(requestId);
     	String leaveCreate = req.getParameter("leaveCreate");
     	if (request.getCreatedbyName().equals(leaveCreate)) {
     		if (requestType.equals("Task")) {
         		request.setType(1);
         		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
-            	User receiveUser = masterService.getUserById(userId);
+            	User receiveUser = requestService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Rule")) {
         		request.setType(2);
         		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = masterService.getUserById(userId);
+            	User receiveUser = requestService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Announcement")) {
         		request.setType(3);
         		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = masterService.getUserById(userId);
+            	User receiveUser = requestService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Leave")) {
@@ -323,7 +327,7 @@ public class RequestController {
         		request.setStartdate(leaveStartDay);
         		request.setEndate(leaveEndDay);
         		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = masterService.getUserById(userCd);
+            	User receiveUser = requestService.getUserById(userCd);
             	request.setManagerId(receiveUser);
             	request.setManagerAccount(receiveUser.getUsername());
             	request.setManagerName(receiveUser.getUsername());
@@ -338,7 +342,7 @@ public class RequestController {
             							 "Lý do: " + leaveContent;
             	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
         	}
-        	masterService.updateRequest(request);
+        	requestService.updateRequest(request);
         	request.setLastmodified(today);
         	return "redirect:detailRequest?id=" + request.getId();
     	}
@@ -350,21 +354,21 @@ public class RequestController {
     
     @RequestMapping(value="detailRequest")
     public ModelAndView showDetailRequestPage(@RequestParam("id") int id) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	Request request = masterService.getRequestById(id);
+    	Request request = requestService.getRequestById(id);
     	ModelAndView mav = new ModelAndView("detailRequest");
     	mav.addObject("request", request);
 //    	kiem tra tai khoan dang nhap phai tai khoan duoc nhan request ko
 //    	neu phai
     	if (request.getReadstatus() == 1) {
     		request.setReadstatus(2);
-    		masterService.updateRequest(request);
+    		requestService.updateRequest(request);
     	}
     	
 //    	kiem tra tai khoan dang nhap phai tai khoan tao request ko
 //    	neu phai
     	if (request.getReadstatus() == 3) {
     		request.setReadstatus(4);
-    		masterService.updateRequest(request);
+    		requestService.updateRequest(request);
     	}
     	return mav;
     }
@@ -380,7 +384,7 @@ public class RequestController {
 //    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
     	
 //    	Neu phai
-    	Request request = masterService.getRequestById(id);
+    	Request request = requestService.getRequestById(id);
     	request.setStatus("Approved");
     	request.setLastmodified(today);
     	request.setReadstatus(3);
@@ -390,7 +394,7 @@ public class RequestController {
 //    	request.setLastmodifiedbyId(lastmodifiedbyId);
 //    	request.setLastmodifiedbyName(lastmodifiedbyName);
     	
-    	masterService.updateRequest(request);
+    	requestService.updateRequest(request);
     	
     	return "redirect:detailRequest?id=" + id;
     }
@@ -410,7 +414,7 @@ public class RequestController {
 //    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
     	
 //    	Neu phai
-    	Request request = masterService.getRequestById(id);
+    	Request request = requestService.getRequestById(id);
     	request.setStatus("Rejected");
     	request.setReadstatus(3);
     	
@@ -425,7 +429,7 @@ public class RequestController {
 //    	request.setLastmodifiedbyId(lastmodifiedbyId);
 //    	request.setLastmodifiedbyName(lastmodifiedbyName);
     	
-    	masterService.updateRequest(request);
+    	requestService.updateRequest(request);
     	
     	return "redirect:detailRequest?id=" + id;
     }
@@ -434,10 +438,10 @@ public class RequestController {
      * Show listSendRequest page
      **/
     @RequestMapping(value="listSendRequest")
-    public ModelAndView showPageListSendRequest(@RequestParam("username") String username) {
-    	List<Request> listRequest = masterService.getListRequestByCreatedbyName(username);
+    public ModelAndView showPageListSendRequest() {
+//    	List<Request> listRequest = requestService.getListRequestByCreatedbyName(username);
     	ModelAndView mav = new ModelAndView("listSendRequest");
-    	mav.addObject("listRequest", listRequest);
+//    	mav.addObject("listRequest", listRequest);
     	return mav;
     }
     
@@ -445,10 +449,10 @@ public class RequestController {
      * Show listReceiveRequest page
      **/
     @RequestMapping(value="listReceiveRequest")
-    public ModelAndView showPageListReceiveRequest(@RequestParam("username") String username) {
-    	List<Request> listRequest = masterService.getListRequestByManagerName(username);
+    public ModelAndView showPageListReceiveRequest() {
+//    	List<Request> listRequest = requestService.getListRequestByManagerName(username);
     	ModelAndView mav = new ModelAndView("listReceiveRequest");
-    	mav.addObject("listRequest", listRequest);
+//    	mav.addObject("listRequest", listRequest);
     	return mav;
     }
     
@@ -467,8 +471,8 @@ public class RequestController {
 	    JSONObject jsonObject = new JSONObject(json);
 	    String username = (String) jsonObject.get("username");
 	    
-	    List<Request> listRejectedRequest = masterService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Rejected", 3);
-	    List<Request> listApproveRequest = masterService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Approved", 3);
+	    List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Rejected", 3);
+	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(username, "Approved", 3);
 	    int count = 0;
 	    count = listApproveRequest.size() + listRejectedRequest.size();
 	    
@@ -497,8 +501,8 @@ public class RequestController {
 	    JSONObject jsonObject = new JSONObject(json);
 	    String username = (String) jsonObject.get("username");
 	    
-	    List<Request> listRejectedRequest = masterService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Created", 1);
-	    List<Request> listApproveRequest = masterService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Updated", 1);
+	    List<Request> listRejectedRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Created", 1);
+	    List<Request> listApproveRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(username, "Updated", 1);
 	    int count = 0;
 	    count = listApproveRequest.size() + listRejectedRequest.size();
 	    
@@ -511,4 +515,46 @@ public class RequestController {
         out.flush();
         return "home";
     }
+    
+    @RequestMapping(value="send.request.load", method = RequestMethod.GET)
+    public @ResponseBody String loadSendRequest(@RequestParam("username") String username) throws JSONException{
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+    	List<Request> listRequest = requestService.getListRequestByCreatedbyName(username);
+    	System.out.println("USERNAME la " + username);
+    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+    	for (Request request:listRequest) {
+    		JSONObject json = new JSONObject();
+    		json.put("requestId", request.getId());
+    		json.put("requestTitle", request.getTitle());
+    		json.put("managerName", request.getManagerName());
+    		json.put("startDate", dateFormat.format(request.getStartdate()));
+    		json.put("endDate", dateFormat.format(request.getEndate()));
+    		json.put("reason", request.getContent());
+    		listJson.add(json);
+    	}
+//    	System.out.println("Chuoi Json la " + listJson.toString());
+    	return listJson.toString();
+    } 
+    
+    @RequestMapping(value="receive.request.load", method = RequestMethod.GET)
+    public @ResponseBody String loadReceiveRequest(@RequestParam("username") String username) throws JSONException{
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+    	List<Request> listRequest = requestService.getListRequestByManagerName(username);
+    	System.out.println("USERNAME la " + username);
+    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+    	for (Request request:listRequest) {
+    		JSONObject json = new JSONObject();
+    		json.put("requestId", request.getId());
+    		json.put("requestTitle", request.getTitle());
+    		json.put("createName", request.getCreatedbyName());
+    		json.put("startDate", dateFormat.format(request.getStartdate()));
+    		json.put("endDate", dateFormat.format(request.getEndate()));
+    		json.put("reason", request.getContent());
+    		listJson.add(json);
+    	}
+//    	System.out.println("Chuoi Json la " + listJson.toString());
+    	return listJson.toString();
+    } 
 }

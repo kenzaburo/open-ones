@@ -21,4 +21,14 @@ $(function() {
 			return false;
 		}
 	});
+	$("#reason").submit(function () {
+		var confrim = confirm("Bạn có muốn từ chối yêu cầu này?");
+	 	if (confrim) {
+	 		return true;
+	 	} else {
+	 		$("#approve").show("slow");
+	 		return false;
+	 	}
+	});
+	
 });

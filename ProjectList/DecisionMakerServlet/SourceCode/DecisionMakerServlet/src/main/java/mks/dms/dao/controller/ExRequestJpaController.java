@@ -40,7 +40,7 @@ public class ExRequestJpaController extends RequestJpaController{
 	        EntityManager em = getEntityManager();
 	        try {
 	            Query query = em.createQuery("Select r FROM Request r WHERE r.createdbyName = :createdbyName AND r.status = :status AND r.readstatus = :readstatus");
-	            query.setParameter("createname", createdbyName);
+	            query.setParameter("createdbyName", createdbyName);
 	            query.setParameter("status", status);
 	            query.setParameter("readstatus", readstatus);
 	            List<Request> listRequest = (List<Request>) query.getResultList();
@@ -84,7 +84,7 @@ public class ExRequestJpaController extends RequestJpaController{
 			        EntityManager em = getEntityManager();
 			        try {
 			            Query query = em.createQuery("Select r FROM Request r WHERE r.createdbyName = :createdbyName");
-			            query.setParameter("createname", createdbyName);
+			            query.setParameter("createdbyName", createdbyName);
 			            List<Request> listRequest = (List<Request>) query.getResultList();
 			            
 			            return listRequest;
@@ -102,7 +102,7 @@ public class ExRequestJpaController extends RequestJpaController{
 				    public List<Request> getListRequestByManagername(String managerName) {
 				        EntityManager em = getEntityManager();
 				        try {
-				            Query query = em.createQuery("Select r FROM Request r WHERE r.managerName = :managerName AND r.status = :status AND r.readstatus = :readstatus");
+				            Query query = em.createQuery("Select r FROM Request r WHERE r.managerName = :managerName");
 				            query.setParameter("managerName", managerName);
 				            List<Request> listRequest = (List<Request>) query.getResultList();
 				            
@@ -111,5 +111,4 @@ public class ExRequestJpaController extends RequestJpaController{
 				            em.close();
 				        }
 				    }
-
 }
