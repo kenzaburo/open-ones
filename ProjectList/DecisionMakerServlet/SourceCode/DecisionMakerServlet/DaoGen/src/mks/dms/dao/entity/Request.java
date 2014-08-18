@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "request")
@@ -38,18 +38,22 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Request.findAll", query = "SELECT r FROM Request r"),
     @NamedQuery(name = "Request.findById", query = "SELECT r FROM Request r WHERE r.id = :id"),
-    @NamedQuery(name = "Request.findByType", query = "SELECT r FROM Request r WHERE r.type = :type"),
+    @NamedQuery(name = "Request.findByRequesttypeId", query = "SELECT r FROM Request r WHERE r.requesttypeId = :requesttypeId"),
+    @NamedQuery(name = "Request.findByRequesttypeCd", query = "SELECT r FROM Request r WHERE r.requesttypeCd = :requesttypeCd"),
+    @NamedQuery(name = "Request.findByRequesttypeName", query = "SELECT r FROM Request r WHERE r.requesttypeName = :requesttypeName"),
     @NamedQuery(name = "Request.findByTitle", query = "SELECT r FROM Request r WHERE r.title = :title"),
-    @NamedQuery(name = "Request.findByContent", query = "SELECT r FROM Request r WHERE r.content = :content"),
     @NamedQuery(name = "Request.findByStartdate", query = "SELECT r FROM Request r WHERE r.startdate = :startdate"),
-    @NamedQuery(name = "Request.findByEndate", query = "SELECT r FROM Request r WHERE r.endate = :endate"),
+    @NamedQuery(name = "Request.findByEnddate", query = "SELECT r FROM Request r WHERE r.enddate = :enddate"),
     @NamedQuery(name = "Request.findByAssignedAccount", query = "SELECT r FROM Request r WHERE r.assignedAccount = :assignedAccount"),
     @NamedQuery(name = "Request.findByAssignedName", query = "SELECT r FROM Request r WHERE r.assignedName = :assignedName"),
     @NamedQuery(name = "Request.findByWatchersId", query = "SELECT r FROM Request r WHERE r.watchersId = :watchersId"),
     @NamedQuery(name = "Request.findByManagerAccount", query = "SELECT r FROM Request r WHERE r.managerAccount = :managerAccount"),
     @NamedQuery(name = "Request.findByManagerName", query = "SELECT r FROM Request r WHERE r.managerName = :managerName"),
     @NamedQuery(name = "Request.findByLabelsId", query = "SELECT r FROM Request r WHERE r.labelsId = :labelsId"),
+    @NamedQuery(name = "Request.findByDuration", query = "SELECT r FROM Request r WHERE r.duration = :duration"),
+    @NamedQuery(name = "Request.findByDurationunit", query = "SELECT r FROM Request r WHERE r.durationunit = :durationunit"),
     @NamedQuery(name = "Request.findByStatus", query = "SELECT r FROM Request r WHERE r.status = :status"),
+    @NamedQuery(name = "Request.findByReadstatus", query = "SELECT r FROM Request r WHERE r.readstatus = :readstatus"),
     @NamedQuery(name = "Request.findByPlaneffort", query = "SELECT r FROM Request r WHERE r.planeffort = :planeffort"),
     @NamedQuery(name = "Request.findByPlanunit", query = "SELECT r FROM Request r WHERE r.planunit = :planunit"),
     @NamedQuery(name = "Request.findByCreated", query = "SELECT r FROM Request r WHERE r.created = :created"),
@@ -60,51 +64,30 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByLastmodifiedbyName", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
     @NamedQuery(name = "Request.findByLastmodifiedbyAccount", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Request implements Serializable {
-    @Lob
-    @Column(name = "ATTACHMENT1")
-    private byte[] attachment1;
-    @Lob
-    @Column(name = "ATTACHMENT2")
-    private byte[] attachment2;
-    @Lob
-    @Column(name = "ATTACHMENT3")
-    private byte[] attachment3;
-    @Column(name = "DURATION")
-    private Integer duration;
-    @Column(name = "DURATIONUNIT")
-    private Integer durationunit;
-    @Lob()
-    @Column(name = "COMMENT")
-    private String comment;
-    @Column(name = "READSTATUS")
-    private Integer readstatus;
-    @Column(name = "REQUESTTYPE_ID")
-    private Integer requesttypeId;
-    @Column(name = "REQUESTTYPE_CD")
-    private String requesttypeCd;
-    @Column(name = "REQUESTTYPE_NAME")
-    private String requesttypeName;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestId")
-    private Collection<LabelRequest> labelRequestCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "TYPE")
-    private Integer type;
+    @Column(name = "REQUESTTYPE_ID")
+    private Integer requesttypeId;
+    @Column(name = "REQUESTTYPE_CD")
+    private String requesttypeCd;
+    @Column(name = "REQUESTTYPE_NAME")
+    private String requesttypeName;
     @Basic(optional = false)
     @Column(name = "TITLE")
     private String title;
+    @Lob
     @Column(name = "CONTENT")
     private String content;
     @Column(name = "STARTDATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date startdate;
-    @Column(name = "ENDATE")
+    @Column(name = "ENDDATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date endate;
+    private Date enddate;
     @Column(name = "ASSIGNED_ACCOUNT")
     private String assignedAccount;
     @Column(name = "ASSIGNED_NAME")
@@ -117,12 +100,30 @@ public class Request implements Serializable {
     private String managerName;
     @Column(name = "LABELS_ID")
     private Integer labelsId;
+    @Column(name = "DURATION")
+    private Integer duration;
+    @Column(name = "DURATIONUNIT")
+    private Integer durationunit;
     @Column(name = "STATUS")
     private String status;
+    @Lob
+    @Column(name = "COMMENT")
+    private String comment;
+    @Column(name = "READSTATUS")
+    private Integer readstatus;
     @Column(name = "PLANEFFORT")
     private Integer planeffort;
     @Column(name = "PLANUNIT")
     private String planunit;
+    @Lob
+    @Column(name = "ATTACHMENT1")
+    private byte[] attachment1;
+    @Lob
+    @Column(name = "ATTACHMENT2")
+    private byte[] attachment2;
+    @Lob
+    @Column(name = "ATTACHMENT3")
+    private byte[] attachment3;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -140,6 +141,8 @@ public class Request implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_ACCOUNT")
     private String lastmodifiedbyAccount;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reqId")
+    private Collection<LabelRequest> labelRequestCollection;
     @JoinColumn(name = "DEPARTMENTS_ID", referencedColumnName = "ID")
     @ManyToOne
     private Department departmentsId;
@@ -176,12 +179,28 @@ public class Request implements Serializable {
         this.id = id;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getRequesttypeId() {
+        return requesttypeId;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setRequesttypeId(Integer requesttypeId) {
+        this.requesttypeId = requesttypeId;
+    }
+
+    public String getRequesttypeCd() {
+        return requesttypeCd;
+    }
+
+    public void setRequesttypeCd(String requesttypeCd) {
+        this.requesttypeCd = requesttypeCd;
+    }
+
+    public String getRequesttypeName() {
+        return requesttypeName;
+    }
+
+    public void setRequesttypeName(String requesttypeName) {
+        this.requesttypeName = requesttypeName;
     }
 
     public String getTitle() {
@@ -208,12 +227,12 @@ public class Request implements Serializable {
         this.startdate = startdate;
     }
 
-    public Date getEndate() {
-        return endate;
+    public Date getEnddate() {
+        return enddate;
     }
 
-    public void setEndate(Date endate) {
-        this.endate = endate;
+    public void setEnddate(Date enddate) {
+        this.enddate = enddate;
     }
 
     public String getAssignedAccount() {
@@ -264,12 +283,44 @@ public class Request implements Serializable {
         this.labelsId = labelsId;
     }
 
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public Integer getDurationunit() {
+        return durationunit;
+    }
+
+    public void setDurationunit(Integer durationunit) {
+        this.durationunit = durationunit;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Integer getReadstatus() {
+        return readstatus;
+    }
+
+    public void setReadstatus(Integer readstatus) {
+        this.readstatus = readstatus;
     }
 
     public Integer getPlaneffort() {
@@ -288,6 +339,29 @@ public class Request implements Serializable {
         this.planunit = planunit;
     }
 
+    public byte[] getAttachment1() {
+        return attachment1;
+    }
+
+    public void setAttachment1(byte[] attachment1) {
+        this.attachment1 = attachment1;
+    }
+
+    public byte[] getAttachment2() {
+        return attachment2;
+    }
+
+    public void setAttachment2(byte[] attachment2) {
+        this.attachment2 = attachment2;
+    }
+
+    public byte[] getAttachment3() {
+        return attachment3;
+    }
+
+    public void setAttachment3(byte[] attachment3) {
+        this.attachment3 = attachment3;
+    }
 
     public Date getCreated() {
         return created;
@@ -343,6 +417,15 @@ public class Request implements Serializable {
 
     public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
         this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    }
+
+    @XmlTransient
+    public Collection<LabelRequest> getLabelRequestCollection() {
+        return labelRequestCollection;
+    }
+
+    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
+        this.labelRequestCollection = labelRequestCollection;
     }
 
     public Department getDepartmentsId() {
@@ -409,96 +492,6 @@ public class Request implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.Request[ id=" + id + " ]";
-    }
-
-
-    @XmlTransient
-    public Collection<LabelRequest> getLabelRequestCollection() {
-        return labelRequestCollection;
-    }
-
-    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
-        this.labelRequestCollection = labelRequestCollection;
-    }
-
-    public Integer getRequesttypeId() {
-        return requesttypeId;
-    }
-
-    public void setRequesttypeId(Integer requesttypeId) {
-        this.requesttypeId = requesttypeId;
-    }
-
-    public String getRequesttypeCd() {
-        return requesttypeCd;
-    }
-
-    public void setRequesttypeCd(String requesttypeCd) {
-        this.requesttypeCd = requesttypeCd;
-    }
-
-    public String getRequesttypeName() {
-        return requesttypeName;
-    }
-
-    public void setRequesttypeName(String requesttypeName) {
-        this.requesttypeName = requesttypeName;
-    }
-
-    public Integer getReadstatus() {
-        return readstatus;
-    }
-
-    public void setReadstatus(Integer readstatus) {
-        this.readstatus = readstatus;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public Integer getDurationunit() {
-        return durationunit;
-    }
-
-    public void setDurationunit(Integer durationunit) {
-        this.durationunit = durationunit;
-    }
-
-    public byte[] getAttachment1() {
-        return attachment1;
-    }
-
-    public void setAttachment1(byte[] attachment1) {
-        this.attachment1 = attachment1;
-    }
-
-    public byte[] getAttachment2() {
-        return attachment2;
-    }
-
-    public void setAttachment2(byte[] attachment2) {
-        this.attachment2 = attachment2;
-    }
-
-    public byte[] getAttachment3() {
-        return attachment3;
-    }
-
-    public void setAttachment3(byte[] attachment3) {
-        this.attachment3 = attachment3;
     }
     
 }

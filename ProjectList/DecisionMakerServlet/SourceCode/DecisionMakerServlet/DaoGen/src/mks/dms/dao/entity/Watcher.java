@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "watcher")
@@ -34,8 +34,26 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Watcher.findAll", query = "SELECT w FROM Watcher w"),
     @NamedQuery(name = "Watcher.findById", query = "SELECT w FROM Watcher w WHERE w.id = :id"),
     @NamedQuery(name = "Watcher.findByUserAccount", query = "SELECT w FROM Watcher w WHERE w.userAccount = :userAccount"),
-    @NamedQuery(name = "Watcher.findByUserName", query = "SELECT w FROM Watcher w WHERE w.userName = :userName")})
+    @NamedQuery(name = "Watcher.findByUserName", query = "SELECT w FROM Watcher w WHERE w.userName = :userName"),
+    @NamedQuery(name = "Watcher.findByCreated", query = "SELECT w FROM Watcher w WHERE w.created = :created"),
+    @NamedQuery(name = "Watcher.findByCreatedbyId", query = "SELECT w FROM Watcher w WHERE w.createdbyId = :createdbyId"),
+    @NamedQuery(name = "Watcher.findByCreatedbyAccount", query = "SELECT w FROM Watcher w WHERE w.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Watcher.findByCreatedbyName", query = "SELECT w FROM Watcher w WHERE w.createdbyName = :createdbyName"),
+    @NamedQuery(name = "Watcher.findByLastmodified", query = "SELECT w FROM Watcher w WHERE w.lastmodified = :lastmodified"),
+    @NamedQuery(name = "Watcher.findByLastmodifiedbyId", query = "SELECT w FROM Watcher w WHERE w.lastmodifiedbyId = :lastmodifiedbyId"),
+    @NamedQuery(name = "Watcher.findByLastmodifiedbyName", query = "SELECT w FROM Watcher w WHERE w.lastmodifiedbyName = :lastmodifiedbyName"),
+    @NamedQuery(name = "Watcher.findByLastmodifiedbyAccount", query = "SELECT w FROM Watcher w WHERE w.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Watcher implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Integer id;
+    @Column(name = "USER_ACCOUNT")
+    private String userAccount;
+    @Column(name = "USER_NAME")
+    private String userName;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -55,16 +73,6 @@ public class Watcher implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_ACCOUNT")
     private String lastmodifiedbyAccount;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
-    private Integer id;
-    @Column(name = "USER_ACCOUNT")
-    private String userAccount;
-    @Column(name = "USER_NAME")
-    private String userName;
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     @ManyToOne
     private User userId;
@@ -77,6 +85,11 @@ public class Watcher implements Serializable {
 
     public Watcher(Integer id) {
         this.id = id;
+    }
+
+    public Watcher(Integer id, Date created) {
+        this.id = id;
+        this.created = created;
     }
 
     public Integer getId() {
@@ -101,47 +114,6 @@ public class Watcher implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
-    public Request getReqId() {
-        return reqId;
-    }
-
-    public void setReqId(Request reqId) {
-        this.reqId = reqId;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Watcher)) {
-            return false;
-        }
-        Watcher other = (Watcher) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "mks.dms.dao.entity.Watcher[ id=" + id + " ]";
     }
 
     public Date getCreated() {
@@ -206,6 +178,47 @@ public class Watcher implements Serializable {
 
     public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
         this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public Request getReqId() {
+        return reqId;
+    }
+
+    public void setReqId(Request reqId) {
+        this.reqId = reqId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Watcher)) {
+            return false;
+        }
+        Watcher other = (Watcher) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "mks.dms.dao.entity.Watcher[ id=" + id + " ]";
     }
     
 }

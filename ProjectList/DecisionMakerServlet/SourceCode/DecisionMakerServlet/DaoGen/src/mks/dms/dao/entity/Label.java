@@ -47,8 +47,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Label.findByLastmodifiedbyName", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyName = :lastmodifiedbyName"),
     @NamedQuery(name = "Label.findByLastmodifiedbyAccount", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Label implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "labelId")
-    private Collection<LabelRequest> labelRequestCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +81,8 @@ public class Label implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_ACCOUNT")
     private String lastmodifiedbyAccount;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "labelId")
+    private Collection<LabelRequest> labelRequestCollection;
 
     public Label() {
     }
@@ -195,6 +195,15 @@ public class Label implements Serializable {
         this.lastmodifiedbyAccount = lastmodifiedbyAccount;
     }
 
+    @XmlTransient
+    public Collection<LabelRequest> getLabelRequestCollection() {
+        return labelRequestCollection;
+    }
+
+    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
+        this.labelRequestCollection = labelRequestCollection;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -218,15 +227,6 @@ public class Label implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.Label[ id=" + id + " ]";
-    }
-
-    @XmlTransient
-    public Collection<LabelRequest> getLabelRequestCollection() {
-        return labelRequestCollection;
-    }
-
-    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
-        this.labelRequestCollection = labelRequestCollection;
     }
     
 }

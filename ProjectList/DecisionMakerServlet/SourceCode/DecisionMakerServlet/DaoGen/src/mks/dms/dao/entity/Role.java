@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "role")
@@ -33,8 +33,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
     @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id"),
-    @NamedQuery(name = "Role.findByRole", query = "SELECT r FROM Role r WHERE r.role = :role")})
+    @NamedQuery(name = "Role.findByRole", query = "SELECT r FROM Role r WHERE r.role = :role"),
+    @NamedQuery(name = "Role.findByCreated", query = "SELECT r FROM Role r WHERE r.created = :created"),
+    @NamedQuery(name = "Role.findByCreatedbyId", query = "SELECT r FROM Role r WHERE r.createdbyId = :createdbyId"),
+    @NamedQuery(name = "Role.findByCreatedbyAccount", query = "SELECT r FROM Role r WHERE r.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Role.findByCreatedbyName", query = "SELECT r FROM Role r WHERE r.createdbyName = :createdbyName"),
+    @NamedQuery(name = "Role.findByLastmodified", query = "SELECT r FROM Role r WHERE r.lastmodified = :lastmodified"),
+    @NamedQuery(name = "Role.findByLastmodifiedbyId", query = "SELECT r FROM Role r WHERE r.lastmodifiedbyId = :lastmodifiedbyId"),
+    @NamedQuery(name = "Role.findByLastmodifiedbyName", query = "SELECT r FROM Role r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
+    @NamedQuery(name = "Role.findByLastmodifiedbyAccount", query = "SELECT r FROM Role r WHERE r.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Role implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Integer id;
+    @Column(name = "ROLE")
+    private String role;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -54,14 +70,6 @@ public class Role implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_ACCOUNT")
     private String lastmodifiedbyAccount;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
-    private Integer id;
-    @Column(name = "ROLE")
-    private String role;
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     @ManyToOne
     private User userId;
@@ -71,6 +79,11 @@ public class Role implements Serializable {
 
     public Role(Integer id) {
         this.id = id;
+    }
+
+    public Role(Integer id, Date created) {
+        this.id = id;
+        this.created = created;
     }
 
     public Integer getId() {
@@ -87,39 +100,6 @@ public class Role implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Role)) {
-            return false;
-        }
-        Role other = (Role) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "mks.dms.dao.entity.Role[ id=" + id + " ]";
     }
 
     public Date getCreated() {
@@ -184,6 +164,39 @@ public class Role implements Serializable {
 
     public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
         this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Role)) {
+            return false;
+        }
+        Role other = (Role) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "mks.dms.dao.entity.Role[ id=" + id + " ]";
     }
     
 }

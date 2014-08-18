@@ -21,6 +21,7 @@ import mks.dms.dao.entity.User;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestControllerService;
+import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -168,27 +169,54 @@ public class RequestController {
         // Debug data of model
         Request request = model.getRequest();
         LOG.debug("Binding result; hasError=" + result.hasErrors());
-        LOG.debug("type=" + request.getType());
-        LOG.debug("title=" + request.getTitle());
-        LOG.debug("content=" + request.getContent());
-        LOG.debug("assigned id=" + request.getAssignedId().getId());
-        LOG.debug("assigned cd=" + request.getAssignedId().getCd());
-        LOG.debug("assigned username=" + request.getAssignedId().getUsername());
+        //LOG.debug("type id=" + request.getRequesttypeId());
+        LOG.debug("type cd=" + request.getRequesttypeCd());                       // have value from client
+        //LOG.debug("type name=" + request.getRequesttypeName());
+        LOG.debug("title=" + request.getTitle());                                 // For all requests 
+        LOG.debug("content=" + request.getContent());                             // For all requests
+        if (request.getAssignedId() != null) {
+            LOG.debug("assigned id=" + request.getAssignedId().getId());          // Task
+            // LOG.debug("assigned cd=" + request.getAssignedId().getCd());
+            // LOG.debug("assigned username=" + request.getAssignedId().getUsername());
+        }
         
-        LOG.debug("manager id=" + request.getManagerId().getId());
-        LOG.debug("manager cd=" + request.getManagerId().getCd());
-        LOG.debug("manager username=" + request.getManagerId().getUsername());
+        
+        if (request.getManagerId() != null) {
+            LOG.debug("manager id=" + request.getManagerId().getId());                // Task | Leave
+            // LOG.debug("manager cd=" + request.getManagerId().getCd());             // Task | Leave
+            // LOG.debug("manager username=" + request.getManagerId().getUsername()); // Task | Leave
+        }
+        
+        LOG.debug("Start date=" + request.getStartdate());                         // Task | Leave
+        LOG.debug("End date=" + request.getEnddate());                             // Task | Leave
         
         // Save request by call to request controller service
-        requestService.saveRequest(model, masterService);;
+        boolean retOK = requestService.saveRequest(model, masterService);;
                 
         LOG.debug("SaveRequest controller init data: " + model.getRequest());
         
+        // Send email if the request is "Leave"
+        if (retOK && (AppCons.LEAVE.equals(request.getRequesttypeCd()))) {
+            sendEmailLeave(request);
+        }
+
         return mav;
     }
     
+    /**
+    * Sending email to request a leave.
+    * @param request contain information data from client
+    */
+    private void sendEmailLeave(Request request) {
+        // TODO Auto-generated method stub
+        
+    }
+
     /** 
      * process when click submit in form createRequest
+     * 18-08-2014:
+     * Thach: Deprecated
+     * @see method saveRequest
      *  */
     @RequestMapping(value="createNewRequest")
     public String createNewRequest(HttpServletRequest req) throws ParseException {
@@ -198,25 +226,25 @@ public class RequestController {
     	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 		
     	if (requestType.equals("Task")) {
-    		request.setType(1);
+    		request.setRequesttypeId(1);
     		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
         	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Rule")) {
-    		request.setType(2);
+    		request.setRequesttypeId(2);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Announcement")) {
-    		request.setType(3);
+    		request.setRequesttypeId(3);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestType.equals("Leave")) {
-    		request.setType(4);
+    		request.setRequesttypeId(4);
     		String leaveContent = req.getParameter("leaveContent");
     		String leaveTitle = req.getParameter("leaveTitle");
     		Date leaveStartDay = formater.parse(req.getParameter("leaveStartDay"));
@@ -241,7 +269,7 @@ public class RequestController {
 //    		set label
     		
     		request.setStartdate(leaveStartDay);
-    		request.setEndate(leaveEndDay);
+    		request.setEnddate(leaveEndDay);
     		request.setReadstatus(1);
     		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = requestService.getUserById(userCd);
@@ -292,25 +320,25 @@ public class RequestController {
     	String leaveCreate = req.getParameter("leaveCreate");
     	if (request.getCreatedbyName().equals(leaveCreate)) {
     		if (requestType.equals("Task")) {
-        		request.setType(1);
+        		request.setRequesttypeId(1);
         		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
             	User receiveUser = requestService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Rule")) {
-        		request.setType(2);
+        		request.setRequesttypeId(2);
         		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
             	User receiveUser = requestService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Announcement")) {
-        		request.setType(3);
+        		request.setRequesttypeId(3);
         		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
             	User receiveUser = requestService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Leave")) {
-        		request.setType(4);
+        		request.setRequesttypeId(4);
         		String leaveContent = req.getParameter("leaveContent");
         		String leaveTitle = req.getParameter("leaveTitle");
         		Date leaveStartDay = formater.parse(req.getParameter("leaveStartDay"));
@@ -326,7 +354,7 @@ public class RequestController {
 //        		set label
         		
         		request.setStartdate(leaveStartDay);
-        		request.setEndate(leaveEndDay);
+        		request.setEnddate(leaveEndDay);
         		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
             	User receiveUser = requestService.getUserById(userCd);
             	request.setManagerId(receiveUser);
@@ -477,7 +505,7 @@ public class RequestController {
     		json.put("requestTitle", request.getTitle());
     		json.put("managerName", request.getManagerName());
     		json.put("startDate", dateFormat.format(request.getStartdate()));
-    		json.put("endDate", dateFormat.format(request.getEndate()));
+    		json.put("endDate", dateFormat.format(request.getEnddate()));
     		json.put("reason", request.getContent());
     		json.put("readStatus", request.getReadstatus());
     		json.put("status", request.getStatus());
@@ -500,7 +528,7 @@ public class RequestController {
     		json.put("requestTitle", request.getTitle());
     		json.put("createName", request.getCreatedbyName());
     		json.put("startDate", dateFormat.format(request.getStartdate()));
-    		json.put("endDate", dateFormat.format(request.getEndate()));
+    		json.put("endDate", dateFormat.format(request.getEnddate()));
     		json.put("reason", request.getContent());
     		json.put("readStatus", request.getReadstatus());
     		json.put("status", request.getStatus());

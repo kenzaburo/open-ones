@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "requesttype")
@@ -34,8 +34,32 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "RequestType.findByCd", query = "SELECT r FROM RequestType r WHERE r.cd = :cd"),
     @NamedQuery(name = "RequestType.findByName", query = "SELECT r FROM RequestType r WHERE r.name = :name"),
     @NamedQuery(name = "RequestType.findByDescription", query = "SELECT r FROM RequestType r WHERE r.description = :description"),
-    @NamedQuery(name = "RequestType.findByEnabled", query = "SELECT r FROM RequestType r WHERE r.enabled = :enabled")})
+    @NamedQuery(name = "RequestType.findByEnabled", query = "SELECT r FROM RequestType r WHERE r.enabled = :enabled"),
+    @NamedQuery(name = "RequestType.findByCreated", query = "SELECT r FROM RequestType r WHERE r.created = :created"),
+    @NamedQuery(name = "RequestType.findByCreatedbyId", query = "SELECT r FROM RequestType r WHERE r.createdbyId = :createdbyId"),
+    @NamedQuery(name = "RequestType.findByCreatedbyAccount", query = "SELECT r FROM RequestType r WHERE r.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "RequestType.findByCreatedbyName", query = "SELECT r FROM RequestType r WHERE r.createdbyName = :createdbyName"),
+    @NamedQuery(name = "RequestType.findByLastmodified", query = "SELECT r FROM RequestType r WHERE r.lastmodified = :lastmodified"),
+    @NamedQuery(name = "RequestType.findByLastmodifiedbyId", query = "SELECT r FROM RequestType r WHERE r.lastmodifiedbyId = :lastmodifiedbyId"),
+    @NamedQuery(name = "RequestType.findByLastmodifiedbyName", query = "SELECT r FROM RequestType r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
+    @NamedQuery(name = "RequestType.findByLastmodifiedbyAccount", query = "SELECT r FROM RequestType r WHERE r.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class RequestType implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Integer id;
+    @Basic(optional = false)
+    @Column(name = "CD")
+    private String cd;
+    @Basic(optional = false)
+    @Column(name = "NAME")
+    private String name;
+    @Column(name = "DESCRIPTION")
+    private String description;
+    @Column(name = "ENABLED")
+    private Boolean enabled;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -55,26 +79,19 @@ public class RequestType implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_ACCOUNT")
     private String lastmodifiedbyAccount;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
-    private Integer id;
-    @Column(name = "CD")
-    private String cd;
-    @Column(name = "NAME")
-    private String name;
-    @Column(name = "DESCRIPTION")
-    private String description;
-    @Column(name = "ENABLED")
-    private Boolean enabled;
 
     public RequestType() {
     }
 
     public RequestType(Integer id) {
         this.id = id;
+    }
+
+    public RequestType(Integer id, String cd, String name, Date created) {
+        this.id = id;
+        this.cd = cd;
+        this.name = name;
+        this.created = created;
     }
 
     public Integer getId() {
@@ -115,31 +132,6 @@ public class RequestType implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RequestType)) {
-            return false;
-        }
-        RequestType other = (RequestType) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "mks.dms.dao.entity.RequestType[ id=" + id + " ]";
     }
 
     public Date getCreated() {
@@ -204,6 +196,31 @@ public class RequestType implements Serializable {
 
     public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
         this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof RequestType)) {
+            return false;
+        }
+        RequestType other = (RequestType) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "mks.dms.dao.entity.RequestType[ id=" + id + " ]";
     }
     
 }

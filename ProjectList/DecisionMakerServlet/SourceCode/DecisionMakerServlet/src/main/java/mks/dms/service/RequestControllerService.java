@@ -49,37 +49,17 @@ public class RequestControllerService extends BaseService{
     }
 
     /* Save request to database */
-    public void saveRequest(RequestCreateModel model, MasterService masterService) {
+    public boolean saveRequest(RequestCreateModel model, MasterService masterService) {
         // Get request from model
     	Request request = model.getRequest();
     	// Create request with all default value.
 //    	this.initialize(request);
     	
-    	// Get code, name of assigned member by id
-    	User assignedUser = model.getRequest().getAssignedId();
-    	Integer userId = assignedUser.getId();
-    	if (userId != null) {
-    	    UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
-    	    assignedUser = userDaoCtrl.findUser(userId);
-    	    
-    	    request.setAssignedAccount(assignedUser.getUsername());
-    	    request.setAssignedName(ExUser.getFullname(assignedUser));
-    	}
-    	
-    	// Get code, name of manager by id
-    	User managerUser = model.getRequest().getManagerId();
-    	Integer managerUserId = managerUser.getId();
-    	if (managerUserId != null) {
-    	    UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
-    	    managerUser = userDaoCtrl.findUser(userId);
-            
-            request.setManagerAccount(managerUser.getUsername());
-            request.setManagerName(ExUser.getFullname(managerUser));
-    	}
-    	
-    	LOG.debug("Assigned user=" + model.getRequest().getAssignedId().getUsername());
+    	updateReferenceData(model, request);
+
     	// Save request with empty list watcher to get request id
-    	masterService.getRequestService().saveOrUpdate(request);
+    	RequestService requestService = masterService.getRequestService();
+        requestService.saveOrUpdate(request);
     	
     	// LOG request id created by database
     	LOG.debug("RequestControllerService created id: " + request);
@@ -87,10 +67,51 @@ public class RequestControllerService extends BaseService{
     	// Create list watcher
     	this.createRequestWatchers(request, model, masterService);
         // Save list watcher
-    	masterService.getRequestService().saveOrUpdate(request);
+    	int retCd = requestService.saveOrUpdate(request);
     	
     	// LOG save watchers list to database success
     	LOG.debug("RequestControllerService create success: " + request);
+    	
+    	return (retCd != RequestService.SAVE_FAIL); 
+    }
+
+    /**
+    * [Give the description for method].
+    * @param model
+    * @param request output
+    */
+    private void updateReferenceData(RequestCreateModel model, Request request) {
+        // Get code, name of assigned member by id
+    	User assignedUser = model.getRequest().getAssignedId();
+    	
+        if (assignedUser != null) {
+            Integer userId = assignedUser.getId();
+            if (userId != null) {
+                UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
+                assignedUser = userDaoCtrl.findUser(userId);
+
+                request.setAssignedAccount(assignedUser.getUsername());
+                request.setAssignedName(ExUser.getFullname(assignedUser));
+            }
+        } else {
+            // Do nothing
+        }
+    	
+    	// Get code, name of manager by id
+    	User managerUser = model.getRequest().getManagerId();
+    	
+        if (managerUser != null) {
+            Integer managerUserId = managerUser.getId();
+            if (managerUserId != null) {
+                UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
+                managerUser = userDaoCtrl.findUser(managerUserId);
+
+                request.setManagerAccount(managerUser.getUsername());
+                request.setManagerName(ExUser.getFullname(managerUser));
+            }
+        } else {
+            // Do nothing
+        }
     }
     
 //    /* Initialize model if it null*/

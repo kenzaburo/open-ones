@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "parameter")
@@ -35,8 +35,32 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Parameter.findByName", query = "SELECT p FROM Parameter p WHERE p.name = :name"),
     @NamedQuery(name = "Parameter.findByValue", query = "SELECT p FROM Parameter p WHERE p.value = :value"),
     @NamedQuery(name = "Parameter.findByDescription", query = "SELECT p FROM Parameter p WHERE p.description = :description"),
-    @NamedQuery(name = "Parameter.findByEnabled", query = "SELECT p FROM Parameter p WHERE p.enabled = :enabled")})
+    @NamedQuery(name = "Parameter.findByEnabled", query = "SELECT p FROM Parameter p WHERE p.enabled = :enabled"),
+    @NamedQuery(name = "Parameter.findByCreated", query = "SELECT p FROM Parameter p WHERE p.created = :created"),
+    @NamedQuery(name = "Parameter.findByCreatedbyId", query = "SELECT p FROM Parameter p WHERE p.createdbyId = :createdbyId"),
+    @NamedQuery(name = "Parameter.findByCreatedbyAccount", query = "SELECT p FROM Parameter p WHERE p.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Parameter.findByCreatedbyName", query = "SELECT p FROM Parameter p WHERE p.createdbyName = :createdbyName"),
+    @NamedQuery(name = "Parameter.findByLastmodified", query = "SELECT p FROM Parameter p WHERE p.lastmodified = :lastmodified"),
+    @NamedQuery(name = "Parameter.findByLastmodifiedbyId", query = "SELECT p FROM Parameter p WHERE p.lastmodifiedbyId = :lastmodifiedbyId"),
+    @NamedQuery(name = "Parameter.findByLastmodifiedbyName", query = "SELECT p FROM Parameter p WHERE p.lastmodifiedbyName = :lastmodifiedbyName"),
+    @NamedQuery(name = "Parameter.findByLastmodifiedbyAccount", query = "SELECT p FROM Parameter p WHERE p.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
 public class Parameter implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Integer id;
+    @Column(name = "CD")
+    private String cd;
+    @Column(name = "NAME")
+    private String name;
+    @Column(name = "VALUE")
+    private String value;
+    @Column(name = "DESCRIPTION")
+    private String description;
+    @Column(name = "ENABLED")
+    private Boolean enabled;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,28 +80,17 @@ public class Parameter implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_ACCOUNT")
     private String lastmodifiedbyAccount;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
-    private Integer id;
-    @Column(name = "CD")
-    private String cd;
-    @Column(name = "NAME")
-    private String name;
-    @Column(name = "VALUE")
-    private String value;
-    @Column(name = "DESCRIPTION")
-    private String description;
-    @Column(name = "ENABLED")
-    private Boolean enabled;
 
     public Parameter() {
     }
 
     public Parameter(Integer id) {
         this.id = id;
+    }
+
+    public Parameter(Integer id, Date created) {
+        this.id = id;
+        this.created = created;
     }
 
     public Integer getId() {
@@ -126,31 +139,6 @@ public class Parameter implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Parameter)) {
-            return false;
-        }
-        Parameter other = (Parameter) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "mks.dms.dao.entity.Parameter[ id=" + id + " ]";
     }
 
     public Date getCreated() {
@@ -215,6 +203,31 @@ public class Parameter implements Serializable {
 
     public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
         this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Parameter)) {
+            return false;
+        }
+        Parameter other = (Parameter) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "mks.dms.dao.entity.Parameter[ id=" + id + " ]";
     }
     
 }

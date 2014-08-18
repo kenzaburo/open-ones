@@ -39,33 +39,24 @@ public class LabelRequestJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Request requestId = labelRequest.getRequestId();
-            if (requestId != null) {
-                requestId = em.getReference(requestId.getClass(), requestId.getId());
-                labelRequest.setRequestId(requestId);
+            Request reqId = labelRequest.getReqId();
+            if (reqId != null) {
+                reqId = em.getReference(reqId.getClass(), reqId.getId());
+                labelRequest.setReqId(reqId);
             }
             Label labelId = labelRequest.getLabelId();
             if (labelId != null) {
                 labelId = em.getReference(labelId.getClass(), labelId.getId());
                 labelRequest.setLabelId(labelId);
             }
-            Request reqId = labelRequest.getReqId();
-            if (reqId != null) {
-                reqId = em.getReference(reqId.getClass(), reqId.getId());
-                labelRequest.setReqId(reqId);
-            }
             em.persist(labelRequest);
-            if (requestId != null) {
-                requestId.getLabelRequestCollection().add(labelRequest);
-                requestId = em.merge(requestId);
+            if (reqId != null) {
+                reqId.getLabelRequestCollection().add(labelRequest);
+                reqId = em.merge(reqId);
             }
             if (labelId != null) {
                 labelId.getLabelRequestCollection().add(labelRequest);
                 labelId = em.merge(labelId);
-            }
-            if (reqId != null) {
-                reqId.getLabelRequestCollection().add(labelRequest);
-                reqId = em.merge(reqId);
             }
             em.getTransaction().commit();
         } finally {
@@ -81,32 +72,26 @@ public class LabelRequestJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             LabelRequest persistentLabelRequest = em.find(LabelRequest.class, labelRequest.getId());
-            Request requestIdOld = persistentLabelRequest.getRequestId();
-            Request requestIdNew = labelRequest.getRequestId();
-            Label labelIdOld = persistentLabelRequest.getLabelId();
-            Label labelIdNew = labelRequest.getLabelId();
             Request reqIdOld = persistentLabelRequest.getReqId();
             Request reqIdNew = labelRequest.getReqId();
-            if (requestIdNew != null) {
-                requestIdNew = em.getReference(requestIdNew.getClass(), requestIdNew.getId());
-                labelRequest.setRequestId(requestIdNew);
+            Label labelIdOld = persistentLabelRequest.getLabelId();
+            Label labelIdNew = labelRequest.getLabelId();
+            if (reqIdNew != null) {
+                reqIdNew = em.getReference(reqIdNew.getClass(), reqIdNew.getId());
+                labelRequest.setReqId(reqIdNew);
             }
             if (labelIdNew != null) {
                 labelIdNew = em.getReference(labelIdNew.getClass(), labelIdNew.getId());
                 labelRequest.setLabelId(labelIdNew);
             }
-            if (reqIdNew != null) {
-                reqIdNew = em.getReference(reqIdNew.getClass(), reqIdNew.getId());
-                labelRequest.setReqId(reqIdNew);
-            }
             labelRequest = em.merge(labelRequest);
-            if (requestIdOld != null && !requestIdOld.equals(requestIdNew)) {
-                requestIdOld.getLabelRequestCollection().remove(labelRequest);
-                requestIdOld = em.merge(requestIdOld);
+            if (reqIdOld != null && !reqIdOld.equals(reqIdNew)) {
+                reqIdOld.getLabelRequestCollection().remove(labelRequest);
+                reqIdOld = em.merge(reqIdOld);
             }
-            if (requestIdNew != null && !requestIdNew.equals(requestIdOld)) {
-                requestIdNew.getLabelRequestCollection().add(labelRequest);
-                requestIdNew = em.merge(requestIdNew);
+            if (reqIdNew != null && !reqIdNew.equals(reqIdOld)) {
+                reqIdNew.getLabelRequestCollection().add(labelRequest);
+                reqIdNew = em.merge(reqIdNew);
             }
             if (labelIdOld != null && !labelIdOld.equals(labelIdNew)) {
                 labelIdOld.getLabelRequestCollection().remove(labelRequest);
@@ -115,14 +100,6 @@ public class LabelRequestJpaController implements Serializable {
             if (labelIdNew != null && !labelIdNew.equals(labelIdOld)) {
                 labelIdNew.getLabelRequestCollection().add(labelRequest);
                 labelIdNew = em.merge(labelIdNew);
-            }
-            if (reqIdOld != null && !reqIdOld.equals(reqIdNew)) {
-                reqIdOld.getLabelRequestCollection().remove(labelRequest);
-                reqIdOld = em.merge(reqIdOld);
-            }
-            if (reqIdNew != null && !reqIdNew.equals(reqIdOld)) {
-                reqIdNew.getLabelRequestCollection().add(labelRequest);
-                reqIdNew = em.merge(reqIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -153,20 +130,15 @@ public class LabelRequestJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The labelRequest with id " + id + " no longer exists.", enfe);
             }
-            Request requestId = labelRequest.getRequestId();
-            if (requestId != null) {
-                requestId.getLabelRequestCollection().remove(labelRequest);
-                requestId = em.merge(requestId);
+            Request reqId = labelRequest.getReqId();
+            if (reqId != null) {
+                reqId.getLabelRequestCollection().remove(labelRequest);
+                reqId = em.merge(reqId);
             }
             Label labelId = labelRequest.getLabelId();
             if (labelId != null) {
                 labelId.getLabelRequestCollection().remove(labelRequest);
                 labelId = em.merge(labelId);
-            }
-            Request reqId = labelRequest.getReqId();
-            if (reqId != null) {
-                reqId.getLabelRequestCollection().remove(labelRequest);
-                reqId = em.merge(reqId);
             }
             em.remove(labelRequest);
             em.getTransaction().commit();
