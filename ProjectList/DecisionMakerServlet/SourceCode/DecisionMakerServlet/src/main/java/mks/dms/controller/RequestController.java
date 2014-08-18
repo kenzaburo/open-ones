@@ -18,6 +18,7 @@ import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
+import mks.dms.model.DurationUnit;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestControllerService;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.JsonObject;
@@ -60,6 +62,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 @Controller
+@SessionAttributes({"lstReqTypes","listUsers", "listDurationUnits"})
 public class RequestController {
 	/**  */
 	private static final Logger LOG = Logger.getLogger(RequestController.class);
@@ -140,7 +143,7 @@ public class RequestController {
         // Get RequestCreateModel from service
         RequestCreateModel requestCreateModel = requestService.getRequestCreateModel(masterService);
 
-        LOG.debug("CreateRequest controller init data: " + requestCreateModel.getListRequestType().size());
+//        LOG.debug("CreateRequest controller init data: " + requestCreateModel.getListRequestType().size());
 
         // Add object to modelandview
         mav.addObject("model", requestCreateModel);
@@ -150,6 +153,10 @@ public class RequestController {
         mav.addObject("lstReqTypes", lstRequestTypes);
         List<User> listUsers = requestService.getAllUser();
         mav.addObject("listUsers", listUsers);
+        
+        List<DurationUnit> listDurationUnits = MasterService.getDurationUnits();
+        mav.addObject("listDurationUnits", listDurationUnits);
+        
 //        mav.addObject("result", 0);
     	return mav;
     }
@@ -200,6 +207,15 @@ public class RequestController {
             sendEmailLeave(request);
         }
 
+        // Refresh model
+        model.setRequest(request);
+        mav.addObject("model", model);
+        
+        LOG.debug("model.getRequest().getManagerAccount()=" + model.getRequest().getManagerAccount());
+        if (model.getRequest().getManagerId() != null) {
+            LOG.debug("model.getRequest().getManagerId().getUsername()=" + model.getRequest().getManagerId().getUsername());
+        }
+        
         return mav;
     }
     

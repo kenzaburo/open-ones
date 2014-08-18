@@ -35,14 +35,14 @@ public class RequestControllerService extends BaseService{
         // Initialize new model
         RequestCreateModel requestCreateModel = new RequestCreateModel();
         // Get list RequestType from database
-        List<RequestType> listRequestType = masterService.getRequestTypes();
+//        List<RequestType> listRequestType = masterService.getRequestTypes();
         // Get list user from database
-        List<User> listUser = masterService.getUsers();
+//        List<User> listUser = masterService.getUsers();
         // Get list department from database
         List<Department> listDepartment = masterService.getDepartments();
         // Set data to model
-        requestCreateModel.setListRequestType(listRequestType);
-        requestCreateModel.setListUser(listUser);
+//        requestCreateModel.setListRequestType(listRequestType);
+//        requestCreateModel.setListUser(listUser);
         requestCreateModel.setListDepartment(listDepartment);
         
         return requestCreateModel;

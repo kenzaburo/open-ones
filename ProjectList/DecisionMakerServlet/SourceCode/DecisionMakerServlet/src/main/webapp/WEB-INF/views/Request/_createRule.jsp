@@ -1,16 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <!--    Rule -->
 <div id="make-rule">
-  <form name="createRule" class="horizontal" enctype="multipart/form-data" action="createNewRequest">
+  <form:form name="createRule" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
     <!--  Select type Request -->
-    <jsp:include page="_commonPart.jsp">
-      <jsp:param name="formName" value="createRule" />
-      <jsp:param name="newReqType" value="Rule"/>
-    </jsp:include>
+    <div>
+      <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>
+       <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createRule');">
+         <option value="0">-- Lựa chọn --</option>
+         <c:forEach var="reqType" items="${lstReqTypes}">
+           <c:choose>
+             <c:when test='${reqType.cd == "Rule"}'>
+               <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
+             </c:when>
+             <c:otherwise>
+               <option value="${reqType.cd}">${reqType.name}</option>
+             </c:otherwise>
+           </c:choose>
+         </c:forEach>
+      </form:select>
+    </div>
         <div>
-          <label for="title" class="col_2">Quy định</label>
-          <input id="title" type="text" class="col_8" />
+          <label for="request.title" class="col_2">Quy định</label>
+          <form:input path="request.title" id="request.title" type="text" required="required" class="col_8"/>
         </div>
         
         <div>
@@ -38,5 +52,5 @@
           <a class="button" href="">Lưu</a>
           <a class="button" href="">Hủy</a>
       </div>
-  </form>
+  </form:form>
 </div>

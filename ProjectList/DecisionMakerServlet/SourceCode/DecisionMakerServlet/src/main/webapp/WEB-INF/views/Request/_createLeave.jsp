@@ -37,7 +37,7 @@
 		 	<label for="scopes" class="col_2">Người nhận</label>
 		 	<form:select path="request.managerId.id" class="col_3" id="request.managerId.id">
          		<option value="0">-- Người nhận --</option>
-         		<c:forEach var="user" items="${model.listUser}">
+         		<c:forEach var="user" items="${listUsers}">
          			<c:if test="${user.username != pageContext.request.userPrincipal.name}">
             			<option value="${user.id}">${user.username}</option>
             		</c:if>

@@ -36,23 +36,38 @@
 		 	<label for="request.assignedId.id" class="col_2">Người thực hiện</label>
 		 	<form:select path="request.assignedId.id" id="request.assignedId.id" name="request.assignedId.id"
                 class="col_8 chosen-select">
-                <c:forEach var="user" items="${model.listUser}">
-                    <option value="${user.id}">${user.username}</option>
+                <c:forEach var="user" items="${listUsers}">
+                  <c:choose>
+                    <c:when test="${model.request.assignedAccount == user.username}">
+                      <option value="${user.id}" selected="selected">${user.username}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value="${user.id}">${user.username}</option>
+                    </c:otherwise>
+                  </c:choose>
+                    
                 </c:forEach>
             </form:select>
 		</div>
 		<div>
             <label for="request.managerId.id" class="col_2">Người quản lý</label>
             <form:select path="request.managerId.id" id="request.managerId.id" name="request.managerId.id" class="chosen-select col_8">
-                <c:forEach var="user" items="${model.listUser}">
-                    <option value="${user.id}">${user.username}</option>
+                <c:forEach var="user" items="${listUsers}">
+                  <c:choose>
+                    <c:when test="${model.request.managerAccount == user.username}">
+                      <option value="${user.id}" selected="selected">${user.username}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value="${user.id}">${user.username}</option>
+                    </c:otherwise>
+                  </c:choose>
                 </c:forEach>
             </form:select>
 		</div>
 		<div>
             <label for="listWatcher " class="col_2">Chia sẻ</label>
             <form:select path="listWatcher" name="listWatcher" class="col_8 chosen-select" multiple="true">
-                <c:forEach items="${model.listUser}" var="user">
+                <c:forEach var="user" items="${listUsers}">
                     <option value="${user.id}">${user.username }</option>
                 </c:forEach>
             </form:select>
@@ -60,10 +75,10 @@
 		<div>
             <label for="scopes" class="col_2">Ngày bắt đầu</label>
             <form:input path="request.startdate" id="request.startdate" name="request.startdate" type="date"
-                class="col_2"/>
+                class="col_2" placeholder="dd/mm/yyyy"/>
             <label for="scopes" class="col_2">Ngày kết thúc</label>
             <form:input path="request.enddate" id="request.enddate" name="request.endate" type="date"
-                class="col_2"/>
+                class="col_2" placeholder="dd/mm/yyyy"/>
 		</div>
 		<div>
 		 	<label for="scopes" class="col_2">Nhãn</label>
@@ -74,9 +89,16 @@
 		 	<form:input path="request.duration" id="request.duration" type="text" class="col_2" style="display:inline;"/>
       
             <form:select path="request.durationunit" id="durationunit" class="col_2">
-              <option value="0">giờ</option>
-              <option value="1">ngày</option>
-              <option value="2">tuần</option>
+                <c:forEach var="duration" items="${listDurationUnits}">
+                  <c:choose>
+                    <c:when test="${model.request.durationunit == duration.cd}">
+                      <option value="${duration.cd}" selected="selected">${duration.name}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value="${duration.cd}">${duration.name}</option>
+                    </c:otherwise>
+                  </c:choose>
+                </c:forEach>
             </form:select>
 		</div>
 		<div>

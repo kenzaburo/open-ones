@@ -14,9 +14,10 @@ import mks.dms.dao.entity.User;
  */
 public class RequestCreateModel implements Serializable {
     /* List of current request type get on database */
-    private List<RequestType> listRequestType;
+//    private List<RequestType> listRequestType;
     /* List of current user from database */
-    private List<User> listUser;
+    //private List<User> listUser;
+    
     /* List of  Deparment from databse*/
     private List<Department> listDepartment;
 
@@ -27,21 +28,21 @@ public class RequestCreateModel implements Serializable {
     /* List user watch request */
     private Integer[] listWatcher;
 
-    public List<RequestType> getListRequestType() {
-        return listRequestType;
-    }
+//    public List<RequestType> getListRequestType() {
+//        return listRequestType;
+//    }
+//
+//    public void setListRequestType(List<RequestType> listRequestType) {
+//        this.listRequestType = listRequestType;
+//    }
 
-    public void setListRequestType(List<RequestType> listRequestType) {
-        this.listRequestType = listRequestType;
-    }
-
-    public List<User> getListUser() {
-        return listUser;
-    }
-
-    public void setListUser(List<User> listUser) {
-        this.listUser = listUser;
-    }
+//    public List<User> getListUser() {
+//        return listUser;
+//    }
+//
+//    public void setListUser(List<User> listUser) {
+//        this.listUser = listUser;
+//    }
 
     public Request getRequest() {
         return request;

@@ -39,6 +39,7 @@ import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.model.DepartmentModel;
+import mks.dms.model.DurationUnit;
 import mks.dms.model.MasterNode;
 
 import org.apache.log4j.Logger;
@@ -253,5 +254,20 @@ public class MasterService extends BaseService {
         UserJpaController controller = new UserJpaController(emf);
         
         return controller.findUserEntities();
+    }
+    
+    /**
+    * [Give the description for method].
+    * @return
+    */
+    private final static List<DurationUnit> lstDurationUnits = new ArrayList<DurationUnit>(3);
+    static {
+        lstDurationUnits.add(new DurationUnit("0", "Giờ"));
+        lstDurationUnits.add(new DurationUnit("1", "Ngày"));
+        lstDurationUnits.add(new DurationUnit("2", "Tuần"));
+        lstDurationUnits.add(new DurationUnit("3", "Tháng"));
+    }
+    public static List<DurationUnit> getDurationUnits() {
+        return lstDurationUnits;
     }
 }
