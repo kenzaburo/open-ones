@@ -47,15 +47,19 @@ $(document).ready(function () {
 	      <li><a href="createTask"><i class="icon-magic"></i>Tạo việc mới</a></li>
 	      <li><a href="searchTask"><i class="icon-search"></i>Tìm công việc</a></li>
 	      <li class="divider"><a href="myOpenTask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
-	  	</ul></li>
-	  <li><a href="createRequest"><i class="icon-magic"></i>Tạo yêu cầu</a></li>
-	  <li><a href=""><i class="icon-edit"></i>Danh sách yêu cầu</a>
-	  	<ul>
-	      <li class="left"><a href="listSendRequest"><i class="icon-envelope"></i>Yêu cầu của bạn</a></li>
-	      <li class="left"><a href="listReceiveRequest"><i class="icon-envelope-alt"></i>Yêu cầu được nhận</a></li>
-	    </ul>
-	  </li>
-	  <li style="display: inline-block;" id="countRequest">
+	  	</ul>
+      </li>
+	  <li><a href="createRequest"><i class="icon-magic"></i>Tạo yêu cầu</a>
+        <ul>
+          <li><a href=""><i class="icon-edit"></i>Danh sách yêu cầu</a>
+            <ul>
+              <li class="left"><a href="listSendRequest"><i class="icon-envelope"></i>Yêu cầu của bạn</a></li>
+              <li class="left"><a href="listReceiveRequest"><i class="icon-envelope-alt"></i>Yêu cầu được nhận</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+	  <li style="display: inline-block;" id="countRequest"></li>
 	  <li style="display: inline-block; margin-left:10px;" id="countResponse"></li>
 	  <li class="right" style="display: inline-block;"><a href=""><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
 	    <ul>
