@@ -38,28 +38,23 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>id=request.title</td>
+	<td>document.createTask.elements['request.title']</td>
 	<td>Công việc 02</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>id=request.content</td>
+	<td>document.createTask.elements['request.content']</td>
 	<td>Test chức năng Tạo yêu cầu (loại Công việc) bằng Selenium.<br />Người thực hiện chính là người đăng nhập (admin)<br />Người quản lý là: manager<br />Chia sẻ: không<br />Các trường khác: để trống.</td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>id=request.assignedId.id</td>
-	<td>label=manager</td>
+	<td>label=admin</td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>id=request.managerId.id</td>
 	<td>label=manager</td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>id=request.assignedId.id</td>
-	<td>label=admin</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -84,11 +79,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>css=input.button</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Thoát</td>
 	<td></td>
 </tr>
 </tbody></table>
