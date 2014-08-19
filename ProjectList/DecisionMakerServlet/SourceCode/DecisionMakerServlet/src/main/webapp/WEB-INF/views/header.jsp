@@ -42,21 +42,28 @@ $(document).ready(function () {
 	<li class="current"><a href=""><i class="icon-home"></i>Trang chủ</a></li>
   	<li><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>
   	<li><a href="listRule"><i class="icon-legal"></i>Quy định</a></li>
-	  <li><a href="#"><i class="icon-eye-open"></i>Yêu cầu</a>
+	  <li><a href="listTask"><i class="icon-eye-open"></i>Công việc</a>
 	  	<ul>
-	      <li><a href="searchRequest"><i class="icon-magic"></i>Tìm kiếm</a></li>
+	      <li><a href="createTask"><i class="icon-magic"></i>Tạo việc mới</a></li>
 	      <li><a href="searchTask"><i class="icon-search"></i>Tìm công việc</a></li>
 	      <li class="divider"><a href="myOpenTask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
-          
-          <li class="divider"><a href="listSendRequest"><i class="icon-envelope"></i>Yêu cầu của bạn</a></li>
-          <li class="left"><a href="listReceiveRequest"><i class="icon-envelope-alt"></i>Yêu cầu được nhận</a></li>
 	  	</ul>
       </li>
-	  <li><a href="createRequest"><i class="icon-magic"></i>Tạo yêu cầu</a>
-      </li>
-	  <li style="display: inline-block;" id="countRequest"></li>
+	<li><a href=""  onclick="return false"><i class="icon-magic"></i>Quản lý yêu cầu</a>
+		<ul>
+			<li><a href="createRequest" ><i class="icon-edit"></i>Tạo mới yêu cầu</a>
+				<li>
+					<a href=""  onclick="return false"><i class="icon-edit"></i>Danh sách yêu cầu</a>
+					<ul>
+						<li class="left"><a href="listSendRequest"><i class="icon-envelope"></i>Yêu cầu của bạn</a></li>
+						<li class="left"><a href="listReceiveRequest"><i class="icon-envelope-alt"></i>Yêu cầu được nhận</a></li>
+					</ul>
+				</li>
+		</ul>
+	</li>
+	<li style="display: inline-block;" id="countRequest"></li>
 	  <li style="display: inline-block; margin-left:10px;" id="countResponse"></li>
-	  <li class="right" style="display: inline-block;"><a href="#"><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
+	  <li class="right" style="display: inline-block;"><a href=""><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
 	    <ul>
 	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i>Thoát</a></li>
 	    </ul>

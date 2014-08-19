@@ -238,28 +238,28 @@ public class RequestController {
     public String createNewRequest(HttpServletRequest req) throws ParseException {
     	Date today = new Date();
     	Request request = new Request();
-    	String requestType = req.getParameter("reqType");
+    	String requestCd = req.getParameter("reqType");
     	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 		
-    	if (requestType.equals("Task")) {
+    	if (requestCd.equals("Task")) {
     		request.setRequesttypeId(1);
     		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
         	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
-    	if (requestType.equals("Rule")) {
+    	if (requestCd.equals("Rule")) {
     		request.setRequesttypeId(2);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
-    	if (requestType.equals("Announcement")) {
+    	if (requestCd.equals("Announcement")) {
     		request.setRequesttypeId(3);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = requestService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
-    	if (requestType.equals("Leave")) {
+    	if (requestCd.equals("Leave")) {
     		request.setRequesttypeId(4);
     		String leaveContent = req.getParameter("leaveContent");
     		String leaveTitle = req.getParameter("leaveTitle");
@@ -282,6 +282,9 @@ public class RequestController {
     		request.setTitle(leaveTitle);
     		request.setStatus("Created");
     		request.setRequesttypeCd("Leave");
+    		RequestType requestType = requestService.getRequestTypeByCd("Leave");
+    		request.setRequesttypeName(requestType.getName());
+    		request.setRequesttypeId(requestType.getId());
 //    		set label
     		
     		request.setStartdate(leaveStartDay);
@@ -493,7 +496,10 @@ public class RequestController {
     public ModelAndView showPageListSendRequest() {
 //    	List<Request> listRequest = requestService.getListRequestByCreatedbyName(username);
     	ModelAndView mav = new ModelAndView("listSendRequest");
-//    	mav.addObject("listRequest", listRequest);
+    	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
+        mav.addObject("lstReqTypes", lstRequestTypes);
+        List<User> listUsers = requestService.getAllUser();
+        mav.addObject("listUsers", listUsers);
     	return mav;
     }
     
@@ -504,7 +510,11 @@ public class RequestController {
     public ModelAndView showPageListReceiveRequest() {
 //    	List<Request> listRequest = requestService.getListRequestByManagerName(username);
     	ModelAndView mav = new ModelAndView("listReceiveRequest");
-//    	mav.addObject("listRequest", listRequest);
+    	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
+        LOG.debug("lstRequestTypes=" + lstRequestTypes);
+        mav.addObject("lstReqTypes", lstRequestTypes);
+        List<User> listUsers = requestService.getAllUser();
+        mav.addObject("listUsers", listUsers);
     	return mav;
     }
     
@@ -517,11 +527,15 @@ public class RequestController {
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
     		JSONObject json = new JSONObject();
+//    		json.put("requestType", request.getRequesttypeName());
+    		json.put("requestType", request.getRequesttypeCd());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
     		json.put("managerName", request.getManagerName());
-    		json.put("startDate", dateFormat.format(request.getStartdate()));
-    		json.put("endDate", dateFormat.format(request.getEnddate()));
+//    		json.put("startDate", dateFormat.format(request.getStartdate()));
+//    		json.put("endDate", dateFormat.format(request.getEnddate()));
+    		json.put("startDate", "");
+    		json.put("endDate", "");
     		json.put("reason", request.getContent());
     		json.put("readStatus", request.getReadstatus());
     		json.put("status", request.getStatus());
@@ -540,6 +554,7 @@ public class RequestController {
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
     		JSONObject json = new JSONObject();
+    		json.put("requestType", request.getRequesttypeName());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
     		json.put("createName", request.getCreatedbyName());
@@ -555,8 +570,7 @@ public class RequestController {
     
     @RequestMapping(value="response.request.count", method = RequestMethod.GET)
     public @ResponseBody String countResponseRequest(Principal principal) throws JSONException{
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        dateFormat.setLenient(false);
+    	
         List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(principal.getName(), "Rejected", 3);
 	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(principal.getName(), "Approved", 3);
 	    int count = 0;
@@ -570,8 +584,7 @@ public class RequestController {
     
     @RequestMapping(value="request.count", method = RequestMethod.GET)
     public @ResponseBody String countRequest(Principal principal) throws JSONException{
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        dateFormat.setLenient(false);
+
         List<Request> listCreatedRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(principal.getName(), "Created", 1);
 	    List<Request> listUpdateRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(principal.getName(), "Updated", 1);
 	    int count = 0;

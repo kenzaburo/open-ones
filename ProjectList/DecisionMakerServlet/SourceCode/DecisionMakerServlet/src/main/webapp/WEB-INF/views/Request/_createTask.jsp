@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!--    Task -->
 <div id="make-task">
-    <form:form name="createTask" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
+    <form:form name="createTask" id="createTask" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
     <!--  Select type Request -->
     <div>
       <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>

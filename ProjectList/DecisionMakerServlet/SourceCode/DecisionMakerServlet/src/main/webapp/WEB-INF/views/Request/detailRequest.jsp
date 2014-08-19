@@ -68,8 +68,14 @@ $(function(){
 		</div>
 		<div>
 			<label for="title" class="col_2">Lý do: </label>
-			<textarea disabled="disabled" style="display:inline; position: relative; top:6px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.content}</textarea>
+			<textarea disabled="disabled" style="display:inline; position: relative; top:5px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.content}</textarea>
 		</div>
+		<c:if test="${(not empty request.comment)}">
+			<div>
+				<label for="title" class="col_2">Comment: </label>
+				<textarea disabled="disabled" style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.comment}</textarea>
+			</div>
+		</c:if>
 	</div>
 	
 <!-- 	Kiem tra tai khoan dang nhap co phai tai khoan tao yeu cau khong -->

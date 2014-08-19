@@ -17,6 +17,7 @@
             	for (var i = 0; i < res.length; i++) {
             		if (res[i].readStatus == 1) {
             			var obj = new Object();
+            			obj.requestType = "<strong>" + res[i].requestType + "</strong>";
             			obj.requestId = "<strong><a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a></strong>" ;
             			obj.createName = "<strong>" + res[i].createName + "</strong>";
             			obj.time = "<strong><span style='color:blue'>" + res[i].startDate + "</span> - <span style='color:red'>" + res[i].endDate + "</span></strong>";
@@ -25,6 +26,7 @@
             		}
             		else {
             			var obj = new Object();
+            			obj.requestType = res[i].requestType;
             			obj.requestId = "<a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
             			obj.createName = res[i].createName;
             			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
@@ -70,10 +72,10 @@
             	     	  var $container = $("#example1");
             	     	  $container.handsontable({
             	     	  	data: jsonArr,
-            	     	    colWidths: [150, 100, 200, 300, 100],
-            	     	    colHeaders: ["Tiêu đề", "Người xin", "Thời gian", "Lý do"],
-            	     	   colHeaders: ["Tiêu đề", "Người nhận", "Thời gian", "Lý do", "Trạng thái"],
+            	     	   	colWidths: [150, 150, 100, 200, 300, 100],
+            	     	  	colHeaders: ["Loại yêu cầu", "Tiêu đề", "Người nhận", "Thời gian", "Lý do", "Trạng thái"],
 	           	     	    columns: [
+								{data: "requestType", renderer: "html"},
 	           	     	      	{data: "requestId", renderer: "html"},
 	           	     	      	{data: "managerName", renderer: "html"},
 	           	     	     	{data: "time", renderer: "html"},
@@ -111,4 +113,18 @@
          });
 	});
 </script>
-<div id="example1" class="handsontable"></div>
+<h1>Yêu cầu được nhận</h1>
+<select id="reqType" class="col_3" name="reqType">
+	<option value="0">-- Lựa chọn --</option>
+	<c:forEach var="reqType" items="${lstReqTypes}">
+		<c:choose>
+			<c:when test="${reqType.cd == param.newReqType}">
+				<option value="${reqType.cd}" selected="selected">${reqType.name}</option>
+			</c:when>
+			<c:otherwise>
+				<option value="${reqType.cd}">${reqType.name}</option>
+			</c:otherwise>
+		</c:choose>
+	</c:forEach>
+</select>
+<div id="example1" class="handsontable" style="top:10px;"></div>

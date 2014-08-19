@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import mks.dms.dao.controller.ExRequestJpaController;
+import mks.dms.dao.controller.ExRequestTypeJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.controller.UserJpaController;
@@ -237,6 +238,17 @@ public class RequestControllerService extends BaseService{
     
     	daoCtrl.edit(request);
     }
+    
+    /**
+     * Get RequestType By Cd.
+     * @param cd
+     * @return RequestType
+     */
+    public RequestType getRequestTypeByCd(String requestCd) {
+    	ExRequestTypeJpaController daoCtrl = new ExRequestTypeJpaController(emf);
+    	return daoCtrl.getListRequestByRequestCd(requestCd);
+    }
+    
     /**
      * Get User By Cd.
      * @param cd

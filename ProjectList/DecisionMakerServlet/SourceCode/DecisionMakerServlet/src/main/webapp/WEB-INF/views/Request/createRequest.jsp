@@ -5,12 +5,13 @@
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
 <script type="text/javascript" src="resources/js/createRequest.js"></script>
 <link rel="stylesheet" type="text/css" href="resources/chosen/chosen.min.css" />
+<script type="text/javascript" src="resources/js/validateFunction.js"></script>
 <script>
 	$(function() {
 
 	});
 </script>
-
+	
 	<!-- 	Announcement -->
 	   <jsp:include page="_createAnnouncement.jsp"></jsp:include>
 	<!--    Rule -->

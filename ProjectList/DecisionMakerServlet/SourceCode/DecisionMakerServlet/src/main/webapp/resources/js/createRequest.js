@@ -38,6 +38,7 @@ function displayDetailedRequest(formName) {
 	}
 }
 $(function() {
+	var reqType = $("#reqType").val();
 	$("#make-task").show();
 	$("#make-announcement").hide();
 	$("#make-rule").hide();
