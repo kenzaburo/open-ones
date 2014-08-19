@@ -16,15 +16,6 @@ public class TaskController {
 	/**  */
 	private static final Logger LOG = Logger.getLogger(TaskController.class);
 	
-    @RequestMapping(value="createTask" , method = RequestMethod.GET)
-    public ModelAndView createTask(Model model){
-        ModelAndView mav = new ModelAndView("createRequest");
-    	
-    	mav.addObject("reqType", "Task");
-
-    	return mav;
-    }
-
     @RequestMapping(value="listTask" , method = RequestMethod.GET)
     public ModelAndView listTask(Model model){
         ModelAndView mav = new ModelAndView("listTask");

@@ -582,4 +582,11 @@ public class RequestController {
     		
     	return json.toString();
     }
+    
+    @RequestMapping(value="searchRequest" , method = RequestMethod.GET)
+    public ModelAndView searchTask(Model model){
+        ModelAndView mav = new ModelAndView("searchRequest");
+        
+        return mav;
+    }
 }
