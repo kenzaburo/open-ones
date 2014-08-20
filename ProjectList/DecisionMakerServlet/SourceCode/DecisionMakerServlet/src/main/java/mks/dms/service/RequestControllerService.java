@@ -21,6 +21,7 @@ import mks.dms.dao.entity.Watcher;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
 import mks.dms.model.RequestCreateModel;
+import mks.dms.util.AppCons;
 
 /**
  * @description Get data from database and map to model controller
@@ -35,6 +36,14 @@ public class RequestControllerService extends BaseService{
     public RequestCreateModel getRequestCreateModel(MasterService masterService) {
         // Initialize new model
         RequestCreateModel requestCreateModel = new RequestCreateModel();
+        
+        // Set default of type: Task
+        if (requestCreateModel.getRequest() == null) {
+            requestCreateModel.setRequest(new Request());
+        }
+        requestCreateModel.getRequest().setRequesttypeCd(AppCons.TASK);
+        //
+        
         // Get list RequestType from database
 //        List<RequestType> listRequestType = masterService.getRequestTypes();
         // Get list user from database
@@ -107,8 +116,10 @@ public class RequestControllerService extends BaseService{
                 UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
                 managerUser = userDaoCtrl.findUser(managerUserId);
 
-                request.setManagerAccount(managerUser.getUsername());
-                request.setManagerName(ExUser.getFullname(managerUser));
+                if (managerUser != null) {
+                    request.setManagerAccount(managerUser.getUsername());
+                    request.setManagerName(ExUser.getFullname(managerUser));
+                }
             }
         } else {
             // Do nothing

@@ -44,7 +44,7 @@ $(document).ready(function () {
   	<li><a href="listRule"><i class="icon-legal"></i>Quy định</a></li>
 	  <li><a href="listTask"><i class="icon-eye-open"></i>Công việc</a>
 	  	<ul>
-	      <li><a href="createTask"><i class="icon-magic"></i>Tạo việc mới</a></li>
+	      <li><a href="createRequest?model.request.requesttypeCd=Task"><i class="icon-magic"></i>Tạo việc mới</a></li>
 	      <li><a href="searchTask"><i class="icon-search"></i>Tìm công việc</a></li>
 	      <li class="divider"><a href="myOpenTask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
 	  	</ul>

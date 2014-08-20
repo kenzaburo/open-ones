@@ -5,23 +5,24 @@
 <!--    Rule -->
 <div id="make-rule">
   <form:form name="createRule" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
+    <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Rule"/>
     <!--  Select type Request -->
-    <div>
-      <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>
-       <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createRule');">
-         <option value="0">-- Lựa chọn --</option>
-         <c:forEach var="reqType" items="${lstReqTypes}">
-           <c:choose>
-             <c:when test='${reqType.cd == "Rule"}'>
-               <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
-             </c:when>
-             <c:otherwise>
-               <option value="${reqType.cd}">${reqType.name}</option>
-             </c:otherwise>
-           </c:choose>
-         </c:forEach>
-      </form:select>
-    </div>
+<!--     <div> -->
+<!--       <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label> -->
+<%--        <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createRule');"> --%>
+<!--          <option value="0">-- Lựa chọn --</option> -->
+<%--          <c:forEach var="reqType" items="${lstReqTypes}"> --%>
+<%--            <c:choose> --%>
+<%--              <c:when test='${reqType.cd == "Rule"}'> --%>
+<%--                <option value="${reqType.cd}" selected="selected">${reqType.name}</option> --%>
+<%--              </c:when> --%>
+<%--              <c:otherwise> --%>
+<%--                <option value="${reqType.cd}">${reqType.name}</option> --%>
+<%--              </c:otherwise> --%>
+<%--            </c:choose> --%>
+<%--          </c:forEach> --%>
+<%--       </form:select> --%>
+<!--     </div> -->
         <div>
           <label for="request.title" class="col_2">Quy định</label>
           <form:input path="request.title" id="request.title" type="text" required="required" class="col_8"/>
@@ -29,17 +30,13 @@
         
         <div>
             <label for="content" class="col_2">Nội dung</label>
-            <textarea class="ckeditor" cols="80" id="ruleContent" name="editor1" rows="15">
-            </textarea>
+            <form:textarea path="request.content" id="request.content" class="ckeditor" name="request.content" rows="10"/>
         </div>
         
         <div>
           <label for="scopes" class="col_2">Phạm vi áp dụng</label>
           <select id="scopes" multiple="multiple" class="col_3 fancy">
             <option value="0">Tất cả</option>
-            <option value="1">Phòng kế toán</option>
-            <option value="2">Phòng kinh doanh</option>
-            <option value="3">Kho</option>
           </select>
         </div>
         
@@ -49,8 +46,8 @@
         </div>
 
       <div>
-          <a class="button" href="">Lưu</a>
-          <a class="button" href="">Hủy</a>
+        <input type="submit" value="Lưu" class="button"/>
+        <input type="reset" value="Hủy" class="button" />
       </div>
   </form:form>
 </div>

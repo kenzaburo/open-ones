@@ -144,7 +144,8 @@ public class RequestController {
         RequestCreateModel requestCreateModel = requestService.getRequestCreateModel(masterService);
 
 //        LOG.debug("CreateRequest controller init data: " + requestCreateModel.getListRequestType().size());
-
+        LOG.debug("model.getClass()=" + model.getClass());
+        
         // Add object to modelandview
         mav.addObject("model", requestCreateModel);
         

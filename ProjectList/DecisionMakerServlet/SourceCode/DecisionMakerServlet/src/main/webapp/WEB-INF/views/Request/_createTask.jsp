@@ -4,23 +4,24 @@
 <!--    Task -->
 <div id="make-task">
     <form:form name="createTask" id="createTask" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
+      <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Task"/>
     <!--  Select type Request -->
-    <div>
-      <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>
-       <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createTask');">
-         <option value="0">-- Lựa chọn --</option>
-         <c:forEach var="reqType" items="${lstReqTypes}">
-           <c:choose>
-             <c:when test='${reqType.cd == "Task"}'>
-               <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
-             </c:when>
-             <c:otherwise>
-               <option value="${reqType.cd}">${reqType.name}</option>
-             </c:otherwise>
-           </c:choose>
-         </c:forEach>
-      </form:select>
-    </div>
+<!--     <div> -->
+<!--       <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label> -->
+<%--        <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createTask');"> --%>
+<!--          <option value="0">-- Lựa chọn --</option> -->
+<%--          <c:forEach var="reqType" items="${lstReqTypes}"> --%>
+<%--            <c:choose> --%>
+<%--              <c:when test='${reqType.cd == "Task"}'> --%>
+<%--                <option value="${reqType.cd}" selected="selected">${reqType.name}</option> --%>
+<%--              </c:when> --%>
+<%--              <c:otherwise> --%>
+<%--                <option value="${reqType.cd}">${reqType.name}</option> --%>
+<%--              </c:otherwise> --%>
+<%--            </c:choose> --%>
+<%--          </c:forEach> --%>
+<%--       </form:select> --%>
+<!--     </div> -->
 		<div>
 		  <label for="request.title" class="col_2">Tiêu đề</label>
 		  <form:input path="request.title" id="request.title" type="text" required="required" class="col_8"/>

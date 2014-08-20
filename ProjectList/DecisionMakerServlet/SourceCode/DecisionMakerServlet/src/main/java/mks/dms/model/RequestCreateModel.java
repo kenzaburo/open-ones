@@ -7,6 +7,7 @@ import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
+import mks.dms.util.AppCons;
 
 /**
  * @description Contains request model, which work on view
@@ -44,6 +45,16 @@ public class RequestCreateModel implements Serializable {
 //        this.listUser = listUser;
 //    }
 
+    /**
+     *  Create default request model.
+     *  <br/>
+     *  Default, the type is "Task"
+     */
+//    public RequestCreateModel() {
+//        request = new Request();
+//        request.setRequesttypeCd(AppCons.TASK);
+//    }
+    
     public Request getRequest() {
         return request;
     }

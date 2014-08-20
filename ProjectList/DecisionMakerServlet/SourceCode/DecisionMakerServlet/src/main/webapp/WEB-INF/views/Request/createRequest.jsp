@@ -11,7 +11,24 @@
 
 	});
 </script>
-	
+  <div>
+  <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>
+  
+<%--        <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createRule');"> --%>
+      <select id="reqType" class="col_3" name="reqType">
+         <option value="0">-- Lựa chọn --</option>
+         <c:forEach var="reqType" items="${lstReqTypes}">
+           <c:choose>
+             <c:when test='${reqType.cd == model.request.requesttypeCd}'>
+               <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
+             </c:when>
+             <c:otherwise>
+               <option value="${reqType.cd}">${reqType.name}</option>
+             </c:otherwise>
+           </c:choose>
+         </c:forEach>
+      </select>
+</div>      
 	<!-- 	Announcement -->
 	   <jsp:include page="_createAnnouncement.jsp"></jsp:include>
 	<!--    Rule -->
