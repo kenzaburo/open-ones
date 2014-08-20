@@ -18,6 +18,14 @@
 	});
 
 </script>
+  <%-- Display the result/error --%>
+  <c:if test='${SAVE_STATUS != null && SAVE_STATUS == "SUCCESS"}'>
+    <div id="" class="notice success">
+        <i class="icon-ok icon-large"></i>Lưu thành công!
+        <a href="#close" class="icon-remove"></a>
+    </div>
+  </c:if>
+
   <div>
   <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>
   

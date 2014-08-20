@@ -28,4 +28,13 @@ public class AppCons {
     public static final String LEAVE = "Leave";
     public static final String ANNOUNCEMENT = "Announcement";
     public static final String RULE = "Rule";
+    
+    ////////////////////////////////////////////////////////
+    /*
+     * Status of events
+     */
+    public static final String SAVE_STATUS = "SAVE_STATUS";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String FAIL = "FAIL";
+    
 }

@@ -208,9 +208,11 @@ public class RequestController {
             sendEmailLeave(request);
         }
 
+        // Enable flag save.success
+        mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
         // Refresh model
-        model.setRequest(request);
-        mav.addObject("model", model);
+        //model.setRequest(request);
+        //mav.addObject("model", model);
         
         LOG.debug("model.getRequest().getManagerAccount()=" + model.getRequest().getManagerAccount());
         if (model.getRequest().getManagerId() != null) {
