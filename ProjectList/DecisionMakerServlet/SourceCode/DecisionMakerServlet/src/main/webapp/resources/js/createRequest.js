@@ -50,6 +50,16 @@ function showHideDetailedRequest(selectedReqType) {
  * Process when init the page
  */
 $(function() {
+	// Using id contains dot character, the jquery date picker does not work. 
+    
+	// For Task request
+	$("#request_startdate").datepicker({dateFormat: 'dd-mm-yy'});
+    $("#request_enddate").datepicker({dateFormat: 'dd-mm-yy'});
+    
+    // For Leave request
+    $("#request_startdate_leave").datepicker({dateFormat: 'dd-mm-yy'});
+    $("#request_enddate_leave").datepicker({dateFormat: 'dd-mm-yy'});
+    
 	///////////////////////////////////////////////////////////
 	// Processing when init the screen "Create Request"
 	// Hide all screen section of detailed request

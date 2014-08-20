@@ -13,6 +13,7 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
         <intercept-url pattern="/logout" access="permitAll" />
         <intercept-url pattern="/accessdenied" access="permitAll" />
         <intercept-url pattern="/resources/**" access="permitAll"/>
+        <intercept-url pattern="/img/**" access="permitAll"/>
         <intercept-url pattern="/**" access="hasAnyRole('ROLE_USER', 'ROLE_MANAGER', 'ROLE_ADMIN')" />
         <form-login login-page="/login" default-target-url="/home" authentication-failure-url="/login?error" />
         <logout logout-success-url="/login" />

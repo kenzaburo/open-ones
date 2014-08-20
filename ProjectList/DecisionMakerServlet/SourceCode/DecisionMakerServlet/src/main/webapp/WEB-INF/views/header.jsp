@@ -37,7 +37,6 @@ $(document).ready(function () {
     });
 });
 </script>
-<p id="loginUser" hidden="hidden">${pageContext.request.userPrincipal.name}</p>
 <ul class="menu">
 	<li class="current"><a href=""><i class="icon-home"></i>Trang chủ</a></li>
   	<li><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>

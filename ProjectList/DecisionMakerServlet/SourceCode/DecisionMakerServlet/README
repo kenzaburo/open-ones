@@ -13,17 +13,19 @@ How to run the project?
 ------------------------------------
 Step 1) Open the project by Eclipse
 
-Step 2) Prepare CAS for authentication
-The project use CAS (http://www.jasig.org/cas) for authentication.
-So it needs to setup into the Eclipse.
 
-View guidelines in folder "../Doc/DMS_Guideline_Development in Eclipse.ods"
-
-Step 3) Start database server
+Step 2) Start database server
 The project uses database configuration at folder "DecisionMaker/src/main/resources/META-INF/persistence.xml"
 
 For development, you can use HSQL Server at "DecisionMakerServlet/Deployment/hsqldb/".
 Start database by executing script start-dms.bat (for Windows) / start-dms.sh (for Linux) from folder "DecisionMakerServlet\Deployment\hsqldb"
+
+Step 3)
+For IE, after login, the browser can display HTTP status 404 with url "http://localhost:8080/decisionmaker/img/fancybox/fancy_shadow_nw.png"
+Solving:
+On Windows, Create soft link "
+From the prompt of folder "..../DecisionMakerServlet/src/main/webapp", execute command:
+mklink /D img resources\htmlkickstart\css\img
 
 ---------
 Le Ngoc Thach

@@ -75,14 +75,11 @@
 		</div>
 		<div>
             <label for="scopes" class="col_2">Ngày bắt đầu</label>
-            <form:input path="request.startdate" id="request.startdate" type="date" class="col_2"/>
-<%--             <form:input path="request.startdate" id="request.startdate" type="date" --%>
-<%--                 class="col_2" placeholder="dd-mm-yyyy"/> --%>
+            <form:input path="request.startdate" id="request_startdate" size="10" class="col_2"/>
             
             <label for="scopes" class="col_2">Ngày kết thúc</label>
-            <form:input path="request.enddate" id="request.enddate" type="date" class="col_2"/>
-<%--             <form:input path="request.enddate" id="request.enddate" type="date" --%>
-<%--                 class="col_2" placeholder="dd-mm-yyyy"/> --%>
+            <form:input path="request.enddate" id="request_enddate" size="10" class="col_2"/>
+
 		</div>
 		<div>
 		 	<label for="scopes" class="col_2">Nhãn</label>

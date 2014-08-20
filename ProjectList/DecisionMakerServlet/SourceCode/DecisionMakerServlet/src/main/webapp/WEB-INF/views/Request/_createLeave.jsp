@@ -35,9 +35,9 @@
           <input name="leaveCreate" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
         </div>	
         <div>
-		 	<label for="scopes" class="col_2">Người nhận</label>
-		 	<form:select path="request.managerId.id" class="col_3" id="request.managerId.id">
-         		<option value="0">-- Người nhận --</option>
+		 	<label for="scopes" class="col_2">Quản lý</label>
+		 	<form:select path="request.managerId.id" class="col_3" id="request.managerId.id" title="Người sẽ nhận đơn và duyệt nghỉ phép">
+         		<option value="0">-- Chọn --</option>
          		<c:forEach var="user" items="${listUsers}">
          			<c:if test="${user.username != pageContext.request.userPrincipal.name}">
             			<option value="${user.id}">${user.username}</option>
@@ -47,11 +47,11 @@
 		</div>
         <div>
             <label for="scopes" class="col_2">Ngày bắt đầu</label>
-            <form:input path="request.startdate" id="request.startdate" type="date" class="col_2"/>
+            <form:input path="request.startdate" id="request_startdate_leave" class="col_2"/>
         </div>
         <div>
             <label for="scopes" class="col_2">Ngày kết thúc</label>
-            <form:input path="request.enddate" id="request.enddate" type="date" class="col_2"/>
+            <form:input path="request.enddate" id="request_enddate_leave" class="col_2"/>
         </div>
         <div>
             <label for="scopes" class="col_2">Nhãn</label>
