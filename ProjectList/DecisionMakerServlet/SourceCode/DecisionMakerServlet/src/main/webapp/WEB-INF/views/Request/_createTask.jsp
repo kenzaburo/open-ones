@@ -75,11 +75,11 @@
 		</div>
 		<div>
             <label for="scopes" class="col_2">Ngày bắt đầu</label>
-            <form:input path="request.startdate" id="request.startdate" name="request.startdate" type="date"
-                class="col_2" placeholder="dd/mm/yyyy"/>
+            <form:input path="request.startdate" id="request.startdate" type="date"
+                class="col_2" placeholder="dd-mm-yyyy"/>
             <label for="scopes" class="col_2">Ngày kết thúc</label>
-            <form:input path="request.enddate" id="request.enddate" name="request.endate" type="date"
-                class="col_2" placeholder="dd/mm/yyyy"/>
+            <form:input path="request.enddate" id="request.enddate" type="date"
+                class="col_2" placeholder="dd-mm-yyyy"/>
 		</div>
 		<div>
 		 	<label for="scopes" class="col_2">Nhãn</label>

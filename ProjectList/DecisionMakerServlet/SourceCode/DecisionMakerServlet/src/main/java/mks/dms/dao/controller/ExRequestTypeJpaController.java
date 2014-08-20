@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 public class ExRequestTypeJpaController extends RequestTypeJpaController{
 
 	/** Logging. */
-    private final static Logger LOG = Logger.getLogger(ExDepartmentJpaController.class);
+    private final static Logger LOG = Logger.getLogger(ExRequestTypeJpaController.class);
 	
 	public ExRequestTypeJpaController(EntityManagerFactory emf) {
 		super(emf);
@@ -48,5 +48,18 @@ public class ExRequestTypeJpaController extends RequestTypeJpaController{
 	            em.close();
 	        }
 	    }
+
+    public RequestType findRequestTypeByCd(String requesttypeCd) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("Select e FROM RequestType e WHERE e.cd = :requestTypeCd");
+            query.setParameter("requestTypeCd", requesttypeCd);
+            RequestType reqType = (RequestType) query.getSingleResult();
+            
+            return reqType;
+        } finally {
+            em.close();
+        }
+    }
 }
 
