@@ -39,11 +39,19 @@
 		 	<form:select path="request.managerId.id" class="col_3" id="request.managerId.id" title="Người sẽ nhận đơn và duyệt nghỉ phép">
          		<option value="0">-- Chọn --</option>
          		<c:forEach var="user" items="${listUsers}">
-         			<c:if test="${user.username != pageContext.request.userPrincipal.name}">
-            			<option value="${user.id}">${user.username}</option>
-            		</c:if>
+                  <c:choose>
+                    <c:when test="${model.request.managerAccount == user.username}">
+                        <option value="${user.id}" selected="selected">${user.username}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <c:if test="${user.username != pageContext.request.userPrincipal.name}">
+                        <option value="${user.id}">${user.username}</option>
+                      </c:if>
+                    </c:otherwise>
+                  </c:choose>
+         			
          		</c:forEach>
-	  		</form:select>
+	  		</form:select>        
 		</div>
         <div>
             <label for="scopes" class="col_2">Ngày bắt đầu</label>
