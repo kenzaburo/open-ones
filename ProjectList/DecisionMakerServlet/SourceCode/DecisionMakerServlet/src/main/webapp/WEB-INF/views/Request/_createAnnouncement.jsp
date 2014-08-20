@@ -29,8 +29,8 @@
 		</div>
 		
 		<div>
-			<label for="request.content" class="col_2">Nội dung</label>
-			<form:textarea path="request.content" id="request.content" class="ckeditor" name="request.content" rows="10"/>
+			<label for="request.contentAnnouncement" class="col_2">Nội dung</label>
+			<form:textarea path="request.content" id="request.contentAnnouncement" class="ckeditor" rows="10"/>
 			
 		</div>
 		

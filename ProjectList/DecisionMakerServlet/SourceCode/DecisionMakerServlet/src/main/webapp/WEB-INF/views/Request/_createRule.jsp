@@ -30,7 +30,7 @@
         
         <div>
             <label for="content" class="col_2">Nội dung</label>
-            <form:textarea path="request.content" id="request.content" class="ckeditor" name="request.content" rows="10"/>
+            <form:textarea path="request.content" id="request.contentRule" class="ckeditor" rows="10"/>
         </div>
         
         <div>
