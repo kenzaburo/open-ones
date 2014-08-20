@@ -94,7 +94,7 @@ public class RequestControllerService extends BaseService{
         // Update request type id, request type name from request type cd
         ExRequestTypeJpaController reqTypeJpaCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
         RequestType reqType = reqTypeJpaCtrl.findRequestTypeByCd(request.getRequesttypeCd());
-        if (reqType == null) {
+        if (reqType != null) {
             request.setRequesttypeId(reqType.getId());
             request.setRequesttypeName(reqType.getName());
         } else {
