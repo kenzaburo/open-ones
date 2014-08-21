@@ -55,7 +55,7 @@
             <form:select path="request.managerId.id" id="request.managerId.id" name="request.managerId.id" class="chosen-select col_8">
                 <c:forEach var="user" items="${listUsers}">
                   <c:choose>
-                    <c:when test="${model.request.managerAccount == user.username}">
+                    <c:when test="${model.request.managerCd == user.username}">
                       <option value="${user.id}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>

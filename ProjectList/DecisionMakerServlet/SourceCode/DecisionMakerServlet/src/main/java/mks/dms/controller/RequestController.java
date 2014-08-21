@@ -204,7 +204,7 @@ public class RequestController {
         //model.setRequest(request);
         //mav.addObject("model", model);
         
-        LOG.debug("model.getRequest().getManagerAccount()=" + model.getRequest().getManagerCd());
+        LOG.debug("model.getRequest().getManagerCd()=" + model.getRequest().getManagerCd());
         if (model.getRequest().getManagerId() != null) {
             LOG.debug("model.getRequest().getManagerId().getUsername()=" + model.getRequest().getManagerId().getUsername());
         }
