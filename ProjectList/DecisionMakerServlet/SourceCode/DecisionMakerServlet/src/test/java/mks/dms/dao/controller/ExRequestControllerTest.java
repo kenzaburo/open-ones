@@ -8,11 +8,12 @@ import javax.persistence.Persistence;
 
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
+import mks.dms.service.BaseService;
+import mks.dms.util.AppCons;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -56,5 +57,21 @@ public class ExRequestControllerTest {
         List<Request> listRequest = daoCtrl.getListRequestByManagernameAndStatusAndReadstatus("admin", "Updated", 2);
         
         assertEquals(1, listRequest.size());
+    }
+    
+    @Test
+    public void testFindRequestByCd() {        
+        ExRequestJpaController daoCtrl = new ExRequestJpaController(BaseService.getEmf());
+        List<Request> lstAnnouncement = daoCtrl.findRequestByType(AppCons.ANNOUNCEMENT);
+        
+        assertEquals(3, lstAnnouncement.size());
+        
+        List<Request> lstRule = daoCtrl.findRequestByType(AppCons.RULE);
+        
+        assertEquals(2, lstRule.size());
+        
+        List<Request> lstTask = daoCtrl.findRequestByType(AppCons.TASK);
+        
+        assertEquals(5, lstTask.size());
     }
 }

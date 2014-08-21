@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  * @author truongtho88.nl
  */
 
-public class ExRequestJpaController extends RequestJpaController{
+public class ExRequestJpaController extends RequestJpaController {
 	
 	/** Logging. */
     private final static Logger LOG = Logger.getLogger(ExDepartmentJpaController.class);
@@ -111,4 +111,25 @@ public class ExRequestJpaController extends RequestJpaController{
 				            em.close();
 				        }
 				    }
+
+    /**
+    * Get all available announcements.
+    * @param requestTypeCd Announcement | Rule | Task | Leave
+    * @see mks.dms.util.AppCons
+    * @author ThachLe
+    */
+    public List<Request> findRequestByType(String requestTypeCd) {
+        List<Request> lstRequest;
+        EntityManager em = getEntityManager();
+        try {
+            lstRequest = em.createNamedQuery("Request.findByRequesttypeCd")
+               .setParameter("requesttypeCd", requestTypeCd)
+               .getResultList();
+            
+            return lstRequest;
+        } finally {
+            em.close();
+        }
+
+    }
 }

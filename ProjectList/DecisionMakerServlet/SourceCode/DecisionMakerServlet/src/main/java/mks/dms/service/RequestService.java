@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
@@ -14,13 +15,15 @@ import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.*;
+import mks.dms.util.AppCons;
 
 /**
  * @description create service to bound of Jpa Controller
  * @author TriLVH
  *
  */
-public class RequestService {
+@Service
+public class RequestService extends BaseService {
 	
 	/* Logger to log information */
 	private final static Logger LOG = Logger.getLogger(RequestControllerService.class);
@@ -30,11 +33,15 @@ public class RequestService {
 	public final static int CREATE_SUCCESS = 1;
 	public final static int EDIT_SUCCESS = 2;
 	/* Request Jpa controller */
-	private final RequestJpaController controller;
+	private final ExRequestJpaController controller;
+	
+	public RequestService() {
+	    controller = new ExRequestJpaController(super.getEmf());
+	}
 	
 	/* Default constructor to create controller */
 	public RequestService(EntityManagerFactory emf) {
-		controller = new RequestJpaController(emf);
+		controller = new ExRequestJpaController(emf);
 	}
 	
 	/**
@@ -68,4 +75,11 @@ public class RequestService {
 			return CREATE_SUCCESS;
 		}
 	}
+
+    public List<Request> getListAnnouncement() {
+        List<Request> lstRequest;
+        lstRequest = controller.findRequestByType(AppCons.ANNOUNCEMENT);
+        
+        return lstRequest;
+    }
 }
