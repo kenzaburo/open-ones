@@ -41,11 +41,11 @@ $(document).ready(function () {
 	<li class="current"><a href=""><i class="icon-home"></i>Trang chủ</a></li>
   	<li><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>
   	<li><a href="listRule"><i class="icon-legal"></i>Quy định</a></li>
-	  <li><a href="listTask"><i class="icon-eye-open"></i>Công việc</a>
+	  <li><a href="#"><i class="icon-eye-open"></i>Công việc</a>
 	  	<ul>
 	      <li><a href="createRequest?model.request.requesttypeCd=Task"><i class="icon-magic"></i>Tạo việc mới</a></li>
-	      <li><a href="searchTask"><i class="icon-search"></i>Tìm công việc</a></li>
-	      <li class="divider"><a href="myOpenTask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
+	      <li><a href="searchRequest?requestTypeCd=Task"><i class="icon-search"></i>Tìm công việc</a></li>
+	      <li class="divider"><a href="searchRequest?requestTypeCd=Task&assignedCd=${pageContext.request.userPrincipal.name}"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
 	  	</ul>
       </li>
 	<li><a href=""  onclick="return false"><i class="icon-magic"></i>Quản lý yêu cầu</a>
