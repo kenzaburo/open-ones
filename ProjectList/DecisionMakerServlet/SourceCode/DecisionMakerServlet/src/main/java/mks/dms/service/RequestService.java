@@ -76,6 +76,10 @@ public class RequestService extends BaseService {
 		}
 	}
 
+    /**
+    * [Give the description for method].
+    * @return
+    */
     public List<Request> getListAnnouncement() {
         List<Request> lstRequest;
         lstRequest = controller.findRequestByType(AppCons.ANNOUNCEMENT);
@@ -83,7 +87,24 @@ public class RequestService extends BaseService {
         return lstRequest;
     }
     
+    /**
+    * [Give the description for method].
+    * @return
+    */
+    public List<Request> getListRule() {
+        List<Request> lstRequest;
+        lstRequest = controller.findRequestByType(AppCons.RULE);
+        
+        return lstRequest;
+    }
+    
+    /**
+    * Support service layer can perform simple query.
+    * @return
+    */
     public ExRequestJpaController getDaoController() {
         return controller;
     }
+
+
 }

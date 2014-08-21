@@ -15,4 +15,6 @@
   
   <definition name="viewAnnouncement" template="/WEB-INF/views/Announcement/viewContentAnnouncement.jsp">
   </definition>
+  <definition name="viewRule" template="/WEB-INF/views/Rule/viewContentRule.jsp">
+  </definition>
 </tiles-definitions>
