@@ -33,18 +33,23 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Tạo yêu cầu</td>
+	<td>link=Tạo mới yêu cầu</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>document.createTask.elements['request.title']</td>
-	<td>Công việc 02</td>
+	<td>[Test02] Hoan2 </td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>document.createTask.elements['request.content']</td>
-	<td>Test chức năng Tạo yêu cầu (loại Công việc) bằng Selenium.<br />Người thực hiện chính là người đăng nhập (admin)<br />Người quản lý là: manager<br />Chia sẻ: không<br />Các trường khác: để trống.</td>
+	<td>document.createTask.elements['request.title']</td>
+	<td>[Test02] Hoàn thiện bản nhập liệu cho DecisionMaker</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=request.content</td>
+	<td>Tạo/Sửa được dữ liệu đơn giản: Thông báo, Qui định, Công việc, nghỉ phép<br />Xem được nội dung</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -57,28 +62,43 @@
 	<td>label=manager</td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>id=request.startdate</td>
-	<td>9-2-2014</td>
+	<td>click</td>
+	<td>id=request_startdate</td>
+	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>id=request.enddate</td>
-	<td>9-3-2014</td>
+	<td>click</td>
+	<td>link=25</td>
+	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>id=labels</td>
-	<td>Cong viec</td>
+	<td>click</td>
+	<td>id=request_enddate</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=31</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=request.duration</td>
-	<td>2</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=durationunit</td>
+	<td>label=Ngày</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>css=input.button</td>
+	<td>xpath=(//input[@value='Lưu'])[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Thoát</td>
 	<td></td>
 </tr>
 </tbody></table>

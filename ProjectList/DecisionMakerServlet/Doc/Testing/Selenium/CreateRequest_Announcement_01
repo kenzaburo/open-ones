@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/" />
+<title>CreateRequest_Announcement_01</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateRequest_Announcement_01</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/decisionmaker/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=loginBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Tạo mới yêu cầu</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=reqType</td>
+	<td>label=Thông báo</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=request.title</td>
+	<td>Nội qui công ty</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=html.CSS1Compat</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input.button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Thoát</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
