@@ -82,4 +82,8 @@ public class RequestService extends BaseService {
         
         return lstRequest;
     }
+    
+    public ExRequestJpaController getDaoController() {
+        return controller;
+    }
 }

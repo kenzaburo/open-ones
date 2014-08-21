@@ -39,7 +39,7 @@
                 class="col_8 chosen-select">
                 <c:forEach var="user" items="${listUsers}">
                   <c:choose>
-                    <c:when test="${model.request.assignedAccount == user.username}">
+                    <c:when test="${model.request.assignedCd == user.username}">
                       <option value="${user.id}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>

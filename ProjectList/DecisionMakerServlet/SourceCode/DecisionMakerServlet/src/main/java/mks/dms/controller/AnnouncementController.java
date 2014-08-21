@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -40,4 +41,17 @@ public class AnnouncementController {
         
         return mav;
     }
+    
+    @RequestMapping(value="viewAnnouncement" , method = RequestMethod.GET)
+    public ModelAndView viewAnnouncement(@RequestParam("id") Integer requestId) {
+        ModelAndView mav = new ModelAndView("viewAnnouncement");
+        
+        LOG.debug("requestId=" + requestId);
+        Request announcement = requestService.getDaoController().findRequest(requestId);
+        
+        mav.addObject("announcement", announcement);
+        
+        return mav;
+    }
+    
 }

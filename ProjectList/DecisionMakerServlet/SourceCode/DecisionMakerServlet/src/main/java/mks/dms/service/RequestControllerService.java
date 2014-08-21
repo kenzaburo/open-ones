@@ -110,7 +110,7 @@ public class RequestControllerService extends BaseService{
                 UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
                 assignedUser = userDaoCtrl.findUser(userId);
 
-                request.setAssignedAccount(assignedUser.getUsername());
+                request.setAssignedCd(assignedUser.getUsername());
                 request.setAssignedName(ExUser.getFullname(assignedUser));
             }
         } else {

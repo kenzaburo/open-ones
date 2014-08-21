@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByTitle", query = "SELECT r FROM Request r WHERE r.title = :title"),
     @NamedQuery(name = "Request.findByStartdate", query = "SELECT r FROM Request r WHERE r.startdate = :startdate"),
     @NamedQuery(name = "Request.findByEnddate", query = "SELECT r FROM Request r WHERE r.enddate = :enddate"),
-    @NamedQuery(name = "Request.findByAssignedAccount", query = "SELECT r FROM Request r WHERE r.assignedAccount = :assignedAccount"),
+    @NamedQuery(name = "Request.findByAssignedCd", query = "SELECT r FROM Request r WHERE r.assignedCd = :assignedCd"),
     @NamedQuery(name = "Request.findByAssignedName", query = "SELECT r FROM Request r WHERE r.assignedName = :assignedName"),
     @NamedQuery(name = "Request.findByWatchersId", query = "SELECT r FROM Request r WHERE r.watchersId = :watchersId"),
     @NamedQuery(name = "Request.findByManagerCd", query = "SELECT r FROM Request r WHERE r.managerCd = :managerCd"),
@@ -88,8 +88,8 @@ public class Request implements Serializable {
     @Column(name = "ENDDATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date enddate;
-    @Column(name = "ASSIGNED_ACCOUNT")
-    private String assignedAccount;
+    @Column(name = "ASSIGNED_CD")
+    private String assignedCd;
     @Column(name = "ASSIGNED_NAME")
     private String assignedName;
     @Column(name = "WATCHERS_ID")
@@ -235,12 +235,12 @@ public class Request implements Serializable {
         this.enddate = enddate;
     }
 
-    public String getAssignedAccount() {
-        return assignedAccount;
+    public String getAssignedCd() {
+        return assignedCd;
     }
 
-    public void setAssignedAccount(String assignedAccount) {
-        this.assignedAccount = assignedAccount;
+    public void setAssignedCd(String assignedCd) {
+        this.assignedCd = assignedCd;
     }
 
     public String getAssignedName() {

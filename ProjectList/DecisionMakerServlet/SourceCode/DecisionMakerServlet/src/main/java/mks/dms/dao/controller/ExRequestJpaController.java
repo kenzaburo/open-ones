@@ -166,16 +166,16 @@ public class ExRequestJpaController extends RequestJpaController {
 			}
 			if (!managerId.equals("")) {
 				if ((!assignId.equals("")) || ((!requestTypeCd.equals("")))) {
-					scriptQuery += "r.managerAccount = :managerId AND ";
+					scriptQuery += "r.managerCd = :managerId AND ";
 				} else {
-					scriptQuery += "r.managerAccount = :managerId";
+					scriptQuery += "r.managerCd = :managerId";
 				}
 			}
 			if (!assignId.equals("")) {
 				if (!requestTypeCd.equals("")) {
-					scriptQuery += "r.assignedAccount = :assignId AND ";
+					scriptQuery += "r.assignedCd = :assignId AND ";
 				} else {
-					scriptQuery += "r.assignedAccount = :assignId";
+					scriptQuery += "r.assignedCd = :assignId";
 				}
 			}
 			if (!requestTypeCd.equals("")) {

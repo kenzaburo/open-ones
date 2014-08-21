@@ -12,4 +12,7 @@
   </definition>
   <definition name="changepwdlayout" template="/WEB-INF/layouts/changepwdlayout.jsp">
   </definition>
+  
+  <definition name="viewAnnouncement" template="/WEB-INF/views/Announcement/viewContentAnnouncement.jsp">
+  </definition>
 </tiles-definitions>
