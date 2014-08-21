@@ -126,5 +126,6 @@
 			</c:otherwise>
 		</c:choose>
 	</c:forEach>
+	
 </select>
 <div id="example1" class="handsontable" style="top:10px;"></div>

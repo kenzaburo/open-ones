@@ -2,6 +2,7 @@
 package mks.dms.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -171,6 +172,21 @@ public class RequestControllerService extends BaseService{
     }
     
     /**
+     * Get all of Request.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getAllRequest() {
+    	List<Request> listRequest;
+    	
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    	
+    	listRequest = daoCtrl.findRequestEntities();
+    	
+    	return listRequest;
+    }
+    
+    /**
      * Get Request By Cd.
      * <br/>
      * @return Request
@@ -214,6 +230,22 @@ public class RequestControllerService extends BaseService{
     	
     	return listRequest;
     }
+    
+    /**
+     * Search List<Request>.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> searchRequest(String createdbyName, Date startDate, Date endDate, String managerId, String assignId, String requestTypeCd) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    	
+    	listRequest = daoCtrl.searchRequest(createdbyName, startDate, endDate, managerId, assignId, requestTypeCd);
+    	
+    	return listRequest;
+    }
+    
     
     /**
      * Get List<Request> By createdbyName, status and readstatus.

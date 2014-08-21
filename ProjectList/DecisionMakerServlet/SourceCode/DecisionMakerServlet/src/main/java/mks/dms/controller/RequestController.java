@@ -530,21 +530,22 @@ public class RequestController {
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
     		JSONObject json = new JSONObject();
-//    		json.put("requestType", request.getRequesttypeName());
-    		json.put("requestType", request.getRequesttypeCd());
+    		json.put("requestType", request.getRequesttypeName());
+//    		json.put("requestType", request.getRequesttypeCd());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
     		json.put("managerName", request.getManagerName());
-//    		json.put("startDate", dateFormat.format(request.getStartdate()));
-//    		json.put("endDate", dateFormat.format(request.getEnddate()));
-    		json.put("startDate", "");
-    		json.put("endDate", "");
+    		json.put("managerId", 1);
+    		json.put("assignId", 1);
+    		json.put("startDate", dateFormat.format(request.getStartdate()));
+    		json.put("endDate", dateFormat.format(request.getEnddate()));
+//    		json.put("startDate", "11-08-2014");
+//    		json.put("endDate", "15-08-2014");
     		json.put("reason", request.getContent());
     		json.put("readStatus", request.getReadstatus());
     		json.put("status", request.getStatus());
     		listJson.add(json);
     	}
-//    	System.out.println("Chuoi Json la " + listJson.toString());
     	return listJson.toString();
     } 
     
@@ -558,11 +559,16 @@ public class RequestController {
     	for (Request request:listRequest) {
     		JSONObject json = new JSONObject();
     		json.put("requestType", request.getRequesttypeName());
+//    		json.put("requestType", request.getRequesttypeCd());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
-    		json.put("createName", request.getCreatedbyName());
+    		json.put("managerName", request.getManagerName());
+    		json.put("managerId", 1);
+    		json.put("assignId", 1);
     		json.put("startDate", dateFormat.format(request.getStartdate()));
     		json.put("endDate", dateFormat.format(request.getEnddate()));
+//    		json.put("startDate", "11-08-2014");
+//    		json.put("endDate", "15-08-2014");
     		json.put("reason", request.getContent());
     		json.put("readStatus", request.getReadstatus());
     		json.put("status", request.getStatus());
@@ -570,6 +576,53 @@ public class RequestController {
     	}
     	return listJson.toString();
     } 
+    
+    @RequestMapping(value="searchRequest")
+    public ModelAndView showSearchRequestPage() {
+    	ModelAndView mav = new ModelAndView("searchRequest");
+    	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
+    	LOG.debug("lstRequestTypes=" + lstRequestTypes);
+        mav.addObject("lstReqTypes", lstRequestTypes);
+        List<User> listUsers = requestService.getAllUser();
+        mav.addObject("listUsers", listUsers);
+    	return mav;
+    }
+    
+    @RequestMapping(value="search.request", method = RequestMethod.GET)
+    public @ResponseBody String searchRequest(@RequestParam("createdbyName") String createdbyName, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerId, @RequestParam("assignId") String assignId, @RequestParam("requestTypeCd") String requestTypeCd) throws JSONException {
+    	List<Request> listRequest;
+    	
+    	if (createdbyName.equals("") && startDate == null && endDate == null && managerId.equals("0") && assignId.equals("0") && requestTypeCd.equals("0")) {
+    		System.out.println("Tìm tất cả");
+    		listRequest = requestService.getAllRequest();
+    		System.out.println(listRequest.size());
+    	}else {
+    		listRequest = requestService.searchRequest(createdbyName, startDate, endDate, managerId, assignId, requestTypeCd);
+    	}
+    	
+    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+    	for (Request request:listRequest) {
+    		JSONObject json = new JSONObject();
+    		json.put("requestType", request.getRequesttypeName());
+//    		json.put("requestType", request.getRequesttypeCd());
+    		json.put("requestId", request.getId());
+    		json.put("requestTitle", request.getTitle());
+    		json.put("managerName", request.getManagerName());
+    		json.put("managerId", 1);
+    		json.put("assignId", 1);
+    		json.put("startDate", dateFormat.format(request.getStartdate()));
+    		json.put("endDate", dateFormat.format(request.getEnddate()));
+//    		json.put("startDate", "11-08-2014");
+//    		json.put("endDate", "15-08-2014");
+    		json.put("reason", request.getContent());
+    		json.put("readStatus", request.getReadstatus());
+    		json.put("status", request.getStatus());
+    		listJson.add(json);
+    	}
+    	return listJson.toString();
+    }
     
     @RequestMapping(value="response.request.count", method = RequestMethod.GET)
     public @ResponseBody String countResponseRequest(Principal principal) throws JSONException{

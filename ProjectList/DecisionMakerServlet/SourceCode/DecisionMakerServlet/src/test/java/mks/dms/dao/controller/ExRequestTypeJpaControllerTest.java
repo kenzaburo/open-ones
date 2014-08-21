@@ -19,6 +19,14 @@
 package mks.dms.dao.controller;
 
 import static org.junit.Assert.*;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.service.BaseService;
 
@@ -29,12 +37,18 @@ import org.junit.Test;
  *
  */
 public class ExRequestTypeJpaControllerTest {
-
+	EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
     /**
      * Test method for {@link mks.dms.dao.controller.ExRequestTypeJpaController#findRequestTypeByCd(java.lang.String)}.
      */
     @Test
     public void testFindRequestTypeByCd() {
+    	ExRequestJpaController exDaoCtrl = new ExRequestJpaController(emf);
+    	RequestJpaController daoCtrl = new RequestJpaController(emf);
+    	Date today = new Date();
+//    	List<Request> listRequest = exDaoCtrl.searchRequest("", null, null, "admin", "admin", "Leave");
+    	List<Request> listRequest = daoCtrl.findRequestEntities();
+    	assertEquals(3, listRequest.size());
     }
 
 }

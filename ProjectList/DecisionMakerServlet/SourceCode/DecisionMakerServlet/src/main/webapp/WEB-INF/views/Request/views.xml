@@ -20,5 +20,8 @@
 	<definition name="listReceiveRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/listReceiveRequest.jsp" />
 	</definition>
+	<definition name="searchRequest" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Request/searchRequest.jsp" />
+	</definition>
   
 </tiles-definitions>
