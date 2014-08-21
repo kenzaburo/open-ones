@@ -224,10 +224,4 @@ public class InitDataTest {
 
 
     }
-    @Test
-    public void testDate() {
-    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
-    	Date today = new Date();
-    	System.out.println(formater.format(today));
-    }
 }
