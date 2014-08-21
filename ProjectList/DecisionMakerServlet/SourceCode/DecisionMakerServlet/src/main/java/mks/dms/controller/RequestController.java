@@ -593,9 +593,7 @@ public class RequestController {
     	List<Request> listRequest;
     	
     	if (createdbyName.equals("") && startDate == null && endDate == null && managerId.equals("0") && assignId.equals("0") && requestTypeCd.equals("0")) {
-    		System.out.println("Tìm tất cả");
     		listRequest = requestService.getAllRequest();
-    		System.out.println(listRequest.size());
     	}else {
     		listRequest = requestService.searchRequest(createdbyName, startDate, endDate, managerId, assignId, requestTypeCd);
     	}
