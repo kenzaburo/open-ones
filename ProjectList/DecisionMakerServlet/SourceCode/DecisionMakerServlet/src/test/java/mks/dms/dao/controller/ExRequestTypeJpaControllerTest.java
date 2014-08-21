@@ -46,9 +46,9 @@ public class ExRequestTypeJpaControllerTest {
     	ExRequestJpaController exDaoCtrl = new ExRequestJpaController(emf);
     	RequestJpaController daoCtrl = new RequestJpaController(emf);
     	Date today = new Date();
-//    	List<Request> listRequest = exDaoCtrl.searchRequest("", null, null, "admin", "admin", "Leave");
-    	List<Request> listRequest = daoCtrl.findRequestEntities();
-    	assertEquals(3, listRequest.size());
+    	List<Request> listRequest = exDaoCtrl.searchRequest("", null, null, "0", "0", "Task");
+//    	List<Request> listRequest = daoCtrl.findRequestEntities();
+    	assertEquals(1, listRequest.size());
     }
 
 }

@@ -51,6 +51,7 @@ $(document).ready(function () {
 	<li><a href=""  onclick="return false"><i class="icon-magic"></i>Quản lý yêu cầu</a>
 		<ul>
 			<li><a href="createRequest" ><i class="icon-edit"></i>Tạo mới yêu cầu</a>
+			<li><a href="searchRequest" ><i class="icon-edit"></i>Tìm kiếm yêu cầu</a>
 				<li>
 					<a href=""  onclick="return false"><i class="icon-edit"></i>Danh sách yêu cầu</a>
 					<ul>

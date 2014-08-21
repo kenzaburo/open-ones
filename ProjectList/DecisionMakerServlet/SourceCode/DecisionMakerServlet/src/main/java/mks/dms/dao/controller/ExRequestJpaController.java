@@ -164,14 +164,14 @@ public class ExRequestJpaController extends RequestJpaController {
 				}
 
 			}
-			if (!managerId.equals("")) {
+			if (!managerId.equals("0")) {
 				if ((!assignId.equals("")) || ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.managerCd = :managerId AND ";
 				} else {
 					scriptQuery += "r.managerCd = :managerId";
 				}
 			}
-			if (!assignId.equals("")) {
+			if (!assignId.equals("0")) {
 				if (!requestTypeCd.equals("")) {
 					scriptQuery += "r.assignedCd = :assignId AND ";
 				} else {
@@ -181,7 +181,7 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (!requestTypeCd.equals("")) {
 				scriptQuery += "r.requesttypeCd = :requestTypeCd";
 			}
-			// System.out.println("Query la: " + scriptQuery);
+			 System.out.println("Query la: " + scriptQuery);
 			Query query = em.createQuery(scriptQuery);
 			if (!createdbyName.equals("")) {
 				query.setParameter("createdbyName", createdbyName);
@@ -192,10 +192,10 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (endDate != null) {
 				query.setParameter("endDate", endDate);
 			}
-			if (!managerId.equals("")) {
+			if (!managerId.equals("0")) {
 				query.setParameter("managerId", managerId);
 			}
-			if (!assignId.equals("")) {
+			if (!assignId.equals("0")) {
 				query.setParameter("assignId", assignId);
 			}
 			if (!requestTypeCd.equals("")) {

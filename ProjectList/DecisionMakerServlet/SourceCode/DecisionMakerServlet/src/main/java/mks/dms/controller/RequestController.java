@@ -581,13 +581,20 @@ public class RequestController {
     @RequestMapping(value="search.request", method = RequestMethod.GET)
     public @ResponseBody String searchRequest(@RequestParam("createdbyName") String createdbyName, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerId, @RequestParam("assignId") String assignId, @RequestParam("requestTypeCd") String requestTypeCd, @RequestParam("requestTitle") String requestTitle, @RequestParam("requestContent") String requestContent) throws JSONException {
     	List<Request> listRequest;
-    	
+    	System.out.println(createdbyName);
+    	System.out.println(startDate);
+    	System.out.println(endDate);
+    	System.out.println(managerId);
+    	System.out.println(assignId);
+    	System.out.println(requestTypeCd);
+    	System.out.println(requestTitle);
+    	System.out.println(requestContent);
     	if (createdbyName.equals("") && startDate == null && endDate == null && managerId.equals("0") && assignId.equals("0") && requestTypeCd.equals("0")) {
     		listRequest = requestService.getAllRequest();
     	}else {
     		listRequest = requestService.searchRequest(createdbyName, startDate, endDate, managerId, assignId, requestTypeCd);
     	}
-    	
+    	System.out.println("So lương " + listRequest.size());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
@@ -601,10 +608,10 @@ public class RequestController {
         		json.put("managerName", request.getManagerName());
         		json.put("managerId", 1);
         		json.put("assignId", 1);
-        		json.put("startDate", dateFormat.format(request.getStartdate()));
-        		json.put("endDate", dateFormat.format(request.getEnddate()));
-//        		json.put("startDate", "11-08-2014");
-//        		json.put("endDate", "15-08-2014");
+//        		json.put("startDate", dateFormat.format(request.getStartdate()));
+//        		json.put("endDate", dateFormat.format(request.getEnddate()));
+        		json.put("startDate", "11-08-2014");
+        		json.put("endDate", "15-08-2014");
         		json.put("reason", request.getContent());
         		json.put("readStatus", request.getReadstatus());
         		json.put("status", request.getStatus());
@@ -706,12 +713,5 @@ public class RequestController {
 		json.put("countRequest", count);
     		
     	return json.toString();
-    }
-    
-    @RequestMapping(value="searchRequest" , method = RequestMethod.GET)
-    public ModelAndView searchTask(Model model){
-        ModelAndView mav = new ModelAndView("searchRequest");
-        
-        return mav;
     }
 }

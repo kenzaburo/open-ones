@@ -74,8 +74,6 @@
 				requestContent = $("#reqContent").val();
 			if ($("#reqTitle").val() != null && $("#reqTitle").val() != "")
 				requestTitle = $("#reqTitle").val();
-			alert(requestContent);
-			alert(requestTitle);
 			$.ajax({
 	            url: "search.request",
 	            data: {createdbyName: "", startDate: startDay, endDate: endDay, managerId: requestManager, assignId: requestAssign, requestTypeCd: requestTypeCd, requestContent: requestContent, requestTitle: requestTitle},
@@ -154,14 +152,14 @@
 	<select id="reqManager" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
         <c:forEach var="user" items="${listUsers}">
-            <option value="${user.username}">${user.username}</option>
+            <option value="${user.cd}">${user.username}</option>
         </c:forEach>
 	</select>
 	<label class="col_2">Người được giao : </label>
 	<select id="reqAssign" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
         <c:forEach var="user" items="${listUsers}">
-            <option value="${user.username}">${user.username}</option>
+            <option value="${user.cd}">${user.username}</option>
         </c:forEach>
 	</select>
 	<button id="searchButton" style="margin-left: 0.83333333333333%;">Search</button>
