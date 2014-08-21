@@ -579,7 +579,7 @@ public class RequestController {
     }
     
     @RequestMapping(value="search.request", method = RequestMethod.GET)
-    public @ResponseBody String searchRequest(@RequestParam("createdbyName") String createdbyName, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerId, @RequestParam("assignId") String assignId, @RequestParam("requestTypeCd") String requestTypeCd) throws JSONException {
+    public @ResponseBody String searchRequest(@RequestParam("createdbyName") String createdbyName, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerId, @RequestParam("assignId") String assignId, @RequestParam("requestTypeCd") String requestTypeCd, @RequestParam("requestTitle") String requestTitle, @RequestParam("requestContent") String requestContent) throws JSONException {
     	List<Request> listRequest;
     	
     	if (createdbyName.equals("") && startDate == null && endDate == null && managerId.equals("0") && assignId.equals("0") && requestTypeCd.equals("0")) {
@@ -592,23 +592,91 @@ public class RequestController {
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
     	for (Request request:listRequest) {
-    		JSONObject json = new JSONObject();
-    		json.put("requestType", request.getRequesttypeName());
-//    		json.put("requestType", request.getRequesttypeCd());
-    		json.put("requestId", request.getId());
-    		json.put("requestTitle", request.getTitle());
-    		json.put("managerName", request.getManagerName());
-    		json.put("managerId", 1);
-    		json.put("assignId", 1);
-    		json.put("startDate", dateFormat.format(request.getStartdate()));
-    		json.put("endDate", dateFormat.format(request.getEnddate()));
-//    		json.put("startDate", "11-08-2014");
-//    		json.put("endDate", "15-08-2014");
-    		json.put("reason", request.getContent());
-    		json.put("readStatus", request.getReadstatus());
-    		json.put("status", request.getStatus());
-    		listJson.add(json);
+    		if (requestContent.equals("") && requestTitle.equals("")) {
+    			JSONObject json = new JSONObject();
+        		json.put("requestType", request.getRequesttypeName());
+//        		json.put("requestType", request.getRequesttypeCd());
+        		json.put("requestId", request.getId());
+        		json.put("requestTitle", request.getTitle());
+        		json.put("managerName", request.getManagerName());
+        		json.put("managerId", 1);
+        		json.put("assignId", 1);
+        		json.put("startDate", dateFormat.format(request.getStartdate()));
+        		json.put("endDate", dateFormat.format(request.getEnddate()));
+//        		json.put("startDate", "11-08-2014");
+//        		json.put("endDate", "15-08-2014");
+        		json.put("reason", request.getContent());
+        		json.put("readStatus", request.getReadstatus());
+        		json.put("status", request.getStatus());
+        		listJson.add(json);
+    		}
+    		else if (!requestContent.equals("") && requestTitle.equals("")) {
+    			
+    			if (request.getContent().toLowerCase().contains(requestContent.toLowerCase())) {
+    				JSONObject json = new JSONObject();
+            		json.put("requestType", request.getRequesttypeName());
+//            		json.put("requestType", request.getRequesttypeCd());
+            		json.put("requestId", request.getId());
+            		json.put("requestTitle", request.getTitle());
+            		json.put("managerName", request.getManagerName());
+            		json.put("managerId", 1);
+            		json.put("assignId", 1);
+//            		json.put("startDate", dateFormat.format(request.getStartdate()));
+//            		json.put("endDate", dateFormat.format(request.getEnddate()));
+            		json.put("startDate", "11-08-2014");
+            		json.put("endDate", "15-08-2014");
+            		json.put("reason", request.getContent());
+            		json.put("readStatus", request.getReadstatus());
+            		json.put("status", request.getStatus());
+            		listJson.add(json);
+    			}
+    		}
+    		else if (requestContent.equals("") && !requestTitle.equals("")) {
+    			System.out.println(request.getTitle().toLowerCase());
+    			System.out.println(requestTitle.toLowerCase());
+    			System.out.println(request.getTitle().toLowerCase().contains(requestTitle.toLowerCase()));
+    			if (request.getTitle().toLowerCase().contains(requestTitle.toLowerCase())) {
+    				JSONObject json = new JSONObject();
+            		json.put("requestType", request.getRequesttypeName());
+//            		json.put("requestType", request.getRequesttypeCd());
+            		json.put("requestId", request.getId());
+            		json.put("requestTitle", request.getTitle());
+            		json.put("managerName", request.getManagerName());
+            		json.put("managerId", 1);
+            		json.put("assignId", 1);
+//            		json.put("startDate", dateFormat.format(request.getStartdate()));
+//            		json.put("endDate", dateFormat.format(request.getEnddate()));
+            		json.put("startDate", "11-08-2014");
+            		json.put("endDate", "15-08-2014");
+            		json.put("reason", request.getContent());
+            		json.put("readStatus", request.getReadstatus());
+            		json.put("status", request.getStatus());
+            		listJson.add(json);
+    			}
+    		}
+    		else if (!requestContent.equals("") && !requestTitle.equals("")){
+    			System.out.println("Title and content not null");
+    			if (request.getTitle().toLowerCase().contains(requestTitle.toLowerCase()) && request.getContent().toLowerCase().contains(requestContent.toLowerCase())) {
+    				JSONObject json = new JSONObject();
+            		json.put("requestType", request.getRequesttypeName());
+//            		json.put("requestType", request.getRequesttypeCd());
+            		json.put("requestId", request.getId());
+            		json.put("requestTitle", request.getTitle());
+            		json.put("managerName", request.getManagerName());
+            		json.put("managerId", 1);
+            		json.put("assignId", 1);
+//            		json.put("startDate", dateFormat.format(request.getStartdate()));
+//            		json.put("endDate", dateFormat.format(request.getEnddate()));
+            		json.put("startDate", "11-08-2014");
+            		json.put("endDate", "15-08-2014");
+            		json.put("reason", request.getContent());
+            		json.put("readStatus", request.getReadstatus());
+            		json.put("status", request.getStatus());
+            		listJson.add(json);
+    			}
+    		}
     	}
+    	System.out.println("Chuoi la " + listJson);
     	return listJson.toString();
     }
     

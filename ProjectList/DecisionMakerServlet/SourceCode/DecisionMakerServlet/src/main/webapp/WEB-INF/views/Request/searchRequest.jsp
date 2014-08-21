@@ -60,16 +60,25 @@
 	}
 	
 	$(document).ready(function () {
-		var jsonArr = [];
+		
 		$("#searchButton").click(function(){
+			var requestContent = "";
+			var requestTitle = "";
+			var jsonArr = [];
 			var startDay = $("#startDate").val();
 			var endDay = $("#endDate").val();
 			var requestManager = $("#reqManager option:selected").val();
 			var requestAssign = $("#reqAssign option:selected").val();
 			var requestTypeCd = $("#reqType option:selected").val();
+			if ($("#reqContent").val() != null && $("#reqContent").val() != "")
+				requestContent = $("#reqContent").val();
+			if ($("#reqTitle").val() != null && $("#reqTitle").val() != "")
+				requestTitle = $("#reqTitle").val();
+			alert(requestContent);
+			alert(requestTitle);
 			$.ajax({
 	            url: "search.request",
-	            data: {createdbyName: "", startDate: startDay, endDate: endDay, managerId: requestManager, assignId: requestAssign, requestTypeCd: requestTypeCd},
+	            data: {createdbyName: "", startDate: startDay, endDate: endDay, managerId: requestManager, assignId: requestAssign, requestTypeCd: requestTypeCd, requestContent: requestContent, requestTitle: requestTitle},
 	            dataType: 'json',
 	            type: 'GET',
 	            success: function (res) {
@@ -108,6 +117,7 @@
                 	    }	
                 	});
                 	bindDumpButton();
+                	
 	            },
 	            error: function() {
 	            	alert("Không thể lấy danh sách yêu cầu. Hãy liên hệ với người quản lý");
@@ -155,6 +165,12 @@
         </c:forEach>
 	</select>
 	<button id="searchButton" style="margin-left: 0.83333333333333%;">Search</button>
+</div>
+<div>
+	<label class="col_2">Tiêu đề : </label>
+	<input id="reqTitle" type="text" class="col_2 column"/>
+	<label class="col_2">Nội dung : </label>
+	<input id="reqContent" type="text" class="col_2 column"/>
 </div>
 
 <div id="example1" class="handsontable" style="top:10px;"></div>
