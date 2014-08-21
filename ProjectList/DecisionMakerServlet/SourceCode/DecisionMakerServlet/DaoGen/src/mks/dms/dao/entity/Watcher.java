@@ -33,16 +33,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Watcher.findAll", query = "SELECT w FROM Watcher w"),
     @NamedQuery(name = "Watcher.findById", query = "SELECT w FROM Watcher w WHERE w.id = :id"),
-    @NamedQuery(name = "Watcher.findByUserAccount", query = "SELECT w FROM Watcher w WHERE w.userAccount = :userAccount"),
+    @NamedQuery(name = "Watcher.findByUserCd", query = "SELECT w FROM Watcher w WHERE w.userCd = :userCd"),
     @NamedQuery(name = "Watcher.findByUserName", query = "SELECT w FROM Watcher w WHERE w.userName = :userName"),
     @NamedQuery(name = "Watcher.findByCreated", query = "SELECT w FROM Watcher w WHERE w.created = :created"),
     @NamedQuery(name = "Watcher.findByCreatedbyId", query = "SELECT w FROM Watcher w WHERE w.createdbyId = :createdbyId"),
-    @NamedQuery(name = "Watcher.findByCreatedbyAccount", query = "SELECT w FROM Watcher w WHERE w.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Watcher.findByCreatedbyCd", query = "SELECT w FROM Watcher w WHERE w.createdbyCd = :createdbyCd"),
     @NamedQuery(name = "Watcher.findByCreatedbyName", query = "SELECT w FROM Watcher w WHERE w.createdbyName = :createdbyName"),
     @NamedQuery(name = "Watcher.findByLastmodified", query = "SELECT w FROM Watcher w WHERE w.lastmodified = :lastmodified"),
     @NamedQuery(name = "Watcher.findByLastmodifiedbyId", query = "SELECT w FROM Watcher w WHERE w.lastmodifiedbyId = :lastmodifiedbyId"),
     @NamedQuery(name = "Watcher.findByLastmodifiedbyName", query = "SELECT w FROM Watcher w WHERE w.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Watcher.findByLastmodifiedbyAccount", query = "SELECT w FROM Watcher w WHERE w.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
+    @NamedQuery(name = "Watcher.findByLastmodifiedbyCd", query = "SELECT w FROM Watcher w WHERE w.lastmodifiedbyCd = :lastmodifiedbyCd")})
 public class Watcher implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -50,8 +50,8 @@ public class Watcher implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "USER_ACCOUNT")
-    private String userAccount;
+    @Column(name = "USER_CD")
+    private String userCd;
     @Column(name = "USER_NAME")
     private String userName;
     @Basic(optional = false)
@@ -60,8 +60,8 @@ public class Watcher implements Serializable {
     private Date created;
     @Column(name = "CREATEDBY_ID")
     private Integer createdbyId;
-    @Column(name = "CREATEDBY_ACCOUNT")
-    private String createdbyAccount;
+    @Column(name = "CREATEDBY_CD")
+    private String createdbyCd;
     @Column(name = "CREATEDBY_NAME")
     private String createdbyName;
     @Column(name = "LASTMODIFIED")
@@ -71,8 +71,8 @@ public class Watcher implements Serializable {
     private Integer lastmodifiedbyId;
     @Column(name = "LASTMODIFIEDBY_NAME")
     private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_ACCOUNT")
-    private String lastmodifiedbyAccount;
+    @Column(name = "LASTMODIFIEDBY_CD")
+    private String lastmodifiedbyCd;
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     @ManyToOne
     private User userId;
@@ -100,12 +100,12 @@ public class Watcher implements Serializable {
         this.id = id;
     }
 
-    public String getUserAccount() {
-        return userAccount;
+    public String getUserCd() {
+        return userCd;
     }
 
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
+    public void setUserCd(String userCd) {
+        this.userCd = userCd;
     }
 
     public String getUserName() {
@@ -132,12 +132,12 @@ public class Watcher implements Serializable {
         this.createdbyId = createdbyId;
     }
 
-    public String getCreatedbyAccount() {
-        return createdbyAccount;
+    public String getCreatedbyCd() {
+        return createdbyCd;
     }
 
-    public void setCreatedbyAccount(String createdbyAccount) {
-        this.createdbyAccount = createdbyAccount;
+    public void setCreatedbyCd(String createdbyCd) {
+        this.createdbyCd = createdbyCd;
     }
 
     public String getCreatedbyName() {
@@ -172,12 +172,12 @@ public class Watcher implements Serializable {
         this.lastmodifiedbyName = lastmodifiedbyName;
     }
 
-    public String getLastmodifiedbyAccount() {
-        return lastmodifiedbyAccount;
+    public String getLastmodifiedbyCd() {
+        return lastmodifiedbyCd;
     }
 
-    public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
-        this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
+        this.lastmodifiedbyCd = lastmodifiedbyCd;
     }
 
     public User getUserId() {

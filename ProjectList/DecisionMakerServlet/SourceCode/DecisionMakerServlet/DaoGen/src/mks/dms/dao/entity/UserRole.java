@@ -36,12 +36,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UserRole.findByEnabled", query = "SELECT u FROM UserRole u WHERE u.enabled = :enabled"),
     @NamedQuery(name = "UserRole.findByCreated", query = "SELECT u FROM UserRole u WHERE u.created = :created"),
     @NamedQuery(name = "UserRole.findByCreatedbyId", query = "SELECT u FROM UserRole u WHERE u.createdbyId = :createdbyId"),
-    @NamedQuery(name = "UserRole.findByCreatedbyAccount", query = "SELECT u FROM UserRole u WHERE u.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "UserRole.findByCreatedbyCd", query = "SELECT u FROM UserRole u WHERE u.createdbyCd = :createdbyCd"),
     @NamedQuery(name = "UserRole.findByCreatedbyName", query = "SELECT u FROM UserRole u WHERE u.createdbyName = :createdbyName"),
     @NamedQuery(name = "UserRole.findByLastmodified", query = "SELECT u FROM UserRole u WHERE u.lastmodified = :lastmodified"),
     @NamedQuery(name = "UserRole.findByLastmodifiedbyId", query = "SELECT u FROM UserRole u WHERE u.lastmodifiedbyId = :lastmodifiedbyId"),
     @NamedQuery(name = "UserRole.findByLastmodifiedbyName", query = "SELECT u FROM UserRole u WHERE u.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "UserRole.findByLastmodifiedbyAccount", query = "SELECT u FROM UserRole u WHERE u.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
+    @NamedQuery(name = "UserRole.findByLastmodifiedbyCd", query = "SELECT u FROM UserRole u WHERE u.lastmodifiedbyCd = :lastmodifiedbyCd")})
 public class UserRole implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -62,8 +62,8 @@ public class UserRole implements Serializable {
     private Date created;
     @Column(name = "CREATEDBY_ID")
     private Integer createdbyId;
-    @Column(name = "CREATEDBY_ACCOUNT")
-    private String createdbyAccount;
+    @Column(name = "CREATEDBY_CD")
+    private String createdbyCd;
     @Column(name = "CREATEDBY_NAME")
     private String createdbyName;
     @Column(name = "LASTMODIFIED")
@@ -73,8 +73,8 @@ public class UserRole implements Serializable {
     private Integer lastmodifiedbyId;
     @Column(name = "LASTMODIFIEDBY_NAME")
     private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_ACCOUNT")
-    private String lastmodifiedbyAccount;
+    @Column(name = "LASTMODIFIEDBY_CD")
+    private String lastmodifiedbyCd;
 
     public UserRole() {
     }
@@ -137,12 +137,12 @@ public class UserRole implements Serializable {
         this.createdbyId = createdbyId;
     }
 
-    public String getCreatedbyAccount() {
-        return createdbyAccount;
+    public String getCreatedbyCd() {
+        return createdbyCd;
     }
 
-    public void setCreatedbyAccount(String createdbyAccount) {
-        this.createdbyAccount = createdbyAccount;
+    public void setCreatedbyCd(String createdbyCd) {
+        this.createdbyCd = createdbyCd;
     }
 
     public String getCreatedbyName() {
@@ -177,12 +177,12 @@ public class UserRole implements Serializable {
         this.lastmodifiedbyName = lastmodifiedbyName;
     }
 
-    public String getLastmodifiedbyAccount() {
-        return lastmodifiedbyAccount;
+    public String getLastmodifiedbyCd() {
+        return lastmodifiedbyCd;
     }
 
-    public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
-        this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
+        this.lastmodifiedbyCd = lastmodifiedbyCd;
     }
 
     @Override

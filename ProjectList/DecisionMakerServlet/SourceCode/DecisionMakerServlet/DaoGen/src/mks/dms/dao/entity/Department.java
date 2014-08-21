@@ -41,16 +41,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Department.findByDescription", query = "SELECT d FROM Department d WHERE d.description = :description"),
     @NamedQuery(name = "Department.findByEnabled", query = "SELECT d FROM Department d WHERE d.enabled = :enabled"),
     @NamedQuery(name = "Department.findByManagerId", query = "SELECT d FROM Department d WHERE d.managerId = :managerId"),
-    @NamedQuery(name = "Department.findByManagerAccount", query = "SELECT d FROM Department d WHERE d.managerAccount = :managerAccount"),
+    @NamedQuery(name = "Department.findByManagerCd", query = "SELECT d FROM Department d WHERE d.managerCd = :managerCd"),
     @NamedQuery(name = "Department.findByManagerName", query = "SELECT d FROM Department d WHERE d.managerName = :managerName"),
     @NamedQuery(name = "Department.findByCreated", query = "SELECT d FROM Department d WHERE d.created = :created"),
     @NamedQuery(name = "Department.findByCreatedbyId", query = "SELECT d FROM Department d WHERE d.createdbyId = :createdbyId"),
-    @NamedQuery(name = "Department.findByCreatedbyAccount", query = "SELECT d FROM Department d WHERE d.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Department.findByCreatedbyCd", query = "SELECT d FROM Department d WHERE d.createdbyCd = :createdbyCd"),
     @NamedQuery(name = "Department.findByCreatedbyName", query = "SELECT d FROM Department d WHERE d.createdbyName = :createdbyName"),
     @NamedQuery(name = "Department.findByLastmodified", query = "SELECT d FROM Department d WHERE d.lastmodified = :lastmodified"),
     @NamedQuery(name = "Department.findByLastmodifiedbyId", query = "SELECT d FROM Department d WHERE d.lastmodifiedbyId = :lastmodifiedbyId"),
     @NamedQuery(name = "Department.findByLastmodifiedbyName", query = "SELECT d FROM Department d WHERE d.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Department.findByLastmodifiedbyAccount", query = "SELECT d FROM Department d WHERE d.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
+    @NamedQuery(name = "Department.findByLastmodifiedbyCd", query = "SELECT d FROM Department d WHERE d.lastmodifiedbyCd = :lastmodifiedbyCd")})
 public class Department implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -75,8 +75,8 @@ public class Department implements Serializable {
     private Boolean enabled;
     @Column(name = "MANAGER_ID")
     private Integer managerId;
-    @Column(name = "MANAGER_ACCOUNT")
-    private String managerAccount;
+    @Column(name = "MANAGER_CD")
+    private String managerCd;
     @Column(name = "MANAGER_NAME")
     private String managerName;
     @Basic(optional = false)
@@ -85,8 +85,8 @@ public class Department implements Serializable {
     private Date created;
     @Column(name = "CREATEDBY_ID")
     private Integer createdbyId;
-    @Column(name = "CREATEDBY_ACCOUNT")
-    private String createdbyAccount;
+    @Column(name = "CREATEDBY_CD")
+    private String createdbyCd;
     @Column(name = "CREATEDBY_NAME")
     private String createdbyName;
     @Column(name = "LASTMODIFIED")
@@ -96,8 +96,8 @@ public class Department implements Serializable {
     private Integer lastmodifiedbyId;
     @Column(name = "LASTMODIFIEDBY_NAME")
     private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_ACCOUNT")
-    private String lastmodifiedbyAccount;
+    @Column(name = "LASTMODIFIEDBY_CD")
+    private String lastmodifiedbyCd;
     @OneToMany(mappedBy = "departmentsId")
     private Collection<Request> requestCollection;
 
@@ -180,12 +180,12 @@ public class Department implements Serializable {
         this.managerId = managerId;
     }
 
-    public String getManagerAccount() {
-        return managerAccount;
+    public String getManagerCd() {
+        return managerCd;
     }
 
-    public void setManagerAccount(String managerAccount) {
-        this.managerAccount = managerAccount;
+    public void setManagerCd(String managerCd) {
+        this.managerCd = managerCd;
     }
 
     public String getManagerName() {
@@ -212,12 +212,12 @@ public class Department implements Serializable {
         this.createdbyId = createdbyId;
     }
 
-    public String getCreatedbyAccount() {
-        return createdbyAccount;
+    public String getCreatedbyCd() {
+        return createdbyCd;
     }
 
-    public void setCreatedbyAccount(String createdbyAccount) {
-        this.createdbyAccount = createdbyAccount;
+    public void setCreatedbyCd(String createdbyCd) {
+        this.createdbyCd = createdbyCd;
     }
 
     public String getCreatedbyName() {
@@ -252,12 +252,12 @@ public class Department implements Serializable {
         this.lastmodifiedbyName = lastmodifiedbyName;
     }
 
-    public String getLastmodifiedbyAccount() {
-        return lastmodifiedbyAccount;
+    public String getLastmodifiedbyCd() {
+        return lastmodifiedbyCd;
     }
 
-    public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
-        this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
+        this.lastmodifiedbyCd = lastmodifiedbyCd;
     }
 
     @XmlTransient

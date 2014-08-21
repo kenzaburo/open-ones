@@ -38,12 +38,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Template.findByEnabled", query = "SELECT t FROM Template t WHERE t.enabled = :enabled"),
     @NamedQuery(name = "Template.findByCreated", query = "SELECT t FROM Template t WHERE t.created = :created"),
     @NamedQuery(name = "Template.findByCreatedbyId", query = "SELECT t FROM Template t WHERE t.createdbyId = :createdbyId"),
-    @NamedQuery(name = "Template.findByCreatedbyAccount", query = "SELECT t FROM Template t WHERE t.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Template.findByCreatedbyCd", query = "SELECT t FROM Template t WHERE t.createdbyCd = :createdbyCd"),
     @NamedQuery(name = "Template.findByCreatedbyName", query = "SELECT t FROM Template t WHERE t.createdbyName = :createdbyName"),
     @NamedQuery(name = "Template.findByLastmodified", query = "SELECT t FROM Template t WHERE t.lastmodified = :lastmodified"),
     @NamedQuery(name = "Template.findByLastmodifiedbyId", query = "SELECT t FROM Template t WHERE t.lastmodifiedbyId = :lastmodifiedbyId"),
     @NamedQuery(name = "Template.findByLastmodifiedbyName", query = "SELECT t FROM Template t WHERE t.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Template.findByLastmodifiedbyAccount", query = "SELECT t FROM Template t WHERE t.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
+    @NamedQuery(name = "Template.findByLastmodifiedbyCd", query = "SELECT t FROM Template t WHERE t.lastmodifiedbyCd = :lastmodifiedbyCd")})
 public class Template implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -70,8 +70,8 @@ public class Template implements Serializable {
     private Date created;
     @Column(name = "CREATEDBY_ID")
     private Integer createdbyId;
-    @Column(name = "CREATEDBY_ACCOUNT")
-    private String createdbyAccount;
+    @Column(name = "CREATEDBY_CD")
+    private String createdbyCd;
     @Column(name = "CREATEDBY_NAME")
     private String createdbyName;
     @Column(name = "LASTMODIFIED")
@@ -81,8 +81,8 @@ public class Template implements Serializable {
     private Integer lastmodifiedbyId;
     @Column(name = "LASTMODIFIEDBY_NAME")
     private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_ACCOUNT")
-    private String lastmodifiedbyAccount;
+    @Column(name = "LASTMODIFIEDBY_CD")
+    private String lastmodifiedbyCd;
 
     public Template() {
     }
@@ -162,12 +162,12 @@ public class Template implements Serializable {
         this.createdbyId = createdbyId;
     }
 
-    public String getCreatedbyAccount() {
-        return createdbyAccount;
+    public String getCreatedbyCd() {
+        return createdbyCd;
     }
 
-    public void setCreatedbyAccount(String createdbyAccount) {
-        this.createdbyAccount = createdbyAccount;
+    public void setCreatedbyCd(String createdbyCd) {
+        this.createdbyCd = createdbyCd;
     }
 
     public String getCreatedbyName() {
@@ -202,12 +202,12 @@ public class Template implements Serializable {
         this.lastmodifiedbyName = lastmodifiedbyName;
     }
 
-    public String getLastmodifiedbyAccount() {
-        return lastmodifiedbyAccount;
+    public String getLastmodifiedbyCd() {
+        return lastmodifiedbyCd;
     }
 
-    public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
-        this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
+        this.lastmodifiedbyCd = lastmodifiedbyCd;
     }
 
     @Override

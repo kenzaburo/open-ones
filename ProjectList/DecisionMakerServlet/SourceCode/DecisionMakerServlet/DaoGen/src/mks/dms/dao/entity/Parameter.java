@@ -38,12 +38,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Parameter.findByEnabled", query = "SELECT p FROM Parameter p WHERE p.enabled = :enabled"),
     @NamedQuery(name = "Parameter.findByCreated", query = "SELECT p FROM Parameter p WHERE p.created = :created"),
     @NamedQuery(name = "Parameter.findByCreatedbyId", query = "SELECT p FROM Parameter p WHERE p.createdbyId = :createdbyId"),
-    @NamedQuery(name = "Parameter.findByCreatedbyAccount", query = "SELECT p FROM Parameter p WHERE p.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Parameter.findByCreatedbyCd", query = "SELECT p FROM Parameter p WHERE p.createdbyCd = :createdbyCd"),
     @NamedQuery(name = "Parameter.findByCreatedbyName", query = "SELECT p FROM Parameter p WHERE p.createdbyName = :createdbyName"),
     @NamedQuery(name = "Parameter.findByLastmodified", query = "SELECT p FROM Parameter p WHERE p.lastmodified = :lastmodified"),
     @NamedQuery(name = "Parameter.findByLastmodifiedbyId", query = "SELECT p FROM Parameter p WHERE p.lastmodifiedbyId = :lastmodifiedbyId"),
     @NamedQuery(name = "Parameter.findByLastmodifiedbyName", query = "SELECT p FROM Parameter p WHERE p.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Parameter.findByLastmodifiedbyAccount", query = "SELECT p FROM Parameter p WHERE p.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
+    @NamedQuery(name = "Parameter.findByLastmodifiedbyCd", query = "SELECT p FROM Parameter p WHERE p.lastmodifiedbyCd = :lastmodifiedbyCd")})
 public class Parameter implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -67,8 +67,8 @@ public class Parameter implements Serializable {
     private Date created;
     @Column(name = "CREATEDBY_ID")
     private Integer createdbyId;
-    @Column(name = "CREATEDBY_ACCOUNT")
-    private String createdbyAccount;
+    @Column(name = "CREATEDBY_CD")
+    private String createdbyCd;
     @Column(name = "CREATEDBY_NAME")
     private String createdbyName;
     @Column(name = "LASTMODIFIED")
@@ -78,8 +78,8 @@ public class Parameter implements Serializable {
     private Integer lastmodifiedbyId;
     @Column(name = "LASTMODIFIEDBY_NAME")
     private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_ACCOUNT")
-    private String lastmodifiedbyAccount;
+    @Column(name = "LASTMODIFIEDBY_CD")
+    private String lastmodifiedbyCd;
 
     public Parameter() {
     }
@@ -157,12 +157,12 @@ public class Parameter implements Serializable {
         this.createdbyId = createdbyId;
     }
 
-    public String getCreatedbyAccount() {
-        return createdbyAccount;
+    public String getCreatedbyCd() {
+        return createdbyCd;
     }
 
-    public void setCreatedbyAccount(String createdbyAccount) {
-        this.createdbyAccount = createdbyAccount;
+    public void setCreatedbyCd(String createdbyCd) {
+        this.createdbyCd = createdbyCd;
     }
 
     public String getCreatedbyName() {
@@ -197,12 +197,12 @@ public class Parameter implements Serializable {
         this.lastmodifiedbyName = lastmodifiedbyName;
     }
 
-    public String getLastmodifiedbyAccount() {
-        return lastmodifiedbyAccount;
+    public String getLastmodifiedbyCd() {
+        return lastmodifiedbyCd;
     }
 
-    public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
-        this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
+        this.lastmodifiedbyCd = lastmodifiedbyCd;
     }
 
     @Override

@@ -1,9 +1,5 @@
 package mks.dms.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.text.ParseException;
@@ -11,10 +7,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
+import javax.servlet.http.HttpServletRequest;
 
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
@@ -41,22 +47,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.google.gson.JsonObject;
-
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 /**
  * @author ThachLe, TruongTho
  *
@@ -214,7 +204,7 @@ public class RequestController {
         //model.setRequest(request);
         //mav.addObject("model", model);
         
-        LOG.debug("model.getRequest().getManagerAccount()=" + model.getRequest().getManagerAccount());
+        LOG.debug("model.getRequest().getManagerAccount()=" + model.getRequest().getManagerCd());
         if (model.getRequest().getManagerId() != null) {
             LOG.debug("model.getRequest().getManagerId().getUsername()=" + model.getRequest().getManagerId().getUsername());
         }
@@ -274,7 +264,7 @@ public class RequestController {
     		
     		User createUser = requestService.getUserByUsername(leaveCreate);
 //    		Department createDepartmentId = requestService.getDepartmentByCd(createUser.getDepartmentId());
-    		request.setCreatedbyAccount(createUser.getUsername());
+    		request.setCreatedbyCd(createUser.getUsername());
     		request.setCreatedbyId(createUser);
     		request.setCreatedbyName(createUser.getUsername());
 //    		request.setDepartmentsId(createDepartmentId);
@@ -296,7 +286,7 @@ public class RequestController {
     		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
         	User receiveUser = requestService.getUserById(userCd);
         	request.setManagerId(receiveUser);
-        	request.setManagerAccount(receiveUser.getUsername());
+        	request.setManagerCd(receiveUser.getUsername());
         	request.setManagerName(receiveUser.getUsername());
 
         	requestService.createRequest(request);
@@ -380,7 +370,7 @@ public class RequestController {
         		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
             	User receiveUser = requestService.getUserById(userCd);
             	request.setManagerId(receiveUser);
-            	request.setManagerAccount(receiveUser.getUsername());
+            	request.setManagerCd(receiveUser.getUsername());
             	request.setManagerName(receiveUser.getUsername());
             	
             	

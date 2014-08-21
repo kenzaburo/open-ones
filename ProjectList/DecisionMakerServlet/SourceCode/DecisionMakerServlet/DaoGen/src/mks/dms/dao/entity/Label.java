@@ -40,12 +40,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Label.findByName", query = "SELECT l FROM Label l WHERE l.name = :name"),
     @NamedQuery(name = "Label.findByCreated", query = "SELECT l FROM Label l WHERE l.created = :created"),
     @NamedQuery(name = "Label.findByCreatedbyId", query = "SELECT l FROM Label l WHERE l.createdbyId = :createdbyId"),
-    @NamedQuery(name = "Label.findByCreatedbyAccount", query = "SELECT l FROM Label l WHERE l.createdbyAccount = :createdbyAccount"),
+    @NamedQuery(name = "Label.findByCreatedbyCd", query = "SELECT l FROM Label l WHERE l.createdbyCd = :createdbyCd"),
     @NamedQuery(name = "Label.findByCreatedbyName", query = "SELECT l FROM Label l WHERE l.createdbyName = :createdbyName"),
     @NamedQuery(name = "Label.findByLastmodified", query = "SELECT l FROM Label l WHERE l.lastmodified = :lastmodified"),
     @NamedQuery(name = "Label.findByLastmodifiedbyId", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyId = :lastmodifiedbyId"),
     @NamedQuery(name = "Label.findByLastmodifiedbyName", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Label.findByLastmodifiedbyAccount", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyAccount = :lastmodifiedbyAccount")})
+    @NamedQuery(name = "Label.findByLastmodifiedbyCd", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyCd = :lastmodifiedbyCd")})
 public class Label implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -68,8 +68,8 @@ public class Label implements Serializable {
     private Date created;
     @Column(name = "CREATEDBY_ID")
     private Integer createdbyId;
-    @Column(name = "CREATEDBY_ACCOUNT")
-    private String createdbyAccount;
+    @Column(name = "CREATEDBY_CD")
+    private String createdbyCd;
     @Column(name = "CREATEDBY_NAME")
     private String createdbyName;
     @Column(name = "LASTMODIFIED")
@@ -79,8 +79,8 @@ public class Label implements Serializable {
     private Integer lastmodifiedbyId;
     @Column(name = "LASTMODIFIEDBY_NAME")
     private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_ACCOUNT")
-    private String lastmodifiedbyAccount;
+    @Column(name = "LASTMODIFIEDBY_CD")
+    private String lastmodifiedbyCd;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "labelId")
     private Collection<LabelRequest> labelRequestCollection;
 
@@ -147,12 +147,12 @@ public class Label implements Serializable {
         this.createdbyId = createdbyId;
     }
 
-    public String getCreatedbyAccount() {
-        return createdbyAccount;
+    public String getCreatedbyCd() {
+        return createdbyCd;
     }
 
-    public void setCreatedbyAccount(String createdbyAccount) {
-        this.createdbyAccount = createdbyAccount;
+    public void setCreatedbyCd(String createdbyCd) {
+        this.createdbyCd = createdbyCd;
     }
 
     public String getCreatedbyName() {
@@ -187,12 +187,12 @@ public class Label implements Serializable {
         this.lastmodifiedbyName = lastmodifiedbyName;
     }
 
-    public String getLastmodifiedbyAccount() {
-        return lastmodifiedbyAccount;
+    public String getLastmodifiedbyCd() {
+        return lastmodifiedbyCd;
     }
 
-    public void setLastmodifiedbyAccount(String lastmodifiedbyAccount) {
-        this.lastmodifiedbyAccount = lastmodifiedbyAccount;
+    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
+        this.lastmodifiedbyCd = lastmodifiedbyCd;
     }
 
     @XmlTransient

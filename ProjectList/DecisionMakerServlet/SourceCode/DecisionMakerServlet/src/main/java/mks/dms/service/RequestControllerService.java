@@ -1,12 +1,8 @@
 
 package mks.dms.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
 
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExRequestTypeJpaController;
@@ -18,11 +14,14 @@ import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
-import mks.dms.dao.entity.Watcher;
 import mks.dms.dao.entity.User;
+import mks.dms.dao.entity.Watcher;
 import mks.dms.extentity.ExUser;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.util.AppCons;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 /**
  * @description Get data from database and map to model controller
@@ -128,7 +127,7 @@ public class RequestControllerService extends BaseService{
                 managerUser = userDaoCtrl.findUser(managerUserId);
 
                 if (managerUser != null) {
-                    request.setManagerAccount(managerUser.getUsername());
+                    request.setManagerCd(managerUser.getUsername());
                     request.setManagerName(ExUser.getFullname(managerUser));
                 }
             }
