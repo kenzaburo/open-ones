@@ -4,7 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <fmt:formatDate value="${request.startdate}" pattern="yyyy-MM-dd" var="startDate"/>
-<fmt:formatDate value="${request.endate}" pattern="yyyy-MM-dd" var="endDate"/>
+<fmt:formatDate value="${request.enddate}" pattern="yyyy-MM-dd" var="endDate"/>
 <!--    Leave -->
 <div id="make-leave">
   <form name="createLeave" class="horizontal" enctype="multipart/form-data" action="updateRequest">

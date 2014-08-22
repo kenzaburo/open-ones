@@ -128,7 +128,7 @@ public class RequestControllerService extends BaseService{
 
                 if (managerUser != null) {
                     request.setManagerCd(managerUser.getUsername());
-                    request.setManagerName(ExUser.getFullname(managerUser));
+                    request.setManagerCd(ExUser.getFullname(managerUser));
                 }
             }
         } else {
@@ -201,31 +201,31 @@ public class RequestControllerService extends BaseService{
     }
     
     /**
-     * Get List<Request> By createdbyName.
+     * Get List<Request> By createdbyCd.
      * <br/>
      * @return List<Request>
      */
-    public List<Request> getListRequestByCreatedbyName(String createdbyName) {
+    public List<Request> getListRequestByCreatedbyCd(String createdbyCd) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     
-    	listRequest = daoCtrl.getListRequestByCreatename(createdbyName);
+    	listRequest = daoCtrl.getListRequestByCreatedbyCd(createdbyCd);
     	
     	return listRequest;
     }
     
     /**
-     * Get List<Request> By managerName.
+     * Get List<Request> By managerCd.
      * <br/>
      * @return List<Request>
      */
-    public List<Request> getListRequestByManagerName(String managerName) {
+    public List<Request> getListRequestByManagerCd(String managerCd) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     
-    	listRequest = daoCtrl.getListRequestByManagername(managerName);
+    	listRequest = daoCtrl.getListRequestByManagerCd(managerCd);
     	
     	return listRequest;
     }
@@ -235,43 +235,43 @@ public class RequestControllerService extends BaseService{
      * <br/>
      * @return List<Request>
      */
-    public List<Request> searchRequest(String createdbyName, Date startDate, Date endDate, String managerId, String assignId, String requestTypeCd) {
+    public List<Request> searchRequest(String createdbyCd, Date startDate, Date endDate, String managerCd, String assignCd, String requestTypeCd) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     	
-    	listRequest = daoCtrl.searchRequest(createdbyName, startDate, endDate, managerId, assignId, requestTypeCd);
+    	listRequest = daoCtrl.searchRequest(createdbyCd, startDate, endDate, managerCd, assignCd, requestTypeCd);
     	
     	return listRequest;
     }
     
     
     /**
-     * Get List<Request> By createdbyName, status and readstatus.
+     * Get List<Request> By createdbyCd, status and readstatus.
      * <br/>
      * @return List<Request>
      */
-    public List<Request> getListRequestByCreatedbyNameAndStatusAndReadstatus(String createdbyName, String status, int readstatus) {
+    public List<Request> getListRequestByCreatedbyCdAndStatusAndReadstatus(String createdbyCd, String status, int readstatus) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     
-    	listRequest = daoCtrl.getListRequestByCreatenameAndStatusAndReadstatus(createdbyName, status, readstatus);
+    	listRequest = daoCtrl.getListRequestByCreatedbyCdAndStatusAndReadstatus(createdbyCd, status, readstatus);
     	
     	return listRequest;
     }
     
     /**
-     * Get List<Request> By managerName.
+     * Get List<Request> By managerCd.
      * <br/>
      * @return List<Request>
      */
-    public List<Request> getListRequestByManagerNameAndStatusAndReadstatus(String managerName, String status, int readstatus) {
+    public List<Request> getListRequestByManagerCdAndStatusAndReadstatus(String managerCd, String status, int readstatus) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     
-    	listRequest = daoCtrl.getListRequestByManagernameAndStatusAndReadstatus(managerName, status, readstatus);
+    	listRequest = daoCtrl.getListRequestByManagerCdAndStatusAndReadstatus(managerCd, status, readstatus);
     	
     	return listRequest;
     }
@@ -299,52 +299,6 @@ public class RequestControllerService extends BaseService{
     public RequestType getRequestTypeByCd(String requestCd) {
     	ExRequestTypeJpaController daoCtrl = new ExRequestTypeJpaController(emf);
     	return daoCtrl.getListRequestByRequestCd(requestCd);
-    }
-    
-    /**
-     * Get User By Cd.
-     * @param cd
-     * @return User
-     */
-    public User getUserById(int id) {
-    	User user;
-    	
-    	UserJpaController daoCtrl = new UserJpaController(emf);
-    	
-    	user = daoCtrl.findUser(id);
-    	
-    	return user;
-    }
-    
-    /**
-     * Get User By Cd.
-     * @param username
-     * @return User
-     */
-    public User getUserByUsername(String username) {
-    	User user;
-    	
-    	ExUserJpaController daoCtrl = new ExUserJpaController(emf);
-    	
-    	user = daoCtrl.findUserByUsername(username);
-    	
-    	return user;
-    }
-    
-    
-    /**
-     * Get all of User.
-     * <br/>
-     * @return list of User
-     */
-    public List<User> getAllUser() {
-    	List<User> listUsers;
-    	
-    	UserJpaController userDaoCtrl = new UserJpaController(emf);
-    	
-    	listUsers = userDaoCtrl.findUserEntities();
-    	
-    	return listUsers;
     }
     
     /**

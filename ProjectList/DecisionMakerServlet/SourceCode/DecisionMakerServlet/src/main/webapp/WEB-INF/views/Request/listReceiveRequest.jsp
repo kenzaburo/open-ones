@@ -73,7 +73,7 @@
             	     	  $container.handsontable({
             	     	  	data: jsonArr,
             	     	   	colWidths: [150, 150, 100, 200, 300, 100],
-            	     	  	colHeaders: ["Loại yêu cầu", "Tiêu đề", "Người nhận", "Thời gian", "Lý do", "Trạng thái"],
+            	     	  	colHeaders: ["Loại yêu cầu", "Tiêu đề", "Người quản lý", "Thời gian", "Nội dung", "Trạng thái"],
 	           	     	    columns: [
 								{data: "requestType", renderer: "html"},
 	           	     	      	{data: "requestId", renderer: "html"},

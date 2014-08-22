@@ -42,19 +42,19 @@ public class ExRequestControllerTest {
      */
     
     @Test
-    public void testgetListRequestByCreatename() {
+    public void testgetListRequestByCreatedbyCd() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
         ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
-        List<Request> listRequest = daoCtrl.getListRequestByCreatenameAndStatusAndReadstatus("user", "Created", 2);
+        List<Request> listRequest = daoCtrl.getListRequestByCreatedbyCdAndStatusAndReadstatus("001", "Created", 1);
         
         assertEquals(1, listRequest.size());
     }
     
     @Test
-    public void testgetListRequestByManagername() {
+    public void testgetListRequestByManagerCd() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
         ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
-        List<Request> listRequest = daoCtrl.getListRequestByManagernameAndStatusAndReadstatus("admin", "Updated", 2);
+        List<Request> listRequest = daoCtrl.getListRequestByManagerCdAndStatusAndReadstatus("admin", "Updated", 2);
         
         assertEquals(1, listRequest.size());
     }

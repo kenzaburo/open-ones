@@ -4,9 +4,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <fmt:formatDate value="${request.startdate}" pattern="yyyy-MM-dd" var="startDate"/>
-<fmt:formatDate value="${request.endate}" pattern="yyyy-MM-dd" var="endDate"/>
+<fmt:formatDate value="${request.enddate}" pattern="yyyy-MM-dd" var="endDate"/>
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
-<script type="text/javascript" src="resources/js/createRequest.js"></script>
+<!-- <script type="text/javascript" src="resources/js/createRequest.js"></script> -->
 <script type="text/javascript" src="resources/js/validateFunction.js"></script>
 <script>
 $(function(){
@@ -77,15 +77,14 @@ $(function(){
 			</div>
 		</c:if>
 	</div>
-	
 <!-- 	Kiem tra tai khoan dang nhap co phai tai khoan tao yeu cau khong -->
-	<c:if test="${pageContext.request.userPrincipal.name == request.createdbyName}">
+	<c:if test="${not empty isCreater}">
 		<div>
 			<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
 		</div>
 	</c:if>
 <!-- 	Kiem tra tai khoan dang nhap co phai tai khoan nhan yeu cau khong -->
-	<c:if test="${pageContext.request.userPrincipal.name == request.managerName}">
+	<c:if test="${not empty isManager}">
 		<div>
 			<a class="button" href="approveRequest?id=${request.id}" id="approve">Duyệt</a>
 			<a class="button" id="reject">Từ chối</a>

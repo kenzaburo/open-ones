@@ -31,7 +31,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	}
 
 	/**
-	 * Get Request by createdbyName and status and readStatus.
+	 * Get Request by createdbyCd and status and readStatus.
 	 * 
 	 * @param username
 	 * @param status
@@ -41,15 +41,15 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByCreatenameAndStatusAndReadstatus(
-			String createdbyName, String status, int readstatus) {
+	public List<Request> getListRequestByCreatedbyCdAndStatusAndReadstatus(
+			String createdbyCd, String status, int creatorRead) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
-					.createQuery("Select r FROM Request r WHERE r.createdbyName = :createdbyName AND r.status = :status AND r.readstatus = :readstatus");
-			query.setParameter("createdbyName", createdbyName);
+					.createQuery("Select r FROM Request r WHERE r.createdbyCd = :createdbyCd AND r.status = :status AND r.creatorRead = :creatorRead");
+			query.setParameter("createdbyCd", createdbyCd);
 			query.setParameter("status", status);
-			query.setParameter("readstatus", readstatus);
+			query.setParameter("creatorRead", creatorRead);
 			List<Request> listRequest = (List<Request>) query.getResultList();
 
 			return listRequest;
@@ -69,15 +69,15 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByManagernameAndStatusAndReadstatus(
-			String managerName, String status, int readstatus) {
+	public List<Request> getListRequestByManagerCdAndStatusAndReadstatus(
+			String managerCd, String status, int managerRead) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
-					.createQuery("Select r FROM Request r WHERE r.managerName = :managerName AND r.status = :status AND r.readstatus = :readstatus");
-			query.setParameter("managerName", managerName);
+					.createQuery("Select r FROM Request r WHERE r.managerCd = :managerCd AND r.status = :status AND r.managerRead = :managerRead");
+			query.setParameter("managerCd", managerCd);
 			query.setParameter("status", status);
-			query.setParameter("readstatus", readstatus);
+			query.setParameter("managerRead", managerRead);
 			List<Request> listRequest = (List<Request>) query.getResultList();
 
 			return listRequest;
@@ -87,7 +87,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	}
 
 	/**
-	 * Get Request by createdbyName
+	 * Get Request by createdbyCd
 	 * 
 	 * @param username
 	 * @return List<Request>
@@ -95,12 +95,12 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByCreatename(String createdbyName) {
+	public List<Request> getListRequestByCreatedbyCd(String createdbyCd) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
-					.createQuery("Select r FROM Request r WHERE r.createdbyName = :createdbyName");
-			query.setParameter("createdbyName", createdbyName);
+					.createQuery("Select r FROM Request r WHERE r.createdbyCd = :createdbyCd");
+			query.setParameter("createdbyCd", createdbyCd);
 			List<Request> listRequest = (List<Request>) query.getResultList();
 
 			return listRequest;
@@ -110,9 +110,9 @@ public class ExRequestJpaController extends RequestJpaController {
 	}
 
 	/**
-	 * Get Request by createdbyName
+	 * Get Request by createdbyCd
 	 * 
-	 * @param createdbyName
+	 * @param createdbyCd
 	 * @param startDate
 	 * @param endDate
 	 * @param managerId
@@ -123,32 +123,32 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> searchRequest(String createdbyName, Date startDate,
-			Date endDate, String managerId, String assignId,
+	public List<Request> searchRequest(String createdbyCd, Date startDate,
+			Date endDate, String managerCd, String assignCd,
 			String requestTypeCd) {
 		EntityManager em = getEntityManager();
 		try {
 			String scriptQuery = "select r from Request r ";
-			if ((!createdbyName.equals("")) || ((startDate != null))
-					|| ((endDate != null)) || ((!managerId.equals("")))
-					|| ((!assignId.equals("")))
+			if ((!createdbyCd.equals("")) || ((startDate != null))
+					|| ((endDate != null)) || ((!managerCd.equals("")))
+					|| ((!assignCd.equals("")))
 					|| ((!requestTypeCd.equals("")))) {
 				scriptQuery += "WHERE ";
 			}
-			if (!createdbyName.equals("")) {
+			if (!createdbyCd.equals("")) {
 				if (((startDate != null)) || ((endDate != null))
-						|| ((!managerId.equals("")))
-						|| ((!assignId.equals("")))
+						|| ((!managerCd.equals("")))
+						|| ((!assignCd.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
-					scriptQuery += "r.createdbyname = :createdbyname AND ";
+					scriptQuery += "r.createdbyCd = :createdbyCd AND ";
 				} else {
-					scriptQuery += "r.createdbyname = :createdbyname ";
+					scriptQuery += "r.createdbyCd = :createdbyCd ";
 				}
 
 			}
 			if (startDate != null) {
-				if (((endDate != null)) || ((!managerId.equals("")))
-						|| ((!assignId.equals("")))
+				if (((endDate != null)) || ((!managerCd.equals("")))
+						|| ((!assignCd.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.startdate <= :startdate AND ";
 				} else {
@@ -156,7 +156,7 @@ public class ExRequestJpaController extends RequestJpaController {
 				}
 			}
 			if (endDate != null) {
-				if (((!managerId.equals(""))) || ((!assignId.equals("")))
+				if (((!managerCd.equals(""))) || ((!assignCd.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.enddate >= :enddate AND ";
 				} else {
@@ -164,18 +164,18 @@ public class ExRequestJpaController extends RequestJpaController {
 				}
 
 			}
-			if (!managerId.equals("0")) {
-				if ((!assignId.equals("")) || ((!requestTypeCd.equals("")))) {
-					scriptQuery += "r.managerCd = :managerId AND ";
+			if (!managerCd.equals("0")) {
+				if ((!assignCd.equals("")) || ((!requestTypeCd.equals("")))) {
+					scriptQuery += "r.managerCd = :managerCd AND ";
 				} else {
-					scriptQuery += "r.managerCd = :managerId";
+					scriptQuery += "r.managerCd = :managerCd";
 				}
 			}
-			if (!assignId.equals("0")) {
+			if (!assignCd.equals("0")) {
 				if (!requestTypeCd.equals("")) {
-					scriptQuery += "r.assignedCd = :assignId AND ";
+					scriptQuery += "r.assignedCd = :assignCd AND ";
 				} else {
-					scriptQuery += "r.assignedCd = :assignId";
+					scriptQuery += "r.assignedCd = :assignCd";
 				}
 			}
 			if (!requestTypeCd.equals("")) {
@@ -183,8 +183,8 @@ public class ExRequestJpaController extends RequestJpaController {
 			}
 			 System.out.println("Query la: " + scriptQuery);
 			Query query = em.createQuery(scriptQuery);
-			if (!createdbyName.equals("")) {
-				query.setParameter("createdbyName", createdbyName);
+			if (!createdbyCd.equals("")) {
+				query.setParameter("createdbyCd", createdbyCd);
 			}
 			if (startDate != null) {
 				query.setParameter("startDate", startDate);
@@ -192,11 +192,11 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (endDate != null) {
 				query.setParameter("endDate", endDate);
 			}
-			if (!managerId.equals("0")) {
-				query.setParameter("managerId", managerId);
+			if (!managerCd.equals("0")) {
+				query.setParameter("managerCd", managerCd);
 			}
-			if (!assignId.equals("0")) {
-				query.setParameter("assignId", assignId);
+			if (!assignCd.equals("0")) {
+				query.setParameter("assignCd", assignCd);
 			}
 			if (!requestTypeCd.equals("")) {
 				query.setParameter("requestTypeCd", requestTypeCd);
@@ -218,12 +218,12 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByManagername(String managerName) {
+	public List<Request> getListRequestByManagerCd(String managerCd) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
-					.createQuery("Select r FROM Request r WHERE r.managerName = :managerName");
-			query.setParameter("managerName", managerName);
+					.createQuery("Select r FROM Request r WHERE r.managerCd = :managerCd");
+			query.setParameter("managerCd", managerCd);
 			List<Request> listRequest = (List<Request>) query.getResultList();
 
 			return listRequest;

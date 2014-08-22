@@ -28,6 +28,7 @@ import mks.dms.model.DurationUnit;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestControllerService;
+import mks.dms.service.UserControllerService;
 import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
@@ -61,10 +62,13 @@ public class RequestController {
 	
 	private final RequestControllerService requestService;
 	
+	private final UserControllerService userService;
+	
     @Autowired
-    public RequestController(MasterService masterService, RequestControllerService requestService) {
+    public RequestController(MasterService masterService, RequestControllerService requestService, UserControllerService userService) {
         this.masterService = masterService;
         this.requestService = requestService;
+        this.userService = userService;
     }
 	
     /**
@@ -142,7 +146,7 @@ public class RequestController {
         List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         LOG.debug("lstRequestTypes=" + lstRequestTypes);
         mav.addObject("lstReqTypes", lstRequestTypes);
-        List<User> listUsers = requestService.getAllUser();
+        List<User> listUsers = userService.getAllUser();
         mav.addObject("listUsers", listUsers);
         
         List<DurationUnit> listDurationUnits = MasterService.getDurationUnits();
@@ -160,7 +164,7 @@ public class RequestController {
     * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
     */
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
-    public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result) {
+    public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result, Principal principal) {
         // Model to re-display the saved request
         ModelAndView mav = new ModelAndView("createRequest");
 
@@ -187,6 +191,17 @@ public class RequestController {
         
         LOG.debug("Start date=" + request.getStartdate());                         // Task | Leave
         LOG.debug("End date=" + request.getEnddate());                             // Task | Leave
+        
+        User userCreate = userService.getUserByUsername(principal.getName());
+ 
+        Date today = new Date();
+        model.getRequest().setStatus("Created");
+        model.getRequest().setCreatorRead(1);
+        model.getRequest().setCreatedbyId(userCreate);
+        model.getRequest().setCreatedbyCd(principal.getName());
+        model.getRequest().setCreatedbyCd(userCreate.getCd());
+        
+        model.getRequest().setCreated(today);
         
         // Save request by call to request controller service
         boolean retOK = requestService.saveRequest(model, masterService);;
@@ -237,19 +252,19 @@ public class RequestController {
     	if (requestCd.equals("Task")) {
     		request.setRequesttypeId(1);
     		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
-        	User receiveUser = requestService.getUserById(userId);
+        	User receiveUser = userService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestCd.equals("Rule")) {
     		request.setRequesttypeId(2);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = requestService.getUserById(userId);
+        	User receiveUser = userService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestCd.equals("Announcement")) {
     		request.setRequesttypeId(3);
     		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = requestService.getUserById(userId);
+        	User receiveUser = userService.getUserById(userId);
         	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
     	}
     	if (requestCd.equals("Leave")) {
@@ -262,11 +277,11 @@ public class RequestController {
     		String leaveCreate = req.getParameter("leaveCreate");
 //    		System.out.println(req.getParameter("leaveStartDay"));
     		
-    		User createUser = requestService.getUserByUsername(leaveCreate);
+    		User createUser = userService.getUserByUsername(leaveCreate);
 //    		Department createDepartmentId = requestService.getDepartmentByCd(createUser.getDepartmentId());
     		request.setCreatedbyCd(createUser.getUsername());
     		request.setCreatedbyId(createUser);
-    		request.setCreatedbyName(createUser.getUsername());
+    		request.setCreatedbyCd(createUser.getUsername());
 //    		request.setDepartmentsId(createDepartmentId);
     		
     		request.setCreated(today);
@@ -282,12 +297,14 @@ public class RequestController {
     		
     		request.setStartdate(leaveStartDay);
     		request.setEnddate(leaveEndDay);
-    		request.setReadstatus(1);
+    		request.setCreatorRead(1);
+    		request.setManagerRead(0);
+    		request.setAssignerRead(0);
     		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = requestService.getUserById(userCd);
+        	User receiveUser = userService.getUserById(userCd);
         	request.setManagerId(receiveUser);
         	request.setManagerCd(receiveUser.getUsername());
-        	request.setManagerName(receiveUser.getUsername());
+        	request.setManagerCd(receiveUser.getUsername());
 
         	requestService.createRequest(request);
         	
@@ -316,7 +333,7 @@ public class RequestController {
 //    	Neu phai
     	ModelAndView mav = new ModelAndView("editRequest");
     	Request request = requestService.getRequestById(id);
-    	List<User> listUsers = requestService.getAllUser();
+    	List<User> listUsers = userService.getAllUser();
         mav.addObject("listUsers", listUsers);
     	mav.addObject("request", request);
     	return mav;
@@ -330,23 +347,23 @@ public class RequestController {
     	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
     	Request request = requestService.getRequestById(requestId);
     	String leaveCreate = req.getParameter("leaveCreate");
-    	if (request.getCreatedbyName().equals(leaveCreate)) {
+    	if (request.getCreatedbyCd().equals(leaveCreate)) {
     		if (requestType.equals("Task")) {
         		request.setRequesttypeId(1);
         		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
-            	User receiveUser = requestService.getUserById(userId);
+            	User receiveUser = userService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Rule")) {
         		request.setRequesttypeId(2);
         		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = requestService.getUserById(userId);
+            	User receiveUser = userService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Announcement")) {
         		request.setRequesttypeId(3);
         		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = requestService.getUserById(userId);
+            	User receiveUser = userService.getUserById(userId);
             	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
         	}
         	if (requestType.equals("Leave")) {
@@ -361,17 +378,17 @@ public class RequestController {
         		request.setContent(leaveContent);
         		request.setTitle(leaveTitle);
         		request.setStatus("Updated");
-        		request.setReadstatus(1);
+        		request.setManagerRead(0);
         		
 //        		set label
         		
         		request.setStartdate(leaveStartDay);
         		request.setEnddate(leaveEndDay);
         		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = requestService.getUserById(userCd);
+            	User receiveUser = userService.getUserById(userCd);
             	request.setManagerId(receiveUser);
             	request.setManagerCd(receiveUser.getUsername());
-            	request.setManagerName(receiveUser.getUsername());
+            	request.setManagerCd(receiveUser.getUsername());
             	
             	
             	
@@ -401,22 +418,26 @@ public class RequestController {
 //    	kiem tra tai khoan dang nhap phai tai khoan duoc nhan request ko
 //    	neu phai
     	
-//    	User user = requestService.getUserByUsername(principal.getName());
-    	if (request.getManagerName().equals(principal.getName())) {
-    		if (request.getReadstatus() == 1) {
-        		request.setReadstatus(2);
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	
+    	if (request.getManagerCd().equals(userLogin.getCd())) {
+    		if (request.getManagerRead() == 0) {
+        		request.setManagerRead(1);
         		requestService.updateRequest(request);
         	}
+    		mav.addObject("isManager", Boolean.TRUE);
     	}
     	
     	
 //    	kiem tra tai khoan dang nhap phai tai khoan tao request ko
 //    	neu phai
-    	if (request.getCreatedbyName().equals(principal.getName())) {
-	    	if (request.getReadstatus() == 3) {
-	    		request.setReadstatus(4);
+    	if (request.getCreatedbyCd().equals(userLogin.getCd())) {
+	    	if (request.getCreatorRead() == 0) {
+	    		request.setCreatorRead(1);
 	    		requestService.updateRequest(request);
+	    		
 	    	}
+	    	mav.addObject("isCreater", Boolean.TRUE);
     	}
     	return mav;
     }
@@ -435,7 +456,7 @@ public class RequestController {
     	Request request = requestService.getRequestById(id);
     	request.setStatus("Approved");
     	request.setLastmodified(today);
-    	request.setReadstatus(3);
+    	request.setCreatorRead(0);
     	
 //    	Bo sung them thong tin sau
 //    	request.setLastmodifiedbyAccount(lastmodifiedbyAccount);
@@ -451,7 +472,7 @@ public class RequestController {
      * Process when rejecte Request
      **/
     @RequestMapping(value="rejectRequest")
-    public String rejectRequest(HttpServletRequest req) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public String rejectRequest(HttpServletRequest req, Principal pricipal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
     	Date today = new Date();
     	int id = Integer.parseInt(req.getParameter("requestId"));
@@ -464,11 +485,13 @@ public class RequestController {
 //    	Neu phai
     	Request request = requestService.getRequestById(id);
     	request.setStatus("Rejected");
-    	request.setReadstatus(3);
+    	request.setCreatorRead(0);
     	
+    	User userLogin = userService.getUserByUsername(pricipal.getName());
 //    	luu lý do reject
-    	String fullReasonReject = "Ten tai khoan comment" + formater.format(today) + reasonReject;
-    	request.setComment(fullReasonReject);
+    	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
+    	request.setComment(request.getComment() + fullReasonReject);
+    	
     	
     	request.setLastmodified(today);
     	
@@ -487,11 +510,11 @@ public class RequestController {
      **/
     @RequestMapping(value="listSendRequest")
     public ModelAndView showPageListSendRequest() {
-//    	List<Request> listRequest = requestService.getListRequestByCreatedbyName(username);
+//    	List<Request> listRequest = requestService.getListRequestByCreatedbyCd(username);
     	ModelAndView mav = new ModelAndView("listSendRequest");
     	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         mav.addObject("lstReqTypes", lstRequestTypes);
-        List<User> listUsers = requestService.getAllUser();
+        List<User> listUsers = userService.getAllUser();
         mav.addObject("listUsers", listUsers);
     	return mav;
     }
@@ -501,12 +524,12 @@ public class RequestController {
      **/
     @RequestMapping(value="listReceiveRequest")
     public ModelAndView showPageListReceiveRequest() {
-//    	List<Request> listRequest = requestService.getListRequestByManagerName(username);
+//    	List<Request> listRequest = requestService.getListRequestByManagerCd(username);
     	ModelAndView mav = new ModelAndView("listReceiveRequest");
     	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         LOG.debug("lstRequestTypes=" + lstRequestTypes);
         mav.addObject("lstReqTypes", lstRequestTypes);
-        List<User> listUsers = requestService.getAllUser();
+        List<User> listUsers = userService.getAllUser();
         mav.addObject("listUsers", listUsers);
     	return mav;
     }
@@ -516,7 +539,8 @@ public class RequestController {
     public @ResponseBody String loadSendRequest(Principal principal) throws JSONException{
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
-    	List<Request> listRequest = requestService.getListRequestByCreatedbyName(principal.getName());
+        User userLogin = userService.getUserByUsername(principal.getName());
+    	List<Request> listRequest = requestService.getListRequestByCreatedbyCd(userLogin.getCd());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
     		JSONObject json = new JSONObject();
@@ -524,7 +548,7 @@ public class RequestController {
 //    		json.put("requestType", request.getRequesttypeCd());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
-    		json.put("managerName", request.getManagerName());
+    		json.put("managerName", request.getManagerCd());
     		json.put("managerId", 1);
     		json.put("assignId", 1);
     		json.put("startDate", dateFormat.format(request.getStartdate()));
@@ -532,7 +556,7 @@ public class RequestController {
 //    		json.put("startDate", "11-08-2014");
 //    		json.put("endDate", "15-08-2014");
     		json.put("reason", request.getContent());
-    		json.put("readStatus", request.getReadstatus());
+    		json.put("readStatus", request.getCreatorRead());
     		json.put("status", request.getStatus());
     		listJson.add(json);
     	}
@@ -543,8 +567,8 @@ public class RequestController {
     public @ResponseBody String loadReceiveRequest(Principal principal) throws JSONException{
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
-    	List<Request> listRequest = requestService.getListRequestByManagerName(principal.getName());
-    	System.out.println("USERNAME la " + username);
+        User userLogin = userService.getUserByUsername(principal.getName());
+    	List<Request> listRequest = requestService.getListRequestByManagerCd(userLogin.getCd());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
     		JSONObject json = new JSONObject();
@@ -552,7 +576,7 @@ public class RequestController {
 //    		json.put("requestType", request.getRequesttypeCd());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
-    		json.put("managerName", request.getManagerName());
+    		json.put("managerName", request.getManagerCd());
     		json.put("managerId", 1);
     		json.put("assignId", 1);
     		json.put("startDate", dateFormat.format(request.getStartdate()));
@@ -560,7 +584,7 @@ public class RequestController {
 //    		json.put("startDate", "11-08-2014");
 //    		json.put("endDate", "15-08-2014");
     		json.put("reason", request.getContent());
-    		json.put("readStatus", request.getReadstatus());
+    		json.put("readStatus", request.getManagerRead());
     		json.put("status", request.getStatus());
     		listJson.add(json);
     	}
@@ -573,26 +597,18 @@ public class RequestController {
     	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
     	LOG.debug("lstRequestTypes=" + lstRequestTypes);
         mav.addObject("lstReqTypes", lstRequestTypes);
-        List<User> listUsers = requestService.getAllUser();
+        List<User> listUsers = userService.getAllUser();
         mav.addObject("listUsers", listUsers);
     	return mav;
     }
     
     @RequestMapping(value="search.request", method = RequestMethod.GET)
-    public @ResponseBody String searchRequest(@RequestParam("createdbyName") String createdbyName, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerId, @RequestParam("assignId") String assignId, @RequestParam("requestTypeCd") String requestTypeCd, @RequestParam("requestTitle") String requestTitle, @RequestParam("requestContent") String requestContent) throws JSONException {
+    public @ResponseBody String searchRequest(@RequestParam("createdbyCd") String createdbyCd, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerCd, @RequestParam("assignId") String assignCd, @RequestParam("requestTypeCd") String requestTypeCd, @RequestParam("requestTitle") String requestTitle, @RequestParam("requestContent") String requestContent) throws JSONException {
     	List<Request> listRequest;
-    	System.out.println(createdbyName);
-    	System.out.println(startDate);
-    	System.out.println(endDate);
-    	System.out.println(managerId);
-    	System.out.println(assignId);
-    	System.out.println(requestTypeCd);
-    	System.out.println(requestTitle);
-    	System.out.println(requestContent);
-    	if (createdbyName.equals("") && startDate == null && endDate == null && managerId.equals("0") && assignId.equals("0") && requestTypeCd.equals("0")) {
+    	if (createdbyCd.equals("") && startDate == null && endDate == null && managerCd.equals("0") && assignCd.equals("0") && requestTypeCd.equals("0")) {
     		listRequest = requestService.getAllRequest();
     	}else {
-    		listRequest = requestService.searchRequest(createdbyName, startDate, endDate, managerId, assignId, requestTypeCd);
+    		listRequest = requestService.searchRequest(createdbyCd, startDate, endDate, managerCd, assignCd, requestTypeCd);
     	}
     	System.out.println("So lương " + listRequest.size());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
@@ -605,7 +621,7 @@ public class RequestController {
 //        		json.put("requestType", request.getRequesttypeCd());
         		json.put("requestId", request.getId());
         		json.put("requestTitle", request.getTitle());
-        		json.put("managerName", request.getManagerName());
+        		json.put("managerName", request.getManagerCd());
         		json.put("managerId", 1);
         		json.put("assignId", 1);
 //        		json.put("startDate", dateFormat.format(request.getStartdate()));
@@ -613,7 +629,7 @@ public class RequestController {
         		json.put("startDate", "11-08-2014");
         		json.put("endDate", "15-08-2014");
         		json.put("reason", request.getContent());
-        		json.put("readStatus", request.getReadstatus());
+//        		json.put("readStatus", request.getReadstatus());
         		json.put("status", request.getStatus());
         		listJson.add(json);
     		}
@@ -625,7 +641,7 @@ public class RequestController {
 //            		json.put("requestType", request.getRequesttypeCd());
             		json.put("requestId", request.getId());
             		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerName());
+            		json.put("managerName", request.getManagerCd());
             		json.put("managerId", 1);
             		json.put("assignId", 1);
 //            		json.put("startDate", dateFormat.format(request.getStartdate()));
@@ -633,7 +649,7 @@ public class RequestController {
             		json.put("startDate", "11-08-2014");
             		json.put("endDate", "15-08-2014");
             		json.put("reason", request.getContent());
-            		json.put("readStatus", request.getReadstatus());
+//            		json.put("readStatus", request.getReadstatus());
             		json.put("status", request.getStatus());
             		listJson.add(json);
     			}
@@ -648,7 +664,7 @@ public class RequestController {
 //            		json.put("requestType", request.getRequesttypeCd());
             		json.put("requestId", request.getId());
             		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerName());
+            		json.put("managerName", request.getManagerCd());
             		json.put("managerId", 1);
             		json.put("assignId", 1);
 //            		json.put("startDate", dateFormat.format(request.getStartdate()));
@@ -656,7 +672,7 @@ public class RequestController {
             		json.put("startDate", "11-08-2014");
             		json.put("endDate", "15-08-2014");
             		json.put("reason", request.getContent());
-            		json.put("readStatus", request.getReadstatus());
+//            		json.put("readStatus", request.getReadstatus());
             		json.put("status", request.getStatus());
             		listJson.add(json);
     			}
@@ -669,7 +685,7 @@ public class RequestController {
 //            		json.put("requestType", request.getRequesttypeCd());
             		json.put("requestId", request.getId());
             		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerName());
+            		json.put("managerName", request.getManagerCd());
             		json.put("managerId", 1);
             		json.put("assignId", 1);
 //            		json.put("startDate", dateFormat.format(request.getStartdate()));
@@ -677,7 +693,7 @@ public class RequestController {
             		json.put("startDate", "11-08-2014");
             		json.put("endDate", "15-08-2014");
             		json.put("reason", request.getContent());
-            		json.put("readStatus", request.getReadstatus());
+//            		json.put("readStatus", request.getReadstatus());
             		json.put("status", request.getStatus());
             		listJson.add(json);
     			}
@@ -689,9 +705,9 @@ public class RequestController {
     
     @RequestMapping(value="response.request.count", method = RequestMethod.GET)
     public @ResponseBody String countResponseRequest(Principal principal) throws JSONException{
-    	
-        List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(principal.getName(), "Rejected", 3);
-	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyNameAndStatusAndReadstatus(principal.getName(), "Approved", 3);
+    	User userLogin = userService.getUserByUsername(principal.getName());
+        List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyCdAndStatusAndReadstatus(userLogin.getCd(), "Rejected", 3);
+	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyCdAndStatusAndReadstatus(userLogin.getCd(), "Approved", 3);
 	    int count = 0;
 	    count = listApproveRequest.size() + listRejectedRequest.size();
     	
@@ -703,9 +719,9 @@ public class RequestController {
     
     @RequestMapping(value="request.count", method = RequestMethod.GET)
     public @ResponseBody String countRequest(Principal principal) throws JSONException{
-
-        List<Request> listCreatedRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(principal.getName(), "Created", 1);
-	    List<Request> listUpdateRequest = requestService.getListRequestByManagerNameAndStatusAndReadstatus(principal.getName(), "Updated", 1);
+    	User userLogin = userService.getUserByUsername(principal.getName());
+        List<Request> listCreatedRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 1);
+	    List<Request> listUpdateRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Updated", 1);
 	    int count = 0;
 	    count = listCreatedRequest.size() + listUpdateRequest.size();
     	

@@ -19,6 +19,7 @@ $(document).ready(function () {
 	    	alert("FAIL");
 	    }
     });
+	
 	$.ajax({
 	    url: "request.count",
 	    dataType: 'json',
@@ -35,6 +36,44 @@ $(document).ready(function () {
 	    	alert("FAIL");
 	    }
     });
+	
+	setInterval(function(){ 
+		$.ajax({
+		    url: "response.request.count",
+		    dataType: 'json',
+		    type: 'GET',
+		    success: function (res) {
+		    	if (res.countResponseRequest > 0) {
+		    		$("#countResponse").html("<a class='button blue small' href='listSendRequest' >" + res.countResponseRequest + " New Response </a>");
+		    	}
+		    	else {
+		    		$("#countResponse").html();
+		    	}
+		    },
+		    fail: function() {
+		    	alert("FAIL");
+		    }
+	    });
+	}, 5000);
+	
+	setInterval(function(){ 
+		$.ajax({
+		    url: "response.request.count",
+		    dataType: 'json',
+		    type: 'GET',
+		    success: function (res) {
+		    	if (res.countResponseRequest > 0) {
+		    		$("#countResponse").html("<a class='button blue small' href='listSendRequest' >" + res.countResponseRequest + " New Response </a>");
+		    	}
+		    	else {
+		    		$("#countResponse").html();
+		    	}
+		    },
+		    fail: function() {
+		    	alert("FAIL");
+		    }
+	    });
+	}, 5000);
 });
 </script>
 <ul class="menu">
@@ -51,7 +90,7 @@ $(document).ready(function () {
 	<li><a href=""  onclick="return false"><i class="icon-magic"></i>Quản lý yêu cầu</a>
 		<ul>
 			<li><a href="createRequest" ><i class="icon-edit"></i>Tạo mới yêu cầu</a>
-			<li><a href="searchRequest" ><i class="icon-edit"></i>Tìm kiếm yêu cầu</a>
+			<li><a href="searchRequest" ><i class="icon-search"></i>Tìm kiếm yêu cầu</a>
 				<li>
 					<a href=""  onclick="return false"><i class="icon-edit"></i>Danh sách yêu cầu</a>
 					<ul>
