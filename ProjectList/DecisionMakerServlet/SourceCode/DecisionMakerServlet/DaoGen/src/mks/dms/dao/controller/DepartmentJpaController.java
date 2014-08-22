@@ -22,7 +22,7 @@ import mks.dms.dao.entity.Department;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class DepartmentJpaController implements Serializable {
 

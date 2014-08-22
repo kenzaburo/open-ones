@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "request")
@@ -53,7 +53,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByDuration", query = "SELECT r FROM Request r WHERE r.duration = :duration"),
     @NamedQuery(name = "Request.findByDurationunit", query = "SELECT r FROM Request r WHERE r.durationunit = :durationunit"),
     @NamedQuery(name = "Request.findByStatus", query = "SELECT r FROM Request r WHERE r.status = :status"),
-    @NamedQuery(name = "Request.findByReadstatus", query = "SELECT r FROM Request r WHERE r.readstatus = :readstatus"),
+    @NamedQuery(name = "Request.findByCreatorRead", query = "SELECT r FROM Request r WHERE r.creatorRead = :creatorRead"),
+    @NamedQuery(name = "Request.findByManagerRead", query = "SELECT r FROM Request r WHERE r.managerRead = :managerRead"),
+    @NamedQuery(name = "Request.findByAssignerRead", query = "SELECT r FROM Request r WHERE r.assignerRead = :assignerRead"),
     @NamedQuery(name = "Request.findByPlaneffort", query = "SELECT r FROM Request r WHERE r.planeffort = :planeffort"),
     @NamedQuery(name = "Request.findByPlanunit", query = "SELECT r FROM Request r WHERE r.planunit = :planunit"),
     @NamedQuery(name = "Request.findByCreated", query = "SELECT r FROM Request r WHERE r.created = :created"),
@@ -109,8 +111,12 @@ public class Request implements Serializable {
     @Lob
     @Column(name = "COMMENT")
     private String comment;
-    @Column(name = "READSTATUS")
-    private Integer readstatus;
+    @Column(name = "CREATOR_READ")
+    private Integer creatorRead;
+    @Column(name = "MANAGER_READ")
+    private Integer managerRead;
+    @Column(name = "ASSIGNER_READ")
+    private Integer assignerRead;
     @Column(name = "PLANEFFORT")
     private Integer planeffort;
     @Column(name = "PLANUNIT")
@@ -315,12 +321,28 @@ public class Request implements Serializable {
         this.comment = comment;
     }
 
-    public Integer getReadstatus() {
-        return readstatus;
+    public Integer getCreatorRead() {
+        return creatorRead;
     }
 
-    public void setReadstatus(Integer readstatus) {
-        this.readstatus = readstatus;
+    public void setCreatorRead(Integer creatorRead) {
+        this.creatorRead = creatorRead;
+    }
+
+    public Integer getManagerRead() {
+        return managerRead;
+    }
+
+    public void setManagerRead(Integer managerRead) {
+        this.managerRead = managerRead;
+    }
+
+    public Integer getAssignerRead() {
+        return assignerRead;
+    }
+
+    public void setAssignerRead(Integer assignerRead) {
+        this.assignerRead = assignerRead;
     }
 
     public Integer getPlaneffort() {

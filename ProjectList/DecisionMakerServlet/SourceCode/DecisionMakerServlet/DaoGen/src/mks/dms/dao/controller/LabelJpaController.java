@@ -23,7 +23,7 @@ import mks.dms.dao.entity.Label;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class LabelJpaController implements Serializable {
 

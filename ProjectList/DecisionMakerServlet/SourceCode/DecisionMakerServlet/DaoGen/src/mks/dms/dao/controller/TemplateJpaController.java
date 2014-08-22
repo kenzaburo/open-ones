@@ -19,7 +19,7 @@ import mks.dms.dao.entity.Template;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class TemplateJpaController implements Serializable {
 

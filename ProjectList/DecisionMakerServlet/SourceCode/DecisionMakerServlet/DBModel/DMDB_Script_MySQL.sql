@@ -181,7 +181,9 @@ CREATE TABLE REQUEST (
      , DEPARTMENTS_ID INT
      , STATUS VARCHAR(30)        -- Created | Rejected | Approved | Updated
 	 , COMMENT TEXT
-     , READSTATUS INT            -- 1: New; 2: After manager read; 3: After manager responded; 4: After creator read the response
+     , CREATOR_READ INT
+     , MANAGER_READ INT
+     , ASSIGNER_READ INT
      , PLANEFFORT INT
      , PLANUNIT VARCHAR(50)
      , ATTACHMENT1 BLOB

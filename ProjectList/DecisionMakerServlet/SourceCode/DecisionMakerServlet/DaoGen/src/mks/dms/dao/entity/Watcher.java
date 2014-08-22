@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "watcher")

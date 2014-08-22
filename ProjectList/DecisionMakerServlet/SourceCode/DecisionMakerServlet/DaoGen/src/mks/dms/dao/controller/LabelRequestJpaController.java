@@ -21,7 +21,7 @@ import mks.dms.dao.entity.LabelRequest;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class LabelRequestJpaController implements Serializable {
 

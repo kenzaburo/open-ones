@@ -24,7 +24,7 @@ import mks.dms.dao.entity.Watcher;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class UserJpaController implements Serializable {
 

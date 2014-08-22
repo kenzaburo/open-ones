@@ -20,7 +20,7 @@ import mks.dms.dao.entity.User;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class RoleJpaController implements Serializable {
 

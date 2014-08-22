@@ -19,7 +19,7 @@ import mks.dms.dao.entity.Parameter;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class ParameterJpaController implements Serializable {
 
