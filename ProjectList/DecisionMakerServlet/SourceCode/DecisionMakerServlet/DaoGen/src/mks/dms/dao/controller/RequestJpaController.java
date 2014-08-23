@@ -13,7 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.User;
-import mks.dms.dao.entity.LabelRequest;
+import mks.dms.dao.entity.Watcher;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +22,6 @@ import javax.persistence.EntityManagerFactory;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
-import mks.dms.dao.entity.Watcher;
 
 /**
  *
@@ -40,9 +39,6 @@ public class RequestJpaController implements Serializable {
     }
 
     public void create(Request request) {
-        if (request.getLabelRequestCollection() == null) {
-            request.setLabelRequestCollection(new ArrayList<LabelRequest>());
-        }
         if (request.getWatcherCollection() == null) {
             request.setWatcherCollection(new ArrayList<Watcher>());
         }
@@ -70,12 +66,6 @@ public class RequestJpaController implements Serializable {
                 assignedId = em.getReference(assignedId.getClass(), assignedId.getId());
                 request.setAssignedId(assignedId);
             }
-            Collection<LabelRequest> attachedLabelRequestCollection = new ArrayList<LabelRequest>();
-            for (LabelRequest labelRequestCollectionLabelRequestToAttach : request.getLabelRequestCollection()) {
-                labelRequestCollectionLabelRequestToAttach = em.getReference(labelRequestCollectionLabelRequestToAttach.getClass(), labelRequestCollectionLabelRequestToAttach.getId());
-                attachedLabelRequestCollection.add(labelRequestCollectionLabelRequestToAttach);
-            }
-            request.setLabelRequestCollection(attachedLabelRequestCollection);
             Collection<Watcher> attachedWatcherCollection = new ArrayList<Watcher>();
             for (Watcher watcherCollectionWatcherToAttach : request.getWatcherCollection()) {
                 watcherCollectionWatcherToAttach = em.getReference(watcherCollectionWatcherToAttach.getClass(), watcherCollectionWatcherToAttach.getId());
@@ -98,15 +88,6 @@ public class RequestJpaController implements Serializable {
             if (assignedId != null) {
                 assignedId.getRequestCollection().add(request);
                 assignedId = em.merge(assignedId);
-            }
-            for (LabelRequest labelRequestCollectionLabelRequest : request.getLabelRequestCollection()) {
-                Request oldReqIdOfLabelRequestCollectionLabelRequest = labelRequestCollectionLabelRequest.getReqId();
-                labelRequestCollectionLabelRequest.setReqId(request);
-                labelRequestCollectionLabelRequest = em.merge(labelRequestCollectionLabelRequest);
-                if (oldReqIdOfLabelRequestCollectionLabelRequest != null) {
-                    oldReqIdOfLabelRequestCollectionLabelRequest.getLabelRequestCollection().remove(labelRequestCollectionLabelRequest);
-                    oldReqIdOfLabelRequestCollectionLabelRequest = em.merge(oldReqIdOfLabelRequestCollectionLabelRequest);
-                }
             }
             for (Watcher watcherCollectionWatcher : request.getWatcherCollection()) {
                 Request oldReqIdOfWatcherCollectionWatcher = watcherCollectionWatcher.getReqId();
@@ -139,19 +120,9 @@ public class RequestJpaController implements Serializable {
             User managerIdNew = request.getManagerId();
             User assignedIdOld = persistentRequest.getAssignedId();
             User assignedIdNew = request.getAssignedId();
-            Collection<LabelRequest> labelRequestCollectionOld = persistentRequest.getLabelRequestCollection();
-            Collection<LabelRequest> labelRequestCollectionNew = request.getLabelRequestCollection();
             Collection<Watcher> watcherCollectionOld = persistentRequest.getWatcherCollection();
             Collection<Watcher> watcherCollectionNew = request.getWatcherCollection();
             List<String> illegalOrphanMessages = null;
-            for (LabelRequest labelRequestCollectionOldLabelRequest : labelRequestCollectionOld) {
-                if (!labelRequestCollectionNew.contains(labelRequestCollectionOldLabelRequest)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain LabelRequest " + labelRequestCollectionOldLabelRequest + " since its reqId field is not nullable.");
-                }
-            }
             for (Watcher watcherCollectionOldWatcher : watcherCollectionOld) {
                 if (!watcherCollectionNew.contains(watcherCollectionOldWatcher)) {
                     if (illegalOrphanMessages == null) {
@@ -179,13 +150,6 @@ public class RequestJpaController implements Serializable {
                 assignedIdNew = em.getReference(assignedIdNew.getClass(), assignedIdNew.getId());
                 request.setAssignedId(assignedIdNew);
             }
-            Collection<LabelRequest> attachedLabelRequestCollectionNew = new ArrayList<LabelRequest>();
-            for (LabelRequest labelRequestCollectionNewLabelRequestToAttach : labelRequestCollectionNew) {
-                labelRequestCollectionNewLabelRequestToAttach = em.getReference(labelRequestCollectionNewLabelRequestToAttach.getClass(), labelRequestCollectionNewLabelRequestToAttach.getId());
-                attachedLabelRequestCollectionNew.add(labelRequestCollectionNewLabelRequestToAttach);
-            }
-            labelRequestCollectionNew = attachedLabelRequestCollectionNew;
-            request.setLabelRequestCollection(labelRequestCollectionNew);
             Collection<Watcher> attachedWatcherCollectionNew = new ArrayList<Watcher>();
             for (Watcher watcherCollectionNewWatcherToAttach : watcherCollectionNew) {
                 watcherCollectionNewWatcherToAttach = em.getReference(watcherCollectionNewWatcherToAttach.getClass(), watcherCollectionNewWatcherToAttach.getId());
@@ -225,17 +189,6 @@ public class RequestJpaController implements Serializable {
             if (assignedIdNew != null && !assignedIdNew.equals(assignedIdOld)) {
                 assignedIdNew.getRequestCollection().add(request);
                 assignedIdNew = em.merge(assignedIdNew);
-            }
-            for (LabelRequest labelRequestCollectionNewLabelRequest : labelRequestCollectionNew) {
-                if (!labelRequestCollectionOld.contains(labelRequestCollectionNewLabelRequest)) {
-                    Request oldReqIdOfLabelRequestCollectionNewLabelRequest = labelRequestCollectionNewLabelRequest.getReqId();
-                    labelRequestCollectionNewLabelRequest.setReqId(request);
-                    labelRequestCollectionNewLabelRequest = em.merge(labelRequestCollectionNewLabelRequest);
-                    if (oldReqIdOfLabelRequestCollectionNewLabelRequest != null && !oldReqIdOfLabelRequestCollectionNewLabelRequest.equals(request)) {
-                        oldReqIdOfLabelRequestCollectionNewLabelRequest.getLabelRequestCollection().remove(labelRequestCollectionNewLabelRequest);
-                        oldReqIdOfLabelRequestCollectionNewLabelRequest = em.merge(oldReqIdOfLabelRequestCollectionNewLabelRequest);
-                    }
-                }
             }
             for (Watcher watcherCollectionNewWatcher : watcherCollectionNew) {
                 if (!watcherCollectionOld.contains(watcherCollectionNewWatcher)) {
@@ -278,13 +231,6 @@ public class RequestJpaController implements Serializable {
                 throw new NonexistentEntityException("The request with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<LabelRequest> labelRequestCollectionOrphanCheck = request.getLabelRequestCollection();
-            for (LabelRequest labelRequestCollectionOrphanCheckLabelRequest : labelRequestCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Request (" + request + ") cannot be destroyed since the LabelRequest " + labelRequestCollectionOrphanCheckLabelRequest + " in its labelRequestCollection field has a non-nullable reqId field.");
-            }
             Collection<Watcher> watcherCollectionOrphanCheck = request.getWatcherCollection();
             for (Watcher watcherCollectionOrphanCheckWatcher : watcherCollectionOrphanCheck) {
                 if (illegalOrphanMessages == null) {

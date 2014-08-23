@@ -153,8 +153,6 @@ public class Request implements Serializable {
     private String lastmodifiedbyName;
     @Column(name = "LASTMODIFIEDBY_CD")
     private String lastmodifiedbyCd;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reqId")
-    private Collection<LabelRequest> labelRequestCollection;
     @JoinColumn(name = "DEPARTMENTS_ID", referencedColumnName = "ID")
     @ManyToOne
     private Department departmentsId;
@@ -461,15 +459,6 @@ public class Request implements Serializable {
 
     public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
         this.lastmodifiedbyCd = lastmodifiedbyCd;
-    }
-
-    @XmlTransient
-    public Collection<LabelRequest> getLabelRequestCollection() {
-        return labelRequestCollection;
-    }
-
-    public void setLabelRequestCollection(Collection<LabelRequest> labelRequestCollection) {
-        this.labelRequestCollection = labelRequestCollection;
     }
 
     public Department getDepartmentsId() {
