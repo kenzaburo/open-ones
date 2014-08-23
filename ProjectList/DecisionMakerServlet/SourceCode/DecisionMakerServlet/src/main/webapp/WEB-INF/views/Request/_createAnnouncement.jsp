@@ -6,6 +6,7 @@
 <div id="make-announcement">
   <form:form name="createAnnouncement" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
     <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Announcement"/>
+    <form:hidden path="request.id"/>
     <!--  Select type Request -->
 <!--     <div> -->
 <%--       <label for="request.requesttypeCd" class="col_2">Loại yêu cầu${model.request.requesttypeCd}</label> --%>

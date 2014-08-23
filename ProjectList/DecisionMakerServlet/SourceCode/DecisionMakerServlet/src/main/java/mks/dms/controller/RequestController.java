@@ -157,7 +157,7 @@ public class RequestController {
     }
     
     /**
-    * This method process saving a request from client.
+    * This method process saving (create or edit) a request from client.
     * @param model contains data are submitted from client
     * @return the current view with result of saving
     * @author ThachLe
