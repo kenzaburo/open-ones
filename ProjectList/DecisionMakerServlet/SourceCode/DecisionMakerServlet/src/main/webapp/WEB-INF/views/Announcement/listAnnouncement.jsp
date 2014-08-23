@@ -2,13 +2,39 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 
-<script src="resources/handsontable/lib/jquery-1.10.2.js"></script>
-<script src="resources/handsontable/jquery.handsontable.full.js"></script>
-<script src="resources/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js"></script>
-
-<link rel="stylesheet" media="screen" href="resources/handsontable/jquery.handsontable.full.css">
-<link rel="stylesheet" media="screen" href="resources/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
+<script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
+<link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
 <script>
+  $(function() {
+    $("#dialog-confirm").hide();
+  }); 
+
+  function showConfirmDialog(requestId, requestTitle) {
+
+	  $( "#dialog-confirm" ).dialog({
+          resizable: false,
+          height:140,
+          modal: true,
+          buttons: {
+              "Xóa": function() {
+                  // Send http request to delete Announcement
+                  $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                	contentType: 'application/json',
+                    url: "deleteRequest",
+
+                    data: {"id": requestId}                 
+                  });
+                  $( this ).dialog( "close" );
+              },
+              Cancel: function() {
+                  $( this ).dialog( "close" );
+              }
+          }
+      });
+  }
   function viewRequestContent(viewUrl) {
     // alert("Open windows url=" + viewUrl);
     if (window.showModelessDialog) {        // Internet Explorer
@@ -27,6 +53,10 @@
     }
   }
 </script>
+<div id="dialog-confirm" title="Xóa thông báo?">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Thông báo sẽ bị xóa hoàn toàn và không thể khôi phục lại được. Bạn có chắc xóa không?</p>
+</div>
+
 <table class="sortable">
   <thead>
     <tr>
@@ -46,7 +76,7 @@
           <a href="#" title="Bạn thích thông báo này"><i class="icon-thumbs-up"></i></a>
           <s:authorize access="hasRole('ROLE_ADMIN')">
             <a href="editRequest?id=${request.id}" title="Sửa"><i class="icon-edit"></i></a>
-            <a href="#" onclick='confirmDelete("${request.id}", "${request.title}")' title="Xóa"><i class="icon-remove"></i></a>
+            <a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title="Xóa"><i class="icon-remove"></i></a>
            </s:authorize>
          </td>
       </tr>

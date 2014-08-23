@@ -19,12 +19,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
-import mks.dms.model.DurationUnit;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestControllerService;
@@ -48,6 +48,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.Gson;
 /**
  * @author ThachLe, TruongTho
  *
@@ -342,6 +344,28 @@ public class RequestController {
 
         return mav;
     }
+    
+    @RequestMapping(value="deleteRequest")
+    public String deleteRequest(@RequestParam("id") Integer requestId) {
+        Gson gson = new Gson();
+        String jsonResult;
+
+        LOG.debug("id=" + requestId);
+
+        ExRequestJpaController daoCtrl = requestService.getDaoController();
+        try {
+            daoCtrl.destroy(requestId);
+            jsonResult = gson.toJson("listAnnouncement");
+        } catch (IllegalOrphanException ex) {
+            jsonResult = gson.toJson("FAIL");
+            LOG.error("Could not delete the request id " + requestId, ex);
+        } catch (NonexistentEntityException ex) {
+            jsonResult = gson.toJson("FAIL");
+            LOG.error("Could not delete the request id " + requestId, ex);
+        }
+        
+        return jsonResult;
+    }    
 //    @RequestMapping(value="editRequest")
 //    public ModelAndView editRequest(@RequestParam("id") int id) {
 //    	

@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
  * @author TriLVH, ThachLe
  */
 @Service
-public class RequestControllerService extends BaseService{
+public class RequestControllerService extends RequestService {
     // Logger to log information to console.
     private final static Logger LOG = Logger.getLogger(RequestControllerService.class);
     
