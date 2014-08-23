@@ -320,24 +320,43 @@ public class RequestController {
     	return "redirect:detailRequest?id="+ request.getId();
     }
     
+
     /**
-     * Show page editRequest
-     **/
+    * Show the screen Edit request.
+    * <br/>
+    * Edit screen is sample as the Create screen.
+    * So the .jsp is reused 100%.
+    * @param id identifier of the request
+    * @return
+    */
     @RequestMapping(value="editRequest")
     public ModelAndView editRequest(@RequestParam("id") int id) {
-    	
-//    	Lay thong tin tai khoan dang nhap
-//    	Kiem tra tai khoan dang nhap phai tai khoan khoi tao yeu cau khong
-//    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
-    	
-//    	Neu phai
-    	ModelAndView mav = new ModelAndView("editRequest");
-    	Request request = requestService.getRequestById(id);
-    	List<User> listUsers = userService.getAllUser();
-        mav.addObject("listUsers", listUsers);
-    	mav.addObject("request", request);
-    	return mav;
+        ModelAndView mav = new ModelAndView("editRequest");
+        LOG.debug("id=" + id);
+        RequestCreateModel requestCreateModel = new RequestCreateModel();
+        Request request = requestService.getRequestById(id);
+        requestCreateModel.setRequest(request);;
+        
+        // Add object to modelandview
+        mav.addObject("model", requestCreateModel);
+
+        return mav;
     }
+//    @RequestMapping(value="editRequest")
+//    public ModelAndView editRequest(@RequestParam("id") int id) {
+//    	
+////    	Lay thong tin tai khoan dang nhap
+////    	Kiem tra tai khoan dang nhap phai tai khoan khoi tao yeu cau khong
+////    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
+//    	
+////    	Neu phai
+//    	ModelAndView mav = new ModelAndView("editRequest");
+//    	Request request = requestService.getRequestById(id);
+//    	List<User> listUsers = userService.getAllUser();
+//        mav.addObject("listUsers", listUsers);
+//    	mav.addObject("request", request);
+//    	return mav;
+//    }
     
     @RequestMapping(value="updateRequest")
     public String processUpdateRequest(HttpServletRequest req) throws IllegalOrphanException, NonexistentEntityException, Exception {

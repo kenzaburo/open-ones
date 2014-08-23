@@ -18,6 +18,14 @@
         window.open (viewUrl, "Nội dung qui định","width=980, height=620, alwaysRaised=yes");
     }
   }
+
+  function confirmDelete(requestId, requestTitle) {
+    var confirmVal = confirm("Bạn chắc chắn muốn xóa qui định này?<br/>" + 
+          "[" + requestId + "]" + requestTitle);
+    if (confirmVal) {
+    } else {
+    }
+  }
 </script>
 <table class="sortable">
   <thead>
@@ -37,8 +45,8 @@
         <td>
           <a href="#" title="Bạn thích qui định này"><i class="icon-thumbs-up"></i></a>
           <s:authorize access="hasRole('ROLE_ADMIN')">
-            <a href="#" title="Sửa"><i class="icon-edit"></i></a>
-            <a href="#" title="Xóa"><i class="icon-remove"></i></a>
+            <a href="editRequest?id=${request.id}" title="Sửa"><i class="icon-edit"></i></a>
+            <a href="#" onclick='confirmDelete("${request.id}", "${request.title}")' title="Xóa"><i class="icon-remove"></i></a>
            </s:authorize>
          </td>
       </tr>
