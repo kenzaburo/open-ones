@@ -345,9 +345,9 @@ public class RequestController {
         return mav;
     }
     
-    @RequestMapping(value="deleteRequest")
+    @RequestMapping(method = RequestMethod.GET, value="deleteRequest")
+    @ResponseBody
     public String deleteRequest(@RequestParam("id") Integer requestId) {
-        Gson gson = new Gson();
         String jsonResult;
 
         LOG.debug("id=" + requestId);
@@ -355,12 +355,12 @@ public class RequestController {
         ExRequestJpaController daoCtrl = requestService.getDaoController();
         try {
             daoCtrl.destroy(requestId);
-            jsonResult = gson.toJson("listAnnouncement");
+            jsonResult = "{result: 'SUCCESS'}";
         } catch (IllegalOrphanException ex) {
-            jsonResult = gson.toJson("FAIL");
+            jsonResult = "{result: 'FAIL'}";
             LOG.error("Could not delete the request id " + requestId, ex);
         } catch (NonexistentEntityException ex) {
-            jsonResult = gson.toJson("FAIL");
+            jsonResult = "{result: 'FAIL'}";
             LOG.error("Could not delete the request id " + requestId, ex);
         }
         

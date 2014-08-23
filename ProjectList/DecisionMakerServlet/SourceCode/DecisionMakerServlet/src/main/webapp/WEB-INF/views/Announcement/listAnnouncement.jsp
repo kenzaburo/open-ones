@@ -25,7 +25,14 @@
                 	contentType: 'application/json',
                     url: "deleteRequest",
 
-                    data: {"id": requestId}                 
+                    data: {"id": requestId},
+                    success: function(res) {
+                        alert(res);
+                        document.forms['listAnnouncement'].submit();
+                    },
+                    error: function(res) {
+                    	document.forms['listAnnouncement'].submit();
+                    }               
                   });
                   $( this ).dialog( "close" );
               },
@@ -45,14 +52,10 @@
     }
   }
 
-  function confirmDelete(requestId, requestTitle) {
-    var confirmVal = confirm("Bạn chắc chắn muốn xóa thông báo này?<br/>" + 
-          "[" + requestId + "]" + requestTitle);
-    if (confirmVal) {
-    } else {
-    }
-  }
 </script>
+<form action="listAnnouncement" name="listAnnouncement" method="GET">
+</form>
+
 <div id="dialog-confirm" title="Xóa thông báo?">
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Thông báo sẽ bị xóa hoàn toàn và không thể khôi phục lại được. Bạn có chắc xóa không?</p>
 </div>
