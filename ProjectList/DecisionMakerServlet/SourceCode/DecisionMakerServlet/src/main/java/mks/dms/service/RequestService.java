@@ -65,9 +65,9 @@ public class RequestService extends BaseService {
 				}
 				controller.edit(request);
 				return EDIT_SUCCESS;
-			} catch (Exception e) {
+			} catch (Exception ex) {
 				// Log data by throws exception inner
-				LOG.error(e.getMessage());
+				LOG.error("Could note update the request id " + request.getId(), ex);
 				return SAVE_FAIL;
 			}
 		} else {

@@ -54,7 +54,7 @@ $(document).ready(function () {
 		    	alert("FAIL");
 		    }
 	    });
-	}, 5000);
+	}, 90000);
 	
 	setInterval(function(){ 
 		$.ajax({
@@ -73,7 +73,7 @@ $(document).ready(function () {
 		    	alert("FAIL");
 		    }
 	    });
-	}, 5000);
+	}, 90000);
 });
 </script>
 <ul class="menu">

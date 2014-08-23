@@ -49,7 +49,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByWatchersId", query = "SELECT r FROM Request r WHERE r.watchersId = :watchersId"),
     @NamedQuery(name = "Request.findByManagerCd", query = "SELECT r FROM Request r WHERE r.managerCd = :managerCd"),
     @NamedQuery(name = "Request.findByManagerName", query = "SELECT r FROM Request r WHERE r.managerName = :managerName"),
-    @NamedQuery(name = "Request.findByLabelsId", query = "SELECT r FROM Request r WHERE r.labelsId = :labelsId"),
+    @NamedQuery(name = "Request.findByLabel1", query = "SELECT r FROM Request r WHERE r.label1 = :label1"),
+    @NamedQuery(name = "Request.findByLabel2", query = "SELECT r FROM Request r WHERE r.label2 = :label2"),
+    @NamedQuery(name = "Request.findByLabel3", query = "SELECT r FROM Request r WHERE r.label3 = :label3"),
     @NamedQuery(name = "Request.findByDuration", query = "SELECT r FROM Request r WHERE r.duration = :duration"),
     @NamedQuery(name = "Request.findByDurationunit", query = "SELECT r FROM Request r WHERE r.durationunit = :durationunit"),
     @NamedQuery(name = "Request.findByStatus", query = "SELECT r FROM Request r WHERE r.status = :status"),
@@ -100,8 +102,12 @@ public class Request implements Serializable {
     private String managerCd;
     @Column(name = "MANAGER_NAME")
     private String managerName;
-    @Column(name = "LABELS_ID")
-    private Integer labelsId;
+    @Column(name = "LABEL1")
+    private String label1;
+    @Column(name = "LABEL2")
+    private String label2;
+    @Column(name = "LABEL3")
+    private String label3;
     @Column(name = "DURATION")
     private Integer duration;
     @Column(name = "DURATIONUNIT")
@@ -281,12 +287,28 @@ public class Request implements Serializable {
         this.managerName = managerName;
     }
 
-    public Integer getLabelsId() {
-        return labelsId;
+    public String getLabel1() {
+        return label1;
     }
 
-    public void setLabelsId(Integer labelsId) {
-        this.labelsId = labelsId;
+    public void setLabel1(String label1) {
+        this.label1 = label1;
+    }
+
+    public String getLabel2() {
+        return label2;
+    }
+
+    public void setLabel2(String label2) {
+        this.label2 = label2;
+    }
+
+    public String getLabel3() {
+        return label3;
+    }
+
+    public void setLabel3(String label3) {
+        this.label3 = label3;
     }
 
     public Integer getDuration() {

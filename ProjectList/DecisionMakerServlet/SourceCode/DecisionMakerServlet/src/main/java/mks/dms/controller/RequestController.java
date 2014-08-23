@@ -143,14 +143,14 @@ public class RequestController {
         // Add object to modelandview
         mav.addObject("model", requestCreateModel);
         
-        List<RequestType> lstRequestTypes = masterService.getRequestTypes();
-        LOG.debug("lstRequestTypes=" + lstRequestTypes);
-        mav.addObject("lstReqTypes", lstRequestTypes);
-        List<User> listUsers = userService.getAllUser();
-        mav.addObject("listUsers", listUsers);
-        
-        List<DurationUnit> listDurationUnits = MasterService.getDurationUnits();
-        mav.addObject("listDurationUnits", listDurationUnits);
+//        List<RequestType> lstRequestTypes = masterService.getRequestTypes();
+//        LOG.debug("lstRequestTypes=" + lstRequestTypes);
+//        mav.addObject("lstReqTypes", lstRequestTypes);
+//        List<User> listUsers = userService.getAllUser();
+//        mav.addObject("listUsers", listUsers);
+//        
+//        List<DurationUnit> listDurationUnits = MasterService.getDurationUnits();
+//        mav.addObject("listDurationUnits", listDurationUnits);
         
 //        mav.addObject("result", 0);
     	return mav;

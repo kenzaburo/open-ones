@@ -175,7 +175,9 @@ CREATE TABLE REQUEST (
      , MANAGER_ID INT
      , MANAGER_CD VARCHAR(50)
      , MANAGER_NAME VARCHAR(100)
-     , LABELS_ID INT
+     , LABEL1 VARCHAR(20)
+     , LABEL2 VARCHAR(20)
+     , LABEL3 VARCHAR(20)
      , DURATION INT
      , DURATIONUNIT INT          -- 0: hour; 1: day; 2: week; 3: moth; 4: year
      , DEPARTMENTS_ID INT
