@@ -20,6 +20,8 @@ package mks.dms.dao.controller;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -40,15 +42,18 @@ public class ExRequestTypeJpaControllerTest {
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
     /**
      * Test method for {@link mks.dms.dao.controller.ExRequestTypeJpaController#findRequestTypeByCd(java.lang.String)}.
+     * @throws ParseException 
      */
     @Test
-    public void testFindRequestTypeByCd() {
+    public void testFindRequestTypeByCd() throws ParseException {
     	ExRequestJpaController exDaoCtrl = new ExRequestJpaController(emf);
     	RequestJpaController daoCtrl = new RequestJpaController(emf);
     	Date today = new Date();
-    	List<Request> listRequest = exDaoCtrl.searchRequest("", null, null, "0", "0", "Task");
+    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+//    	List<Request> listRequest = exDaoCtrl.searchRequest("", null, null, "0", "0", "Task");
 //    	List<Request> listRequest = daoCtrl.findRequestEntities();
-    	assertEquals(1, listRequest.size());
+    	System.out.println(formater.format(today));
+    	System.out.println(formater.parse(formater.format(today)));
     }
 
 }

@@ -40,7 +40,7 @@
                 class="col_8 chosen-select">
                 <c:forEach var="user" items="${listUsers}">
                   <c:choose>
-                    <c:when test="${model.request.assignedCd == user.username}">
+                    <c:when test="${model.request.assignedCd == user.cd}">
                       <option value="${user.id}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
@@ -56,7 +56,7 @@
             <form:select path="request.managerId.id" id="request.managerId.id" name="request.managerId.id" class="chosen-select col_8">
                 <c:forEach var="user" items="${listUsers}">
                   <c:choose>
-                    <c:when test="${model.request.managerCd == user.username}">
+                    <c:when test="${model.request.managerCd == user.cd}">
                       <option value="${user.id}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
@@ -109,8 +109,8 @@
 		</div>
 
       <div>
-        <input type="submit" value="Lưu" class="button"/>
-        <input type="reset" value="Hủy" class="button" />
+        <input type="submit" value="Save" class="button"/>
+         <input type="reset" value="Reset" class="button" />
       </div>
   </form:form>
 </div>

@@ -41,7 +41,7 @@
          		<option value="0">-- Chọn --</option>
          		<c:forEach var="user" items="${listUsers}">
                   <c:choose>
-                    <c:when test="${model.request.managerCd == user.username}">
+                    <c:when test="${model.request.managerCd == user.cd}">
                         <option value="${user.id}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
@@ -71,8 +71,8 @@
           <form:input path="request.attachment1" id="attachment1" type="file" class="col_8"/>
         </div>
       	<div>
-      		<input type="submit" value="Send" class="button" />
-			<input type="reset" value="Reset" class="button"  />
+      		<input type="submit" value="Save" class="button"/>
+         <input type="reset" value="Reset" class="button" />
       	</div>
   </form:form>
 </div>

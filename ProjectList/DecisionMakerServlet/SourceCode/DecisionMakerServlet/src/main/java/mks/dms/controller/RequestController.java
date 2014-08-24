@@ -197,14 +197,27 @@ public class RequestController {
         User userCreate = userService.getUserByUsername(principal.getName());
  
         Date today = new Date();
-        model.getRequest().setStatus("Created");
-        model.getRequest().setCreatorRead(1);
-        model.getRequest().setCreatedbyId(userCreate);
-        model.getRequest().setCreatedbyCd(principal.getName());
-        model.getRequest().setCreatedbyCd(userCreate.getCd());
-        
-        model.getRequest().setCreated(today);
-        
+        int saveOrUpdate = requestService.saveOrUpdate(model.getRequest());
+        if (saveOrUpdate == 1) {
+        	model.getRequest().setStatus("Created");
+            model.getRequest().setCreatorRead(1);
+            model.getRequest().setCreatedbyId(userCreate);
+            model.getRequest().setCreatedbyName(principal.getName());
+            model.getRequest().setCreatedbyCd(userCreate.getCd());
+            model.getRequest().setAssignerRead(0);
+            model.getRequest().setManagerRead(0);
+            model.getRequest().setCreated(today);
+        }
+        if (saveOrUpdate == 2) {
+        	model.getRequest().setStatus("Updated");
+            model.getRequest().setCreatorRead(1);
+            model.getRequest().setCreatedbyId(userCreate);
+            model.getRequest().setCreatedbyName(principal.getName());
+            model.getRequest().setCreatedbyCd(userCreate.getCd());
+            model.getRequest().setAssignerRead(0);
+            model.getRequest().setManagerRead(0);
+            model.getRequest().setCreated(today);
+        }
         // Save request by call to request controller service
         boolean retOK = requestService.saveRequest(model, masterService);;
                 
@@ -420,7 +433,7 @@ public class RequestController {
         		request.setLastmodified(today);
         		request.setContent(leaveContent);
         		request.setTitle(leaveTitle);
-        		request.setStatus("Updated");
+//        		request.setStatus("Updated");
         		request.setManagerRead(0);
         		
 //        		set label
@@ -591,15 +604,18 @@ public class RequestController {
 //    		json.put("requestType", request.getRequesttypeCd());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
-    		json.put("managerName", request.getManagerCd());
+    		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
     		json.put("managerId", 1);
     		json.put("assignId", 1);
     		json.put("startDate", dateFormat.format(request.getStartdate()));
     		json.put("endDate", dateFormat.format(request.getEnddate()));
-//    		json.put("startDate", "11-08-2014");
-//    		json.put("endDate", "15-08-2014");
     		json.put("reason", request.getContent());
-    		json.put("readStatus", request.getCreatorRead());
+    		if (requestService.checkIsRead(request, userLogin) == 1) {
+    			json.put("readStatus", 1);
+    		}
+    		else {
+    			json.put("readStatus", 0);
+    		}
     		json.put("status", request.getStatus());
     		listJson.add(json);
     	}
@@ -611,23 +627,32 @@ public class RequestController {
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
         User userLogin = userService.getUserByUsername(principal.getName());
-    	List<Request> listRequest = requestService.getListRequestByManagerCd(userLogin.getCd());
+    	List<Request> listManagerRequest = requestService.getListRequestByManagerCd(userLogin.getCd());
+    	List<Request> listAssignerRequest = requestService.getListRequestByAssignedCd(userLogin.getCd());
+    	System.out.println("List Assigner " + userLogin.getCd());
+    	System.out.println("LoginCd: " + listAssignerRequest.size());
+    	listAssignerRequest.removeAll(listManagerRequest);
+    	listManagerRequest.addAll(listAssignerRequest);
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
-    	for (Request request:listRequest) {
+    	for (Request request:listManagerRequest) {
     		JSONObject json = new JSONObject();
     		json.put("requestType", request.getRequesttypeName());
 //    		json.put("requestType", request.getRequesttypeCd());
     		json.put("requestId", request.getId());
     		json.put("requestTitle", request.getTitle());
-    		json.put("managerName", request.getManagerCd());
-    		json.put("managerId", 1);
-    		json.put("assignId", 1);
+    		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+    		json.put("managerId", request.getManagerId());
+    		json.put("assignId", request.getManagerId());
     		json.put("startDate", dateFormat.format(request.getStartdate()));
     		json.put("endDate", dateFormat.format(request.getEnddate()));
-//    		json.put("startDate", "11-08-2014");
-//    		json.put("endDate", "15-08-2014");
     		json.put("reason", request.getContent());
-    		json.put("readStatus", request.getManagerRead());
+    		if (requestService.checkIsRead(request, userLogin) == 1) {
+    			json.put("readStatus", 1);
+    		}
+    		else {
+    			json.put("readStatus", 0);
+    		}
+    		
     		json.put("status", request.getStatus());
     		listJson.add(json);
     	}
@@ -646,13 +671,14 @@ public class RequestController {
     }
     
     @RequestMapping(value="search.request", method = RequestMethod.GET)
-    public @ResponseBody String searchRequest(@RequestParam("createdbyCd") String createdbyCd, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerCd, @RequestParam("assignId") String assignCd, @RequestParam("requestTypeCd") String requestTypeCd, @RequestParam("requestTitle") String requestTitle, @RequestParam("requestContent") String requestContent) throws JSONException {
-    	List<Request> listRequest;
+    public @ResponseBody String searchRequest(Principal principal, @RequestParam("createdbyCd") String createdbyCd, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerCd, @RequestParam("assignId") String assignCd, @RequestParam("requestTypeCd") String requestTypeCd, @RequestParam("requestTitle") String requestTitle, @RequestParam("requestContent") String requestContent) throws JSONException {
+    	List<Request> listRequest;    	
     	if (createdbyCd.equals("") && startDate == null && endDate == null && managerCd.equals("0") && assignCd.equals("0") && requestTypeCd.equals("0")) {
     		listRequest = requestService.getAllRequest();
     	}else {
     		listRequest = requestService.searchRequest(createdbyCd, startDate, endDate, managerCd, assignCd, requestTypeCd);
     	}
+    	User userLogin = userService.getUserByUsername(principal.getName());
     	System.out.println("So lương " + listRequest.size());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -664,15 +690,18 @@ public class RequestController {
 //        		json.put("requestType", request.getRequesttypeCd());
         		json.put("requestId", request.getId());
         		json.put("requestTitle", request.getTitle());
-        		json.put("managerName", request.getManagerCd());
-        		json.put("managerId", 1);
-        		json.put("assignId", 1);
-//        		json.put("startDate", dateFormat.format(request.getStartdate()));
-//        		json.put("endDate", dateFormat.format(request.getEnddate()));
-        		json.put("startDate", "11-08-2014");
-        		json.put("endDate", "15-08-2014");
+        		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+        		json.put("managerId", request.getManagerId());
+        		json.put("assignId", request.getManagerId());
+        		json.put("startDate", dateFormat.format(request.getStartdate()));
+        		json.put("endDate", dateFormat.format(request.getEnddate()));
         		json.put("reason", request.getContent());
-//        		json.put("readStatus", request.getReadstatus());
+        		if (requestService.checkIsRead(request, userLogin) == 1) {
+        			json.put("readStatus", 1);
+        		}
+        		else {
+        			json.put("readStatus", 0);
+        		}
         		json.put("status", request.getStatus());
         		listJson.add(json);
     		}
@@ -684,15 +713,18 @@ public class RequestController {
 //            		json.put("requestType", request.getRequesttypeCd());
             		json.put("requestId", request.getId());
             		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerCd());
-            		json.put("managerId", 1);
-            		json.put("assignId", 1);
-//            		json.put("startDate", dateFormat.format(request.getStartdate()));
-//            		json.put("endDate", dateFormat.format(request.getEnddate()));
-            		json.put("startDate", "11-08-2014");
-            		json.put("endDate", "15-08-2014");
+            		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+            		json.put("managerId", request.getManagerId());
+            		json.put("assignId", request.getManagerId());
+            		json.put("startDate", dateFormat.format(request.getStartdate()));
+            		json.put("endDate", dateFormat.format(request.getEnddate()));
             		json.put("reason", request.getContent());
-//            		json.put("readStatus", request.getReadstatus());
+            		if (requestService.checkIsRead(request, userLogin) == 1) {
+            			json.put("readStatus", 1);
+            		}
+            		else {
+            			json.put("readStatus", 0);
+            		}
             		json.put("status", request.getStatus());
             		listJson.add(json);
     			}
@@ -707,15 +739,18 @@ public class RequestController {
 //            		json.put("requestType", request.getRequesttypeCd());
             		json.put("requestId", request.getId());
             		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerCd());
-            		json.put("managerId", 1);
-            		json.put("assignId", 1);
-//            		json.put("startDate", dateFormat.format(request.getStartdate()));
-//            		json.put("endDate", dateFormat.format(request.getEnddate()));
-            		json.put("startDate", "11-08-2014");
-            		json.put("endDate", "15-08-2014");
+            		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+            		json.put("managerId", request.getManagerId());
+            		json.put("assignId", request.getManagerId());
+            		json.put("startDate", dateFormat.format(request.getStartdate()));
+            		json.put("endDate", dateFormat.format(request.getEnddate()));
             		json.put("reason", request.getContent());
-//            		json.put("readStatus", request.getReadstatus());
+            		if (requestService.checkIsRead(request, userLogin) == 1) {
+            			json.put("readStatus", 1);
+            		}
+            		else {
+            			json.put("readStatus", 0);
+            		}
             		json.put("status", request.getStatus());
             		listJson.add(json);
     			}
@@ -728,13 +763,11 @@ public class RequestController {
 //            		json.put("requestType", request.getRequesttypeCd());
             		json.put("requestId", request.getId());
             		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerCd());
+            		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
             		json.put("managerId", 1);
             		json.put("assignId", 1);
-//            		json.put("startDate", dateFormat.format(request.getStartdate()));
-//            		json.put("endDate", dateFormat.format(request.getEnddate()));
-            		json.put("startDate", "11-08-2014");
-            		json.put("endDate", "15-08-2014");
+            		json.put("startDate", dateFormat.format(request.getStartdate()));
+            		json.put("endDate", dateFormat.format(request.getEnddate()));;
             		json.put("reason", request.getContent());
 //            		json.put("readStatus", request.getReadstatus());
             		json.put("status", request.getStatus());
@@ -749,8 +782,10 @@ public class RequestController {
     @RequestMapping(value="response.request.count", method = RequestMethod.GET)
     public @ResponseBody String countResponseRequest(Principal principal) throws JSONException{
     	User userLogin = userService.getUserByUsername(principal.getName());
-        List<Request> listRejectedRequest = requestService.getListRequestByCreatedbyCdAndStatusAndReadstatus(userLogin.getCd(), "Rejected", 3);
-	    List<Request> listApproveRequest = requestService.getListRequestByCreatedbyCdAndStatusAndReadstatus(userLogin.getCd(), "Approved", 3);
+    	
+        List<Request> listApproveRequest = requestService.getListRequestByCreatorCdAndStatusAndManagerRead(userLogin.getCd(), "Approved", 0);
+        List<Request> listRejectedRequest = requestService.getListRequestByCreatorCdAndStatusAndManagerRead(userLogin.getCd(), "Rejected", 0);
+        
 	    int count = 0;
 	    count = listApproveRequest.size() + listRejectedRequest.size();
     	
@@ -763,10 +798,13 @@ public class RequestController {
     @RequestMapping(value="request.count", method = RequestMethod.GET)
     public @ResponseBody String countRequest(Principal principal) throws JSONException{
     	User userLogin = userService.getUserByUsername(principal.getName());
-        List<Request> listCreatedRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 1);
-	    List<Request> listUpdateRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Updated", 1);
+    	
+        List<Request> listCreatedRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 0);
+        List<Request> listUpdateRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Updated", 0);
+        List<Request> listTaskRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 0);
+        
 	    int count = 0;
-	    count = listCreatedRequest.size() + listUpdateRequest.size();
+	    count = listCreatedRequest.size() + listUpdateRequest.size() + listTaskRequest.size();
     	
 		JSONObject json = new JSONObject();
 		json.put("countRequest", count);

@@ -19,7 +19,7 @@
             			var obj = new Object();
             			obj.requestType = "<strong>" + res[i].requestType + "</strong>";
             			obj.requestId = "<strong><a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a></strong>" ;
-            			obj.createName = "<strong>" + res[i].createName + "</strong>";
+            			obj.managerName = "<strong>" + res[i].managerName + "</strong>";
             			obj.time = "<strong><span style='color:blue'>" + res[i].startDate + "</span> - <span style='color:red'>" + res[i].endDate + "</span></strong>";
             			obj.reason = "<strong>" + res[i].reason + "</strong>";
             			obj.status = "<strong>" + res[i].status + "</strong>";
@@ -28,7 +28,7 @@
             			var obj = new Object();
             			obj.requestType = res[i].requestType;
             			obj.requestId = "<a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
-            			obj.createName = res[i].createName;
+            			obj.managerName = res[i].managerName;
             			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
             			obj.reason = res[i].reason;
             			obj.status = res[i].status;

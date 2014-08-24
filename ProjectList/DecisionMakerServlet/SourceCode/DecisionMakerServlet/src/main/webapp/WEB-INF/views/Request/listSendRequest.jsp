@@ -68,7 +68,7 @@
             type: 'GET',
             success: function (res) {
             	for (var i = 0; i < res.length; i++) {
-            		if (res[i].readStatus == 3) {
+            		if (res[i].readStatus == 1) {
             			var obj = new Object();
             			obj.requestType = "<strong>" + res[i].requestType + "</strong>";
             			obj.requestId = "<strong><a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a></strong>" ;

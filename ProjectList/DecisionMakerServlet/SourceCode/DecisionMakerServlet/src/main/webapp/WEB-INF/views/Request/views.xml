@@ -10,7 +10,7 @@
 	</definition>
     <!-- Edit request screen is same as Create request screen -->
 	<definition name="editRequest" extends="default">
-		<put-attribute name="body" value="/WEB-INF/views/Request/createRequest.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/Request/editRequest.jsp" />
 	</definition>
     <definition name="searchRequest" extends="default">
         <put-attribute name="body" value="/WEB-INF/views/Request/searchRequest.jsp" />

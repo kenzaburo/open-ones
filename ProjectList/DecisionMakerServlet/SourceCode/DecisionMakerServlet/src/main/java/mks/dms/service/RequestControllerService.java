@@ -69,7 +69,7 @@ public class RequestControllerService extends RequestService {
 
     	// Save request with empty list watcher to get request id
     	RequestService requestService = masterService.getRequestService();
-        requestService.saveOrUpdate(request);
+//        requestService.saveOrUpdate(request);
     	
     	// LOG request id created by database
     	LOG.debug("RequestControllerService created id: " + request);
@@ -84,6 +84,11 @@ public class RequestControllerService extends RequestService {
     	
     	return (retCd != RequestService.SAVE_FAIL); 
     }
+    
+    public int saveOrUpdate(Request request, MasterService masterService) {
+    	RequestService requestService = masterService.getRequestService();
+    	return requestService.saveOrUpdate(request);
+    }
 
     /**
     * [Give the description for method].
@@ -97,6 +102,7 @@ public class RequestControllerService extends RequestService {
         if (reqType != null) {
             request.setRequesttypeId(reqType.getId());
             request.setRequesttypeName(reqType.getName());
+            request.setRequesttypeCd(reqType.getCd());
         } else {
             LOG.error("Could not found request type cd = " + request.getRequesttypeCd());
         }
@@ -109,8 +115,7 @@ public class RequestControllerService extends RequestService {
             if (userId != null) {
                 UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
                 assignedUser = userDaoCtrl.findUser(userId);
-
-                request.setAssignedCd(assignedUser.getUsername());
+                request.setAssignedCd(assignedUser.getCd());
                 request.setAssignedName(ExUser.getFullname(assignedUser));
             }
         } else {
@@ -125,11 +130,8 @@ public class RequestControllerService extends RequestService {
             if (managerUserId != null) {
                 UserJpaController userDaoCtrl = new UserJpaController(BaseService.getEmf());
                 managerUser = userDaoCtrl.findUser(managerUserId);
-
-                if (managerUser != null) {
-                    request.setManagerCd(managerUser.getUsername());
-                    request.setManagerCd(ExUser.getFullname(managerUser));
-                }
+                request.setManagerCd(managerUser.getCd());
+                request.setManagerName(ExUser.getFullname(managerUser));
             }
         } else {
             // Do nothing
@@ -231,6 +233,49 @@ public class RequestControllerService extends RequestService {
     }
     
     /**
+     * Get List<Request> By assignedCd.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByAssignedCd(String assignedCd) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByAssignedCd(assignedCd);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Check isRead.
+     * <br/>
+     * @return 1 if unread, 0 if read
+     */
+    public int checkIsRead(Request request, User userLogin) {
+    	int i = 0;
+    	if (request.getCreatedbyCd() != null && request.getCreatedbyCd().equals(userLogin.getCd())) {
+    		if (request.getCreatorRead() == 0) {
+    			i = 1;
+    		}
+    	}
+    	
+    	if (request.getAssignedCd() != null && request.getAssignedCd().equals(userLogin.getCd())) {
+    		if (request.getAssignerRead() == 0) {
+    			i = 1;
+    		}
+    	}
+    	
+    	if (request.getManagerCd() != null && request.getManagerCd().equals(userLogin.getCd())) {
+    		if (request.getManagerRead() == 0) {
+    			i = 1;
+    		}
+    	}
+    	
+    	return i;
+    }
+
+    /**
      * Search List<Request>.
      * <br/>
      * @return List<Request>
@@ -251,12 +296,12 @@ public class RequestControllerService extends RequestService {
      * <br/>
      * @return List<Request>
      */
-    public List<Request> getListRequestByCreatedbyCdAndStatusAndReadstatus(String createdbyCd, String status, int readstatus) {
+    public List<Request> getListRequestByCreatorCdAndStatusAndManagerRead(String createdbyCd, String status, int creatorRead) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     
-    	listRequest = daoCtrl.getListRequestByCreatedbyCdAndStatusAndReadstatus(createdbyCd, status, readstatus);
+    	listRequest = daoCtrl.getListRequestByCreatorCdAndStatusAndManagerRead(createdbyCd, status, creatorRead);
     	
     	return listRequest;
     }
@@ -266,12 +311,27 @@ public class RequestControllerService extends RequestService {
      * <br/>
      * @return List<Request>
      */
-    public List<Request> getListRequestByManagerCdAndStatusAndReadstatus(String managerCd, String status, int readstatus) {
+    public List<Request> getListRequestByManagerCdAndStatusAndReadstatus(String managedCd, String status, int managerRead) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     
-    	listRequest = daoCtrl.getListRequestByManagerCdAndStatusAndReadstatus(managerCd, status, readstatus);
+    	listRequest = daoCtrl.getListRequestByManagerCdAndStatusAndManagerRead(managedCd, status, managerRead);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By assignerCd.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByAssignerCdAndStatusAndAssignerRead(String assignerCd, String status, int assignerRead) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByAssignerCdAndStatusAndAssignerRead(assignerCd, status, assignerRead);
     	
     	return listRequest;
     }

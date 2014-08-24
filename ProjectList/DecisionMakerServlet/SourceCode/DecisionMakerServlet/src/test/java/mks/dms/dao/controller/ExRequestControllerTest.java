@@ -1,6 +1,7 @@
 package mks.dms.dao.controller;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -45,16 +46,23 @@ public class ExRequestControllerTest {
     public void testgetListRequestByCreatedbyCd() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
         ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
-        List<Request> listRequest = daoCtrl.getListRequestByCreatedbyCdAndStatusAndReadstatus("001", "Created", 1);
-        
-        assertEquals(1, listRequest.size());
+        List<String> listOne = new ArrayList<String>();
+        listOne.add("A");
+        listOne.add("B");
+        listOne.add("C");
+        List<String> listTwo = new ArrayList<String>();
+        listTwo.add("B");
+        listTwo.add("C");
+        listOne.removeAll(listTwo);
+        listTwo.addAll(listOne);
+        System.out.println(listTwo);
     }
     
     @Test
     public void testgetListRequestByManagerCd() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
         ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
-        List<Request> listRequest = daoCtrl.getListRequestByManagerCdAndStatusAndReadstatus("admin", "Updated", 2);
+        List<Request> listRequest = daoCtrl.getListRequestByManagerCdAndStatusAndManagerRead("admin", "Updated", 2);
         
         assertEquals(1, listRequest.size());
     }

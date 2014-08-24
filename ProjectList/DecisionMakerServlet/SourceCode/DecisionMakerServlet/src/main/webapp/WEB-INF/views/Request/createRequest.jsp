@@ -26,10 +26,8 @@
     </div>
   </c:if>
 
-  <div>
+<div>
   <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>
-  
-<%--        <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createRule');"> --%>
       <select id="reqType" class="col_3" name="reqType">
          <option value="0">-- Lựa chọn --</option>
          <c:forEach var="reqType" items="${lstReqTypes}">

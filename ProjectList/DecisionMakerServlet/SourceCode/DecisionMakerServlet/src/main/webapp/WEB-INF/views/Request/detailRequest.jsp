@@ -97,6 +97,85 @@ $(function(){
 			</form>
 		</div>
 	</c:if>
-	
-<%-- 	</c:if> --%>
+</c:if>
+<c:if test="${request.requesttypeCd == 'Task'}">
+	<div id="make-task">
+		<div>
+			<label for="title" class="col_2">Tiêu đề: </label>
+			<input id="title" type="text" disabled="disabled" value="${request.title}" class="col_3 column"/>
+			<c:if test="${request.status == 'Created'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small blue">Created</button>
+			</c:if>
+			<c:if test="${request.status == 'Updated'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small orange">Updated</button>
+			</c:if>
+			<c:if test="${request.status == 'Rejected'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small red">Rejected</button>
+			</c:if>
+			<c:if test="${request.status == 'Doing'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small red">Doing</button>
+			</c:if>
+			<c:if test="${request.status == 'Done'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small green">Done</button>
+			</c:if>
+		</div>
+	    <div>
+			<label for="title" class="col_2">Người Tạo: </label>
+			<input id="title" type="text" disabled="disabled" value="${request.createdbyName}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Người Nhận: </label>
+			<input id="title" type="text" disabled="disabled" value="${request.assignedName}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Người Quản lý: </label>
+			<input id="title" type="text" disabled="disabled" value="${request.managerName}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Ngày bắt đầu: </label>
+			<input id="title" type="date" disabled="disabled" value="${startDate}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Ngày kết thúc: </label>
+			<input id="title" type="date" disabled="disabled" value="${endDate}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Thời lượng: </label>
+			<input id="title" type="date" disabled="disabled" value="${request.duration}" class="col_3 column"/>
+			<label for="title" class="col_1">${request.durationunit}</label>
+		</div>
+		<div>
+			<label for="title" class="col_2">Chi tiết công việc: </label>
+			<textarea disabled="disabled" style="display:inline; position: relative; top:5px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.content}</textarea>
+		</div>
+		<c:if test="${(not empty request.comment)}">
+			<div>
+				<label for="title" class="col_2">Comment: </label>
+				<textarea disabled="disabled" style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.comment}</textarea>
+			</div>
+		</c:if>
+		<c:if test="${not empty isCreater}">
+			<div>
+				<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
+			</div>
+		</c:if>
+		<c:if test="${not empty isManager}">
+		<div>
+			<a class="button" href="approveLeave?id=${request.id}" id="approve">Duyệt</a>
+			<a class="button" id="reject">Từ chối</a>
+			<form action="rejectRequest" id="reason">
+				<input type="hidden" name="requestId" value="${request.id}">
+				<label for="content" class="col_2">Lý do: </label>
+				<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="rejectContent" rows="5" placeholder="Lý do từ chối"></textarea>
+				<br>
+				<input type="submit" value="Xác nhận">
+			</form>
+		</div>
+	</c:if>
+	</div>
 </c:if>

@@ -41,7 +41,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByCreatedbyCdAndStatusAndReadstatus(
+	public List<Request> getListRequestByCreatorCdAndStatusAndManagerRead(
 			String createdbyCd, String status, int creatorRead) {
 		EntityManager em = getEntityManager();
 		try {
@@ -69,7 +69,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByManagerCdAndStatusAndReadstatus(
+	public List<Request> getListRequestByManagerCdAndStatusAndManagerRead(
 			String managerCd, String status, int managerRead) {
 		EntityManager em = getEntityManager();
 		try {
@@ -78,6 +78,34 @@ public class ExRequestJpaController extends RequestJpaController {
 			query.setParameter("managerCd", managerCd);
 			query.setParameter("status", status);
 			query.setParameter("managerRead", managerRead);
+			List<Request> listRequest = (List<Request>) query.getResultList();
+
+			return listRequest;
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
+	 * Get Request by managerName and status and readStatus.
+	 * 
+	 * @param username
+	 * @param status
+	 * @param readStatus
+	 * @return List<Request>
+	 * @see http
+	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
+	 *      /Querying/JPQL
+	 */
+	public List<Request> getListRequestByAssignerCdAndStatusAndAssignerRead(
+			String assignedCd, String status, int assignerRead) {
+		EntityManager em = getEntityManager();
+		try {
+			Query query = em
+					.createQuery("Select r FROM Request r WHERE r.assignedCd = :assignedCd AND r.status = :status AND r.assignerRead = :assignerRead");
+			query.setParameter("assignedCd", assignedCd);
+			query.setParameter("status", status);
+			query.setParameter("assignerRead", assignerRead);
 			List<Request> listRequest = (List<Request>) query.getResultList();
 
 			return listRequest;
@@ -210,9 +238,9 @@ public class ExRequestJpaController extends RequestJpaController {
 	}
 
 	/**
-	 * Get Request by managerName and status and readStatus.
+	 * Get Request by managerCd.
 	 * 
-	 * @param username
+	 * @param managerCd
 	 * @return List<Request>
 	 * @see http
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
@@ -231,7 +259,30 @@ public class ExRequestJpaController extends RequestJpaController {
 			em.close();
 		}
 	}
+	
+	/**
+	 * Get Request by assignedCd.
+	 * 
+	 * @param assignedCd
+	 * @return List<Request>
+	 * @see http
+	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
+	 *      /Querying/JPQL
+	 */
+	public List<Request> getListRequestByAssignedCd(String assignedCd) {
+		EntityManager em = getEntityManager();
+		try {
+			Query query = em
+					.createQuery("Select r FROM Request r WHERE r.assignedCd = :assignedCd");
+			query.setParameter("assignedCd", assignedCd);
+			List<Request> listRequest = (List<Request>) query.getResultList();
 
+			return listRequest;
+		} finally {
+			em.close();
+		}
+	}
+	
 	/**
 	 * Get all available announcements.
 	 * 

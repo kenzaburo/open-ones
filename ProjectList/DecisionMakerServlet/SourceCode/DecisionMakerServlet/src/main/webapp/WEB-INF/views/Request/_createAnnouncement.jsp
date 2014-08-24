@@ -48,8 +48,8 @@
 		</div>
 
       <div>
-         <input type="submit" value="Lưu" class="button"/>
-         <input type="reset" value="Hủy" class="button" />
+         <input type="submit" value="Save" class="button"/>
+         <input type="reset" value="Reset" class="button" />
       </div>
   </form:form>
 </div>
