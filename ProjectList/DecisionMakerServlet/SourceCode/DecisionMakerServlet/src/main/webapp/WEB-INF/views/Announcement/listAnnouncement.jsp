@@ -75,8 +75,8 @@
         <td>${status.count}.</td>
         <td><a href="#" onclick='viewRequestContent("viewAnnouncement?id=${request.id}")'>${request.title}</a></td>
         <td>
-          <c:if test="${not empty request.filename1} }">
-            <a href="downloadFile?id=${request.id}" target="_blank" title="Tài liệu đính kèm"><img alt="Đính kèm" src="resources/common-image/attachment.png"> </a>
+          <c:if test="${not empty request.filename1}">
+            <a href="downloadFile?id=${request.id}" target="_blank" title="Tài liệu đính kèm">${request.filename1}</a>
           </c:if>
         </td>
         <td>

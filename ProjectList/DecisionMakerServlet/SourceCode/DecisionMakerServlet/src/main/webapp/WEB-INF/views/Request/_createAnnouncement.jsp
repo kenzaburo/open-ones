@@ -42,10 +42,10 @@
 		  </select>
 		</div>
 		
-		<div>
-		  <label for="attachment" class="col_2">Đính kèm</label>
-		  <input id="attachment" type="file" class="col_8"/>
-		</div>
+        <div>
+          <label for="attachment1" class="col_2">Đính kèm</label>
+          <input name="attachments[0]" type="file" class="col_8"/>
+        </div>
 
       <div>
          <input type="submit" value="Save" class="button"/>

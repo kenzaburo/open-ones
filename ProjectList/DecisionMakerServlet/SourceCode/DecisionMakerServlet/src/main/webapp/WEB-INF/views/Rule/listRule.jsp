@@ -77,7 +77,11 @@
       <tr>
         <td>${status.count}.</td>
         <td><a href="#" onclick='viewRequestContent("viewRule?id=${request.id}")'>${request.title}</a></td>
-        <td></td>
+        <td>
+          <c:if test="${not empty request.filename1}">
+            <a href="downloadFile?id=${request.id}" target="_blank" title="Tài liệu đính kèm">${request.filename1}</a>
+          </c:if>
+        </td>
         <td>
           <a href="#" title="Bạn thích qui định này"><i class="icon-thumbs-up"></i></a>
           <s:authorize access="hasRole('ROLE_ADMIN')">

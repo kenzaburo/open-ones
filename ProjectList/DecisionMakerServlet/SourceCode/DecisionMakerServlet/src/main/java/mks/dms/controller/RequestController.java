@@ -743,8 +743,16 @@ public class RequestController {
                     json.put("managerId", request.getManagerId());
                 }
         		json.put("assignId", request.getManagerId());
-        		json.put("startDate", dateFormat.format(request.getStartdate()));
-        		json.put("endDate", dateFormat.format(request.getEnddate()));
+        		
+        		// Thach.Modified.20140825
+        		if (request.getStartdate() != null) {
+        		    json.put("startDate", dateFormat.format(request.getStartdate()));
+        		}
+        		
+        		// Thach.Modified.20140825
+        		if (request.getEnddate() != null) {
+        		    json.put("endDate", dateFormat.format(request.getEnddate()));
+        		}
         		json.put("reason", request.getContent());
         		if (requestService.checkIsRead(request, userLogin) == 1) {
         			json.put("readStatus", 1);

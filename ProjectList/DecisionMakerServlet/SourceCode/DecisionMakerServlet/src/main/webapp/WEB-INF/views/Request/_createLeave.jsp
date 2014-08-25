@@ -67,8 +67,8 @@
             <form:input path="labels" id="labels" type="text" class="col_8"/>
         </div>
         <div>
-          <label for="attachment" class="col_2">Đính kèm</label>
-          <form:input path="request.attachment1" id="attachment1" type="file" class="col_8"/>
+          <label for="attachment1" class="col_2">Đính kèm</label>
+          <input name="attachments[0]" type="file" class="col_8"/>
         </div>
       	<div>
       		<input type="submit" value="Save" class="button"/>
