@@ -5,9 +5,8 @@ import java.util.List;
 
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
-import mks.dms.dao.entity.RequestType;
-import mks.dms.dao.entity.User;
-import mks.dms.util.AppCons;
+
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @description Contains request model, which work on view
@@ -29,6 +28,7 @@ public class RequestCreateModel implements Serializable {
     /* List user watch request */
     private Integer[] listWatcher;
 
+    private List<MultipartFile> attachments;
 //    public List<RequestType> getListRequestType() {
 //        return listRequestType;
 //    }
@@ -93,6 +93,22 @@ public class RequestCreateModel implements Serializable {
      */
     public void setLabels(String labels) {
         this.labels = labels;
+    }
+
+    /**
+     * Get value of attachments.
+     * @return the attachments
+     */
+    public List<MultipartFile> getAttachments() {
+        return attachments;
+    }
+
+    /**
+     * Set the value for attachments.
+     * @param attachments the attachments to set
+     */
+    public void setAttachments(List<MultipartFile> attachments) {
+        this.attachments = attachments;
     }
     
 }

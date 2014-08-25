@@ -1,5 +1,7 @@
 package mks.dms.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.text.ParseException;
@@ -18,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
@@ -59,7 +62,7 @@ import com.google.gson.Gson;
 public class RequestController {
 	/**  */
 	private static final Logger LOG = Logger.getLogger(RequestController.class);
-	
+
 	private final MasterService masterService;
 	
 	private final RequestControllerService requestService;
@@ -193,6 +196,19 @@ public class RequestController {
         
         LOG.debug("Start date=" + request.getStartdate());                         // Task | Leave
         LOG.debug("End date=" + request.getEnddate());                             // Task | Leave
+        
+        if (model.getAttachments() != null) {
+            LOG.debug("Number of attachment: " + model.getAttachments().size());
+            LOG.debug("Name: " + model.getAttachments().get(0).getOriginalFilename());
+            try {
+                LOG.debug("Number of size: " + model.getAttachments().get(0).getBytes().length);
+            } catch (IOException ex) {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
+        } else {
+            LOG.debug("No attachment");
+        }
         
         User userCreate = userService.getUserByUsername(principal.getName());
  
@@ -356,6 +372,35 @@ public class RequestController {
         mav.addObject("model", requestCreateModel);
 
         return mav;
+    }
+
+    @RequestMapping(value="downloadFile")
+    public void downloadFile(@RequestParam("id") int id, HttpServletResponse response) {
+        LOG.debug("id=" + id);
+        Request request = requestService.getRequestById(id);
+        String mimeType = "application/octet-stream";
+        
+        if (request.getAttachment1() != null) {
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) request.getAttachment1().length);
+        }
+        
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                request.getFilename1());
+        response.setHeader(headerKey, headerValue);
+ 
+        // get output stream of the response
+        OutputStream outStream;
+        try {
+            outStream = response.getOutputStream();
+            outStream.write(request.getAttachment1());
+        } catch (IOException ex) {
+            LOG.error("Could not read the attachment content.", ex);
+        }
+         
     }
     
     @RequestMapping(method = RequestMethod.GET, value="deleteRequest")
@@ -690,8 +735,13 @@ public class RequestController {
 //        		json.put("requestType", request.getRequesttypeCd());
         		json.put("requestId", request.getId());
         		json.put("requestTitle", request.getTitle());
-        		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
-        		json.put("managerId", request.getManagerId());
+                
+        		// Thach.modified.20140825
+        		if (request.getManagerId() != null) {
+                    json.put("managerName", request.getManagerId().getLastname() + " "
+                            + request.getManagerId().getFirstname());
+                    json.put("managerId", request.getManagerId());
+                }
         		json.put("assignId", request.getManagerId());
         		json.put("startDate", dateFormat.format(request.getStartdate()));
         		json.put("endDate", dateFormat.format(request.getEnddate()));

@@ -74,7 +74,11 @@
       <tr>
         <td>${status.count}.</td>
         <td><a href="#" onclick='viewRequestContent("viewAnnouncement?id=${request.id}")'>${request.title}</a></td>
-        <td></td>
+        <td>
+          <c:if test="${not empty request.filename1} }">
+            <a href="downloadFile?id=${request.id}" target="_blank" title="Tài liệu đính kèm"><img alt="Đính kèm" src="resources/common-image/attachment.png"> </a>
+          </c:if>
+        </td>
         <td>
           <a href="#" title="Bạn thích thông báo này"><i class="icon-thumbs-up"></i></a>
           <s:authorize access="hasRole('ROLE_ADMIN')">

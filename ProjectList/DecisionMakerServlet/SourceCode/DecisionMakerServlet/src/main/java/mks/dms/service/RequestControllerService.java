@@ -1,6 +1,7 @@
 
 package mks.dms.service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @description Get data from database and map to model controller
@@ -135,6 +137,18 @@ public class RequestControllerService extends RequestService {
             }
         } else {
             // Do nothing
+        }
+        
+        // Update attachment
+        List<MultipartFile> lstAttachment = model.getAttachments();
+        if (lstAttachment != null) {
+            MultipartFile attachFile = lstAttachment.get(0);
+            request.setFilename1(attachFile.getOriginalFilename());
+            try {
+                request.setAttachment1(attachFile.getBytes());
+            } catch (IOException ex) {
+                LOG.warn("Could not get the content of attached file", ex);
+            }
         }
     }
     

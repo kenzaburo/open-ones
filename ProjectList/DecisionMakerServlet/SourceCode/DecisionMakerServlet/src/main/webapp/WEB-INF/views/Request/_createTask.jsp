@@ -103,9 +103,10 @@
                 </c:forEach>
             </form:select>
 		</div>
+    <%-- Refer: http://crunchify.com/spring-mvc-tutorial-how-to-upload-multiple-files-to-specific-location/ --%>
 		<div>
 		  <label for="attachment1" class="col_2">Đính kèm</label>
-		  <form:input path="request.attachment1" id="attachment1" type="file" class="col_8"/>
+		  <input name="attachments[0]" type="file" class="col_8"/>
 		</div>
 
       <div>

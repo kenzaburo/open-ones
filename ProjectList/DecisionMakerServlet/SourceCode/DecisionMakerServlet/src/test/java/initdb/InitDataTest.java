@@ -115,6 +115,44 @@ public class InitDataTest {
     }
 
     @Test
+    public void testInitCreateUserForTokutokuya() {
+        String username = "thang@tokutokuya.com.vn";
+        boolean isEnable = true;
+        User user = new User();
+        user.setCd("011");
+        
+        user.setDepartmentCd("System");
+        user.setDepartmentName("System");
+        user.setDepartmentId(1);
+        
+        user.setUsername(username);
+        user.setFirstname("Thang");
+        user.setLastname("Chau Duc");
+        user.setEnabled(isEnable);
+        user.setEmail("thang@tokutokuya.com.vn");
+        
+        UserJpaController daoCtrl = new UserJpaController(emf);
+        daoCtrl.create(user);
+
+
+        
+        user.setCd("012");
+        
+        user.setDepartmentCd("System");
+        user.setDepartmentName("System");
+        user.setDepartmentId(1);
+        
+        user.setUsername("ngan@tokutokuya.com.vn");
+        user.setFirstname("Ngan");
+        user.setLastname("Ms");
+        user.setEnabled(isEnable);
+        user.setEmail("ngan@tokutokuya.com.vn");
+        
+        daoCtrl.create(user);
+
+    }
+
+    @Test
     public void testInitCreateUser01() {
         System.out.println("create");
         String username = "user01";

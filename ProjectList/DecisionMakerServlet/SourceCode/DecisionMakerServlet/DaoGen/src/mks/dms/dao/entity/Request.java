@@ -60,6 +60,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByAssignerRead", query = "SELECT r FROM Request r WHERE r.assignerRead = :assignerRead"),
     @NamedQuery(name = "Request.findByPlaneffort", query = "SELECT r FROM Request r WHERE r.planeffort = :planeffort"),
     @NamedQuery(name = "Request.findByPlanunit", query = "SELECT r FROM Request r WHERE r.planunit = :planunit"),
+    @NamedQuery(name = "Request.findByFilename1", query = "SELECT r FROM Request r WHERE r.filename1 = :filename1"),
+    @NamedQuery(name = "Request.findByFilename2", query = "SELECT r FROM Request r WHERE r.filename2 = :filename2"),
+    @NamedQuery(name = "Request.findByFilename3", query = "SELECT r FROM Request r WHERE r.filename3 = :filename3"),
     @NamedQuery(name = "Request.findByCreated", query = "SELECT r FROM Request r WHERE r.created = :created"),
     @NamedQuery(name = "Request.findByCreatedbyCd", query = "SELECT r FROM Request r WHERE r.createdbyCd = :createdbyCd"),
     @NamedQuery(name = "Request.findByCreatedbyName", query = "SELECT r FROM Request r WHERE r.createdbyName = :createdbyName"),
@@ -130,12 +133,18 @@ public class Request implements Serializable {
     @Lob
     @Column(name = "ATTACHMENT1")
     private byte[] attachment1;
+    @Column(name = "FILENAME1")
+    private String filename1;
     @Lob
     @Column(name = "ATTACHMENT2")
     private byte[] attachment2;
+    @Column(name = "FILENAME2")
+    private String filename2;
     @Lob
     @Column(name = "ATTACHMENT3")
     private byte[] attachment3;
+    @Column(name = "FILENAME3")
+    private String filename3;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -389,6 +398,14 @@ public class Request implements Serializable {
         this.attachment1 = attachment1;
     }
 
+    public String getFilename1() {
+        return filename1;
+    }
+
+    public void setFilename1(String filename1) {
+        this.filename1 = filename1;
+    }
+
     public byte[] getAttachment2() {
         return attachment2;
     }
@@ -397,12 +414,28 @@ public class Request implements Serializable {
         this.attachment2 = attachment2;
     }
 
+    public String getFilename2() {
+        return filename2;
+    }
+
+    public void setFilename2(String filename2) {
+        this.filename2 = filename2;
+    }
+
     public byte[] getAttachment3() {
         return attachment3;
     }
 
     public void setAttachment3(byte[] attachment3) {
         this.attachment3 = attachment3;
+    }
+
+    public String getFilename3() {
+        return filename3;
+    }
+
+    public void setFilename3(String filename3) {
+        this.filename3 = filename3;
     }
 
     public Date getCreated() {
