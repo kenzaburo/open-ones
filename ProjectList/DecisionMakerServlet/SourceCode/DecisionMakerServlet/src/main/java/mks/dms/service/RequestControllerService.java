@@ -202,7 +202,7 @@ public class RequestControllerService extends RequestService {
     }
     
     /**
-     * Get Request By Cd.
+     * Get Request By Id.
      * <br/>
      * @return Request
      */
@@ -214,6 +214,36 @@ public class RequestControllerService extends RequestService {
     	request = daoCtrl.findRequest(id);
     	
     	return request;
+    }
+
+    /**
+     * Get List<Request> By assignedCd, requestTypeCd.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByAssignedCdAndRequestTypeCd(String assignedCd, String requestTypeCd) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByAssignedCdAndRequestTypeCd(assignedCd, requestTypeCd);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By managerCd, requestTypeCd.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByManagerCdAndRequestTypeCd(String managerCd, String requestTypeCd) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    
+    	listRequest = daoCtrl.getListRequestByManagerCdAndRequestTypeCd(managerCd, requestTypeCd);
+    	
+    	return listRequest;
     }
     
     /**
@@ -310,12 +340,12 @@ public class RequestControllerService extends RequestService {
      * <br/>
      * @return List<Request>
      */
-    public List<Request> getListRequestByCreatorCdAndStatusAndManagerRead(String createdbyCd, String status, int creatorRead) {
+    public List<Request> getListRequestByCreatorCdAndStatusAndCreatorRead(String createdbyCd, String status, int creatorRead) {
     	List<Request> listRequest;
     	
     	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
     
-    	listRequest = daoCtrl.getListRequestByCreatorCdAndStatusAndManagerRead(createdbyCd, status, creatorRead);
+    	listRequest = daoCtrl.getListRequestByCreatorCdAndStatusAndCreatorRead(createdbyCd, status, creatorRead);
     	
     	return listRequest;
     }

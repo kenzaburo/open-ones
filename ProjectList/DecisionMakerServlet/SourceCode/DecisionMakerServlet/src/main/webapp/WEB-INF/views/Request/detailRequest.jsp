@@ -117,7 +117,7 @@ $(function(){
 			</c:if>
 			<c:if test="${request.status == 'Doing'}">
 				<label for="title" class="col_1">Trạng thái: </label>
-				<button class="small red">Doing</button>
+				<button class="small green">Doing</button>
 			</c:if>
 			<c:if test="${request.status == 'Done'}">
 				<label for="title" class="col_1">Trạng thái: </label>
@@ -146,7 +146,7 @@ $(function(){
 		</div>
 		<div>
 			<label for="title" class="col_2">Thời lượng: </label>
-			<input id="title" type="date" disabled="disabled" value="${request.duration}" class="col_3 column"/>
+			<input id="title" type="text" disabled="disabled" value="${request.duration}" class="col_3 column"/>
 			<label for="title" class="col_1">${request.durationunit}</label>
 		</div>
 		<div>
@@ -166,7 +166,7 @@ $(function(){
 		</c:if>
 		<c:if test="${not empty isManager}">
 		<div>
-			<a class="button" href="approveLeave?id=${request.id}" id="approve">Duyệt</a>
+			<a class="button" href="completedtask?requestId=${request.id}" id="approve">Xác nhận hoàn thành</a>
 			<a class="button" id="reject">Từ chối</a>
 			<form action="rejectRequest" id="reason">
 				<input type="hidden" name="requestId" value="${request.id}">

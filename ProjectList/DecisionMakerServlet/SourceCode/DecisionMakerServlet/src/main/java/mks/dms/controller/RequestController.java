@@ -169,10 +169,12 @@ public class RequestController {
     * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
     */
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
-    public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result, Principal principal) {
+    public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result, Principal principal, HttpServletRequest httpRequest) {
         // Model to re-display the saved request
+    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+    	Date today = new Date();
         ModelAndView mav = new ModelAndView("createRequest");
-
+        User userLogin = userService.getUserByUsername(principal.getName());
         // Debug data of model
         Request request = model.getRequest();
         LOG.debug("Binding result; hasError=" + result.hasErrors());
@@ -180,7 +182,8 @@ public class RequestController {
         LOG.debug("type cd=" + request.getRequesttypeCd());                       // have value from client
         //LOG.debug("type name=" + request.getRequesttypeName());
         LOG.debug("title=" + request.getTitle());                                 // For all requests 
-        LOG.debug("content=" + request.getContent());                             // For all requests
+        LOG.debug("content=" + request.getContent()); 
+        LOG.debug("Creator id=" + userLogin.getId());   							// For all requests
         if (request.getAssignedId() != null) {
             LOG.debug("assigned id=" + request.getAssignedId().getId());          // Task
             // LOG.debug("assigned cd=" + request.getAssignedId().getCd());
@@ -210,30 +213,68 @@ public class RequestController {
             LOG.debug("No attachment");
         }
         
-        User userCreate = userService.getUserByUsername(principal.getName());
- 
-        Date today = new Date();
         int saveOrUpdate = requestService.saveOrUpdate(model.getRequest());
         if (saveOrUpdate == 1) {
         	model.getRequest().setStatus("Created");
             model.getRequest().setCreatorRead(1);
-            model.getRequest().setCreatedbyId(userCreate);
+        	if (request.getRequesttypeCd().equals("Task")) {
+        		if (request.getAssignedId().getId() == userLogin.getId()) {
+        			model.getRequest().setStatus("Doing");
+                    model.getRequest().setAssignerRead(1);
+        		}
+                else {
+                	model.getRequest().setAssignerRead(0);
+                }	
+        	}
+            model.getRequest().setCreatedbyId(userLogin);
             model.getRequest().setCreatedbyName(principal.getName());
-            model.getRequest().setCreatedbyCd(userCreate.getCd());
-            model.getRequest().setAssignerRead(0);
+            model.getRequest().setCreatedbyCd(userLogin.getCd());
             model.getRequest().setManagerRead(0);
             model.getRequest().setCreated(today);
         }
         if (saveOrUpdate == 2) {
-        	model.getRequest().setStatus("Updated");
-            model.getRequest().setCreatorRead(1);
-            model.getRequest().setCreatedbyId(userCreate);
+        	if (request.getRequesttypeCd().equals("Leave") || request.getRequesttypeCd().equals("Task")) {
+            	String comment = httpRequest.getParameter("comment");
+            	if (!comment.equals("")) {
+            		String fullComment = request.getComment() + userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + comment + " \n";
+                	request.setComment(fullComment);
+            	}
+            }
+        	if (request.getRequesttypeCd().equals("Task")) {
+        		if (request.getManagerId().getId() == userLogin.getId()) {
+        			model.getRequest().setStatus("Updated");
+                    model.getRequest().setAssignerRead(1);
+                    model.getRequest().setCreatorRead(1);
+        		}
+                if (request.getCreatedbyId().getId() == userLogin.getId() && request.getAssignedId().getId() != userLogin.getId()) {
+                	model.getRequest().setStatus("Updated");
+                	model.getRequest().setManagerRead(1);
+                	model.getRequest().setAssignerRead(1);
+                }
+                else if (request.getAssignedId().getId() == userLogin.getId() && request.getCreatedbyId().getId() != userLogin.getId()) {
+                	model.getRequest().setStatus("Updated");
+                	model.getRequest().setManagerRead(1);
+                	model.getRequest().setCreatorRead(1);
+                }
+                else if (request.getAssignedId().getId() == userLogin.getId() && request.getCreatedbyId().getId() == userLogin.getId()) {
+                	model.getRequest().setStatus("Updated");
+                	model.getRequest().setManagerRead(1);
+                	model.getRequest().setAssignerRead(0);
+                	model.getRequest().setCreatorRead(0);
+                }
+            }
+        	
+            model.getRequest().setCreatedbyId(userLogin);
             model.getRequest().setCreatedbyName(principal.getName());
-            model.getRequest().setCreatedbyCd(userCreate.getCd());
-            model.getRequest().setAssignerRead(0);
+            model.getRequest().setCreatedbyCd(userLogin.getCd());
+            if (request.getAssignedId().getId() == userLogin.getId())
+            	model.getRequest().setAssignerRead(1);
+            else
+            	model.getRequest().setAssignerRead(0);
             model.getRequest().setManagerRead(0);
             model.getRequest().setCreated(today);
         }
+        
         // Save request by call to request controller service
         boolean retOK = requestService.saveRequest(model, masterService);;
                 
@@ -267,91 +308,6 @@ public class RequestController {
         
     }
 
-    /** 
-     * process when click submit in form createRequest
-     * 18-08-2014:
-     * Thach: Deprecated
-     * @see method saveRequest
-     *  */
-    @RequestMapping(value="createNewRequest")
-    public String createNewRequest(HttpServletRequest req) throws ParseException {
-    	Date today = new Date();
-    	Request request = new Request();
-    	String requestCd = req.getParameter("reqType");
-    	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		
-    	if (requestCd.equals("Task")) {
-    		request.setRequesttypeId(1);
-    		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
-        	User receiveUser = userService.getUserById(userId);
-        	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-    	}
-    	if (requestCd.equals("Rule")) {
-    		request.setRequesttypeId(2);
-    		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = userService.getUserById(userId);
-        	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-    	}
-    	if (requestCd.equals("Announcement")) {
-    		request.setRequesttypeId(3);
-    		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = userService.getUserById(userId);
-        	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-    	}
-    	if (requestCd.equals("Leave")) {
-    		request.setRequesttypeId(4);
-    		String leaveContent = req.getParameter("leaveContent");
-    		String leaveTitle = req.getParameter("leaveTitle");
-    		Date leaveStartDay = formater.parse(req.getParameter("leaveStartDay"));
-    		Date leaveEndDay = formater.parse(req.getParameter("leaveEndDay"));
-    		String leaveLabel = req.getParameter("leaveLabel");
-    		String leaveCreate = req.getParameter("leaveCreate");
-//    		System.out.println(req.getParameter("leaveStartDay"));
-    		
-    		User createUser = userService.getUserByUsername(leaveCreate);
-//    		Department createDepartmentId = requestService.getDepartmentByCd(createUser.getDepartmentId());
-    		request.setCreatedbyCd(createUser.getUsername());
-    		request.setCreatedbyId(createUser);
-    		request.setCreatedbyCd(createUser.getUsername());
-//    		request.setDepartmentsId(createDepartmentId);
-    		
-    		request.setCreated(today);
-    		request.setContent(leaveContent);
-    		request.setContent(leaveContent);
-    		request.setTitle(leaveTitle);
-    		request.setStatus("Created");
-    		request.setRequesttypeCd("Leave");
-    		RequestType requestType = requestService.getRequestTypeByCd("Leave");
-    		request.setRequesttypeName(requestType.getName());
-    		request.setRequesttypeId(requestType.getId());
-//    		set label
-    		
-    		request.setStartdate(leaveStartDay);
-    		request.setEnddate(leaveEndDay);
-    		request.setCreatorRead(1);
-    		request.setManagerRead(0);
-    		request.setAssignerRead(0);
-    		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-        	User receiveUser = userService.getUserById(userCd);
-        	request.setManagerId(receiveUser);
-        	request.setManagerCd(receiveUser.getUsername());
-        	request.setManagerCd(receiveUser.getUsername());
-
-        	requestService.createRequest(request);
-        	
-        	String emailContent = "Đơn xin nghỉ việc của " + 
-        							 leaveCreate + 
-        							 "<br>" + 
-        							 "Xin nghỉ từ " + req.getParameter("leaveStartDay") + " đến " + req.getParameter("leaveEndDay") +
-        							 "<br> " +
-        							 "Lý do: " + leaveContent;
-        	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
-    	}
-    	
-    	return "redirect:detailRequest?id="+ request.getId();
-    }
-    
-
     /**
     * Show the screen Edit request.
     * <br/>
@@ -361,11 +317,20 @@ public class RequestController {
     * @return
     */
     @RequestMapping(value="editRequest")
-    public ModelAndView editRequest(@RequestParam("id") int id) {
+    public ModelAndView editRequest(@RequestParam("id") int id, Principal principal) {
         ModelAndView mav = new ModelAndView("editRequest");
         LOG.debug("id=" + id);
+        
+        User userLogin = userService.getUserByUsername(principal.getName());
         RequestCreateModel requestCreateModel = new RequestCreateModel();
+        
         Request request = requestService.getRequestById(id);
+        if (request.getRequesttypeCd().equals("Task") && request.getManagerCd().equals(userLogin.getCd())) {
+        	mav.addObject("isManager", Boolean.TRUE);
+        }
+        if (request.getRequesttypeCd().equals("Leave") && request.getManagerCd().equals(userLogin.getCd())) {
+        	mav.addObject("isManager", Boolean.TRUE);
+        }
         requestCreateModel.setRequest(request);;
         
         // Add object to modelandview
@@ -424,93 +389,7 @@ public class RequestController {
         
         return jsonResult;
     }    
-//    @RequestMapping(value="editRequest")
-//    public ModelAndView editRequest(@RequestParam("id") int id) {
-//    	
-////    	Lay thong tin tai khoan dang nhap
-////    	Kiem tra tai khoan dang nhap phai tai khoan khoi tao yeu cau khong
-////    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
-//    	
-////    	Neu phai
-//    	ModelAndView mav = new ModelAndView("editRequest");
-//    	Request request = requestService.getRequestById(id);
-//    	List<User> listUsers = userService.getAllUser();
-//        mav.addObject("listUsers", listUsers);
-//    	mav.addObject("request", request);
-//    	return mav;
-//    }
-    
-    @RequestMapping(value="updateRequest")
-    public String processUpdateRequest(HttpServletRequest req) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	Date today = new Date();
-    	String requestType = req.getParameter("reqType");
-    	int requestId = Integer.parseInt(req.getParameter("requestId"));
-    	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-    	Request request = requestService.getRequestById(requestId);
-    	String leaveCreate = req.getParameter("leaveCreate");
-    	if (request.getCreatedbyCd().equals(leaveCreate)) {
-    		if (requestType.equals("Task")) {
-        		request.setRequesttypeId(1);
-        		int userId = Integer.parseInt(req.getParameter("taskReceiveUser"));
-            	User receiveUser = userService.getUserById(userId);
-            	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-        	}
-        	if (requestType.equals("Rule")) {
-        		request.setRequesttypeId(2);
-        		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = userService.getUserById(userId);
-            	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-        	}
-        	if (requestType.equals("Announcement")) {
-        		request.setRequesttypeId(3);
-        		int userId = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = userService.getUserById(userId);
-            	sendMail(receiveUser.getEmail(), "Email thử nghiệm", "Email test");
-        	}
-        	if (requestType.equals("Leave")) {
-        		request.setRequesttypeId(4);
-        		String leaveContent = req.getParameter("leaveContent");
-        		String leaveTitle = req.getParameter("leaveTitle");
-        		Date leaveStartDay = formater.parse(req.getParameter("leaveStartDay"));
-        		Date leaveEndDay = formater.parse(req.getParameter("leaveEndDay"));
-        		String leaveLabel = req.getParameter("leaveLabel");
-        		
-        		request.setLastmodified(today);
-        		request.setContent(leaveContent);
-        		request.setTitle(leaveTitle);
-//        		request.setStatus("Updated");
-        		request.setManagerRead(0);
-        		
-//        		set label
-        		
-        		request.setStartdate(leaveStartDay);
-        		request.setEnddate(leaveEndDay);
-        		int userCd = Integer.parseInt(req.getParameter("leaveReceiveUser"));
-            	User receiveUser = userService.getUserById(userCd);
-            	request.setManagerId(receiveUser);
-            	request.setManagerCd(receiveUser.getUsername());
-            	request.setManagerCd(receiveUser.getUsername());
-            	
-            	
-            	
-            	String emailContent = "Đơn xin nghỉ việc của " + 
-            							leaveCreate + 
-            							 "<br>" + 
-            							 "Xin nghỉ từ " + req.getParameter("leaveStartDay") + " đến " + req.getParameter("leaveEndDay") +
-            							 "<br> " +
-            							 "Lý do: " + leaveContent;
-            	sendMail(receiveUser.getEmail(), leaveTitle, emailContent);
-        	}
-        	requestService.updateRequest(request);
-        	request.setLastmodified(today);
-        	return "redirect:detailRequest?id=" + request.getId();
-    	}
-    	else {
-    		return "redirect:detailRequest?id=" + request.getId();
-    	}
-    	
-    }
-    
+
     @RequestMapping(value="detailRequest")
     public ModelAndView showDetailRequestPage(@RequestParam("id") int id, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	Request request = requestService.getRequestById(id);
@@ -520,26 +399,52 @@ public class RequestController {
 //    	neu phai
     	
     	User userLogin = userService.getUserByUsername(principal.getName());
-    	
-    	if (request.getManagerCd().equals(userLogin.getCd())) {
-    		if (request.getManagerRead() == 0) {
-        		request.setManagerRead(1);
-        		requestService.updateRequest(request);
+    	if (request.getRequesttypeCd().equals("Leave")) {
+    		if (request.getManagerCd().equals(userLogin.getCd())) {
+        		if (request.getManagerRead() == 0) {
+            		request.setManagerRead(1);
+            		requestService.updateRequest(request);
+            	}
+        		mav.addObject("isManager", Boolean.TRUE);
         	}
-    		mav.addObject("isManager", Boolean.TRUE);
+        	
+        	if (request.getCreatedbyCd().equals(userLogin.getCd())) {
+    	    	if (request.getCreatorRead() == 0) {
+    	    		request.setCreatorRead(1);
+    	    		requestService.updateRequest(request);
+    	    		
+    	    	}
+    	    	mav.addObject("isCreater", Boolean.TRUE);
+        	}
+    	}
+    	if (request.getRequesttypeCd().equals("Task")) {
+    		if(request.getAssignedCd().equals(request.getCreatedbyCd())) {
+    			if (request.getManagerCd().equals(userLogin.getCd())) {
+            		if (request.getManagerRead() == 0) {
+                		request.setManagerRead(1);
+                		requestService.updateRequest(request);
+                	}
+            		mav.addObject("isManager", Boolean.TRUE);
+            	}
+            	
+            	if (request.getCreatedbyCd().equals(userLogin.getCd())) {
+        	    	if (request.getCreatorRead() == 0) {
+        	    		request.setCreatorRead(1);
+        	    		request.setAssignerRead(1);
+        	    		requestService.updateRequest(request);
+        	    	}
+        	    	mav.addObject("isCreator", Boolean.TRUE);
+            	}
+            	
+            	
+    		}
+    		else {
+    			if (request.getAssignedCd().equals(userLogin.getCd()) && request.getStatus().equals("Created")) {
+    				
+    			}
+    		}
     	}
     	
-    	
-//    	kiem tra tai khoan dang nhap phai tai khoan tao request ko
-//    	neu phai
-    	if (request.getCreatedbyCd().equals(userLogin.getCd())) {
-	    	if (request.getCreatorRead() == 0) {
-	    		request.setCreatorRead(1);
-	    		requestService.updateRequest(request);
-	    		
-	    	}
-	    	mav.addObject("isCreater", Boolean.TRUE);
-    	}
     	return mav;
     }
     
@@ -611,7 +516,6 @@ public class RequestController {
      **/
     @RequestMapping(value="listSendRequest")
     public ModelAndView showPageListSendRequest() {
-//    	List<Request> listRequest = requestService.getListRequestByCreatedbyCd(username);
     	ModelAndView mav = new ModelAndView("listSendRequest");
     	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         mav.addObject("lstReqTypes", lstRequestTypes);
@@ -625,13 +529,30 @@ public class RequestController {
      **/
     @RequestMapping(value="listReceiveRequest")
     public ModelAndView showPageListReceiveRequest() {
-//    	List<Request> listRequest = requestService.getListRequestByManagerCd(username);
     	ModelAndView mav = new ModelAndView("listReceiveRequest");
     	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         LOG.debug("lstRequestTypes=" + lstRequestTypes);
         mav.addObject("lstReqTypes", lstRequestTypes);
         List<User> listUsers = userService.getAllUser();
         mav.addObject("listUsers", listUsers);
+    	return mav;
+    }
+    
+    /**
+     * Show myListTask page
+     **/
+    @RequestMapping(value="mylisttask")
+    public ModelAndView showMyListTask() {
+    	ModelAndView mav = new ModelAndView("mylisttask");
+    	return mav;
+    }
+    
+    /**
+     * Show manageListTask page
+     **/
+    @RequestMapping(value="manageListTask")
+    public ModelAndView showManageListTask() {
+    	ModelAndView mav = new ModelAndView("manageListTask");
     	return mav;
     }
     
@@ -674,8 +595,6 @@ public class RequestController {
         User userLogin = userService.getUserByUsername(principal.getName());
     	List<Request> listManagerRequest = requestService.getListRequestByManagerCd(userLogin.getCd());
     	List<Request> listAssignerRequest = requestService.getListRequestByAssignedCd(userLogin.getCd());
-    	System.out.println("List Assigner " + userLogin.getCd());
-    	System.out.println("LoginCd: " + listAssignerRequest.size());
     	listAssignerRequest.removeAll(listManagerRequest);
     	listManagerRequest.addAll(listAssignerRequest);
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
@@ -704,6 +623,76 @@ public class RequestController {
     	return listJson.toString();
     } 
     
+    @RequestMapping(value="my.task.load", method = RequestMethod.GET)
+    public @ResponseBody String loadMyListTask(Principal principal) throws JSONException{
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+        User userLogin = userService.getUserByUsername(principal.getName());
+    	List<Request> listAssignerRequest = requestService.getListRequestByAssignedCdAndRequestTypeCd(userLogin.getCd(), "Task");
+    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+    	for (Request request:listAssignerRequest) {
+    		JSONObject json = new JSONObject();
+    		json.put("requestType", request.getRequesttypeName());
+    		json.put("requestId", request.getId());
+    		json.put("requestTitle", request.getTitle());
+    		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+    		json.put("managerId", request.getManagerId());
+    		json.put("assignId", request.getManagerId());
+    		if (request.getStartdate() != null) {
+    			json.put("startDate", dateFormat.format(request.getStartdate()));
+    		}
+    		if (request.getEnddate() != null) {
+    			json.put("endDate", dateFormat.format(request.getEnddate()));
+    		}
+    		json.put("reason", request.getContent());
+    		if (requestService.checkIsRead(request, userLogin) == 1) {
+    			json.put("readStatus", 1);
+    		}
+    		else {
+    			json.put("readStatus", 0);
+    		}
+    		
+    		json.put("status", request.getStatus());
+    		listJson.add(json);
+    	}
+    	return listJson.toString();
+    }
+    
+    @RequestMapping(value="manage.task.load", method = RequestMethod.GET)
+    public @ResponseBody String loadManageListTask(Principal principal) throws JSONException{
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+        User userLogin = userService.getUserByUsername(principal.getName());
+    	List<Request> listAssignerRequest = requestService.getListRequestByManagerCdAndRequestTypeCd(userLogin.getCd(), "Task");
+    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+    	for (Request request:listAssignerRequest) {
+    		JSONObject json = new JSONObject();
+    		json.put("requestType", request.getRequesttypeName());
+    		json.put("requestId", request.getId());
+    		json.put("requestTitle", request.getTitle());
+    		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+    		json.put("managerId", request.getManagerId());
+    		json.put("assignId", request.getManagerId());
+    		if (request.getStartdate() != null) {
+    			json.put("startDate", dateFormat.format(request.getStartdate()));
+    		}
+    		if (request.getEnddate() != null) {
+    			json.put("endDate", dateFormat.format(request.getEnddate()));
+    		}
+    		json.put("reason", request.getContent());
+    		if (requestService.checkIsRead(request, userLogin) == 1) {
+    			json.put("readStatus", 1);
+    		}
+    		else {
+    			json.put("readStatus", 0);
+    		}
+    		
+    		json.put("status", request.getStatus());
+    		listJson.add(json);
+    	}
+    	return listJson.toString();
+    }
+    
     @RequestMapping(value="searchRequest")
     public ModelAndView showSearchRequestPage() {
     	ModelAndView mav = new ModelAndView("searchRequest");
@@ -724,7 +713,6 @@ public class RequestController {
     		listRequest = requestService.searchRequest(createdbyCd, startDate, endDate, managerCd, assignCd, requestTypeCd);
     	}
     	User userLogin = userService.getUserByUsername(principal.getName());
-    	System.out.println("So lương " + listRequest.size());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
@@ -841,8 +829,8 @@ public class RequestController {
     public @ResponseBody String countResponseRequest(Principal principal) throws JSONException{
     	User userLogin = userService.getUserByUsername(principal.getName());
     	
-        List<Request> listApproveRequest = requestService.getListRequestByCreatorCdAndStatusAndManagerRead(userLogin.getCd(), "Approved", 0);
-        List<Request> listRejectedRequest = requestService.getListRequestByCreatorCdAndStatusAndManagerRead(userLogin.getCd(), "Rejected", 0);
+        List<Request> listApproveRequest = requestService.getListRequestByCreatorCdAndStatusAndCreatorRead(userLogin.getCd(), "Approved", 0);
+        List<Request> listRejectedRequest = requestService.getListRequestByCreatorCdAndStatusAndCreatorRead(userLogin.getCd(), "Rejected", 0);
         
 	    int count = 0;
 	    count = listApproveRequest.size() + listRejectedRequest.size();
@@ -859,14 +847,48 @@ public class RequestController {
     	
         List<Request> listCreatedRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 0);
         List<Request> listUpdateRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Updated", 0);
-        List<Request> listTaskRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 0);
-        
+        List<Request> listTaskRequest = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Created", 0);
+        List<Request> listTaskRequest1 = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Updated", 0);
+        List<Request> listTaskRequest2 = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Done", 0);
 	    int count = 0;
-	    count = listCreatedRequest.size() + listUpdateRequest.size() + listTaskRequest.size();
+	    count = listCreatedRequest.size() + listUpdateRequest.size() + listTaskRequest.size() + listTaskRequest1.size() + listTaskRequest2.size();
     	
 		JSONObject json = new JSONObject();
 		json.put("countRequest", count);
     		
     	return json.toString();
+    }
+    
+    @RequestMapping(value="confirm.task", method = RequestMethod.GET)
+    public @ResponseBody String confirmTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	Request request = requestService.getRequestById(requestId);
+    	request.setStatus("Confirm");
+    	request.setManagerRead(0);
+    	if (request.getCreatedbyCd().equals(userLogin.getCd()) && !request.getCreatedbyCd().equals(request.getAssignedCd())) {
+    		request.setAssignerRead(0);
+    	}
+    	if (request.getAssignedCd().equals(userLogin.getCd()) && !request.getCreatedbyCd().equals(request.getAssignedCd())) {
+    		request.setCreatorRead(0);
+    	}
+    	
+    	requestService.updateRequest(request);
+    	JSONObject json = new JSONObject();
+		json.put("result", "Success");
+		return json.toString();	
+    }
+    
+    @RequestMapping(value="completedtask")
+    public String completedTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	Request request = requestService.getRequestById(requestId);
+    	request.setStatus("Done");
+    	request.setManagerRead(1);
+    	request.setAssignerRead(0);
+    	request.setCreatorRead(0);
+    	requestService.updateRequest(request);
+    	JSONObject json = new JSONObject();
+		json.put("result", "Success");
+		return "redirect:detailRequest?id=" + requestId;
     }
 }

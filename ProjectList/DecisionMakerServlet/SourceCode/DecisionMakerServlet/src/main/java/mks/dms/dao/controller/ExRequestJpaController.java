@@ -41,7 +41,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByCreatorCdAndStatusAndManagerRead(
+	public List<Request> getListRequestByCreatorCdAndStatusAndCreatorRead(
 			String createdbyCd, String status, int creatorRead) {
 		EntityManager em = getEntityManager();
 		try {
@@ -275,6 +275,54 @@ public class ExRequestJpaController extends RequestJpaController {
 			Query query = em
 					.createQuery("Select r FROM Request r WHERE r.assignedCd = :assignedCd");
 			query.setParameter("assignedCd", assignedCd);
+			List<Request> listRequest = (List<Request>) query.getResultList();
+
+			return listRequest;
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
+	 * Get Request by assignedCd, requestTypeCd
+	 * 
+	 * @param assignedCd
+	 * @return List<Request>
+	 * @see http
+	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
+	 *      /Querying/JPQL
+	 */
+	public List<Request> getListRequestByAssignedCdAndRequestTypeCd(String assignedCd, String requestTypeCd) {
+		EntityManager em = getEntityManager();
+		try {
+			Query query = em
+					.createQuery("Select r FROM Request r WHERE r.assignedCd = :assignedCd AND r.requesttypeCd = :requesttypeCd");
+			query.setParameter("assignedCd", assignedCd);
+			query.setParameter("requesttypeCd", requestTypeCd);
+			List<Request> listRequest = (List<Request>) query.getResultList();
+
+			return listRequest;
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
+	 * Get Request by managerCd, requestTypeCd.
+	 * 
+	 * @param assignedCd
+	 * @return List<Request>
+	 * @see http
+	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
+	 *      /Querying/JPQL
+	 */
+	public List<Request> getListRequestByManagerCdAndRequestTypeCd(String managerCd, String requestTypeCd) {
+		EntityManager em = getEntityManager();
+		try {
+			Query query = em
+					.createQuery("Select r FROM Request r WHERE r.managerCd = :managerCd AND r.requesttypeCd = :requesttypeCd");
+			query.setParameter("managerCd", managerCd);
+			query.setParameter("requesttypeCd", requestTypeCd);
 			List<Request> listRequest = (List<Request>) query.getResultList();
 
 			return listRequest;

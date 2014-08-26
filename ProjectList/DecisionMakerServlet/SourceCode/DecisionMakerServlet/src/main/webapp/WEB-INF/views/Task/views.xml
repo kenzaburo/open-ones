@@ -6,8 +6,8 @@
 		<put-attribute name="body" value="/WEB-INF/views/Request/createRequest.jsp" />
 	</definition>
   
-    <definition name="listTask" extends="default">
-        <put-attribute name="body" value="/WEB-INF/views/Task/listTask.jsp" />
+    <definition name="mylisttask" extends="default">
+        <put-attribute name="body" value="/WEB-INF/views/Task/myListTask.jsp" />
     </definition>
 
     <definition name="searchTask" extends="default">
