@@ -114,7 +114,7 @@
 		            
 					<form:textarea path="request.content" id="request.content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="taskContent" rows="15" placeholder="Mô tả chi tiết công việc"></form:textarea>
 				</div>
-		
+				<form:hidden path="request.createdbyId.id"/>
 				<div>
 					
 				 	<label for="request.assignedId.id" class="col_2">Người thực hiện</label>
@@ -185,12 +185,21 @@
 		                </c:forEach>
 		            </form:select>
 				</div>
-				<div>
+				<div style="position:relative; top:10px;">
+					<label for="title" class="col_2">Góp ý: </label>
+					<textarea disabled="disabled" style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" rows="15">${model.request.comment}</textarea>
+				</div>
+				<form:hidden path="request.comment"/>
+				<div style="position:relative; top:20px;">
+					<label for="title" class="col_2">Thêm góp ý: </label>
+					<textarea style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" name="commentTask" rows="15"></textarea>
+				</div>
+				<div style="position:relative; top:30px;">
 				  <label for="attachment1" class="col_2">Đính kèm</label>
 				  <form:input path="request.attachment1" id="attachment1" type="file" class="col_8"/>
 				</div>
 		
-		      <div>
+		      <div style="position:relative; top:40px;">
 		        <input type="submit" value="Save" class="button"/>
 		         <input type="reset" value="Reset" class="button" />
 		      </div>

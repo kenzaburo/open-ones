@@ -9,8 +9,40 @@
 <!-- <script type="text/javascript" src="resources/js/createRequest.js"></script> -->
 <script type="text/javascript" src="resources/js/validateFunction.js"></script>
 <script>
+
 $(function(){
+	$("#confirmTask").click(function(){
+		$.ajax({
+		    url: "confirm.task",
+		    data: {'requestId': $("#requestId").val()},
+		    dataType: 'json',
+		    type: 'GET',
+		    success: function (res) {
+		    	alert("Send Request Confirm.");
+		    },
+		    fail: function() {
+		    	alert("FAIL");
+		    }
+	    });
+	});
+	
+	$("#confirmComplete").click(function(){
+		$.ajax({
+		    url: "completedtask",
+		    data: {'requestId': $("#requestId").val()},
+		    dataType: 'json',
+		    type: 'GET',
+		    success: function (res) {
+		    	alert("Confirm Success");
+		    },
+		    fail: function() {
+		    	alert("FAIL");
+		    }
+	    });
+	});
+	
 	var status = 0;
+	var statusTask = 0;
 	$("#reason").hide();
 	function showHideForm() {
 		if (status == 0) {
@@ -29,6 +61,32 @@ $(function(){
  
 	$("#reason").submit(function( event ) {
   		$( "#reason" ).hide("fast");
+	});
+	
+	
+	$("#comment").hide();
+	function showHideForm1() {
+		alert("Click");
+		if (statusTask == 0) {
+			alert(statusTask);
+			$("#comment").show("slow");
+			alert(statusTask);
+			$("#approve").hide("slow");
+			alert(statusTask);
+			statusTask = 1;
+		}
+		else { 
+			$("#comment").hide("slow");
+			$("#approve").show("slow");
+			statusTask = 0;
+		}
+	}
+	
+	$("#confirmIncomplete").click(showHideForm1);
+	$("#commentTask").click(showHideForm1);
+ 
+	$("#comment").submit(function( event ) {
+  		$( "#comment" ).hide("fast");
 	});
 });
 </script>
@@ -77,8 +135,9 @@ $(function(){
 			</div>
 		</c:if>
 	</div>
+	
 <!-- 	Kiem tra tai khoan dang nhap co phai tai khoan tao yeu cau khong -->
-	<c:if test="${not empty isCreater}">
+	<c:if test="${not empty isCreator}">
 		<div>
 			<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
 		</div>
@@ -119,6 +178,10 @@ $(function(){
 				<label for="title" class="col_1">Trạng thái: </label>
 				<button class="small green">Doing</button>
 			</c:if>
+			<c:if test="${request.status == 'Confirm'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small green">Confirm</button>
+			</c:if>
 			<c:if test="${request.status == 'Done'}">
 				<label for="title" class="col_1">Trạng thái: </label>
 				<button class="small green">Done</button>
@@ -153,29 +216,41 @@ $(function(){
 			<label for="title" class="col_2">Chi tiết công việc: </label>
 			<textarea disabled="disabled" style="display:inline; position: relative; top:5px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.content}</textarea>
 		</div>
-		<c:if test="${(not empty request.comment)}">
+		<input type="hidden" value="${request.id}" id="requestId"/>
+		<c:if test="${not empty request.comment}">
 			<div>
 				<label for="title" class="col_2">Comment: </label>
 				<textarea disabled="disabled" style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.comment}</textarea>
 			</div>
 		</c:if>
-		<c:if test="${not empty isCreater}">
-			<div>
+		<c:if test="${not empty isCreator}">
+			<div style="position:relative; top:20px;">
 				<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
+				<c:if test="${request.status == 'Doing'}">
+					<a class="button" id="confirmTask">Xác nhận hoàn thành</a>
+				</c:if>
 			</div>
 		</c:if>
-		<c:if test="${not empty isManager}">
-		<div>
-			<a class="button" href="completedtask?requestId=${request.id}" id="approve">Xác nhận hoàn thành</a>
-			<a class="button" id="reject">Từ chối</a>
-			<form action="rejectRequest" id="reason">
-				<input type="hidden" name="requestId" value="${request.id}">
-				<label for="content" class="col_2">Lý do: </label>
-				<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="rejectContent" rows="5" placeholder="Lý do từ chối"></textarea>
-				<br>
-				<input type="submit" value="Xác nhận">
-			</form>
-		</div>
-	</c:if>
+<%-- 		<c:if test="${not empty isManager}"> --%>
+			<div style="position:relative; top:20px;">
+				<c:choose>
+					<c:when test="${request.status == 'Confirm'}">
+		            	<a class="button" id="confirmComplete">Xác nhận hoàn thành</a>
+						<a class="button" id="confirmIncomplete">Xác nhận chưa hoàn thành</a>
+		            </c:when>
+		            <c:otherwise>
+		                <a class="button" id="commentTask">Góp ý</a>
+						<form action="addComment" id="comment">
+							<input type="hidden" name="requestId" value="${request.id}">
+							<label for="content" class="col_2">Nội dung: </label>
+							<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="commentContent" rows="5" placeholder="Nội dung góp ý"></textarea>
+							<br>
+							<input type="submit" value="Xác nhận">
+						</form>   
+		            </c:otherwise>
+		        </c:choose>
+				
+			</div>
+<%-- 		</c:if> --%>
 	</div>
 </c:if>

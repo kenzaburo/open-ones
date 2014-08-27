@@ -169,11 +169,11 @@ public class RequestController {
     * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
     */
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
-    public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result, Principal principal, HttpServletRequest httpRequest) {
+    public String saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result, Principal principal, HttpServletRequest httpRequest) {
         // Model to re-display the saved request
     	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
     	Date today = new Date();
-        ModelAndView mav = new ModelAndView("createRequest");
+//        ModelAndView mav = new ModelAndView("createRequest");
         User userLogin = userService.getUserByUsername(principal.getName());
         // Debug data of model
         Request request = model.getRequest();
@@ -234,19 +234,30 @@ public class RequestController {
         }
         if (saveOrUpdate == 2) {
         	if (request.getRequesttypeCd().equals("Leave") || request.getRequesttypeCd().equals("Task")) {
-            	String comment = httpRequest.getParameter("comment");
+            	String comment = httpRequest.getParameter("commentTask");
+            	String fullComment = "";
             	if (!comment.equals("")) {
-            		String fullComment = request.getComment() + userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + comment + " \n";
-                	request.setComment(fullComment);
+            		fullComment = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + comment + " \n";
             	}
+            	System.out.println("Comment " + request.getComment());
+            	if (request.getComment() != null) {
+            		request.setComment(request.getComment() + fullComment);
+            	}
+            	else {
+            		request.setComment(fullComment);
+            	}
+            	
             }
+        	System.out.println(userLogin.getId());
+    		System.out.println(request.getCreatedbyId().getId());
+    		System.out.println(request.getAssignedId().getId());
         	if (request.getRequesttypeCd().equals("Task")) {
         		if (request.getManagerId().getId() == userLogin.getId()) {
         			model.getRequest().setStatus("Updated");
                     model.getRequest().setAssignerRead(1);
                     model.getRequest().setCreatorRead(1);
         		}
-                if (request.getCreatedbyId().getId() == userLogin.getId() && request.getAssignedId().getId() != userLogin.getId()) {
+        		else if (request.getCreatedbyId().getId() == userLogin.getId() && request.getAssignedId().getId() != userLogin.getId()) {
                 	model.getRequest().setStatus("Updated");
                 	model.getRequest().setManagerRead(1);
                 	model.getRequest().setAssignerRead(1);
@@ -286,7 +297,7 @@ public class RequestController {
         }
 
         // Enable flag save.success
-        mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
+//        mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
         // Refresh model
         //model.setRequest(request);
         //mav.addObject("model", model);
@@ -296,7 +307,7 @@ public class RequestController {
             LOG.debug("model.getRequest().getManagerId().getUsername()=" + model.getRequest().getManagerId().getUsername());
         }
         
-        return mav;
+        return "redirect:detailRequest?id=" + request.getId();
     }
     
     /**
@@ -325,11 +336,14 @@ public class RequestController {
         RequestCreateModel requestCreateModel = new RequestCreateModel();
         
         Request request = requestService.getRequestById(id);
-        if (request.getRequesttypeCd().equals("Task") && request.getManagerCd().equals(userLogin.getCd())) {
+        if (request.getManagerCd().equals(userLogin.getCd())) {
         	mav.addObject("isManager", Boolean.TRUE);
         }
-        if (request.getRequesttypeCd().equals("Leave") && request.getManagerCd().equals(userLogin.getCd())) {
-        	mav.addObject("isManager", Boolean.TRUE);
+        if (request.getRequesttypeCd().equals("Task") && request.getCreatedbyCd().equals(userLogin.getCd())) {
+        	mav.addObject("isCreator", Boolean.TRUE);
+        }
+        if (request.getRequesttypeCd().equals("Task") && request.getAssignedCd().equals(userLogin.getCd())) {
+        	mav.addObject("isAssigner", Boolean.TRUE);
         }
         requestCreateModel.setRequest(request);;
         
@@ -414,7 +428,7 @@ public class RequestController {
     	    		requestService.updateRequest(request);
     	    		
     	    	}
-    	    	mav.addObject("isCreater", Boolean.TRUE);
+    	    	mav.addObject("isCreator", Boolean.TRUE);
         	}
     	}
     	if (request.getRequesttypeCd().equals("Task")) {
@@ -497,6 +511,46 @@ public class RequestController {
 //    	luu lý do reject
     	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
     	request.setComment(request.getComment() + fullReasonReject);
+    	
+    	
+    	request.setLastmodified(today);
+    	
+//    	Bo sung them thong tin sau
+//    	request.setLastmodifiedbyAccount(lastmodifiedbyAccount);
+//    	request.setLastmodifiedbyId(lastmodifiedbyId);
+//    	request.setLastmodifiedbyName(lastmodifiedbyName);
+    	
+    	requestService.updateRequest(request);
+    	
+    	return "redirect:detailRequest?id=" + id;
+    }
+    
+    @RequestMapping(value="addComment")
+    public String addComment(HttpServletRequest req, Principal pricipal) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+    	Date today = new Date();
+    	int id = Integer.parseInt(req.getParameter("requestId"));
+    	String commentContent = req.getParameter("commentContent");
+    	
+//    	Lay thong tin tai khoan dang nhap
+//    	Kiem tra tai khoan dang nhap phai tai khoan duoc yeu cau khong
+//    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
+    	
+//    	Neu phai
+    	Request request = requestService.getRequestById(id);
+    	request.setStatus("Doing");
+    	request.setCreatorRead(0);
+    	request.setAssignerRead(0);
+    	
+    	User userLogin = userService.getUserByUsername(pricipal.getName());
+//    	luu lý do reject
+    	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + commentContent + " \n";
+    	if (request.getComment() != null) {
+    		request.setComment(request.getComment() + fullReasonReject);
+    	}
+    	else {
+    		request.setComment(fullReasonReject);
+    	}
     	
     	
     	request.setLastmodified(today);
@@ -831,9 +885,18 @@ public class RequestController {
     	
         List<Request> listApproveRequest = requestService.getListRequestByCreatorCdAndStatusAndCreatorRead(userLogin.getCd(), "Approved", 0);
         List<Request> listRejectedRequest = requestService.getListRequestByCreatorCdAndStatusAndCreatorRead(userLogin.getCd(), "Rejected", 0);
+        List<Request> listDoingTask = requestService.getListRequestByCreatorCdAndStatusAndCreatorRead(userLogin.getCd(), "Doing", 0);
+        List<Request> listDoingTask1 = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Doing", 0);
+        List<Request> listDoneTask = requestService.getListRequestByCreatorCdAndStatusAndCreatorRead(userLogin.getCd(), "Done", 0);
+        List<Request> listDoneTask1 = requestService.getListRequestByCreatorCdAndStatusAndCreatorRead(userLogin.getCd(), "Done", 0);
+        
+        listDoingTask.removeAll(listDoingTask1);
+        listDoingTask.addAll(listDoingTask1);
+        listDoneTask.removeAll(listDoneTask1);
+        listDoneTask.addAll(listDoneTask1);
         
 	    int count = 0;
-	    count = listApproveRequest.size() + listRejectedRequest.size();
+	    count = listApproveRequest.size() + listRejectedRequest.size() + listDoneTask.size() + listDoingTask.size();
     	
 		JSONObject json = new JSONObject();
 		json.put("countResponseRequest", count);
@@ -847,11 +910,18 @@ public class RequestController {
     	
         List<Request> listCreatedRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 0);
         List<Request> listUpdateRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Updated", 0);
+        List<Request> listDoingRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Doing", 0);
         List<Request> listTaskRequest = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Created", 0);
         List<Request> listTaskRequest1 = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Updated", 0);
         List<Request> listTaskRequest2 = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Done", 0);
-	    int count = 0;
-	    count = listCreatedRequest.size() + listUpdateRequest.size() + listTaskRequest.size() + listTaskRequest1.size() + listTaskRequest2.size();
+        
+        listCreatedRequest.removeAll(listTaskRequest);
+        listCreatedRequest.addAll(listTaskRequest);
+        listUpdateRequest.removeAll(listTaskRequest1);
+        listUpdateRequest.addAll(listTaskRequest1);
+        
+        int count = 0;
+	    count = listCreatedRequest.size() + listUpdateRequest.size() + listTaskRequest2.size() + listDoingRequest.size();
     	
 		JSONObject json = new JSONObject();
 		json.put("countRequest", count);
@@ -871,7 +941,6 @@ public class RequestController {
     	if (request.getAssignedCd().equals(userLogin.getCd()) && !request.getCreatedbyCd().equals(request.getAssignedCd())) {
     		request.setCreatorRead(0);
     	}
-    	
     	requestService.updateRequest(request);
     	JSONObject json = new JSONObject();
 		json.put("result", "Success");
@@ -879,7 +948,7 @@ public class RequestController {
     }
     
     @RequestMapping(value="completedtask")
-    public String completedTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public @ResponseBody String completedTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	User userLogin = userService.getUserByUsername(principal.getName());
     	Request request = requestService.getRequestById(requestId);
     	request.setStatus("Done");
@@ -889,6 +958,6 @@ public class RequestController {
     	requestService.updateRequest(request);
     	JSONObject json = new JSONObject();
 		json.put("result", "Success");
-		return "redirect:detailRequest?id=" + requestId;
+		return json.toString();	
     }
 }
