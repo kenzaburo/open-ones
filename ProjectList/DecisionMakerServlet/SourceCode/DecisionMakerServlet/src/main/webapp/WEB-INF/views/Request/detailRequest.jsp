@@ -66,13 +66,9 @@ $(function(){
 	
 	$("#comment").hide();
 	function showHideForm1() {
-		alert("Click");
 		if (statusTask == 0) {
-			alert(statusTask);
 			$("#comment").show("slow");
-			alert(statusTask);
 			$("#approve").hide("slow");
-			alert(statusTask);
 			statusTask = 1;
 		}
 		else { 
@@ -231,7 +227,7 @@ $(function(){
 				</c:if>
 			</div>
 		</c:if>
-<%-- 		<c:if test="${not empty isManager}"> --%>
+		<c:if test="${not empty isManager}">
 			<div style="position:relative; top:20px;">
 				<c:choose>
 					<c:when test="${request.status == 'Confirm'}">
@@ -240,17 +236,16 @@ $(function(){
 		            </c:when>
 		            <c:otherwise>
 		                <a class="button" id="commentTask">Góp ý</a>
-						<form action="addComment" id="comment">
-							<input type="hidden" name="requestId" value="${request.id}">
-							<label for="content" class="col_2">Nội dung: </label>
-							<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="commentContent" rows="5" placeholder="Nội dung góp ý"></textarea>
-							<br>
-							<input type="submit" value="Xác nhận">
-						</form>   
 		            </c:otherwise>
 		        </c:choose>
-				
+				<form action="addComment" id="comment">
+					<input type="hidden" name="requestId" value="${request.id}">
+					<label for="content" class="col_2">Nội dung: </label>
+					<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="commentContent" rows="5" placeholder="Nội dung góp ý"></textarea>
+					<br>
+					<input type="submit" value="Xác nhận">
+				</form> 
 			</div>
-<%-- 		</c:if> --%>
+		</c:if>
 	</div>
 </c:if>
