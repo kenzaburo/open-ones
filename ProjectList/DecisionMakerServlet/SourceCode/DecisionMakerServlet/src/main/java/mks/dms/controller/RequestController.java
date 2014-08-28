@@ -239,7 +239,6 @@ public class RequestController {
             	if (!comment.equals("")) {
             		fullComment = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + comment + " \n";
             	}
-            	System.out.println("Comment " + request.getComment());
             	if (request.getComment() != null) {
             		request.setComment(request.getComment() + fullComment);
             	}
@@ -248,9 +247,7 @@ public class RequestController {
             	}
             	
             }
-        	System.out.println(userLogin.getId());
-    		System.out.println(request.getCreatedbyId().getId());
-    		System.out.println(request.getAssignedId().getId());
+        	
         	if (request.getRequesttypeCd().equals("Task")) {
         		if (request.getManagerId().getId() == userLogin.getId()) {
         			model.getRequest().setStatus("Updated");
@@ -263,7 +260,7 @@ public class RequestController {
                 	model.getRequest().setAssignerRead(1);
                 }
                 else if (request.getAssignedId().getId() == userLogin.getId() && request.getCreatedbyId().getId() != userLogin.getId()) {
-                	model.getRequest().setStatus("Updated");
+                	model.getRequest().setStatus("Updated1");
                 	model.getRequest().setManagerRead(1);
                 	model.getRequest().setCreatorRead(1);
                 }
@@ -432,7 +429,7 @@ public class RequestController {
         	}
     	}
     	if (request.getRequesttypeCd().equals("Task")) {
-    		if(request.getAssignedCd().equals(request.getCreatedbyCd())) {
+    		if (request.getAssignedCd().equals(request.getCreatedbyCd())) {
     			if (request.getManagerCd().equals(userLogin.getCd())) {
             		if (request.getManagerRead() == 0) {
                 		request.setManagerRead(1);
@@ -447,15 +444,33 @@ public class RequestController {
         	    		request.setAssignerRead(1);
         	    		requestService.updateRequest(request);
         	    	}
-        	    	mav.addObject("isCreator", Boolean.TRUE);
+        	    	mav.addObject("isCreatorAssigner", Boolean.TRUE);
             	}
             	
             	
     		}
     		else {
-    			if (request.getAssignedCd().equals(userLogin.getCd()) && request.getStatus().equals("Created")) {
-    				
+    			if (request.getAssignedCd().equals(userLogin.getCd())) {
+    				if (request.getAssignerRead() == 0) {
+    					request.setAssignerRead(1);
+        				requestService.updateRequest(request);
+    				}
+    				mav.addObject("isAssigner", Boolean.TRUE);
     			}
+    			if (request.getManagerCd().equals(userLogin.getCd())) {
+            		if (request.getManagerRead() == 0) {
+                		request.setManagerRead(1);
+                		requestService.updateRequest(request);
+                	}
+            		mav.addObject("isManager", Boolean.TRUE);
+            	}
+    			if (request.getCreatedbyCd().equals(userLogin.getCd())) {
+        	    	if (request.getCreatorRead() == 0) {
+        	    		request.setCreatorRead(1);
+        	    		requestService.updateRequest(request);
+        	    	}
+        	    	mav.addObject("isCreator", Boolean.TRUE);
+            	}
     		}
     	}
     	
@@ -474,7 +489,14 @@ public class RequestController {
     	
 //    	Neu phai
     	Request request = requestService.getRequestById(id);
-    	request.setStatus("Approved");
+    	if (request.getRequesttypeCd().equals("Leave")) {
+    		request.setStatus("Approved");
+    	}
+    	if (request.getRequesttypeCd().equals("Task") && (request.getStatus().equals("Created") || request.getStatus().equals("Updated"))) {
+    		request.setStatus("Doing");
+    		request.setManagerRead(0);
+    	}
+    	
     	request.setLastmodified(today);
     	request.setCreatorRead(0);
     	
@@ -504,14 +526,36 @@ public class RequestController {
     	
 //    	Neu phai
     	Request request = requestService.getRequestById(id);
-    	request.setStatus("Rejected");
-    	request.setCreatorRead(0);
     	
-    	User userLogin = userService.getUserByUsername(pricipal.getName());
-//    	luu lý do reject
-    	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
-    	request.setComment(request.getComment() + fullReasonReject);
+    	if (request.getRequesttypeCd().equals("Leave")) {
+    		request.setStatus("Rejected");
+        	request.setCreatorRead(0);
+        	
+        	User userLogin = userService.getUserByUsername(pricipal.getName());
+//        	luu lý do reject
+        	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
+        	if (request.getComment() != null && !request.getComment().equals("")) {
+        		request.setComment(request.getComment() + fullReasonReject);
+        	}
+        	else {
+        		request.setComment(fullReasonReject);
+        	}
+    	}
     	
+    	if (request.getRequesttypeCd().equals("Task")) {
+    		request.setStatus("Rejected");
+        	request.setCreatorRead(0);
+        	request.setManagerRead(0);
+        	User userLogin = userService.getUserByUsername(pricipal.getName());
+//        	luu lý do reject
+        	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
+        	if (request.getComment() != null && !request.getComment().equals("")) {
+        		request.setComment(request.getComment() + fullReasonReject);
+        	}
+        	else {
+        		request.setComment(fullReasonReject);
+        	}
+    	}
     	
     	request.setLastmodified(today);
     	
@@ -526,7 +570,7 @@ public class RequestController {
     }
     
     @RequestMapping(value="addComment")
-    public String addComment(HttpServletRequest req, Principal pricipal) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public String addComment(HttpServletRequest req, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
     	Date today = new Date();
     	int id = Integer.parseInt(req.getParameter("requestId"));
@@ -537,13 +581,32 @@ public class RequestController {
 //    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
     	
 //    	Neu phai
-    	Request request = requestService.getRequestById(id);
-    	request.setStatus("Doing");
-    	request.setCreatorRead(0);
-    	request.setAssignerRead(0);
     	
-    	User userLogin = userService.getUserByUsername(pricipal.getName());
-//    	luu lý do reject
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	
+    	Request request = requestService.getRequestById(id);
+    	if (userLogin.getCd().equals(request.getManagerCd())) {
+    		if (request.getStatus().equals("Rejected")) {
+        		request.setCreatorRead(0);
+            	request.setAssignerRead(0);
+        	}
+        	else {
+        		request.setStatus("Doing");
+            	request.setCreatorRead(0);
+            	request.setAssignerRead(0);
+        	}
+    	}
+    	
+    	if (userLogin.getCd().equals(request.getCreatedbyCd())) {
+    		request.setAssignerRead(0);
+    		request.setManagerRead(0);
+    	}
+    	
+    	if (userLogin.getCd().equals(request.getAssignedCd())) {
+    		request.setAssignerRead(0);
+    		request.setManagerRead(0);
+    	}
+    		
     	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + commentContent + " \n";
     	if (request.getComment() != null) {
     		request.setComment(request.getComment() + fullReasonReject);
@@ -551,8 +614,6 @@ public class RequestController {
     	else {
     		request.setComment(fullReasonReject);
     	}
-    	
-    	
     	request.setLastmodified(today);
     	
 //    	Bo sung them thong tin sau
@@ -909,6 +970,7 @@ public class RequestController {
     	User userLogin = userService.getUserByUsername(principal.getName());
     	
         List<Request> listCreatedRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Created", 0);
+        List<Request> listConfirmRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Confirm", 0);
         List<Request> listUpdateRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Updated", 0);
         List<Request> listDoingRequest = requestService.getListRequestByManagerCdAndStatusAndReadstatus(userLogin.getCd(), "Doing", 0);
         List<Request> listTaskRequest = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Created", 0);
@@ -919,9 +981,8 @@ public class RequestController {
         listCreatedRequest.addAll(listTaskRequest);
         listUpdateRequest.removeAll(listTaskRequest1);
         listUpdateRequest.addAll(listTaskRequest1);
-        
         int count = 0;
-	    count = listCreatedRequest.size() + listUpdateRequest.size() + listTaskRequest2.size() + listDoingRequest.size();
+	    count = listCreatedRequest.size() + listUpdateRequest.size() + listTaskRequest2.size() + listDoingRequest.size() + listConfirmRequest.size();
     	
 		JSONObject json = new JSONObject();
 		json.put("countRequest", count);
@@ -930,34 +991,27 @@ public class RequestController {
     }
     
     @RequestMapping(value="confirm.task", method = RequestMethod.GET)
-    public @ResponseBody String confirmTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public String confirmTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	User userLogin = userService.getUserByUsername(principal.getName());
     	Request request = requestService.getRequestById(requestId);
     	request.setStatus("Confirm");
     	request.setManagerRead(0);
-    	if (request.getCreatedbyCd().equals(userLogin.getCd()) && !request.getCreatedbyCd().equals(request.getAssignedCd())) {
-    		request.setAssignerRead(0);
-    	}
     	if (request.getAssignedCd().equals(userLogin.getCd()) && !request.getCreatedbyCd().equals(request.getAssignedCd())) {
     		request.setCreatorRead(0);
     	}
     	requestService.updateRequest(request);
-    	JSONObject json = new JSONObject();
-		json.put("result", "Success");
-		return json.toString();	
+    	return "redirect:detailRequest?id=" + request.getId(); 
     }
     
     @RequestMapping(value="completedtask")
-    public @ResponseBody String completedTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	User userLogin = userService.getUserByUsername(principal.getName());
+    public String completedTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
+//    	User userLogin = userService.getUserByUsername(principal.getName());
     	Request request = requestService.getRequestById(requestId);
     	request.setStatus("Done");
     	request.setManagerRead(1);
     	request.setAssignerRead(0);
     	request.setCreatorRead(0);
     	requestService.updateRequest(request);
-    	JSONObject json = new JSONObject();
-		json.put("result", "Success");
-		return json.toString();	
+    	return "redirect:detailRequest?id=" + request.getId();	
     }
 }

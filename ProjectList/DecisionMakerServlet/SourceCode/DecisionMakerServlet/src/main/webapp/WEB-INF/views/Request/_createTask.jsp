@@ -105,10 +105,10 @@
                 </c:forEach>
             </form:select>
 		</div>
-		<div style="position:relative; top:10px;">
-			<label for="title" class="col_2">Góp ý: </label>
-			<form:textarea path="request.comment" style="display:inline; position: relative; top:10px; left:10px;" cols="120" rows="15"></form:textarea>
-		</div>
+<!-- 		<div style="position:relative; top:10px;"> -->
+<!-- 			<label for="title" class="col_2">Góp ý: </label> -->
+<%-- 			<form:textarea path="request.comment" style="display:inline; position: relative; top:10px; left:10px;" cols="120" rows="15"></form:textarea> --%>
+<!-- 		</div> -->
     <%-- Refer: http://crunchify.com/spring-mvc-tutorial-how-to-upload-multiple-files-to-specific-location/ --%>
 		<div>
 		  <label for="attachment1" class="col_2">Đính kèm</label>

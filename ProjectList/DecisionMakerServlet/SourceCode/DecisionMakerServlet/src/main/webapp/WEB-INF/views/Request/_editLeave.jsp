@@ -74,6 +74,7 @@
 		  <form:form id="createLeave" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
 		    <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Leave"/>
 		    <form:hidden path="request.id"/>
+		    <form:hidden path="request.createdbyId.id"/>
 		        <div>
 		          <label for="request.title" class="col_2">Tiêu đề</label>
 		          <form:input path="request.title" id="request.title" type="text" required="required" class="col_8"/>
@@ -83,7 +84,6 @@
 		            <form:textarea path="request.content" id="request.content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="leaveContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></form:textarea>
 		        </div>
 		        <div>
-		          <input name="leaveCreate" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
 		        </div>	
 		        <div>
 				 	<label for="scopes" class="col_2">Quản lý</label>

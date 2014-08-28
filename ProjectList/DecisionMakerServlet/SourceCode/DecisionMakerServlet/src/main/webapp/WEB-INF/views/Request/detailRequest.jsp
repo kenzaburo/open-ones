@@ -11,35 +11,6 @@
 <script>
 
 $(function(){
-	$("#confirmTask").click(function(){
-		$.ajax({
-		    url: "confirm.task",
-		    data: {'requestId': $("#requestId").val()},
-		    dataType: 'json',
-		    type: 'GET',
-		    success: function (res) {
-		    	alert("Send Request Confirm.");
-		    },
-		    fail: function() {
-		    	alert("FAIL");
-		    }
-	    });
-	});
-	
-	$("#confirmComplete").click(function(){
-		$.ajax({
-		    url: "completedtask",
-		    data: {'requestId': $("#requestId").val()},
-		    dataType: 'json',
-		    type: 'GET',
-		    success: function (res) {
-		    	alert("Confirm Success");
-		    },
-		    fail: function() {
-		    	alert("FAIL");
-		    }
-	    });
-	});
 	
 	var status = 0;
 	var statusTask = 0;
@@ -219,11 +190,22 @@ $(function(){
 				<textarea disabled="disabled" style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.comment}</textarea>
 			</div>
 		</c:if>
-		<c:if test="${not empty isCreator}">
+		
+		<c:if test="${not empty isAssigner}">
+			<div style="position:relative; top:20px;">
+				<c:if test="${request.status == 'Created'}">
+					<a class="button" href="approveRequest?id=${request.id}">Nhận yêu cầu</a>
+				</c:if>
+				<c:if test="${request.status == 'Doing'}">
+					<a class="button" id="confirmTask">Yêu cầu xác nhận hoàn thành</a>
+				</c:if>
+			</div>
+		</c:if>
+		<c:if test="${not empty isCreatorAssigner}">
 			<div style="position:relative; top:20px;">
 				<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
 				<c:if test="${request.status == 'Doing'}">
-					<a class="button" id="confirmTask">Xác nhận hoàn thành</a>
+					<a class="button" id="confirmTask" href="confirm.task?requestId=${request.id}">Xác nhận hoàn thành</a>
 				</c:if>
 			</div>
 		</c:if>
@@ -231,7 +213,7 @@ $(function(){
 			<div style="position:relative; top:20px;">
 				<c:choose>
 					<c:when test="${request.status == 'Confirm'}">
-		            	<a class="button" id="confirmComplete">Xác nhận hoàn thành</a>
+		            	<a class="button" id="confirmComplete" href="completedtask?requestId=${request.id}">Xác nhận hoàn thành</a>
 						<a class="button" id="confirmIncomplete">Xác nhận chưa hoàn thành</a>
 		            </c:when>
 		            <c:otherwise>
