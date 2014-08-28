@@ -115,6 +115,7 @@
 					<form:textarea path="request.content" id="request.content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="taskContent" rows="15" placeholder="Mô tả chi tiết công việc"></form:textarea>
 				</div>
 				<form:hidden path="request.createdbyId.id"/>
+				<form:hidden path="request.creatorRead"/>
 				<div>
 					
 				 	<label for="request.assignedId.id" class="col_2">Người thực hiện</label>

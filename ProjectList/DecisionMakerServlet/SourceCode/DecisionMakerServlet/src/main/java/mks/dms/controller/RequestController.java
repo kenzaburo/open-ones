@@ -169,11 +169,11 @@ public class RequestController {
     * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
     */
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
-    public String saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result, Principal principal, HttpServletRequest httpRequest) {
+    public ModelAndView saveRequest(@ModelAttribute("model") RequestCreateModel model, BindingResult result, Principal principal, HttpServletRequest httpRequest) {
         // Model to re-display the saved request
     	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
     	Date today = new Date();
-//        ModelAndView mav = new ModelAndView("createRequest");
+    	ModelAndView mav = new ModelAndView("editRequest");
         User userLogin = userService.getUserByUsername(principal.getName());
         // Debug data of model
         Request request = model.getRequest();
@@ -293,18 +293,20 @@ public class RequestController {
             sendEmailLeave(request);
         }
 
-        // Enable flag save.success
-//        mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
+        
+		// Enable flag save.success
+        mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
         // Refresh model
-        //model.setRequest(request);
-        //mav.addObject("model", model);
+        model.setRequest(request);
+        mav.addObject("model", model);
         
         LOG.debug("model.getRequest().getManagerCd()=" + model.getRequest().getManagerCd());
         if (model.getRequest().getManagerId() != null) {
             LOG.debug("model.getRequest().getManagerId().getUsername()=" + model.getRequest().getManagerId().getUsername());
         }
         
-        return "redirect:detailRequest?id=" + request.getId();
+//        return "redirect:detailRequest?id=" + request.getId();
+        return mav;
     }
     
     /**
@@ -690,7 +692,7 @@ public class RequestController {
     		json.put("assignId", 1);
     		json.put("startDate", dateFormat.format(request.getStartdate()));
     		json.put("endDate", dateFormat.format(request.getEnddate()));
-    		json.put("reason", request.getContent());
+    		json.put("content", request.getContent());
     		if (requestService.checkIsRead(request, userLogin) == 1) {
     			json.put("readStatus", 1);
     		}
@@ -724,7 +726,7 @@ public class RequestController {
     		json.put("assignId", request.getManagerId());
     		json.put("startDate", dateFormat.format(request.getStartdate()));
     		json.put("endDate", dateFormat.format(request.getEnddate()));
-    		json.put("reason", request.getContent());
+    		json.put("content", request.getContent());
     		if (requestService.checkIsRead(request, userLogin) == 1) {
     			json.put("readStatus", 1);
     		}
@@ -759,7 +761,7 @@ public class RequestController {
     		if (request.getEnddate() != null) {
     			json.put("endDate", dateFormat.format(request.getEnddate()));
     		}
-    		json.put("reason", request.getContent());
+    		json.put("content", request.getContent());
     		if (requestService.checkIsRead(request, userLogin) == 1) {
     			json.put("readStatus", 1);
     		}
@@ -794,7 +796,7 @@ public class RequestController {
     		if (request.getEnddate() != null) {
     			json.put("endDate", dateFormat.format(request.getEnddate()));
     		}
-    		json.put("reason", request.getContent());
+    		json.put("content", request.getContent());
     		if (requestService.checkIsRead(request, userLogin) == 1) {
     			json.put("readStatus", 1);
     		}
@@ -856,7 +858,7 @@ public class RequestController {
         		if (request.getEnddate() != null) {
         		    json.put("endDate", dateFormat.format(request.getEnddate()));
         		}
-        		json.put("reason", request.getContent());
+        		json.put("content", request.getContent());
         		if (requestService.checkIsRead(request, userLogin) == 1) {
         			json.put("readStatus", 1);
         		}
@@ -879,7 +881,7 @@ public class RequestController {
             		json.put("assignId", request.getManagerId());
             		json.put("startDate", dateFormat.format(request.getStartdate()));
             		json.put("endDate", dateFormat.format(request.getEnddate()));
-            		json.put("reason", request.getContent());
+            		json.put("content", request.getContent());
             		if (requestService.checkIsRead(request, userLogin) == 1) {
             			json.put("readStatus", 1);
             		}
@@ -905,7 +907,7 @@ public class RequestController {
             		json.put("assignId", request.getManagerId());
             		json.put("startDate", dateFormat.format(request.getStartdate()));
             		json.put("endDate", dateFormat.format(request.getEnddate()));
-            		json.put("reason", request.getContent());
+            		json.put("content", request.getContent());
             		if (requestService.checkIsRead(request, userLogin) == 1) {
             			json.put("readStatus", 1);
             		}
@@ -929,7 +931,7 @@ public class RequestController {
             		json.put("assignId", 1);
             		json.put("startDate", dateFormat.format(request.getStartdate()));
             		json.put("endDate", dateFormat.format(request.getEnddate()));;
-            		json.put("reason", request.getContent());
+            		json.put("content", request.getContent());
 //            		json.put("readStatus", request.getReadstatus());
             		json.put("status", request.getStatus());
             		listJson.add(json);
@@ -1013,5 +1015,13 @@ public class RequestController {
     	request.setCreatorRead(0);
     	requestService.updateRequest(request);
     	return "redirect:detailRequest?id=" + request.getId();	
+    }
+    
+    @RequestMapping(value="detailContent")
+    public ModelAndView detailContent(@RequestParam("id") int requestId) {
+    	Request request = requestService.getRequestById(requestId);
+    	ModelAndView mav = new ModelAndView("detailContent");
+    	mav.addObject("request", request);
+    	return mav;
     }
 }

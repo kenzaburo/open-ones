@@ -90,7 +90,7 @@
 	        			obj.endDay = res[i].endDate;
 	        			obj.managerId = res[i].managerId;
 	        			obj.assignId = res[i].assignId;
-	        			obj.reason = res[i].reason;
+	        			obj.content = res[i].content.substr(0, 40) + "<a href='javascript: void(0)' onclick=" + '"' + "window.open('detailContent?id=" + res[i].requestId + "', 'windowname1', 'width=400, height=200'); return false;" + '"' + "> ... </a>";
 	        			obj.status = res[i].status;
 	        			jsonArr.push(obj);
 	            	}
@@ -105,7 +105,7 @@
                 	     	{data: "requestId", renderer: "html"},
                 	     	{data: "managerName", renderer: "html"},
                 	     	{data: "time", renderer: "html"},
-                	     	{data: "reason", renderer: "html"},
+                	     	{data: "content", renderer: "html"},
                 	     	{data: "status", renderer: "html"},
                 	    ],
                 	    cells: function(r,c, prop) {
@@ -125,7 +125,7 @@
 		
 	});
 </script>
-<h1>Tìm kiếm</h1>
+<h3>Tìm kiếm</h3>
 <div>
 	<label class="col_2">Loại yêu cầu :</label>
 	<select id="reqType" class="col_2 column" name="reqType">

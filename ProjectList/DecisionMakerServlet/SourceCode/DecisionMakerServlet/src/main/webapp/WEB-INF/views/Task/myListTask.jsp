@@ -21,7 +21,7 @@
             			obj.requestId = "<strong><a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a></strong>" ;
             			obj.managerName = "<strong>" + res[i].managerName + "</strong>";
             			obj.time = "<strong><span style='color:blue'>" + res[i].startDate + "</span> - <span style='color:red'>" + res[i].endDate + "</span></strong>";
-            			obj.content = "<strong>" + res[i].content + "</strong>";
+            			obj.content = "<strong>" + res[i].content.substr(0, 40) + "<a href='javascript: void(0)' onclick=" + '"' + "window.open('detailContent?id=" + res[i].requestId + "', 'windowname1', 'width=400, height=200'); return false;" + '"' + "> ... </a>" + "</strong>";
             			obj.status = "<strong>" + res[i].status + "</strong>";
             		}
             		else {
@@ -30,7 +30,7 @@
             			obj.requestId = "<a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
             			obj.managerName = res[i].managerName;
             			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
-            			obj.content = res[i].content;
+            			obj.content = res[i].content.substr(0, 40) + "<a href='javascript: void(0)' onclick=" + '"' + "window.open('detailContent?id=" + res[i].requestId + "', 'windowname1', 'width=400, height=200'); return false;" + '"' + "> ... </a>";
             			obj.status = res[i].status;
             		}
             		var jsonIn = JSON.stringify(obj);

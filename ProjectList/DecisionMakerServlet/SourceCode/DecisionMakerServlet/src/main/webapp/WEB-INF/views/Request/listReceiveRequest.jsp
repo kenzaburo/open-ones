@@ -21,7 +21,7 @@
             			obj.requestId = "<strong><a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a></strong>" ;
             			obj.managerName = "<strong>" + res[i].managerName + "</strong>";
             			obj.time = "<strong><span style='color:blue'>" + res[i].startDate + "</span> - <span style='color:red'>" + res[i].endDate + "</span></strong>";
-            			obj.reason = "<strong>" + res[i].reason + "</strong>";
+            			obj.content = "<strong>" + res[i].content.substr(0, 40) + "<a href='javascript: void(0)' onclick=" + '"' + "window.open('detailContent?id=" + res[i].requestId + "', 'windowname1', 'width=400, height=200'); return false;" + '"' + "> ... </a>" + "</strong>";
             			obj.status = "<strong>" + res[i].status + "</strong>";
             		}
             		else {
@@ -30,7 +30,7 @@
             			obj.requestId = "<a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
             			obj.managerName = res[i].managerName;
             			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
-            			obj.reason = res[i].reason;
+            			obj.content = res[i].content.substr(0, 40) + "<a href='javascript: void(0)' onclick=" + '"' + "window.open('detailContent?id=" + res[i].requestId + "', 'windowname1', 'width=400, height=200'); return false;" + '"' + "> ... </a>";
             			obj.status = res[i].status;
             		}
             		var jsonIn = JSON.stringify(obj);
@@ -79,7 +79,7 @@
 	           	     	      	{data: "requestId", renderer: "html"},
 	           	     	      	{data: "managerName", renderer: "html"},
 	           	     	     	{data: "time", renderer: "html"},
-	           	     	     	{data: "reason", renderer: "html"},
+	           	     	     	{data: "content", renderer: "html"},
 	           	     	     	{data: "status", renderer: "html"},
 	           	     	    ],
             	     	   cells: function(r,c, prop) {
@@ -113,7 +113,7 @@
          });
 	});
 </script>
-<h1>Yêu cầu được nhận</h1>
+<h3>Yêu cầu được nhận</h3>
 <select id="reqType" class="col_3" name="reqType">
 	<option value="0">-- Lựa chọn --</option>
 	<c:forEach var="reqType" items="${lstReqTypes}">

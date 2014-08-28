@@ -70,6 +70,10 @@ $(function(){
 				<label for="title" class="col_1">Trạng thái: </label>
 				<button class="small orange">Updated</button>
 			</c:if>
+			<c:if test="${request.status == 'Updated1'}">
+				<label for="title" class="col_1">Trạng thái: </label>
+				<button class="small orange">Updated</button>
+			</c:if>
 			<c:if test="${request.status == 'Rejected'}">
 				<label for="title" class="col_1">Trạng thái: </label>
 				<button class="small red">Rejected</button>
