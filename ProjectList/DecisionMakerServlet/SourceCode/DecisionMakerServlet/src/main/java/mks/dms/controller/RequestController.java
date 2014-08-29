@@ -338,7 +338,10 @@ public class RequestController {
         if (request.getManagerCd().equals(userLogin.getCd())) {
         	mav.addObject("isManager", Boolean.TRUE);
         }
-        if (request.getRequesttypeCd().equals("Task") && request.getCreatedbyCd().equals(userLogin.getCd())) {
+        if (request.getRequesttypeCd().equals("Task") && request.getCreatedbyCd().equals(userLogin.getCd()) && request.getCreatedbyCd().equals(request.getAssignedCd())) {
+        	mav.addObject("isCreatorAssigner", Boolean.TRUE);
+        }
+        if (request.getRequesttypeCd().equals("Task") && request.getCreatedbyCd().equals(userLogin.getCd()) && !request.getCreatedbyCd().equals(request.getAssignedCd())) {
         	mav.addObject("isCreator", Boolean.TRUE);
         }
         if (request.getRequesttypeCd().equals("Task") && request.getAssignedCd().equals(userLogin.getCd())) {
@@ -483,13 +486,11 @@ public class RequestController {
      * Process when approveRequest
      **/
     @RequestMapping(value="approveRequest")
-    public String approveRequest(@RequestParam("id") int id) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public String approveRequest(@RequestParam("id") int id, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	Date today = new Date();
-//    	Lay thong tin tai khoan dang nhap
-//    	Kiem tra tai khoan dang nhap phai tai khoan duoc yeu cau khong
-//    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
     	
-//    	Neu phai
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	
     	Request request = requestService.getRequestById(id);
     	if (request.getRequesttypeCd().equals("Leave")) {
     		request.setStatus("Approved");
@@ -502,10 +503,10 @@ public class RequestController {
     	request.setLastmodified(today);
     	request.setCreatorRead(0);
     	
-//    	Bo sung them thong tin sau
-//    	request.setLastmodifiedbyAccount(lastmodifiedbyAccount);
-//    	request.setLastmodifiedbyId(lastmodifiedbyId);
-//    	request.setLastmodifiedbyName(lastmodifiedbyName);
+    	request.setLastmodified(today);
+    	request.setLastmodifiedbyCd(userLogin.getCd());
+    	request.setLastmodifiedbyName(userLogin.getLastname() + userLogin.getFirstname());
+    	request.setLastmodifiedbyId(userLogin.getId());
     	
     	requestService.updateRequest(request);
     	
@@ -588,26 +589,30 @@ public class RequestController {
     	
     	Request request = requestService.getRequestById(id);
     	if (userLogin.getCd().equals(request.getManagerCd())) {
-    		if (request.getStatus().equals("Rejected")) {
-        		request.setCreatorRead(0);
-            	request.setAssignerRead(0);
+    		if (request.getStatus().equals("Confirm")) {
+    			request.setStatus("Doing");
         	}
-        	else {
-        		request.setStatus("Doing");
-            	request.setCreatorRead(0);
-            	request.setAssignerRead(0);
-        	}
+    		request.setCreatorRead(0);
+        	request.setAssignerRead(0);
     	}
     	
-    	if (userLogin.getCd().equals(request.getCreatedbyCd())) {
-    		request.setAssignerRead(0);
-    		request.setManagerRead(0);
+    	if (!request.getCreatedbyCd().equals(request.getAssignedCd())) {
+    		if (userLogin.getCd().equals(request.getCreatedbyCd())) {
+	    		request.setAssignerRead(0);
+	    		request.setManagerRead(0);
+	    	}
+	    	
+	    	if (userLogin.getCd().equals(request.getAssignedCd())) {
+	    		request.setAssignerRead(0);
+	    		request.setManagerRead(0);
+	    	}
     	}
-    	
-    	if (userLogin.getCd().equals(request.getAssignedCd())) {
-    		request.setAssignerRead(0);
-    		request.setManagerRead(0);
+    	else {
+    		if (userLogin.getCd().equals(request.getCreatedbyCd())) {
+    			request.setManagerRead(0);
+    		}
     	}
+	    	
     		
     	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + commentContent + " \n";
     	if (request.getComment() != null) {

@@ -205,6 +205,23 @@ $(function(){
 				</c:if>
 			</div>
 		</c:if>
+		<c:if test="${not empty isCreator}">
+			<div style="position:relative; top:20px;">
+				<c:if test="${request.status == 'Created' || request.status == 'Rejected' || request.status == 'Updated'}">
+					<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>
+				</c:if>
+				<c:if test="${request.status == 'Doing' || request.status == 'Update1' || request.status == 'Confrim' || request.status == 'Done'}">
+					<a class="button" id="commentTask">Góp ý</a>
+					<form action="addComment" id="comment">
+						<input type="hidden" name="requestId" value="${request.id}">
+						<label for="content" class="col_2">Nội dung: </label>
+						<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="commentContent" rows="5" placeholder="Nội dung góp ý"></textarea>
+						<br>
+						<input type="submit" value="Xác nhận">
+					</form> 
+				</c:if>
+			</div>
+		</c:if>
 		<c:if test="${not empty isCreatorAssigner}">
 			<div style="position:relative; top:20px;">
 				<a class="button" href="editRequest?id=${request.id}">Sửa nội dung yêu cầu</a>

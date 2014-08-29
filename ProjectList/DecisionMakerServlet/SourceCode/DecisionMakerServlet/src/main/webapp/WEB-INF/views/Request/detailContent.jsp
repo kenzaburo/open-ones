@@ -9,4 +9,4 @@
 <!-- <script type="text/javascript" src="resources/js/createRequest.js"></script> -->
 <script type="text/javascript" src="resources/js/validateFunction.js"></script>
 
-<textarea disabled="disabled" style="display:inline; position: relative; top:5px; left:-20px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.content}</textarea>
+<textarea disabled="disabled" style="display:inline; position: relative; top:5px; left:-20px;" cols="70" rows="10" id="taskContent" name="taskContent" >${request.content}</textarea>
