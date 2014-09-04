@@ -7,6 +7,7 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -717,6 +718,14 @@ public class RequestController {
         User userLogin = userService.getUserByUsername(principal.getName());
     	List<Request> listManagerRequest = requestService.getListRequestByManagerCd(userLogin.getCd());
     	List<Request> listAssignerRequest = requestService.getListRequestByAssignedCd(userLogin.getCd());
+    	for (Request request:listManagerRequest) {
+    		System.out.println("Manager");
+    		System.out.println(request.getId());
+    	}
+    	for (Request request:listAssignerRequest) {
+    		System.out.println("Assigner");
+    		System.out.println(request.getId());
+    	}
     	listAssignerRequest.removeAll(listManagerRequest);
     	listManagerRequest.addAll(listAssignerRequest);
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
@@ -842,7 +851,6 @@ public class RequestController {
     		if (requestContent.equals("") && requestTitle.equals("")) {
     			JSONObject json = new JSONObject();
         		json.put("requestType", request.getRequesttypeName());
-//        		json.put("requestType", request.getRequesttypeCd());
         		json.put("requestId", request.getId());
         		json.put("requestTitle", request.getTitle());
                 
@@ -898,9 +906,6 @@ public class RequestController {
     			}
     		}
     		else if (requestContent.equals("") && !requestTitle.equals("")) {
-    			System.out.println(request.getTitle().toLowerCase());
-    			System.out.println(requestTitle.toLowerCase());
-    			System.out.println(request.getTitle().toLowerCase().contains(requestTitle.toLowerCase()));
     			if (request.getTitle().toLowerCase().contains(requestTitle.toLowerCase())) {
     				JSONObject json = new JSONObject();
             		json.put("requestType", request.getRequesttypeName());
@@ -943,7 +948,6 @@ public class RequestController {
     			}
     		}
     	}
-    	System.out.println("Chuoi la " + listJson);
     	return listJson.toString();
     }
     
@@ -993,7 +997,6 @@ public class RequestController {
     	
 		JSONObject json = new JSONObject();
 		json.put("countRequest", count);
-		System.out.println("ABC");
     	return json.toString();
     }
     
@@ -1028,5 +1031,61 @@ public class RequestController {
     	ModelAndView mav = new ModelAndView("detailContent");
     	mav.addObject("request", request);
     	return mav;
+    }
+    
+    @RequestMapping(value="listLeaveRequest")
+    public ModelAndView showListLeaveRequestPage(Principal principal) {
+    	ModelAndView mav = new ModelAndView("listLeaveRequest");
+    	return mav;
+    }
+    
+    @RequestMapping(value="search.leave.request")
+    public @ResponseBody String searchLeaveRequest(Principal principal, @RequestParam("startDay") Date startDay, @RequestParam("endDay") Date endDay, @RequestParam("userCd") String userCd, @RequestParam("departmentCd") String departmentCd) throws JSONException {
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	if (startDay == null) {
+    		Calendar c = Calendar.getInstance();
+            c.set(Calendar.DAY_OF_MONTH, 1);
+            startDay = c.getTime();
+    	}
+    	if (endDay == null) {
+    		endDay = new Date();
+    	}
+    	List<Request> listRequest = requestService.searchRequest(userCd, startDay, endDay, userLogin.getCd(), "", "Leave");
+    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+    	for (Request request:listRequest) {
+    		JSONObject json = new JSONObject();
+        	json.put("requestType", request.getRequesttypeName());
+        	json.put("requestId", request.getId());
+        	json.put("requestTitle", request.getTitle());
+                
+        	// Thach.modified.20140825
+        	if (request.getManagerId() != null) {
+        		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+                json.put("managerId", request.getManagerId());
+            }
+        	json.put("assignId", request.getManagerId());
+        		
+        	// Thach.Modified.20140825
+        	if (request.getStartdate() != null) {
+        		json.put("startDate", dateFormat.format(request.getStartdate()));
+        	}
+        		
+        	// Thach.Modified.20140825
+        	if (request.getEnddate() != null) {
+        		json.put("endDate", dateFormat.format(request.getEnddate()));
+        	}
+        	json.put("content", request.getContent());
+        	if (requestService.checkIsRead(request, userLogin) == 1) {
+        		json.put("readStatus", 1);
+        	}
+        	else {
+        		json.put("readStatus", 0);
+        	}
+        	json.put("status", request.getStatus());
+        	listJson.add(json);
+    	}
+    	return listJson.toString();
     }
 }

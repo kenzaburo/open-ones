@@ -178,28 +178,28 @@ public class ExRequestJpaController extends RequestJpaController {
 				if (((endDate != null)) || ((!managerCd.equals("")))
 						|| ((!assignCd.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
-					scriptQuery += "r.startdate <= :startdate AND ";
+					scriptQuery += "r.startdate >= :startdate AND ";
 				} else {
-					scriptQuery += "r.startdate <= :startdate ";
+					scriptQuery += "r.startdate >= :startdate ";
 				}
 			}
 			if (endDate != null) {
 				if (((!managerCd.equals(""))) || ((!assignCd.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
-					scriptQuery += "r.enddate >= :enddate AND ";
+					scriptQuery += "r.enddate <= :enddate AND ";
 				} else {
-					scriptQuery += "r.enddate >= :enddate ";
+					scriptQuery += "r.enddate <= :enddate ";
 				}
 
 			}
-			if (!managerCd.equals("0")) {
+			if (!managerCd.equals("0") && !managerCd.equals("")) {
 				if ((!assignCd.equals("")) || ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.managerCd = :managerCd AND ";
 				} else {
 					scriptQuery += "r.managerCd = :managerCd";
 				}
 			}
-			if (!assignCd.equals("0")) {
+			if (!assignCd.equals("0") && !assignCd.equals("")) {
 				if (!requestTypeCd.equals("")) {
 					scriptQuery += "r.assignedCd = :assignCd AND ";
 				} else {
@@ -209,21 +209,20 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (!requestTypeCd.equals("")) {
 				scriptQuery += "r.requesttypeCd = :requestTypeCd";
 			}
-			 System.out.println("Query la: " + scriptQuery);
 			Query query = em.createQuery(scriptQuery);
 			if (!createdbyCd.equals("")) {
 				query.setParameter("createdbyCd", createdbyCd);
 			}
 			if (startDate != null) {
-				query.setParameter("startDate", startDate);
+				query.setParameter("startdate", startDate);
 			}
 			if (endDate != null) {
-				query.setParameter("endDate", endDate);
+				query.setParameter("enddate", endDate);
 			}
-			if (!managerCd.equals("0")) {
+			if (!managerCd.equals("0") && !managerCd.equals("")) {
 				query.setParameter("managerCd", managerCd);
 			}
-			if (!assignCd.equals("0")) {
+			if (!assignCd.equals("0") && !assignCd.equals("")) {
 				query.setParameter("assignCd", assignCd);
 			}
 			if (!requestTypeCd.equals("")) {
