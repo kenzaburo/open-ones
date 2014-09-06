@@ -163,7 +163,7 @@ public class ExRequestJpaController extends RequestJpaController {
 					|| ((!requestTypeCd.equals("")))) {
 				scriptQuery += "WHERE ";
 			}
-			if (!createdbyCd.equals("")) {
+			if (!createdbyCd.equals("") && !createdbyCd.equals("0")) {
 				if (((startDate != null)) || ((endDate != null))
 						|| ((!managerCd.equals("")))
 						|| ((!assignCd.equals("")))
@@ -228,8 +228,11 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (!requestTypeCd.equals("")) {
 				query.setParameter("requestTypeCd", requestTypeCd);
 			}
+			System.out.println(scriptQuery);
+			System.out.println(startDate);
+			System.out.println(endDate);
 			List<Request> listRequest = (List<Request>) query.getResultList();
-
+				
 			return listRequest;
 		} finally {
 			em.close();

@@ -62,7 +62,21 @@ public class UserControllerService extends BaseService{
     	return user;
     }
     
-    
+    /**
+     * Get User By departmentCd.
+     * @param departmentCd
+     * @return List<User>
+     */
+    public List<User> getUserByDepartmentCd(String departmentCd) {
+    	List<User> listUser;
+    	
+    	ExUserJpaController daoCtrl = new ExUserJpaController(emf);
+    	
+    	listUser = daoCtrl.getUserByDepartmentCd(departmentCd);
+    	
+    	return listUser;
+    }
+        
     /**
      * Get all of User.
      * <br/>

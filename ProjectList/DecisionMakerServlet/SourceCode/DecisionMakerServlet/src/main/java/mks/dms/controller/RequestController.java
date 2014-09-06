@@ -26,10 +26,12 @@ import javax.servlet.http.HttpServletResponse;
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.model.RequestCreateModel;
+import mks.dms.service.DepartmentControllerService;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestControllerService;
 import mks.dms.service.UserControllerService;
@@ -70,11 +72,14 @@ public class RequestController {
 	
 	private final UserControllerService userService;
 	
+	private final DepartmentControllerService departmentService;
+	
     @Autowired
-    public RequestController(MasterService masterService, RequestControllerService requestService, UserControllerService userService) {
+    public RequestController(MasterService masterService, RequestControllerService requestService, UserControllerService userService, DepartmentControllerService departmentService) {
         this.masterService = masterService;
         this.requestService = requestService;
         this.userService = userService;
+        this.departmentService = departmentService;
     }
 	
     /**
@@ -1036,6 +1041,10 @@ public class RequestController {
     @RequestMapping(value="listLeaveRequest")
     public ModelAndView showListLeaveRequestPage(Principal principal) {
     	ModelAndView mav = new ModelAndView("listLeaveRequest");
+    	List<Department> listDept = departmentService.getAllDepartment();
+    	List<User> listUser = userService.getAllUser();
+    	mav.addObject("listUsers", listUser);
+    	mav.addObject("listDepartment", listDept);
     	return mav;
     }
     
@@ -1050,42 +1059,81 @@ public class RequestController {
     	if (endDay == null) {
     		endDay = new Date();
     	}
+    	
     	List<Request> listRequest = requestService.searchRequest(userCd, startDay, endDay, userLogin.getCd(), "", "Leave");
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setLenient(false);
-    	for (Request request:listRequest) {
-    		JSONObject json = new JSONObject();
-        	json.put("requestType", request.getRequesttypeName());
-        	json.put("requestId", request.getId());
-        	json.put("requestTitle", request.getTitle());
-                
-        	// Thach.modified.20140825
-        	if (request.getManagerId() != null) {
-        		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
-                json.put("managerId", request.getManagerId());
-            }
-        	json.put("assignId", request.getManagerId());
-        		
-        	// Thach.Modified.20140825
-        	if (request.getStartdate() != null) {
-        		json.put("startDate", dateFormat.format(request.getStartdate()));
+        if (departmentCd.equals("0") || departmentCd.equals("")) {
+        	for (Request request:listRequest) {
+        		JSONObject json = new JSONObject();
+            	json.put("requestType", request.getRequesttypeName());
+            	json.put("requestId", request.getId());
+            	json.put("requestTitle", request.getTitle());
+                    
+            	// Thach.modified.20140825
+            	if (request.getManagerId() != null) {
+            		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+                    json.put("managerId", request.getManagerId());
+                }
+            	json.put("assignId", request.getManagerId());
+            		
+            	// Thach.Modified.20140825
+            	if (request.getStartdate() != null) {
+            		json.put("startDate", dateFormat.format(request.getStartdate()));
+            	}
+            		
+            	// Thach.Modified.20140825
+            	if (request.getEnddate() != null) {
+            		json.put("endDate", dateFormat.format(request.getEnddate()));
+            	}
+            	json.put("content", request.getContent());
+            	if (requestService.checkIsRead(request, userLogin) == 1) {
+            		json.put("readStatus", 1);
+            	}
+            	else {
+            		json.put("readStatus", 0);
+            	}
+            	json.put("status", request.getStatus());
+            	listJson.add(json);
         	}
-        		
-        	// Thach.Modified.20140825
-        	if (request.getEnddate() != null) {
-        		json.put("endDate", dateFormat.format(request.getEnddate()));
+        }
+        else {
+        	for (Request request:listRequest) {
+        		if (request.getCreatedbyId().getDepartmentCd().equals(departmentCd)) {
+        			JSONObject json = new JSONObject();
+                	json.put("requestType", request.getRequesttypeName());
+                	json.put("requestId", request.getId());
+                	json.put("requestTitle", request.getTitle());
+                        
+                	// Thach.modified.20140825
+                	if (request.getManagerId() != null) {
+                		json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+                        json.put("managerId", request.getManagerId());
+                    }
+                	json.put("assignId", request.getManagerId());
+                		
+                	// Thach.Modified.20140825
+                	if (request.getStartdate() != null) {
+                		json.put("startDate", dateFormat.format(request.getStartdate()));
+                	}
+                		
+                	// Thach.Modified.20140825
+                	if (request.getEnddate() != null) {
+                		json.put("endDate", dateFormat.format(request.getEnddate()));
+                	}
+                	json.put("content", request.getContent());
+                	if (requestService.checkIsRead(request, userLogin) == 1) {
+                		json.put("readStatus", 1);
+                	}
+                	else {
+                		json.put("readStatus", 0);
+                	}
+                	json.put("status", request.getStatus());
+                	listJson.add(json);
+        		}
         	}
-        	json.put("content", request.getContent());
-        	if (requestService.checkIsRead(request, userLogin) == 1) {
-        		json.put("readStatus", 1);
-        	}
-        	else {
-        		json.put("readStatus", 0);
-        	}
-        	json.put("status", request.getStatus());
-        	listJson.add(json);
-    	}
+        }
     	return listJson.toString();
     }
 }

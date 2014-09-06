@@ -64,13 +64,14 @@
 	}
 	
 	$(document).ready(function () {
-		
+		var htmlOptionDefault = $("#reqCreator").html();
 		$.ajax({
             url: "search.leave.request",
             data: {startDay: "", endDay: "", userCd: "", departmentCd: ""},
             dataType: 'json',
             type: 'GET',
             success: function (res) {
+            	alert(res.length);
             	for (var i = 0; i < res.length; i++) {
 	            	var obj = new Object();
         			obj.requestType = res[i].requestType;
@@ -113,19 +114,43 @@
             }
         });
 		
+		$("#reqDepartement").change(function(){
+			if (requestDepartment != 0) {
+				var requestDepartment = $("#reqDepartement option:selected").val();
+				$.ajax({
+					url: "load.user",
+					data: {departmentCd: requestDepartment},
+					dataType: "json",
+					type: "GET",
+					success: function (res) {
+						var htmlOption = "<option value='0'>All User</option>";
+						for (var i = 0; i < res.length; i++) {
+							htmlOption += "<option value='" + res[i].cd +"'>" + res[i].name + "</option>";
+						}
+						$("#reqCreator").html(htmlOption);
+					},
+					error: function() {
+			            alert("Không thể lấy danh sách yêu cầu. Hãy liên hệ với người quản lý");
+			        }
+				});
+			}
+			else{
+				$("#reqCreator").html(htmlOptionDefault);
+			}
+		});
+		
 		$("#searchButton").click(function(){
 			var startDay = $("#startDate").val();
 			var endDay = $("#endDate").val();
-			var requestManager = $("#reqManager option:selected").val();
-			var requestAssign = $("#reqAssign option:selected").val();
-			var requestTypeCd = $("#reqType option:selected").val();
+			var requestDepartment = $("#reqDepartement option:selected").val();
+			var requestCreator = $("#reqCreator option:selected").val();
 			if ($("#reqContent").val() != null && $("#reqContent").val() != "")
 				requestContent = $("#reqContent").val();
 			if ($("#reqTitle").val() != null && $("#reqTitle").val() != "")
 				requestTitle = $("#reqTitle").val();
 			$.ajax({
-	            url: "search.request",
-	            data: {createdbyCd: "", startDate: startDay, endDate: endDay, managerId: requestManager, assignId: requestAssign, requestTypeCd: requestTypeCd, requestContent: requestContent, requestTitle: requestTitle},
+	            url: "search.leave.request",
+	            data: {createdbyCd: "", startDate: startDay, endDate: endDay, userCd: requestCreator, departmentCd: requestDepartment},
 	            dataType: 'json',
 	            type: 'GET',
 	            success: function (res) {
@@ -176,20 +201,6 @@
 </script>
 <h3>Tìm kiếm</h3>
 <div>
-	<label class="col_2">Loại yêu cầu :</label>
-	<select id="reqType" class="col_2 column" name="reqType">
-		<option value="0">-- Tất cả --</option>
-		<c:forEach var="reqType" items="${lstReqTypes}">
-			<c:choose>
-				<c:when test="${reqType.cd == param.newReqType}">
-					<option value="${reqType.cd}" selected="selected">${reqType.name}</option>
-				</c:when>
-				<c:otherwise>
-					<option value="${reqType.cd}">${reqType.name}</option>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
-	</select>
 	<label class="col_2">Ngày bắt đầu : </label>
 	<input id="startDate" type="date" class="col_2 column"/>
 	<label class="col_2">Ngày kết thúc : </label>
@@ -197,15 +208,15 @@
 </div>
 <div>
 	
-	<label class="col_2">Người quản lý : </label>
-	<select id="reqManager" class="col_2 column">
+	<label class="col_2">Phòng ban : </label>
+	<select id="reqDepartement" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
-        <c:forEach var="user" items="${listUsers}">
-            <option value="${user.cd}">${user.username}</option>
+        <c:forEach var="dept" items="${listDepartment}">
+            <option value="${dept.cd}">${dept.name}</option>
         </c:forEach>
 	</select>
-	<label class="col_2">Người được giao : </label>
-	<select id="reqAssign" class="col_2 column">
+	<label class="col_2">Người xin nghỉ : </label>
+	<select id="reqCreator" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
         <c:forEach var="user" items="${listUsers}">
             <option value="${user.cd}">${user.username}</option>

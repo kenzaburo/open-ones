@@ -107,6 +107,14 @@ $(document).ready(function () {
 	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i>Thoát</a></li>
 	    </ul>
 	  </li>
+	  <s:authorize access="hasRole('ROLE_MANAGER')">
+	  
+	    <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i>Quản trị</a>
+	    <ul>
+	      <li class="left"><a href="listLeaveRequest"><i class="icon-desktop"></i>Quản lý đơn nghỉ phép</a></li>
+	    </ul>
+	  </li>
+	  </s:authorize>
 	  <%-- For Admin.START --%>
 	  <s:authorize access="hasRole('ROLE_ADMIN')">
 	  
@@ -114,6 +122,7 @@ $(document).ready(function () {
 	    <ul>
 	      <li class="left"><a href="master.department"><i class="icon-sitemap"></i>Phòng ban</a></li>
 	      <li class="left"><a href="master.template"><i class="icon-bookmark-empty"></i>Biểu mẫu</a></li>
+	      <li class="left"><a href="listLeaveRequest"><i class="icon-desktop"></i>Quản lý đơn nghỉ phép</a></li>
 	    </ul>
 	  </li>
 	  </s:authorize>

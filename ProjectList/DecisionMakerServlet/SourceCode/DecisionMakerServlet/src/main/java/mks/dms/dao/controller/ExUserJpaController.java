@@ -61,6 +61,23 @@ public class ExUserJpaController extends UserJpaController {
         }
     }
 
-    
-    
+    /**
+     * Get user information by departmentCd.
+     * @param departmentCd
+     * @return
+     * @see http://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/JPQL
+     */
+    public List<User> getUserByDepartmentCd(String departmentCd) {
+    	List<User> listUser;
+    	EntityManager em = getEntityManager();
+    	try {
+            Query query = em.createQuery("Select e FROM User e WHERE e.departmentCd = :departmentCd");
+            query.setParameter("departmentCd", departmentCd);
+            listUser = (List<User>) query.getResultList();
+            
+            return listUser;
+        } finally {
+            em.close();
+        }
+    }
 }
