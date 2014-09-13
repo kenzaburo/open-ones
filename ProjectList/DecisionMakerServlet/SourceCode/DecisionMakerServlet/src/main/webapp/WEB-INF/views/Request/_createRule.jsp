@@ -35,10 +35,13 @@
         </div>
         
         <div>
-          <label for="scopes" class="col_2">Phạm vi áp dụng</label>
-          <select id="scopes" multiple="multiple" class="col_3 fancy">
-            <option value="0">Tất cả</option>
-          </select>
+          	<label for="scopes" class="col_2">Phạm vi áp dụng</label>
+          	<select id="reqDepartement" multiple="multiple" class="col_2 column" name="reqDepartement">
+				<option value="0">-- Tất cả --</option>
+		        <c:forEach var="dept" items="${listDepartment}">
+		            <option value="${dept.cd}">${dept.name}</option>
+		        </c:forEach>
+			</select>
         </div>
         
         <div>

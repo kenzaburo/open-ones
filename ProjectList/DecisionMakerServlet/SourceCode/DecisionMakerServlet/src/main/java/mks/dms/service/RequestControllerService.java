@@ -351,6 +351,36 @@ public class RequestControllerService extends RequestService {
     }
     
     /**
+     * Get List<Request> By requestTypeCd.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByRequestTypeCd(String requestTypeCd) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    	
+    	listRequest = daoCtrl.getListRequestByRequestTypeCd(requestTypeCd);
+    	
+    	return listRequest;
+    }
+    
+    /**
+     * Get List<Request> By requestTypeCd.
+     * <br/>
+     * @return List<Request>
+     */
+    public List<Request> getListRequestByRequestTypeCdAndOrderByCreate(String requestTypeCd, String order) {
+    	List<Request> listRequest;
+    	
+    	ExRequestJpaController daoCtrl = new ExRequestJpaController(emf);
+    	
+    	listRequest = daoCtrl.getListRequestByRequestTypeCdAndOrderByCreate(requestTypeCd, order);
+    	
+    	return listRequest;
+    }
+    
+    /**
      * Get List<Request> By managerCd.
      * <br/>
      * @return List<Request>

@@ -71,7 +71,6 @@
             dataType: 'json',
             type: 'GET',
             success: function (res) {
-            	alert(res.length);
             	for (var i = 0; i < res.length; i++) {
 	            	var obj = new Object();
         			obj.requestType = res[i].requestType;
@@ -115,8 +114,8 @@
         });
 		
 		$("#reqDepartement").change(function(){
-			if (requestDepartment != 0) {
-				var requestDepartment = $("#reqDepartement option:selected").val();
+			var requestDepartment = $("#reqDepartement option:selected").val();
+			if (requestDepartment != "0") {
 				$.ajax({
 					url: "load.user",
 					data: {departmentCd: requestDepartment},

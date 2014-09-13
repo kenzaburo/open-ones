@@ -252,3 +252,75 @@ $(function(){
 		</c:if>
 	</div>
 </c:if>
+<c:if test="${request.requesttypeCd == 'Rule'}">
+	<c:if test="${not empty isRead}">
+		<div>
+			<label for="title" class="col_2">Tiêu đề: </label>
+			<input id="title" type="text" disabled="disabled" value="${request.title}" class="col_3 column"/>
+		</div>
+		<div>
+			<label class="col_2">Phạm vi: </label>
+		</div>
+		<div>
+			<label for="title" class="col_2">Ngày bắt đầu: </label>
+			<input id="title" type="date" disabled="disabled" value="${startDate}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Ngày kết thúc: </label>
+			<input id="title" type="date" disabled="disabled" value="${endDate}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Nội dung: </label>
+			<textarea disabled="disabled" style="display:inline; position: relative; top:5px; left:10px;" cols="120" rows="15" id="" name="">${request.content}</textarea>
+		</div>
+		<c:if test="${not empty request.comment}">
+			<div>
+				<label for="title" class="col_2">Comment: </label>
+				<textarea disabled="disabled" style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.comment}</textarea>
+			</div>
+		</c:if>
+		<form action="addComment" id="comment">
+			<input type="hidden" name="requestId" value="${request.id}">
+			<label for="content" class="col_2">Nội dung: </label>
+			<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="commentContent" rows="5" placeholder="Nội dung góp ý"></textarea>
+			<br>
+			<input type="submit" value="Xác nhận">
+		</form>
+	</c:if>
+</c:if>
+<c:if test="${request.requesttypeCd == 'Announcement'}">
+	<c:if test="${not empty isRead}">
+		<div>
+			<label for="title" class="col_2">Tiêu đề: </label>
+			<input id="title" type="text" disabled="disabled" value="${request.title}" class="col_3 column"/>
+		</div>
+		<div>
+			<label class="col_2">Phạm vi: </label>
+		</div>
+		<div>
+			<label for="title" class="col_2">Ngày bắt đầu: </label>
+			<input id="title" type="date" disabled="disabled" value="${startDate}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Ngày kết thúc: </label>
+			<input id="title" type="date" disabled="disabled" value="${endDate}" class="col_3 column"/>
+		</div>
+		<div>
+			<label for="title" class="col_2">Nội dung: </label>
+			<textarea disabled="disabled" style="display:inline; position: relative; top:5px; left:10px;" cols="120" rows="15" id="" name="">${request.content}</textarea>
+		</div>
+		<c:if test="${not empty request.comment}">
+			<div>
+				<label for="title" class="col_2">Comment: </label>
+				<textarea disabled="disabled" style="display:inline; position: relative; top:10px; left:10px;" cols="120" id="taskContent" name="taskContent" rows="15">${request.comment}</textarea>
+			</div>
+		</c:if>
+		<form action="addComment" id="comment">
+			<input type="hidden" name="requestId" value="${request.id}">
+			<label for="content" class="col_2">Nội dung: </label>
+			<textarea style="display: inline; position: relative; top: 6px; left: 10px;" cols="100" name="commentContent" rows="5" placeholder="Nội dung góp ý"></textarea>
+			<br>
+			<input type="submit" value="Xác nhận">
+		</form>
+	</c:if>
+</c:if>

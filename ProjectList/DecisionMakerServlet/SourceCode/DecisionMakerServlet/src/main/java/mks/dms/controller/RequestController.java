@@ -143,13 +143,29 @@ public class RequestController {
     * @return
     */
     @RequestMapping(value="createRequest" , method = RequestMethod.GET)
-    public ModelAndView createRequest(Model model){
+    public ModelAndView createRequest(Model model, Principal principal){
         ModelAndView mav = new ModelAndView("createRequest");
         // Get RequestCreateModel from service
         RequestCreateModel requestCreateModel = requestService.getRequestCreateModel(masterService);
 
 //        LOG.debug("CreateRequest controller init data: " + requestCreateModel.getListRequestType().size());
         LOG.debug("model.getClass()=" + model.getClass());
+        
+        User userLogin = userService.getUserByUsername(principal.getName());
+        
+//        Kiem tra role cua user dang nhap
+//        Neu user la admin/manager thi lay day du cac requestType show len
+//        Neu la user binh thuong thi ko lay 2 requestType Rule va Announcement 
+        List<RequestType> listRequestTypes = masterService.getRequestTypes();
+        for (int i = 0; i < listRequestTypes.size(); i++) {
+        	if (listRequestTypes.get(i).getCd().equals("Rule") || listRequestTypes.get(i).getCd().equals("Announcement")) {
+        		listRequestTypes.remove(i);
+        		i--;
+        	}
+        }
+        
+        List<Department> listDepartment = departmentService.getAllDepartment();
+        mav.addObject("listDepartment", listDepartment);
         
         // Add object to modelandview
         mav.addObject("model", requestCreateModel);
@@ -179,7 +195,7 @@ public class RequestController {
         // Model to re-display the saved request
     	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
     	Date today = new Date();
-    	ModelAndView mav = new ModelAndView("editRequest");
+    	ModelAndView mav = new ModelAndView("createRequest");
         User userLogin = userService.getUserByUsername(principal.getName());
         // Debug data of model
         Request request = model.getRequest();
@@ -231,6 +247,11 @@ public class RequestController {
                 else {
                 	model.getRequest().setAssignerRead(0);
                 }	
+        	}
+        	
+        	if (request.getRequesttypeCd().equalsIgnoreCase("Rule") || request.getRequesttypeCd().equalsIgnoreCase("Announcement")) {
+        		String departCd = httpRequest.getParameter("reqDepartement");
+//        		model.getRequest().setDepartmentsId(departCd);
         	}
             model.getRequest().setCreatedbyId(userLogin);
             model.getRequest().setCreatedbyName(principal.getName());
@@ -484,7 +505,13 @@ public class RequestController {
             	}
     		}
     	}
-    	
+    	if (request.getRequesttypeCd().equals("Rule") || request.getRequesttypeCd().equals("Announcement")) {
+    		if (request.getCreatedbyCd().equals(userLogin.getCd())) {
+    			mav.addObject("isRead", Boolean.TRUE);
+    		}
+//    		kiem tra user dang nhap co thuoc cac phong ban trong pham vi ko
+//    		neu phai set isRead True
+    	}
     	return mav;
     }
     
@@ -594,30 +621,36 @@ public class RequestController {
     	User userLogin = userService.getUserByUsername(principal.getName());
     	
     	Request request = requestService.getRequestById(id);
-    	if (userLogin.getCd().equals(request.getManagerCd())) {
-    		if (request.getStatus().equals("Confirm")) {
-    			request.setStatus("Doing");
+    	if (request.getRequesttypeCd().equals("Task") || request.getRequesttypeCd().equals("Leave")) {
+    		if (userLogin.getCd().equals(request.getManagerCd())) {
+        		if (request.getStatus().equals("Confirm")) {
+        			request.setStatus("Doing");
+            	}
+        		request.setCreatorRead(0);
+            	request.setAssignerRead(0);
         	}
-    		request.setCreatorRead(0);
-        	request.setAssignerRead(0);
+        	
+        	if (!request.getCreatedbyCd().equals(request.getAssignedCd())) {
+        		if (userLogin.getCd().equals(request.getCreatedbyCd())) {
+    	    		request.setAssignerRead(0);
+    	    		request.setManagerRead(0);
+    	    	}
+    	    	
+    	    	if (userLogin.getCd().equals(request.getAssignedCd())) {
+    	    		request.setAssignerRead(0);
+    	    		request.setManagerRead(0);
+    	    	}
+        	}
+        	else {
+        		if (userLogin.getCd().equals(request.getCreatedbyCd())) {
+        			request.setManagerRead(0);
+        		}
+        	}
     	}
     	
-    	if (!request.getCreatedbyCd().equals(request.getAssignedCd())) {
-    		if (userLogin.getCd().equals(request.getCreatedbyCd())) {
-	    		request.setAssignerRead(0);
-	    		request.setManagerRead(0);
-	    	}
-	    	
-	    	if (userLogin.getCd().equals(request.getAssignedCd())) {
-	    		request.setAssignerRead(0);
-	    		request.setManagerRead(0);
-	    	}
-    	}
-    	else {
-    		if (userLogin.getCd().equals(request.getCreatedbyCd())) {
-    			request.setManagerRead(0);
-    		}
-    	}
+//    	if (request.getRequesttypeCd().equals("Rule") || request.getRequesttypeCd().equals("Announcement")) {
+//    		
+//    	}
 	    	
     		
     	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + commentContent + " \n";
@@ -723,16 +756,14 @@ public class RequestController {
         User userLogin = userService.getUserByUsername(principal.getName());
     	List<Request> listManagerRequest = requestService.getListRequestByManagerCd(userLogin.getCd());
     	List<Request> listAssignerRequest = requestService.getListRequestByAssignedCd(userLogin.getCd());
-    	for (Request request:listManagerRequest) {
-    		System.out.println("Manager");
-    		System.out.println(request.getId());
-    	}
-    	for (Request request:listAssignerRequest) {
-    		System.out.println("Assigner");
-    		System.out.println(request.getId());
-    	}
+    	List<Request> listRule = requestService.getListRequestByRequestTypeCd("Rule");
+    	List<Request> listAnnouncement = requestService.getListRequestByRequestTypeCd("Announcement");
     	listAssignerRequest.removeAll(listManagerRequest);
     	listManagerRequest.addAll(listAssignerRequest);
+    	listManagerRequest.removeAll(listRule);
+    	listManagerRequest.addAll(listRule);
+    	listManagerRequest.removeAll(listAnnouncement);
+    	listManagerRequest.addAll(listAnnouncement);
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listManagerRequest) {
     		JSONObject json = new JSONObject();
@@ -992,6 +1023,8 @@ public class RequestController {
         List<Request> listTaskRequest = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Created", 0);
         List<Request> listTaskRequest1 = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Updated", 0);
         List<Request> listTaskRequest2 = requestService.getListRequestByAssignerCdAndStatusAndAssignerRead(userLogin.getCd(), "Done", 0);
+        List<Request> listRule = requestService.getListRequestByRequestTypeCd("Rule");
+        List<Request> listAnnouncement = requestService.getListRequestByRequestTypeCd("Announcement");
         
         listCreatedRequest.removeAll(listTaskRequest);
         listCreatedRequest.addAll(listTaskRequest);
@@ -1046,6 +1079,19 @@ public class RequestController {
     	mav.addObject("listUsers", listUser);
     	mav.addObject("listDepartment", listDept);
     	return mav;
+    }
+    
+    @RequestMapping(value="load.user")
+    public @ResponseBody String loadUserByDepartmentCd(@RequestParam("departmentCd") String departmentCd) throws JSONException {
+    	List<User> listUser = userService.getUserByDepartmentCd(departmentCd);
+    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+    	for (User user:listUser) {
+    		JSONObject json = new JSONObject();
+    		json.put("cd", user.getCd());
+    		json.put("name", user.getLastname() + user.getFirstname());
+    		listJson.add(json);
+    	}
+    	return listJson.toString();
     }
     
     @RequestMapping(value="search.leave.request")
@@ -1135,5 +1181,27 @@ public class RequestController {
         	}
         }
     	return listJson.toString();
+    }
+    
+    @RequestMapping(value="listRule")
+    public ModelAndView showListRule(Principal principal) {
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	
+    	List<Request> listRule = requestService.getListRequestByRequestTypeCdAndOrderByCreate("Rule", "DESC");
+    	
+    	ModelAndView mav = new ModelAndView("listRule");
+    	mav.addObject("listRule", listRule);
+    	return mav;
+    }
+    
+    @RequestMapping(value="listAnnouncement")
+    public ModelAndView showListAnnouncement(Principal principal) {
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	
+    	List<Request> listAnnouncement = requestService.getListRequestByRequestTypeCdAndOrderByCreate("Announcement", "DESC");
+    	
+    	ModelAndView mav = new ModelAndView("listAnnouncement");
+    	mav.addObject("listAnnouncement", listAnnouncement);
+    	return mav;
     }
 }

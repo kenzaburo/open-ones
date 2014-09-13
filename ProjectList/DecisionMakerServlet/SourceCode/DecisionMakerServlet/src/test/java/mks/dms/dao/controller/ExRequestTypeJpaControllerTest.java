@@ -31,6 +31,7 @@ import javax.persistence.Persistence;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.service.BaseService;
+import mks.dms.service.MasterService;
 
 import org.junit.Test;
 
@@ -48,12 +49,30 @@ public class ExRequestTypeJpaControllerTest {
     public void testFindRequestTypeByCd() throws ParseException {
     	ExRequestJpaController exDaoCtrl = new ExRequestJpaController(emf);
     	RequestJpaController daoCtrl = new RequestJpaController(emf);
-    	Date today = new Date();
-    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+    	ExRequestTypeJpaController requestTypeDaoCtrl = new ExRequestTypeJpaController(emf);
+    	RequestTypeJpaController requestTypeJpaDaoCtrl = new RequestTypeJpaController(emf);
+        List<RequestType> listRequestTypes = requestTypeJpaDaoCtrl.findRequestTypeEntities();
+//        for (RequestType type:listRequestTypes) {
+//        	if (type.getCd().equals("Rule")) {
+//        		listRequestTypes.remove(type);
+//        	}
+//        	System.out.println(type.getName());
+//        }
+        for (int i = 0; i < listRequestTypes.size(); i++) {
+        	if (listRequestTypes.get(i).getCd().equals("Rule")) {
+        		listRequestTypes.remove(i);
+        		i--;
+        	}
+        }
+        for (RequestType type:listRequestTypes) {
+        	System.out.println(type.getName());
+        }
+//    	Date today = new Date();
+//    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
 //    	List<Request> listRequest = exDaoCtrl.searchRequest("", null, null, "0", "0", "Task");
 //    	List<Request> listRequest = daoCtrl.findRequestEntities();
-    	System.out.println(formater.format(today));
-    	System.out.println(formater.parse(formater.format(today)));
+//    	System.out.println(formater.format(today));
+//    	System.out.println(formater.parse(formater.format(today)));
     }
 
 }

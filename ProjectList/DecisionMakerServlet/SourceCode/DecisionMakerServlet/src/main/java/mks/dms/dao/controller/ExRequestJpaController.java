@@ -59,6 +59,52 @@ public class ExRequestJpaController extends RequestJpaController {
 	}
 
 	/**
+	 * Get Request by requestType.
+	 * 
+	 * @param requestType
+	 * @return List<Request>
+	 * @see http
+	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
+	 *      /Querying/JPQL
+	 */
+	public List<Request> getListRequestByRequestTypeCd(String requestTypeCd) {
+		EntityManager em = getEntityManager();
+		try {
+			Query query = em.createQuery("Select r FROM Request r WHERE r.requesttypeCd = :requestTypeCd");
+			query.setParameter("requestTypeCd", requestTypeCd);
+			List<Request> listRequest = (List<Request>) query.getResultList();
+
+			return listRequest;
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
+	 * Get Request by requestType and Order By created
+	 * 
+	 * @param requestType
+	 * @return List<Request>
+	 * @see http
+	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
+	 *      /Querying/JPQL
+	 */
+	public List<Request> getListRequestByRequestTypeCdAndOrderByCreate(String requestTypeCd, String order) {
+		EntityManager em = getEntityManager();
+		try {
+			String script = "Select r FROM Request r WHERE r.requesttypeCd = :requestTypeCd ORDER BY r.created " + order.toUpperCase(); 
+			Query query = em.createQuery(script);
+			query.setParameter("requestTypeCd", requestTypeCd);
+			List<Request> listRequest = (List<Request>) query.getResultList();
+
+			return listRequest;
+		} finally {
+			em.close();
+		}
+	}
+	
+	
+	/**
 	 * Get Request by managerName and status and readStatus.
 	 * 
 	 * @param username

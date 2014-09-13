@@ -31,23 +31,23 @@ public class ExRequestTypeJpaController extends RequestTypeJpaController{
 	}
 
 	/**
-	    * Get RequestType by requestCd.
-	    * @param requestCd
-	    * @return RequestType
-	    * @see http://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/JPQL
-	    */
-	    public RequestType getListRequestByRequestCd(String requestCd) {
-	        EntityManager em = getEntityManager();
-	        try {
-	            Query query = em.createQuery("Select r FROM RequestType r WHERE r.cd = :requestCd");
-	            query.setParameter("requestCd", requestCd);
-	            RequestType requestType = (RequestType) query.getSingleResult();
+	* Get RequestType by requestCd.
+	* @param requestCd
+	* @return RequestType
+	* @see http://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/JPQL
+	*/
+	public RequestType getListRequestByRequestCd(String requestCd) {
+		EntityManager em = getEntityManager();
+	    try {
+	    	Query query = em.createQuery("Select r FROM RequestType r WHERE r.cd = :requestCd");
+	        query.setParameter("requestCd", requestCd);
+	        RequestType requestType = (RequestType) query.getSingleResult();
 	            
-	            return requestType;
-	        } finally {
-	            em.close();
-	        }
+	        return requestType;
+	    } finally {
+	        em.close();
 	    }
+	}
 
     public RequestType findRequestTypeByCd(String requesttypeCd) {
         EntityManager em = getEntityManager();
