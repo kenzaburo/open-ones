@@ -1009,6 +1009,7 @@ public class RequestController {
 		JSONObject json = new JSONObject();
 		json.put("countResponseRequest", count);
     		
+//		return Json(json, "text/html");
     	return json.toString();
     } 
     

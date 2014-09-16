@@ -1,5 +1,6 @@
 ﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
+<%@ page language="java" contentType="text/plain; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- Menu Horizontal -->
 <script type="text/javascript">
 $(document).ready(function () {
@@ -8,6 +9,7 @@ $(document).ready(function () {
 	    dataType: 'json',
 	    type: 'GET',
 	    success: function (res) {
+	    	alert(res.countResponseRequest);
 	    	if (res.countResponseRequest > 0) {
 	    		$("#countResponse").html("<a class='button blue small' href='listSendRequest' >" + res.countResponseRequest + " New Response </a>");
 	    	}
@@ -25,6 +27,7 @@ $(document).ready(function () {
 	    dataType: 'json',
 	    type: 'GET',
 	    success: function (res) {
+	    	alert(res.countRequest);
 	    	if (res.countRequest > 0) {
 	    		$("#countRequest").html("<a class='button red small' href='listReceiveRequest' >" + res.countRequest + " New Request </a>");
 	    	}
