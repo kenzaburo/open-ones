@@ -116,7 +116,7 @@
 <h3>Yêu cầu được nhận</h3>
 <select id="reqType" class="col_3" name="reqType">
 	<option value="0">-- Lựa chọn --</option>
-	<c:forEach var="reqType" items="${lstReqTypes}">
+	<c:forEach var="reqType" items="${listRequestType}">
 		<c:choose>
 			<c:when test="${reqType.cd == param.newReqType}">
 				<option value="${reqType.cd}" selected="selected">${reqType.name}</option>

@@ -7,30 +7,24 @@
 package mks.dms.dao.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "request")
@@ -38,22 +32,22 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Request.findAll", query = "SELECT r FROM Request r"),
     @NamedQuery(name = "Request.findById", query = "SELECT r FROM Request r WHERE r.id = :id"),
-    @NamedQuery(name = "Request.findByRequesttypeId", query = "SELECT r FROM Request r WHERE r.requesttypeId = :requesttypeId"),
     @NamedQuery(name = "Request.findByRequesttypeCd", query = "SELECT r FROM Request r WHERE r.requesttypeCd = :requesttypeCd"),
     @NamedQuery(name = "Request.findByRequesttypeName", query = "SELECT r FROM Request r WHERE r.requesttypeName = :requesttypeName"),
     @NamedQuery(name = "Request.findByTitle", query = "SELECT r FROM Request r WHERE r.title = :title"),
     @NamedQuery(name = "Request.findByStartdate", query = "SELECT r FROM Request r WHERE r.startdate = :startdate"),
     @NamedQuery(name = "Request.findByEnddate", query = "SELECT r FROM Request r WHERE r.enddate = :enddate"),
-    @NamedQuery(name = "Request.findByAssignedCd", query = "SELECT r FROM Request r WHERE r.assignedCd = :assignedCd"),
-    @NamedQuery(name = "Request.findByAssignedName", query = "SELECT r FROM Request r WHERE r.assignedName = :assignedName"),
-    @NamedQuery(name = "Request.findByWatchersId", query = "SELECT r FROM Request r WHERE r.watchersId = :watchersId"),
-    @NamedQuery(name = "Request.findByManagerCd", query = "SELECT r FROM Request r WHERE r.managerCd = :managerCd"),
+    @NamedQuery(name = "Request.findByAssigneeUsername", query = "SELECT r FROM Request r WHERE r.assigneeUsername = :assigneeUsername"),
+    @NamedQuery(name = "Request.findByAssigneeName", query = "SELECT r FROM Request r WHERE r.assigneeName = :assigneeName"),
+    @NamedQuery(name = "Request.findByManagerUsername", query = "SELECT r FROM Request r WHERE r.managerUsername = :managerUsername"),
     @NamedQuery(name = "Request.findByManagerName", query = "SELECT r FROM Request r WHERE r.managerName = :managerName"),
     @NamedQuery(name = "Request.findByLabel1", query = "SELECT r FROM Request r WHERE r.label1 = :label1"),
     @NamedQuery(name = "Request.findByLabel2", query = "SELECT r FROM Request r WHERE r.label2 = :label2"),
     @NamedQuery(name = "Request.findByLabel3", query = "SELECT r FROM Request r WHERE r.label3 = :label3"),
     @NamedQuery(name = "Request.findByDuration", query = "SELECT r FROM Request r WHERE r.duration = :duration"),
     @NamedQuery(name = "Request.findByDurationunit", query = "SELECT r FROM Request r WHERE r.durationunit = :durationunit"),
+    @NamedQuery(name = "Request.findByDepartmentCd", query = "SELECT r FROM Request r WHERE r.departmentCd = :departmentCd"),
+    @NamedQuery(name = "Request.findByDepartmentName", query = "SELECT r FROM Request r WHERE r.departmentName = :departmentName"),
     @NamedQuery(name = "Request.findByStatus", query = "SELECT r FROM Request r WHERE r.status = :status"),
     @NamedQuery(name = "Request.findByCreatorRead", query = "SELECT r FROM Request r WHERE r.creatorRead = :creatorRead"),
     @NamedQuery(name = "Request.findByManagerRead", query = "SELECT r FROM Request r WHERE r.managerRead = :managerRead"),
@@ -64,12 +58,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Request.findByFilename2", query = "SELECT r FROM Request r WHERE r.filename2 = :filename2"),
     @NamedQuery(name = "Request.findByFilename3", query = "SELECT r FROM Request r WHERE r.filename3 = :filename3"),
     @NamedQuery(name = "Request.findByCreated", query = "SELECT r FROM Request r WHERE r.created = :created"),
-    @NamedQuery(name = "Request.findByCreatedbyCd", query = "SELECT r FROM Request r WHERE r.createdbyCd = :createdbyCd"),
-    @NamedQuery(name = "Request.findByCreatedbyName", query = "SELECT r FROM Request r WHERE r.createdbyName = :createdbyName"),
+    @NamedQuery(name = "Request.findByCreatedbyUsername", query = "SELECT r FROM Request r WHERE r.createdbyUsername = :createdbyUsername"),
     @NamedQuery(name = "Request.findByLastmodified", query = "SELECT r FROM Request r WHERE r.lastmodified = :lastmodified"),
-    @NamedQuery(name = "Request.findByLastmodifiedbyId", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyId = :lastmodifiedbyId"),
-    @NamedQuery(name = "Request.findByLastmodifiedbyName", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Request.findByLastmodifiedbyCd", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyCd = :lastmodifiedbyCd")})
+    @NamedQuery(name = "Request.findByLastmodifiedbyUsername", query = "SELECT r FROM Request r WHERE r.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
 public class Request implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -77,8 +68,6 @@ public class Request implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "REQUESTTYPE_ID")
-    private Integer requesttypeId;
     @Column(name = "REQUESTTYPE_CD")
     private String requesttypeCd;
     @Column(name = "REQUESTTYPE_NAME")
@@ -95,14 +84,12 @@ public class Request implements Serializable {
     @Column(name = "ENDDATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date enddate;
-    @Column(name = "ASSIGNED_CD")
-    private String assignedCd;
-    @Column(name = "ASSIGNED_NAME")
-    private String assignedName;
-    @Column(name = "WATCHERS_ID")
-    private Integer watchersId;
-    @Column(name = "MANAGER_CD")
-    private String managerCd;
+    @Column(name = "ASSIGNEE_USERNAME")
+    private String assigneeUsername;
+    @Column(name = "ASSIGNEE_NAME")
+    private String assigneeName;
+    @Column(name = "MANAGER_USERNAME")
+    private String managerUsername;
     @Column(name = "MANAGER_NAME")
     private String managerName;
     @Column(name = "LABEL1")
@@ -115,6 +102,10 @@ public class Request implements Serializable {
     private Integer duration;
     @Column(name = "DURATIONUNIT")
     private Integer durationunit;
+    @Column(name = "DEPARTMENT_CD")
+    private String departmentCd;
+    @Column(name = "DEPARTMENT_NAME")
+    private String departmentName;
     @Column(name = "STATUS")
     private String status;
     @Lob
@@ -149,33 +140,13 @@ public class Request implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
-    @Column(name = "CREATEDBY_CD")
-    private String createdbyCd;
-    @Column(name = "CREATEDBY_NAME")
-    private String createdbyName;
+    @Column(name = "CREATEDBY_USERNAME")
+    private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastmodified;
-    @Column(name = "LASTMODIFIEDBY_ID")
-    private Integer lastmodifiedbyId;
-    @Column(name = "LASTMODIFIEDBY_NAME")
-    private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_CD")
-    private String lastmodifiedbyCd;
-    @JoinColumn(name = "DEPARTMENTS_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private Department departmentsId;
-    @JoinColumn(name = "CREATEDBY_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private User createdbyId;
-    @JoinColumn(name = "MANAGER_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private User managerId;
-    @JoinColumn(name = "ASSIGNED_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private User assignedId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reqId")
-    private Collection<Watcher> watcherCollection;
+    @Column(name = "LASTMODIFIEDBY_USERNAME")
+    private String lastmodifiedbyUsername;
 
     public Request() {
     }
@@ -196,14 +167,6 @@ public class Request implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getRequesttypeId() {
-        return requesttypeId;
-    }
-
-    public void setRequesttypeId(Integer requesttypeId) {
-        this.requesttypeId = requesttypeId;
     }
 
     public String getRequesttypeCd() {
@@ -254,36 +217,28 @@ public class Request implements Serializable {
         this.enddate = enddate;
     }
 
-    public String getAssignedCd() {
-        return assignedCd;
+    public String getAssigneeUsername() {
+        return assigneeUsername;
     }
 
-    public void setAssignedCd(String assignedCd) {
-        this.assignedCd = assignedCd;
+    public void setAssigneeUsername(String assigneeUsername) {
+        this.assigneeUsername = assigneeUsername;
     }
 
-    public String getAssignedName() {
-        return assignedName;
+    public String getAssigneeName() {
+        return assigneeName;
     }
 
-    public void setAssignedName(String assignedName) {
-        this.assignedName = assignedName;
+    public void setAssigneeName(String assigneeName) {
+        this.assigneeName = assigneeName;
     }
 
-    public Integer getWatchersId() {
-        return watchersId;
+    public String getManagerUsername() {
+        return managerUsername;
     }
 
-    public void setWatchersId(Integer watchersId) {
-        this.watchersId = watchersId;
-    }
-
-    public String getManagerCd() {
-        return managerCd;
-    }
-
-    public void setManagerCd(String managerCd) {
-        this.managerCd = managerCd;
+    public void setManagerUsername(String managerUsername) {
+        this.managerUsername = managerUsername;
     }
 
     public String getManagerName() {
@@ -332,6 +287,22 @@ public class Request implements Serializable {
 
     public void setDurationunit(Integer durationunit) {
         this.durationunit = durationunit;
+    }
+
+    public String getDepartmentCd() {
+        return departmentCd;
+    }
+
+    public void setDepartmentCd(String departmentCd) {
+        this.departmentCd = departmentCd;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public String getStatus() {
@@ -446,20 +417,12 @@ public class Request implements Serializable {
         this.created = created;
     }
 
-    public String getCreatedbyCd() {
-        return createdbyCd;
+    public String getCreatedbyUsername() {
+        return createdbyUsername;
     }
 
-    public void setCreatedbyCd(String createdbyCd) {
-        this.createdbyCd = createdbyCd;
-    }
-
-    public String getCreatedbyName() {
-        return createdbyName;
-    }
-
-    public void setCreatedbyName(String createdbyName) {
-        this.createdbyName = createdbyName;
+    public void setCreatedbyUsername(String createdbyUsername) {
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Date getLastmodified() {
@@ -470,69 +433,12 @@ public class Request implements Serializable {
         this.lastmodified = lastmodified;
     }
 
-    public Integer getLastmodifiedbyId() {
-        return lastmodifiedbyId;
+    public String getLastmodifiedbyUsername() {
+        return lastmodifiedbyUsername;
     }
 
-    public void setLastmodifiedbyId(Integer lastmodifiedbyId) {
-        this.lastmodifiedbyId = lastmodifiedbyId;
-    }
-
-    public String getLastmodifiedbyName() {
-        return lastmodifiedbyName;
-    }
-
-    public void setLastmodifiedbyName(String lastmodifiedbyName) {
-        this.lastmodifiedbyName = lastmodifiedbyName;
-    }
-
-    public String getLastmodifiedbyCd() {
-        return lastmodifiedbyCd;
-    }
-
-    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
-        this.lastmodifiedbyCd = lastmodifiedbyCd;
-    }
-
-    public Department getDepartmentsId() {
-        return departmentsId;
-    }
-
-    public void setDepartmentsId(Department departmentsId) {
-        this.departmentsId = departmentsId;
-    }
-
-    public User getCreatedbyId() {
-        return createdbyId;
-    }
-
-    public void setCreatedbyId(User createdbyId) {
-        this.createdbyId = createdbyId;
-    }
-
-    public User getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(User managerId) {
-        this.managerId = managerId;
-    }
-
-    public User getAssignedId() {
-        return assignedId;
-    }
-
-    public void setAssignedId(User assignedId) {
-        this.assignedId = assignedId;
-    }
-
-    @XmlTransient
-    public Collection<Watcher> getWatcherCollection() {
-        return watcherCollection;
-    }
-
-    public void setWatcherCollection(Collection<Watcher> watcherCollection) {
-        this.watcherCollection = watcherCollection;
+    public void setLastmodifiedbyUsername(String lastmodifiedbyUsername) {
+        this.lastmodifiedbyUsername = lastmodifiedbyUsername;
     }
 
     @Override

@@ -23,7 +23,7 @@
 				 	<label for="request.assignedId.id" class="col_2">Người thực hiện</label>
 				 	<form:select path="request.assignedId.id" disabled="disabled" id="request.assignedId.id" name="request.assignedId.id"
 		                class="col_8 chosen-select">
-		                <c:forEach var="user" items="${listUsers}">
+		                <c:forEach var="user" items="${listUser}">
 		                  <c:choose>
 		                    <c:when test="${model.request.assignedCd == user.cd}">
 		                      <option value="${user.id}" selected="selected">${user.username}</option>
@@ -39,7 +39,7 @@
 				<div>
 		            <label for="request.managerId.id" class="col_2">Người quản lý</label>
 		            <form:select path="request.managerId.id" disabled="disabled" id="request.managerId.id" name="request.managerId.id" class="chosen-select col_8">
-		                <c:forEach var="user" items="${listUsers}">
+		                <c:forEach var="user" items="${listUser}">
 		                  <c:choose>
 		                    <c:when test="${model.request.managerCd == user.cd}">
 		                      <option value="${user.id}" selected="selected">${user.username}</option>
@@ -54,7 +54,7 @@
 				<div>
 		            <label for="listWatcher " class="col_2">Chia sẻ</label>
 		            <form:select path="listWatcher" disabled="disabled" name="listWatcher" class="col_8 chosen-select" multiple="true">
-		                <c:forEach var="user" items="${listUsers}">
+		                <c:forEach var="user" items="${listUser}">
 		                    <option value="${user.id}">${user.username }</option>
 		                </c:forEach>
 		            </form:select>
@@ -121,7 +121,7 @@
 				 	<label for="request.assignedId.id" class="col_2">Người thực hiện</label>
 				 	<form:select path="request.assignedId.id" id="request.assignedId.id" name="request.assignedId.id"
 		                class="col_8 chosen-select">
-		                <c:forEach var="user" items="${listUsers}">
+		                <c:forEach var="user" items="${listUser}">
 		                  <c:choose>
 		                    <c:when test="${model.request.assignedCd == user.cd}">
 		                      <option value="${user.id}" selected="selected">${user.username}</option>
@@ -137,7 +137,7 @@
 				<div>
 		            <label for="request.managerId.id" class="col_2">Người quản lý</label>
 		            <form:select path="request.managerId.id" id="request.managerId.id" name="request.managerId.id" class="chosen-select col_8">
-		                <c:forEach var="user" items="${listUsers}">
+		                <c:forEach var="user" items="${listUser}">
 		                  <c:choose>
 		                    <c:when test="${model.request.managerCd == user.cd}">
 		                      <option value="${user.id}" selected="selected">${user.username}</option>
@@ -152,7 +152,7 @@
 				<div>
 		            <label for="listWatcher " class="col_2">Chia sẻ</label>
 		            <form:select path="listWatcher" name="listWatcher" class="col_8 chosen-select" multiple="true">
-		                <c:forEach var="user" items="${listUsers}">
+		                <c:forEach var="user" items="${listUser}">
 		                    <option value="${user.id}">${user.username }</option>
 		                </c:forEach>
 		            </form:select>

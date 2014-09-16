@@ -7,23 +7,19 @@
 package mks.dms.dao.controller;
 
 import java.io.Serializable;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
-import mks.dms.dao.entity.Department;
-import mks.dms.dao.entity.User;
-import mks.dms.dao.entity.Watcher;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import mks.dms.dao.controller.exceptions.IllegalOrphanException;
+import javax.persistence.Query;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 public class RequestJpaController implements Serializable {
 
@@ -37,65 +33,11 @@ public class RequestJpaController implements Serializable {
     }
 
     public void create(Request request) {
-        if (request.getWatcherCollection() == null) {
-            request.setWatcherCollection(new ArrayList<Watcher>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Department departmentsId = request.getDepartmentsId();
-            if (departmentsId != null) {
-                departmentsId = em.getReference(departmentsId.getClass(), departmentsId.getId());
-                request.setDepartmentsId(departmentsId);
-            }
-            User createdbyId = request.getCreatedbyId();
-            if (createdbyId != null) {
-                createdbyId = em.getReference(createdbyId.getClass(), createdbyId.getId());
-                request.setCreatedbyId(createdbyId);
-            }
-            User managerId = request.getManagerId();
-            if (managerId != null) {
-                managerId = em.getReference(managerId.getClass(), managerId.getId());
-                request.setManagerId(managerId);
-            }
-            User assignedId = request.getAssignedId();
-            if (assignedId != null) {
-                assignedId = em.getReference(assignedId.getClass(), assignedId.getId());
-                request.setAssignedId(assignedId);
-            }
-            Collection<Watcher> attachedWatcherCollection = new ArrayList<Watcher>();
-            for (Watcher watcherCollectionWatcherToAttach : request.getWatcherCollection()) {
-                watcherCollectionWatcherToAttach = em.getReference(watcherCollectionWatcherToAttach.getClass(), watcherCollectionWatcherToAttach.getId());
-                attachedWatcherCollection.add(watcherCollectionWatcherToAttach);
-            }
-            request.setWatcherCollection(attachedWatcherCollection);
             em.persist(request);
-            if (departmentsId != null) {
-                departmentsId.getRequestCollection().add(request);
-                departmentsId = em.merge(departmentsId);
-            }
-            if (createdbyId != null) {
-                createdbyId.getRequestCollection().add(request);
-                createdbyId = em.merge(createdbyId);
-            }
-            if (managerId != null) {
-                managerId.getRequestCollection().add(request);
-                managerId = em.merge(managerId);
-            }
-            if (assignedId != null) {
-                assignedId.getRequestCollection().add(request);
-                assignedId = em.merge(assignedId);
-            }
-            for (Watcher watcherCollectionWatcher : request.getWatcherCollection()) {
-                Request oldReqIdOfWatcherCollectionWatcher = watcherCollectionWatcher.getReqId();
-                watcherCollectionWatcher.setReqId(request);
-                watcherCollectionWatcher = em.merge(watcherCollectionWatcher);
-                if (oldReqIdOfWatcherCollectionWatcher != null) {
-                    oldReqIdOfWatcherCollectionWatcher.getWatcherCollection().remove(watcherCollectionWatcher);
-                    oldReqIdOfWatcherCollectionWatcher = em.merge(oldReqIdOfWatcherCollectionWatcher);
-                }
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -104,101 +46,12 @@ public class RequestJpaController implements Serializable {
         }
     }
 
-    public void edit(Request request) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Request request) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Request persistentRequest = em.find(Request.class, request.getId());
-            Department departmentsIdOld = persistentRequest.getDepartmentsId();
-            Department departmentsIdNew = request.getDepartmentsId();
-            User createdbyIdOld = persistentRequest.getCreatedbyId();
-            User createdbyIdNew = request.getCreatedbyId();
-            User managerIdOld = persistentRequest.getManagerId();
-            User managerIdNew = request.getManagerId();
-            User assignedIdOld = persistentRequest.getAssignedId();
-            User assignedIdNew = request.getAssignedId();
-            Collection<Watcher> watcherCollectionOld = persistentRequest.getWatcherCollection();
-            Collection<Watcher> watcherCollectionNew = request.getWatcherCollection();
-            List<String> illegalOrphanMessages = null;
-            for (Watcher watcherCollectionOldWatcher : watcherCollectionOld) {
-                if (!watcherCollectionNew.contains(watcherCollectionOldWatcher)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Watcher " + watcherCollectionOldWatcher + " since its reqId field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (departmentsIdNew != null) {
-                departmentsIdNew = em.getReference(departmentsIdNew.getClass(), departmentsIdNew.getId());
-                request.setDepartmentsId(departmentsIdNew);
-            }
-            if (createdbyIdNew != null) {
-                createdbyIdNew = em.getReference(createdbyIdNew.getClass(), createdbyIdNew.getId());
-                request.setCreatedbyId(createdbyIdNew);
-            }
-            if (managerIdNew != null) {
-                managerIdNew = em.getReference(managerIdNew.getClass(), managerIdNew.getId());
-                request.setManagerId(managerIdNew);
-            }
-            if (assignedIdNew != null) {
-                assignedIdNew = em.getReference(assignedIdNew.getClass(), assignedIdNew.getId());
-                request.setAssignedId(assignedIdNew);
-            }
-            Collection<Watcher> attachedWatcherCollectionNew = new ArrayList<Watcher>();
-            for (Watcher watcherCollectionNewWatcherToAttach : watcherCollectionNew) {
-                watcherCollectionNewWatcherToAttach = em.getReference(watcherCollectionNewWatcherToAttach.getClass(), watcherCollectionNewWatcherToAttach.getId());
-                attachedWatcherCollectionNew.add(watcherCollectionNewWatcherToAttach);
-            }
-            watcherCollectionNew = attachedWatcherCollectionNew;
-            request.setWatcherCollection(watcherCollectionNew);
             request = em.merge(request);
-            if (departmentsIdOld != null && !departmentsIdOld.equals(departmentsIdNew)) {
-                departmentsIdOld.getRequestCollection().remove(request);
-                departmentsIdOld = em.merge(departmentsIdOld);
-            }
-            if (departmentsIdNew != null && !departmentsIdNew.equals(departmentsIdOld)) {
-                departmentsIdNew.getRequestCollection().add(request);
-                departmentsIdNew = em.merge(departmentsIdNew);
-            }
-            if (createdbyIdOld != null && !createdbyIdOld.equals(createdbyIdNew)) {
-                createdbyIdOld.getRequestCollection().remove(request);
-                createdbyIdOld = em.merge(createdbyIdOld);
-            }
-            if (createdbyIdNew != null && !createdbyIdNew.equals(createdbyIdOld)) {
-                createdbyIdNew.getRequestCollection().add(request);
-                createdbyIdNew = em.merge(createdbyIdNew);
-            }
-            if (managerIdOld != null && !managerIdOld.equals(managerIdNew)) {
-                managerIdOld.getRequestCollection().remove(request);
-                managerIdOld = em.merge(managerIdOld);
-            }
-            if (managerIdNew != null && !managerIdNew.equals(managerIdOld)) {
-                managerIdNew.getRequestCollection().add(request);
-                managerIdNew = em.merge(managerIdNew);
-            }
-            if (assignedIdOld != null && !assignedIdOld.equals(assignedIdNew)) {
-                assignedIdOld.getRequestCollection().remove(request);
-                assignedIdOld = em.merge(assignedIdOld);
-            }
-            if (assignedIdNew != null && !assignedIdNew.equals(assignedIdOld)) {
-                assignedIdNew.getRequestCollection().add(request);
-                assignedIdNew = em.merge(assignedIdNew);
-            }
-            for (Watcher watcherCollectionNewWatcher : watcherCollectionNew) {
-                if (!watcherCollectionOld.contains(watcherCollectionNewWatcher)) {
-                    Request oldReqIdOfWatcherCollectionNewWatcher = watcherCollectionNewWatcher.getReqId();
-                    watcherCollectionNewWatcher.setReqId(request);
-                    watcherCollectionNewWatcher = em.merge(watcherCollectionNewWatcher);
-                    if (oldReqIdOfWatcherCollectionNewWatcher != null && !oldReqIdOfWatcherCollectionNewWatcher.equals(request)) {
-                        oldReqIdOfWatcherCollectionNewWatcher.getWatcherCollection().remove(watcherCollectionNewWatcher);
-                        oldReqIdOfWatcherCollectionNewWatcher = em.merge(oldReqIdOfWatcherCollectionNewWatcher);
-                    }
-                }
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -216,7 +69,7 @@ public class RequestJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -227,37 +80,6 @@ public class RequestJpaController implements Serializable {
                 request.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The request with id " + id + " no longer exists.", enfe);
-            }
-            List<String> illegalOrphanMessages = null;
-            Collection<Watcher> watcherCollectionOrphanCheck = request.getWatcherCollection();
-            for (Watcher watcherCollectionOrphanCheckWatcher : watcherCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Request (" + request + ") cannot be destroyed since the Watcher " + watcherCollectionOrphanCheckWatcher + " in its watcherCollection field has a non-nullable reqId field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            Department departmentsId = request.getDepartmentsId();
-            if (departmentsId != null) {
-                departmentsId.getRequestCollection().remove(request);
-                departmentsId = em.merge(departmentsId);
-            }
-            User createdbyId = request.getCreatedbyId();
-            if (createdbyId != null) {
-                createdbyId.getRequestCollection().remove(request);
-                createdbyId = em.merge(createdbyId);
-            }
-            User managerId = request.getManagerId();
-            if (managerId != null) {
-                managerId.getRequestCollection().remove(request);
-                managerId = em.merge(managerId);
-            }
-            User assignedId = request.getAssignedId();
-            if (assignedId != null) {
-                assignedId.getRequestCollection().remove(request);
-                assignedId = em.merge(assignedId);
             }
             em.remove(request);
             em.getTransaction().commit();
@@ -279,7 +101,9 @@ public class RequestJpaController implements Serializable {
     private List<Request> findRequestEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select object(o) from Request as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            cq.select(cq.from(Request.class));
+            Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -302,7 +126,10 @@ public class RequestJpaController implements Serializable {
     public int getRequestCount() {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select count(o) from Request as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            Root<Request> rt = cq.from(Request.class);
+            cq.select(em.getCriteriaBuilder().count(rt));
+            Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();

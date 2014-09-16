@@ -12,13 +12,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Role;
-import mks.dms.dao.entity.User;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 public class RoleJpaController implements Serializable {
 
@@ -36,16 +37,7 @@ public class RoleJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            User userId = role.getUserId();
-            if (userId != null) {
-                userId = em.getReference(userId.getClass(), userId.getId());
-                role.setUserId(userId);
-            }
             em.persist(role);
-            if (userId != null) {
-                userId.getRoleCollection().add(role);
-                userId = em.merge(userId);
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -59,22 +51,7 @@ public class RoleJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Role persistentRole = em.find(Role.class, role.getId());
-            User userIdOld = persistentRole.getUserId();
-            User userIdNew = role.getUserId();
-            if (userIdNew != null) {
-                userIdNew = em.getReference(userIdNew.getClass(), userIdNew.getId());
-                role.setUserId(userIdNew);
-            }
             role = em.merge(role);
-            if (userIdOld != null && !userIdOld.equals(userIdNew)) {
-                userIdOld.getRoleCollection().remove(role);
-                userIdOld = em.merge(userIdOld);
-            }
-            if (userIdNew != null && !userIdNew.equals(userIdOld)) {
-                userIdNew.getRoleCollection().add(role);
-                userIdNew = em.merge(userIdNew);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -104,11 +81,6 @@ public class RoleJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The role with id " + id + " no longer exists.", enfe);
             }
-            User userId = role.getUserId();
-            if (userId != null) {
-                userId.getRoleCollection().remove(role);
-                userId = em.merge(userId);
-            }
             em.remove(role);
             em.getTransaction().commit();
         } finally {
@@ -129,7 +101,9 @@ public class RoleJpaController implements Serializable {
     private List<Role> findRoleEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select object(o) from Role as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            cq.select(cq.from(Role.class));
+            Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -152,7 +126,10 @@ public class RoleJpaController implements Serializable {
     public int getRoleCount() {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select count(o) from Role as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            Root<Role> rt = cq.from(Role.class);
+            cq.select(em.getCriteriaBuilder().count(rt));
+            Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();

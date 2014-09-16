@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "label")
@@ -35,13 +35,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Label.findByType", query = "SELECT l FROM Label l WHERE l.type = :type"),
     @NamedQuery(name = "Label.findByName", query = "SELECT l FROM Label l WHERE l.name = :name"),
     @NamedQuery(name = "Label.findByCreated", query = "SELECT l FROM Label l WHERE l.created = :created"),
-    @NamedQuery(name = "Label.findByCreatedbyId", query = "SELECT l FROM Label l WHERE l.createdbyId = :createdbyId"),
-    @NamedQuery(name = "Label.findByCreatedbyCd", query = "SELECT l FROM Label l WHERE l.createdbyCd = :createdbyCd"),
-    @NamedQuery(name = "Label.findByCreatedbyName", query = "SELECT l FROM Label l WHERE l.createdbyName = :createdbyName"),
+    @NamedQuery(name = "Label.findByCreatedbyUsername", query = "SELECT l FROM Label l WHERE l.createdbyUsername = :createdbyUsername"),
     @NamedQuery(name = "Label.findByLastmodified", query = "SELECT l FROM Label l WHERE l.lastmodified = :lastmodified"),
-    @NamedQuery(name = "Label.findByLastmodifiedbyId", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyId = :lastmodifiedbyId"),
-    @NamedQuery(name = "Label.findByLastmodifiedbyName", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Label.findByLastmodifiedbyCd", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyCd = :lastmodifiedbyCd")})
+    @NamedQuery(name = "Label.findByLastmodifiedbyUsername", query = "SELECT l FROM Label l WHERE l.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
 public class Label implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -62,21 +58,13 @@ public class Label implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
-    @Column(name = "CREATEDBY_ID")
-    private Integer createdbyId;
-    @Column(name = "CREATEDBY_CD")
-    private String createdbyCd;
-    @Column(name = "CREATEDBY_NAME")
-    private String createdbyName;
+    @Column(name = "CREATEDBY_USERNAME")
+    private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastmodified;
-    @Column(name = "LASTMODIFIEDBY_ID")
-    private Integer lastmodifiedbyId;
-    @Column(name = "LASTMODIFIEDBY_NAME")
-    private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_CD")
-    private String lastmodifiedbyCd;
+    @Column(name = "LASTMODIFIEDBY_USERNAME")
+    private String lastmodifiedbyUsername;
 
     public Label() {
     }
@@ -133,28 +121,12 @@ public class Label implements Serializable {
         this.created = created;
     }
 
-    public Integer getCreatedbyId() {
-        return createdbyId;
+    public String getCreatedbyUsername() {
+        return createdbyUsername;
     }
 
-    public void setCreatedbyId(Integer createdbyId) {
-        this.createdbyId = createdbyId;
-    }
-
-    public String getCreatedbyCd() {
-        return createdbyCd;
-    }
-
-    public void setCreatedbyCd(String createdbyCd) {
-        this.createdbyCd = createdbyCd;
-    }
-
-    public String getCreatedbyName() {
-        return createdbyName;
-    }
-
-    public void setCreatedbyName(String createdbyName) {
-        this.createdbyName = createdbyName;
+    public void setCreatedbyUsername(String createdbyUsername) {
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Date getLastmodified() {
@@ -165,28 +137,12 @@ public class Label implements Serializable {
         this.lastmodified = lastmodified;
     }
 
-    public Integer getLastmodifiedbyId() {
-        return lastmodifiedbyId;
+    public String getLastmodifiedbyUsername() {
+        return lastmodifiedbyUsername;
     }
 
-    public void setLastmodifiedbyId(Integer lastmodifiedbyId) {
-        this.lastmodifiedbyId = lastmodifiedbyId;
-    }
-
-    public String getLastmodifiedbyName() {
-        return lastmodifiedbyName;
-    }
-
-    public void setLastmodifiedbyName(String lastmodifiedbyName) {
-        this.lastmodifiedbyName = lastmodifiedbyName;
-    }
-
-    public String getLastmodifiedbyCd() {
-        return lastmodifiedbyCd;
-    }
-
-    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
-        this.lastmodifiedbyCd = lastmodifiedbyCd;
+    public void setLastmodifiedbyUsername(String lastmodifiedbyUsername) {
+        this.lastmodifiedbyUsername = lastmodifiedbyUsername;
     }
 
     @Override

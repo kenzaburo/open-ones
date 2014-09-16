@@ -15,15 +15,15 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.Parameter;
+import mks.dms.dao.entity.RequestDepartment;
 
 /**
  *
  * @author ThachLN
  */
-public class ParameterJpaController implements Serializable {
+public class RequestDepartmentJpaController implements Serializable {
 
-    public ParameterJpaController(EntityManagerFactory emf) {
+    public RequestDepartmentJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -32,12 +32,12 @@ public class ParameterJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Parameter parameter) {
+    public void create(RequestDepartment requestDepartment) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(parameter);
+            em.persist(requestDepartment);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -46,19 +46,19 @@ public class ParameterJpaController implements Serializable {
         }
     }
 
-    public void edit(Parameter parameter) throws NonexistentEntityException, Exception {
+    public void edit(RequestDepartment requestDepartment) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            parameter = em.merge(parameter);
+            requestDepartment = em.merge(requestDepartment);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = parameter.getId();
-                if (findParameter(id) == null) {
-                    throw new NonexistentEntityException("The parameter with id " + id + " no longer exists.");
+                Integer id = requestDepartment.getId();
+                if (findRequestDepartment(id) == null) {
+                    throw new NonexistentEntityException("The requestDepartment with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -74,14 +74,14 @@ public class ParameterJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Parameter parameter;
+            RequestDepartment requestDepartment;
             try {
-                parameter = em.getReference(Parameter.class, id);
-                parameter.getId();
+                requestDepartment = em.getReference(RequestDepartment.class, id);
+                requestDepartment.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The parameter with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The requestDepartment with id " + id + " no longer exists.", enfe);
             }
-            em.remove(parameter);
+            em.remove(requestDepartment);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -90,19 +90,19 @@ public class ParameterJpaController implements Serializable {
         }
     }
 
-    public List<Parameter> findParameterEntities() {
-        return findParameterEntities(true, -1, -1);
+    public List<RequestDepartment> findRequestDepartmentEntities() {
+        return findRequestDepartmentEntities(true, -1, -1);
     }
 
-    public List<Parameter> findParameterEntities(int maxResults, int firstResult) {
-        return findParameterEntities(false, maxResults, firstResult);
+    public List<RequestDepartment> findRequestDepartmentEntities(int maxResults, int firstResult) {
+        return findRequestDepartmentEntities(false, maxResults, firstResult);
     }
 
-    private List<Parameter> findParameterEntities(boolean all, int maxResults, int firstResult) {
+    private List<RequestDepartment> findRequestDepartmentEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Parameter.class));
+            cq.select(cq.from(RequestDepartment.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -114,20 +114,20 @@ public class ParameterJpaController implements Serializable {
         }
     }
 
-    public Parameter findParameter(Integer id) {
+    public RequestDepartment findRequestDepartment(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Parameter.class, id);
+            return em.find(RequestDepartment.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getParameterCount() {
+    public int getRequestDepartmentCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Parameter> rt = cq.from(Parameter.class);
+            Root<RequestDepartment> rt = cq.from(RequestDepartment.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

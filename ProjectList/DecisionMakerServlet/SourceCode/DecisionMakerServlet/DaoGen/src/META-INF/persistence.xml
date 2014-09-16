@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="DecisionMaker-DBModelPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>mks.dms.dao.entity.RequestType</class>
+    <class>mks.dms.dao.entity.Label</class>
+    <class>mks.dms.dao.entity.Role</class>
+    <class>mks.dms.dao.entity.RequestDepartment</class>
+    <class>mks.dms.dao.entity.Template</class>
+    <class>mks.dms.dao.entity.UserRole</class>
+    <class>mks.dms.dao.entity.User</class>
+    <class>mks.dms.dao.entity.Department</class>
+    <class>mks.dms.dao.entity.Parameter</class>
+    <class>mks.dms.dao.entity.Watcher</class>
+    <class>mks.dms.dao.entity.Request</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dms?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.password" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+    </properties>
+  </persistence-unit>
+</persistence>

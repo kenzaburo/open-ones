@@ -27,12 +27,12 @@
   </c:if>
 
 <div>
-  <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label>
+  <label for="requestTypeCd" class="col_2">Loại yêu cầu</label>
       <select id="reqType" class="col_3" name="reqType">
          <option value="0">-- Lựa chọn --</option>
-         <c:forEach var="reqType" items="${lstReqTypes}">
+         <c:forEach var="reqType" items="${listRequestType}">
            <c:choose>
-             <c:when test='${reqType.cd == model.request.requesttypeCd}'>
+             <c:when test='${reqType.cd == requestTypeCd}'>
                <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
              </c:when>
              <c:otherwise>

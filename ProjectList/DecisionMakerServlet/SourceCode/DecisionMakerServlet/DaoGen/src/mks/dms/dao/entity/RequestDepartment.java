@@ -26,36 +26,28 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ThachLN
  */
 @Entity
-@Table(name = "requesttype")
+@Table(name = "request_department")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "RequestType.findAll", query = "SELECT r FROM RequestType r"),
-    @NamedQuery(name = "RequestType.findById", query = "SELECT r FROM RequestType r WHERE r.id = :id"),
-    @NamedQuery(name = "RequestType.findByCd", query = "SELECT r FROM RequestType r WHERE r.cd = :cd"),
-    @NamedQuery(name = "RequestType.findByName", query = "SELECT r FROM RequestType r WHERE r.name = :name"),
-    @NamedQuery(name = "RequestType.findByDescription", query = "SELECT r FROM RequestType r WHERE r.description = :description"),
-    @NamedQuery(name = "RequestType.findByEnabled", query = "SELECT r FROM RequestType r WHERE r.enabled = :enabled"),
-    @NamedQuery(name = "RequestType.findByCreated", query = "SELECT r FROM RequestType r WHERE r.created = :created"),
-    @NamedQuery(name = "RequestType.findByCreatedbyUsername", query = "SELECT r FROM RequestType r WHERE r.createdbyUsername = :createdbyUsername"),
-    @NamedQuery(name = "RequestType.findByLastmodified", query = "SELECT r FROM RequestType r WHERE r.lastmodified = :lastmodified"),
-    @NamedQuery(name = "RequestType.findByLastmodifiedbyUsername", query = "SELECT r FROM RequestType r WHERE r.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
-public class RequestType implements Serializable {
+    @NamedQuery(name = "RequestDepartment.findAll", query = "SELECT r FROM RequestDepartment r"),
+    @NamedQuery(name = "RequestDepartment.findById", query = "SELECT r FROM RequestDepartment r WHERE r.id = :id"),
+    @NamedQuery(name = "RequestDepartment.findByRequestId", query = "SELECT r FROM RequestDepartment r WHERE r.requestId = :requestId"),
+    @NamedQuery(name = "RequestDepartment.findByDepartmentId", query = "SELECT r FROM RequestDepartment r WHERE r.departmentId = :departmentId"),
+    @NamedQuery(name = "RequestDepartment.findByCreated", query = "SELECT r FROM RequestDepartment r WHERE r.created = :created"),
+    @NamedQuery(name = "RequestDepartment.findByCreatedbyUsername", query = "SELECT r FROM RequestDepartment r WHERE r.createdbyUsername = :createdbyUsername"),
+    @NamedQuery(name = "RequestDepartment.findByLastmodified", query = "SELECT r FROM RequestDepartment r WHERE r.lastmodified = :lastmodified"),
+    @NamedQuery(name = "RequestDepartment.findByLastmodifiedbyUsername", query = "SELECT r FROM RequestDepartment r WHERE r.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
+public class RequestDepartment implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Basic(optional = false)
-    @Column(name = "CD")
-    private String cd;
-    @Basic(optional = false)
-    @Column(name = "NAME")
-    private String name;
-    @Column(name = "DESCRIPTION")
-    private String description;
-    @Column(name = "ENABLED")
-    private Boolean enabled;
+    @Column(name = "REQUEST_ID")
+    private Integer requestId;
+    @Column(name = "DEPARTMENT_ID")
+    private Integer departmentId;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,17 +60,15 @@ public class RequestType implements Serializable {
     @Column(name = "LASTMODIFIEDBY_USERNAME")
     private String lastmodifiedbyUsername;
 
-    public RequestType() {
+    public RequestDepartment() {
     }
 
-    public RequestType(Integer id) {
+    public RequestDepartment(Integer id) {
         this.id = id;
     }
 
-    public RequestType(Integer id, String cd, String name, Date created) {
+    public RequestDepartment(Integer id, Date created) {
         this.id = id;
-        this.cd = cd;
-        this.name = name;
         this.created = created;
     }
 
@@ -90,36 +80,20 @@ public class RequestType implements Serializable {
         this.id = id;
     }
 
-    public String getCd() {
-        return cd;
+    public Integer getRequestId() {
+        return requestId;
     }
 
-    public void setCd(String cd) {
-        this.cd = cd;
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
     }
 
-    public String getName() {
-        return name;
+    public Integer getDepartmentId() {
+        return departmentId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
     }
 
     public Date getCreated() {
@@ -164,10 +138,10 @@ public class RequestType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RequestType)) {
+        if (!(object instanceof RequestDepartment)) {
             return false;
         }
-        RequestType other = (RequestType) object;
+        RequestDepartment other = (RequestDepartment) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -176,7 +150,7 @@ public class RequestType implements Serializable {
 
     @Override
     public String toString() {
-        return "mks.dms.dao.entity.RequestType[ id=" + id + " ]";
+        return "mks.dms.dao.entity.RequestDepartment[ id=" + id + " ]";
     }
     
 }

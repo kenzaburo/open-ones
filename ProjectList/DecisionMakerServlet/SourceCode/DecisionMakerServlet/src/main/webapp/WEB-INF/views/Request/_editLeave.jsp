@@ -21,7 +21,7 @@
 				 	<label for="scopes" class="col_2">Quản lý</label>
 				 	<form:select path="request.managerId.id" disabled="disabled" class="col_3" id="request.managerId.id" title="Người sẽ nhận đơn và duyệt nghỉ phép">
 		         		<option value="0">-- Chọn --</option>
-		         		<c:forEach var="user" items="${listUsers}">
+		         		<c:forEach var="user" items="${listUser}">
 		                  <c:choose>
 		                    <c:when test="${model.request.managerCd == user.cd}">
 		                        <option value="${user.id}" selected="selected">${user.username}</option>
@@ -89,7 +89,7 @@
 				 	<label for="scopes" class="col_2">Quản lý</label>
 				 	<form:select path="request.managerId.id" class="col_3" id="request.managerId.id" title="Người sẽ nhận đơn và duyệt nghỉ phép">
 		         		<option value="0">-- Chọn --</option>
-		         		<c:forEach var="user" items="${listUsers}">
+		         		<c:forEach var="user" items="${listUser}">
 		                  <c:choose>
 		                    <c:when test="${model.request.managerCd == user.cd}">
 		                        <option value="${user.id}" selected="selected">${user.username}</option>

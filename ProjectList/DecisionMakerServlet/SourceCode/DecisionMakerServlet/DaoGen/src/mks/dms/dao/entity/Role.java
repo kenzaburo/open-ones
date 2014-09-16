@@ -14,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -25,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "role")
@@ -34,14 +32,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
     @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id"),
     @NamedQuery(name = "Role.findByRole", query = "SELECT r FROM Role r WHERE r.role = :role"),
+    @NamedQuery(name = "Role.findByEnabled", query = "SELECT r FROM Role r WHERE r.enabled = :enabled"),
     @NamedQuery(name = "Role.findByCreated", query = "SELECT r FROM Role r WHERE r.created = :created"),
-    @NamedQuery(name = "Role.findByCreatedbyId", query = "SELECT r FROM Role r WHERE r.createdbyId = :createdbyId"),
-    @NamedQuery(name = "Role.findByCreatedbyCd", query = "SELECT r FROM Role r WHERE r.createdbyCd = :createdbyCd"),
-    @NamedQuery(name = "Role.findByCreatedbyName", query = "SELECT r FROM Role r WHERE r.createdbyName = :createdbyName"),
+    @NamedQuery(name = "Role.findByCreatedbyUsername", query = "SELECT r FROM Role r WHERE r.createdbyUsername = :createdbyUsername"),
     @NamedQuery(name = "Role.findByLastmodified", query = "SELECT r FROM Role r WHERE r.lastmodified = :lastmodified"),
-    @NamedQuery(name = "Role.findByLastmodifiedbyId", query = "SELECT r FROM Role r WHERE r.lastmodifiedbyId = :lastmodifiedbyId"),
-    @NamedQuery(name = "Role.findByLastmodifiedbyName", query = "SELECT r FROM Role r WHERE r.lastmodifiedbyName = :lastmodifiedbyName"),
-    @NamedQuery(name = "Role.findByLastmodifiedbyCd", query = "SELECT r FROM Role r WHERE r.lastmodifiedbyCd = :lastmodifiedbyCd")})
+    @NamedQuery(name = "Role.findByLastmodifiedbyUsername", query = "SELECT r FROM Role r WHERE r.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
 public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,30 +44,22 @@ public class Role implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
     @Column(name = "ROLE")
     private String role;
+    @Column(name = "ENABLED")
+    private Boolean enabled;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
-    @Column(name = "CREATEDBY_ID")
-    private Integer createdbyId;
-    @Column(name = "CREATEDBY_CD")
-    private String createdbyCd;
-    @Column(name = "CREATEDBY_NAME")
-    private String createdbyName;
+    @Column(name = "CREATEDBY_USERNAME")
+    private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastmodified;
-    @Column(name = "LASTMODIFIEDBY_ID")
-    private Integer lastmodifiedbyId;
-    @Column(name = "LASTMODIFIEDBY_NAME")
-    private String lastmodifiedbyName;
-    @Column(name = "LASTMODIFIEDBY_CD")
-    private String lastmodifiedbyCd;
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private User userId;
+    @Column(name = "LASTMODIFIEDBY_USERNAME")
+    private String lastmodifiedbyUsername;
 
     public Role() {
     }
@@ -81,8 +68,9 @@ public class Role implements Serializable {
         this.id = id;
     }
 
-    public Role(Integer id, Date created) {
+    public Role(Integer id, String role, Date created) {
         this.id = id;
+        this.role = role;
         this.created = created;
     }
 
@@ -102,6 +90,14 @@ public class Role implements Serializable {
         this.role = role;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Date getCreated() {
         return created;
     }
@@ -110,28 +106,12 @@ public class Role implements Serializable {
         this.created = created;
     }
 
-    public Integer getCreatedbyId() {
-        return createdbyId;
+    public String getCreatedbyUsername() {
+        return createdbyUsername;
     }
 
-    public void setCreatedbyId(Integer createdbyId) {
-        this.createdbyId = createdbyId;
-    }
-
-    public String getCreatedbyCd() {
-        return createdbyCd;
-    }
-
-    public void setCreatedbyCd(String createdbyCd) {
-        this.createdbyCd = createdbyCd;
-    }
-
-    public String getCreatedbyName() {
-        return createdbyName;
-    }
-
-    public void setCreatedbyName(String createdbyName) {
-        this.createdbyName = createdbyName;
+    public void setCreatedbyUsername(String createdbyUsername) {
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Date getLastmodified() {
@@ -142,36 +122,12 @@ public class Role implements Serializable {
         this.lastmodified = lastmodified;
     }
 
-    public Integer getLastmodifiedbyId() {
-        return lastmodifiedbyId;
+    public String getLastmodifiedbyUsername() {
+        return lastmodifiedbyUsername;
     }
 
-    public void setLastmodifiedbyId(Integer lastmodifiedbyId) {
-        this.lastmodifiedbyId = lastmodifiedbyId;
-    }
-
-    public String getLastmodifiedbyName() {
-        return lastmodifiedbyName;
-    }
-
-    public void setLastmodifiedbyName(String lastmodifiedbyName) {
-        this.lastmodifiedbyName = lastmodifiedbyName;
-    }
-
-    public String getLastmodifiedbyCd() {
-        return lastmodifiedbyCd;
-    }
-
-    public void setLastmodifiedbyCd(String lastmodifiedbyCd) {
-        this.lastmodifiedbyCd = lastmodifiedbyCd;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setLastmodifiedbyUsername(String lastmodifiedbyUsername) {
+        this.lastmodifiedbyUsername = lastmodifiedbyUsername;
     }
 
     @Override

@@ -130,7 +130,7 @@
 	<label class="col_2">Loại yêu cầu :</label>
 	<select id="reqType" class="col_2 column" name="reqType">
 		<option value="0">-- Tất cả --</option>
-		<c:forEach var="reqType" items="${lstReqTypes}">
+		<c:forEach var="reqType" items="${listRequestType}">
 			<c:choose>
 				<c:when test="${reqType.cd == param.newReqType}">
 					<option value="${reqType.cd}" selected="selected">${reqType.name}</option>
@@ -151,15 +151,15 @@
 	<label class="col_2">Người quản lý : </label>
 	<select id="reqManager" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
-        <c:forEach var="user" items="${listUsers}">
-            <option value="${user.cd}">${user.username}</option>
+        <c:forEach var="user" items="${listUser}">
+            <option value="${user.username}">${user.username}</option>
         </c:forEach>
 	</select>
 	<label class="col_2">Người được giao : </label>
 	<select id="reqAssign" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
-        <c:forEach var="user" items="${listUsers}">
-            <option value="${user.cd}">${user.username}</option>
+        <c:forEach var="user" items="${listUser}">
+            <option value="${user.username}">${user.username}</option>
         </c:forEach>
 	</select>
 	<button id="searchButton" style="margin-left: 0.83333333333333%;">Search</button>

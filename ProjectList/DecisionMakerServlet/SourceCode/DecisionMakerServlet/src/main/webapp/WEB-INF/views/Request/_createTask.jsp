@@ -4,47 +4,30 @@
 <!--    Task -->
 <div id="make-task">
     <form:form name="createTask" id="createTask" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
-      <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Task"/>
-      <form:hidden path="request.id"/>
-    <!--  Select type Request -->
-<!--     <div> -->
-<!--       <label for="request.requesttypeCd" class="col_2">Loại yêu cầu</label> -->
-<%--        <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createTask');"> --%>
-<!--          <option value="0">-- Lựa chọn --</option> -->
-<%--          <c:forEach var="reqType" items="${lstReqTypes}"> --%>
-<%--            <c:choose> --%>
-<%--              <c:when test='${reqType.cd == "Task"}'> --%>
-<%--                <option value="${reqType.cd}" selected="selected">${reqType.name}</option> --%>
-<%--              </c:when> --%>
-<%--              <c:otherwise> --%>
-<%--                <option value="${reqType.cd}">${reqType.name}</option> --%>
-<%--              </c:otherwise> --%>
-<%--            </c:choose> --%>
-<%--          </c:forEach> --%>
-<%--       </form:select> --%>
-<!--     </div> -->
+      <input id="requestTypeCd" name="requestTypeCd" type="hidden" value="Task"/>
+      <form:hidden path="requestId"/>
 		<div>
-		  <label for="request.title" class="col_2">Tiêu đề</label>
-		  <form:input path="request.title" id="request.title" type="text" required="required" class="col_8"/>
+		  <label for="title" class="col_2">Tiêu đề</label>
+		  <form:input path="title" id="title" type="text" required="required" class="col_8"/>
+          <form:errors path="title"></form:errors>
 		</div>
 		<div>
-			<label for="request.content" class="col_2 left">Nội dung</label>
+			<label for="content" class="col_2 left">Nội dung</label>
             
-			<form:textarea path="request.content" id="request.content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="taskContent" rows="15" placeholder="Mô tả chi tiết công việc"></form:textarea>
+			<form:textarea path="content" id="content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="taskContent" rows="15" placeholder="Mô tả chi tiết công việc"></form:textarea>
 		</div>
 
 		<div>
 			
-		 	<label for="request.assignedId.id" class="col_2">Người thực hiện</label>
-		 	<form:select path="request.assignedId.id" id="request.assignedId.id" name="request.assignedId.id"
-                class="col_8 chosen-select">
-                <c:forEach var="user" items="${listUsers}">
+		 	<label for="assigneeAccount" class="col_2">Người thực hiện</label>
+		 	<form:select path="assigneeAccount" class="col_8 chosen-select">
+                <c:forEach var="user" items="${listUser}">
                   <c:choose>
-                    <c:when test="${model.request.assignedCd == user.cd}">
-                      <option value="${user.id}" selected="selected">${user.username}</option>
+                    <c:when test="${assigneeAccount == user.username}">
+                      <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
-                      <option value="${user.id}">${user.username}</option>
+                      <option value="${user.username}">${user.username}</option>
                     </c:otherwise>
                   </c:choose>
                     
@@ -52,16 +35,16 @@
             </form:select>
 		</div>
 		<div>
-            <label for="request.managerId.id" class="col_2">Người quản lý</label>
-            <form:select path="request.managerId.id" id="request.managerId.id" name="request.managerId.id" class="chosen-select col_8">
-                <c:forEach var="user" items="${listUsers}">
+            <label for="managerAccount" class="col_2">Người quản lý</label>
+            <form:select path="managerAccount" class="chosen-select col_8">
+                <c:forEach var="user" items="${listUser}">
                   <c:choose>
-                    <c:when test="${model.request.managerCd == user.cd}">
-                        <option value="${user.id}" selected="selected">${user.username}</option>
+                    <c:when test="${managerAccount == user.username}">
+                        <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
                       <c:if test="${user.username != pageContext.request.userPrincipal.name}">
-                        <option value="${user.id}">${user.username}</option>
+                        <option value="${user.username}">${user.username}</option>
                       </c:if>
                     </c:otherwise>
                   </c:choose>
@@ -69,33 +52,32 @@
             </form:select>
 		</div>
 		<div>
-            <label for="listWatcher " class="col_2">Chia sẻ</label>
+            <label for="listWatcher" class="col_2">Chia sẻ</label>
             <form:select path="listWatcher" name="listWatcher" class="col_8 chosen-select" multiple="true">
-                <c:forEach var="user" items="${listUsers}">
-                    <option value="${user.id}">${user.username }</option>
+                <c:forEach var="user" items="${listUser}">
+                    <option value="${user.username}">${user.username}</option>
                 </c:forEach>
             </form:select>
 		</div>
 		<div>
-            <label for="scopes" class="col_2">Ngày bắt đầu</label>
-            <form:input path="request.startdate" id="request_startdate" size="10" class="col_2"/>
+            <label for="startDate" class="col_2">Ngày bắt đầu</label>
+            <form:input path="startDate" id="request_startdate" size="10" class="col_2"/>
             
-            <label for="scopes" class="col_2">Ngày kết thúc</label>
-            <form:input path="request.enddate" id="request_enddate" size="10" class="col_2"/>
-
+            <label for="endDate" class="col_2">Ngày kết thúc</label>
+            <form:input path="endDate" id="request_enddate" size="10" class="col_2"/>
 		</div>
 		<div>
-		 	<label for="scopes" class="col_2">Nhãn</label>
-		 	<form:input path="labels" id="labels" type="text" class="col_8"/>
+		 	<label for="listLabel" class="col_2">Nhãn</label>
+		 	<form:input path="listLabel" type="text" class="col_8"/>
 		</div>
 		<div>
-		 	<label for="request.duration" class="col_2">Thời lượng</label>
-		 	<form:input path="request.duration" id="request.duration" type="text" class="col_2" style="display:inline;"/>
+		 	<label for="duration" class="col_2">Thời lượng</label>
+		 	<form:input path="duration" id="duration" type="text" class="col_2" style="display:inline;"/>
       
-            <form:select path="request.durationunit" id="durationunit" class="col_2">
-                <c:forEach var="duration" items="${listDurationUnits}">
+            <form:select path="durationUnit" id="durationUnit" class="col_2">
+                <c:forEach var="duration" items="${listDurationUnit}">
                   <c:choose>
-                    <c:when test="${model.request.durationunit == duration.cd}">
+                    <c:when test="${durationUnit == duration.cd}">
                       <option value="${duration.cd}" selected="selected">${duration.name}</option>
                     </c:when>
                     <c:otherwise>
@@ -105,13 +87,9 @@
                 </c:forEach>
             </form:select>
 		</div>
-<!-- 		<div style="position:relative; top:10px;"> -->
-<!-- 			<label for="title" class="col_2">Góp ý: </label> -->
-<%-- 			<form:textarea path="request.comment" style="display:inline; position: relative; top:10px; left:10px;" cols="120" rows="15"></form:textarea> --%>
-<!-- 		</div> -->
     <%-- Refer: http://crunchify.com/spring-mvc-tutorial-how-to-upload-multiple-files-to-specific-location/ --%>
 		<div>
-		  <label for="attachment1" class="col_2">Đính kèm</label>
+		  <label for="attachment0" class="col_2">Đính kèm</label>
 		  <input name="attachments[0]" type="file" class="col_8"/>
 		</div>
 

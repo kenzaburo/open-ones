@@ -37,4 +37,16 @@ public class AppCons {
     public static final String SUCCESS = "SUCCESS";
     public static final String FAIL = "FAIL";
     
+    ////////////////////////////////////////////////////////
+    /*
+    * Status of Request
+    */
+    public static final String STATUS_CREATED = "Created";
+    
+    ////////////////////////////////////////////////////////
+    /*
+    * Status of Request
+    */
+    public static final String STATUS_DOING = "Doing";
+    
 }

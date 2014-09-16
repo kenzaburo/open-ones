@@ -102,7 +102,8 @@ public class TemplateModel implements Serializable {
             arrObjs = new Object[4];
             arrObjs[0] = formatJson(department.getCd());
             arrObjs[1] = formatJson(department.getName());
-            arrObjs[2] = formatJson(department.getManagerName());
+            //arrObjs[2] = formatJson(department.getManagerName());
+            arrObjs[2] = formatJson(department.getManagerUsername());
             arrObjs[3] = formatJson(department.getDescription());
             
             data.add(arrObjs);

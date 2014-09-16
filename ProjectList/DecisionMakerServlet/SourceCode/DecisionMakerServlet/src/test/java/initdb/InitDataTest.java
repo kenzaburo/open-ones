@@ -11,8 +11,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -23,8 +21,6 @@ import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.controller.RoleJpaController;
 import mks.dms.dao.controller.TemplateJpaController;
 import mks.dms.dao.controller.UserJpaController;
-//import mks.dms.dao.controller.UserRoleJpaController;
-import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.Template;
@@ -35,6 +31,7 @@ import org.junit.Test;
 
 import rocky.common.Constant;
 import rocky.common.FileUtil;
+//import mks.dms.dao.controller.UserRoleJpaController;
 
 /**
  *
@@ -89,7 +86,6 @@ public class InitDataTest {
         String username = "user";
         boolean isEnable = true;
         User user = new User();
-        user.setCd("001");
         
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
@@ -119,7 +115,6 @@ public class InitDataTest {
         String username = "thang@tokutokuya.com.vn";
         boolean isEnable = true;
         User user = new User();
-        user.setCd("011");
         
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
@@ -134,9 +129,6 @@ public class InitDataTest {
         UserJpaController daoCtrl = new UserJpaController(emf);
         daoCtrl.create(user);
 
-
-        
-        user.setCd("012");
         
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
@@ -161,7 +153,7 @@ public class InitDataTest {
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
         user.setDepartmentId(1);
-        user.setCd("002");
+
         user.setUsername(username);
         user.setEnabled(isEnable);
         user.setEmail("user01@gmail.com");
@@ -183,7 +175,7 @@ public class InitDataTest {
     public void testInitCreateUserSystem() {
         boolean isEnable = true;
         User user = new User();
-        user.setCd("000");
+
         user.setUsername("admin");
         user.setFirstname("Admin");
         user.setLastname("Mr");
@@ -198,7 +190,7 @@ public class InitDataTest {
         daoCtrl.create(user);
 
         user = new User();
-        user.setCd("010");
+
         user.setUsername("manager");
         user.setFirstname("Manager");
         user.setLastname("Mr");

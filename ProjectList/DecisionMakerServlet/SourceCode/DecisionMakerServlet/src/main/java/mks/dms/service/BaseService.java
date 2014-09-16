@@ -21,6 +21,8 @@ package mks.dms.service;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import mks.dms.dao.entity.User;
+
 /**
  * @author ThachLe
  *
@@ -28,8 +30,26 @@ import javax.persistence.Persistence;
 public class BaseService {
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
     
+    User user;
+    
     public static EntityManagerFactory getEmf() {
         return emf;
+    }
+
+    /**
+     * Get value of user.
+     * @return the user
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Set the value for user.
+     * @param user the user to set
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

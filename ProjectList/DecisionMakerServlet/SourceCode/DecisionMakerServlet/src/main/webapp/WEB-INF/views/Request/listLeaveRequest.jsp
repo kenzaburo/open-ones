@@ -218,7 +218,7 @@
 	<select id="reqCreator" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
         <c:forEach var="user" items="${listUsers}">
-            <option value="${user.cd}">${user.username}</option>
+            <option value="${user.username}">${user.username}</option>
         </c:forEach>
 	</select>
 	<button id="searchButton" style="margin-left: 0.83333333333333%;">Search</button>

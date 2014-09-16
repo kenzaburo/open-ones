@@ -7,20 +7,19 @@
 package mks.dms.dao.controller;
 
 import java.io.Serializable;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
-import mks.dms.dao.entity.Request;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 public class DepartmentJpaController implements Serializable {
 
@@ -34,29 +33,11 @@ public class DepartmentJpaController implements Serializable {
     }
 
     public void create(Department department) {
-        if (department.getRequestCollection() == null) {
-            department.setRequestCollection(new ArrayList<Request>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Request> attachedRequestCollection = new ArrayList<Request>();
-            for (Request requestCollectionRequestToAttach : department.getRequestCollection()) {
-                requestCollectionRequestToAttach = em.getReference(requestCollectionRequestToAttach.getClass(), requestCollectionRequestToAttach.getId());
-                attachedRequestCollection.add(requestCollectionRequestToAttach);
-            }
-            department.setRequestCollection(attachedRequestCollection);
             em.persist(department);
-            for (Request requestCollectionRequest : department.getRequestCollection()) {
-                Department oldDepartmentsIdOfRequestCollectionRequest = requestCollectionRequest.getDepartmentsId();
-                requestCollectionRequest.setDepartmentsId(department);
-                requestCollectionRequest = em.merge(requestCollectionRequest);
-                if (oldDepartmentsIdOfRequestCollectionRequest != null) {
-                    oldDepartmentsIdOfRequestCollectionRequest.getRequestCollection().remove(requestCollectionRequest);
-                    oldDepartmentsIdOfRequestCollectionRequest = em.merge(oldDepartmentsIdOfRequestCollectionRequest);
-                }
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -70,34 +51,7 @@ public class DepartmentJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Department persistentDepartment = em.find(Department.class, department.getId());
-            Collection<Request> requestCollectionOld = persistentDepartment.getRequestCollection();
-            Collection<Request> requestCollectionNew = department.getRequestCollection();
-            Collection<Request> attachedRequestCollectionNew = new ArrayList<Request>();
-            for (Request requestCollectionNewRequestToAttach : requestCollectionNew) {
-                requestCollectionNewRequestToAttach = em.getReference(requestCollectionNewRequestToAttach.getClass(), requestCollectionNewRequestToAttach.getId());
-                attachedRequestCollectionNew.add(requestCollectionNewRequestToAttach);
-            }
-            requestCollectionNew = attachedRequestCollectionNew;
-            department.setRequestCollection(requestCollectionNew);
             department = em.merge(department);
-            for (Request requestCollectionOldRequest : requestCollectionOld) {
-                if (!requestCollectionNew.contains(requestCollectionOldRequest)) {
-                    requestCollectionOldRequest.setDepartmentsId(null);
-                    requestCollectionOldRequest = em.merge(requestCollectionOldRequest);
-                }
-            }
-            for (Request requestCollectionNewRequest : requestCollectionNew) {
-                if (!requestCollectionOld.contains(requestCollectionNewRequest)) {
-                    Department oldDepartmentsIdOfRequestCollectionNewRequest = requestCollectionNewRequest.getDepartmentsId();
-                    requestCollectionNewRequest.setDepartmentsId(department);
-                    requestCollectionNewRequest = em.merge(requestCollectionNewRequest);
-                    if (oldDepartmentsIdOfRequestCollectionNewRequest != null && !oldDepartmentsIdOfRequestCollectionNewRequest.equals(department)) {
-                        oldDepartmentsIdOfRequestCollectionNewRequest.getRequestCollection().remove(requestCollectionNewRequest);
-                        oldDepartmentsIdOfRequestCollectionNewRequest = em.merge(oldDepartmentsIdOfRequestCollectionNewRequest);
-                    }
-                }
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -127,11 +81,6 @@ public class DepartmentJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The department with id " + id + " no longer exists.", enfe);
             }
-            Collection<Request> requestCollection = department.getRequestCollection();
-            for (Request requestCollectionRequest : requestCollection) {
-                requestCollectionRequest.setDepartmentsId(null);
-                requestCollectionRequest = em.merge(requestCollectionRequest);
-            }
             em.remove(department);
             em.getTransaction().commit();
         } finally {
@@ -152,7 +101,9 @@ public class DepartmentJpaController implements Serializable {
     private List<Department> findDepartmentEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select object(o) from Department as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            cq.select(cq.from(Department.class));
+            Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -175,7 +126,10 @@ public class DepartmentJpaController implements Serializable {
     public int getDepartmentCount() {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select count(o) from Department as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            Root<Department> rt = cq.from(Department.class);
+            cq.select(em.getCriteriaBuilder().count(rt));
+            Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();

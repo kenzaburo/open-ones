@@ -1,21 +1,17 @@
 package mks.dms.service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
+import mks.dms.dao.controller.ExRequestJpaController;
+import mks.dms.dao.entity.Request;
+import mks.dms.dao.entity.User;
+import mks.dms.util.AppCons;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-
-import mks.dms.dao.controller.ExRequestJpaController;
-import mks.dms.dao.controller.ExUserJpaController;
-import mks.dms.dao.controller.RequestJpaController;
-import mks.dms.dao.controller.UserJpaController;
-import mks.dms.dao.controller.exceptions.IllegalOrphanException;
-import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.*;
-import mks.dms.util.AppCons;
 
 /**
  * @description create service to bound of Jpa Controller
@@ -53,16 +49,53 @@ public class RequestService extends BaseService {
 	public int saveOrUpdate(Request request) {
 		// Init flag to check model exist
 		boolean flag = false;
+		Date currentDate = new Date();
 		// Find request by controller to check exist
 		flag = (request.getId() != null) && (controller.findRequest(request.getId()) != null);
 		
-		// If flaf is true edit request model
+		String username = user.getUsername();
+		// If flag is true edit request model
 		if (flag) {
 			try {
-				// Check default list wathcher
-				if (request.getWatcherCollection() == null) {
-					request.setWatcherCollection(new ArrayList<Watcher>());
-				}
+			    if (AppCons.TASK.equals(request.getRequesttypeCd())) {
+			       //if (request.getManagerId().getId() == userLogin.getId()) {
+	             if (username.equals(request.getManagerUsername())) {
+	                    request.setStatus("Updated");
+	                    request.setAssignerRead(1);
+	                    request.setCreatorRead(1);
+	                }
+	             // else if (request.getCreatedbyId().getId() == userLogin.getId() && request.getAssignedId().getId() != userLogin.getId()) {
+	                else if (user.getUsername().equals(request.getCreatedbyUsername()) && !username.equals(request.getAssigneeUsername())) {
+	                    request.setStatus("Updated");
+	                    request.setManagerRead(1);
+	                    request.setAssignerRead(1);
+	                }
+	             // else if (request.getAssignedId().getId() == userLogin.getId() && request.getCreatedbyId().getId() != userLogin.getId()) {
+	                else if (!user.getUsername().equals(request.getCreatedbyUsername()) && username.equals(request.getAssigneeUsername())) {
+	                    request.setStatus("Updated1");
+	                    request.setManagerRead(1);
+	                    request.setCreatorRead(1);
+	                }
+	             // else if (request.getAssignedId().getId() == userLogin.getId() && request.getCreatedbyId().getId() == userLogin.getId()) {
+	                else if (username.equals(request.getAssigneeUsername()) && user.getUsername().equals(request.getCreatedbyUsername())) {
+	                    request.setStatus("Updated");
+	                    request.setManagerRead(1);
+	                    request.setAssignerRead(0);
+	                    request.setCreatorRead(0);
+	                }
+	            }
+			
+	            
+	            request.setLastmodifiedbyUsername(username);
+	            request.setLastmodified(currentDate);
+
+	            if (user.getUsername().equals(request.getAssigneeUsername())) {
+	                request.setAssignerRead(1);
+	            } else {
+	                request.setAssignerRead(0);
+	            }
+	            request.setManagerRead(0);
+			    
 				controller.edit(request);
 				return EDIT_SUCCESS;
 			} catch (Exception ex) {
@@ -71,6 +104,28 @@ public class RequestService extends BaseService {
 				return SAVE_FAIL;
 			}
 		} else {
+            request.setStatus(AppCons.STATUS_CREATED);
+            // [TODO] Using meaningful constant
+            request.setCreatorRead(1);
+            
+            if (AppCons.TASK.equals(request.getRequesttypeCd())) {
+                if (username.equals(request.getAssigneeUsername())) {
+                    request.setStatus(AppCons.STATUS_DOING);
+                    
+                    // [TODO] Using meaningful constant
+                    request.setAssignerRead(1);
+                }
+                else {
+                    request.setAssignerRead(0);
+                }   
+            }
+            
+            // [TODO] Using meaningful constant
+            request.setManagerRead(0);
+            
+            request.setCreatedbyUsername(username);
+            request.setCreated(currentDate);
+		    
 			controller.create(request);
 			return CREATE_SUCCESS;
 		}
@@ -106,5 +161,37 @@ public class RequestService extends BaseService {
         return controller;
     }
 
+    /**
+     * Check isRead.
+     * <br/>
+     * @return 1 if unread, 0 if read
+     */
+    public int checkIsRead(Request request, User userLogin) {
+        int i = 0;
+        String username = userLogin.getUsername();
+        
+        // if (request.getCreatedbyCd() != null && request.getCreatedbyCd().equals(userLogin.getCd())) {
+        if (username.equals(request.getCreatedbyUsername())) {
+            if (request.getCreatorRead() == 0) {
+                i = 1;
+            }
+        }
+        
+        // if (request.getAssignedCd() != null && request.getAssignedCd().equals(userLogin.getCd())) {
+        if (username.equals(request.getAssigneeUsername())) {
+            if (request.getAssignerRead() == 0) {
+                i = 1;
+            }
+        }
+        
+        // if (request.getManagerCd() != null && request.getManagerCd().equals(userLogin.getCd())) {
+        if (username.equals(request.getManagerUsername())) {
+            if (request.getManagerRead() == 0) {
+                i = 1;
+            }
+        }
+        
+        return i;
+    }
 
 }

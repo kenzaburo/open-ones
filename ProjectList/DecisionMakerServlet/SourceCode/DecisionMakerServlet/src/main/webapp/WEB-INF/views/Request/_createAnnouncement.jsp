@@ -5,39 +5,23 @@
 <!--    Announcement -->
 <div id="make-announcement">
   <form:form name="createAnnouncement" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
-    <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Announcement"/>
-    <form:hidden path="request.id"/>
-    <!--  Select type Request -->
-<!--     <div> -->
-<%--       <label for="request.requesttypeCd" class="col_2">Loại yêu cầu${model.request.requesttypeCd}</label> --%>
-<%--        <form:select path="request.requesttypeCd"  id="reqType" class="col_3" name="reqType" onchange="displayDetailedRequest('createAnnouncement');"> --%>
-<!--          <option value="0">-- Lựa chọn --</option> -->
-<%--          <c:forEach var="reqType" items="${lstReqTypes}"> --%>
-<%--            <c:choose> --%>
-<%--              <c:when test='${reqType.cd == "Announcement"}'> --%>
-<%--                <option value="${reqType.cd}" selected="selected">${reqType.name}</option> --%>
-<%--              </c:when> --%>
-<%--              <c:otherwise> --%>
-<%--                <option value="${reqType.cd}">${reqType.name}</option> --%>
-<%--              </c:otherwise> --%>
-<%--            </c:choose> --%>
-<%--          </c:forEach> --%>
-<%--       </form:select> --%>
-<!--     </div> -->
+    <input id="requestTypeCd" name="requestTypeCd" type="hidden" value="Announcement"/>
+    <form:hidden path="requestId"/>
+
 		<div>
-		  <label for="request.title" class="col_2">Thông báo</label>
-		  <form:input path="request.title" id="request.title" type="text" required="required" class="col_8"/>
+		  <label for="title" class="col_2">Thông báo</label>
+		  <form:input path="title" id="title" type="text" required="required" class="col_8"/>
 		</div>
 		
 		<div>
 			<label for="request.contentAnnouncement" class="col_2">Nội dung</label>
-			<form:textarea path="request.content" id="request.contentAnnouncement" class="ckeditor" rows="10"/>
+			<form:textarea path="content" id="request.contentAnnouncement" class="ckeditor" rows="10"/>
 			
 		</div>
 		
 		<div>
           <label for="scopes" class="col_2">Phạm vi áp dụng</label>
-          <select id="reqDepartement" multiple="multiple" class="col_2 column" name="reqDepartement">
+          <select path="departmentCd" class="col_2 column">
 				<option value="0">-- Tất cả --</option>
 		        <c:forEach var="dept" items="${listDepartment}">
 		            <option value="${dept.cd}">${dept.name}</option>

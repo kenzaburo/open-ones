@@ -18,22 +18,17 @@
  */
 package mks.dms.dao.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
-
-import org.apache.log4j.Logger;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
-import mks.dms.dao.entity.Request;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author ThachLe
@@ -91,26 +86,7 @@ public class ExDepartmentJpaController extends DepartmentJpaController {
                     department = itDepartment.next();
                     
                     // Refer public void create(Department department) in super class
-                    if (department.getRequestCollection() == null) {
-                        department.setRequestCollection(new ArrayList<Request>());
-                    }
-                    
-                    Collection<Request> attachedRequestCollection = new ArrayList<Request>();
-                    for (Request requestCollectionRequestToAttach : department.getRequestCollection()) {
-                        requestCollectionRequestToAttach = em.getReference(requestCollectionRequestToAttach.getClass(), requestCollectionRequestToAttach.getId());
-                        attachedRequestCollection.add(requestCollectionRequestToAttach);
-                    }
-                    department.setRequestCollection(attachedRequestCollection);
                     em.persist(department);
-                    for (Request requestCollectionRequest : department.getRequestCollection()) {
-                        Department oldDepartmentsIdOfRequestCollectionRequest = requestCollectionRequest.getDepartmentsId();
-                        requestCollectionRequest.setDepartmentsId(department);
-                        requestCollectionRequest = em.merge(requestCollectionRequest);
-                        if (oldDepartmentsIdOfRequestCollectionRequest != null) {
-                            oldDepartmentsIdOfRequestCollectionRequest.getRequestCollection().remove(requestCollectionRequest);
-                            oldDepartmentsIdOfRequestCollectionRequest = em.merge(oldDepartmentsIdOfRequestCollectionRequest);
-                        }
-                    }
                     // Refer
                 }
             

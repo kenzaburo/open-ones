@@ -12,14 +12,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.User;
-import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.Watcher;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 public class WatcherJpaController implements Serializable {
 
@@ -37,25 +37,7 @@ public class WatcherJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            User userId = watcher.getUserId();
-            if (userId != null) {
-                userId = em.getReference(userId.getClass(), userId.getId());
-                watcher.setUserId(userId);
-            }
-            Request reqId = watcher.getReqId();
-            if (reqId != null) {
-                reqId = em.getReference(reqId.getClass(), reqId.getId());
-                watcher.setReqId(reqId);
-            }
             em.persist(watcher);
-            if (userId != null) {
-                userId.getWatcherCollection().add(watcher);
-                userId = em.merge(userId);
-            }
-            if (reqId != null) {
-                reqId.getWatcherCollection().add(watcher);
-                reqId = em.merge(reqId);
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -69,36 +51,7 @@ public class WatcherJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Watcher persistentWatcher = em.find(Watcher.class, watcher.getId());
-            User userIdOld = persistentWatcher.getUserId();
-            User userIdNew = watcher.getUserId();
-            Request reqIdOld = persistentWatcher.getReqId();
-            Request reqIdNew = watcher.getReqId();
-            if (userIdNew != null) {
-                userIdNew = em.getReference(userIdNew.getClass(), userIdNew.getId());
-                watcher.setUserId(userIdNew);
-            }
-            if (reqIdNew != null) {
-                reqIdNew = em.getReference(reqIdNew.getClass(), reqIdNew.getId());
-                watcher.setReqId(reqIdNew);
-            }
             watcher = em.merge(watcher);
-            if (userIdOld != null && !userIdOld.equals(userIdNew)) {
-                userIdOld.getWatcherCollection().remove(watcher);
-                userIdOld = em.merge(userIdOld);
-            }
-            if (userIdNew != null && !userIdNew.equals(userIdOld)) {
-                userIdNew.getWatcherCollection().add(watcher);
-                userIdNew = em.merge(userIdNew);
-            }
-            if (reqIdOld != null && !reqIdOld.equals(reqIdNew)) {
-                reqIdOld.getWatcherCollection().remove(watcher);
-                reqIdOld = em.merge(reqIdOld);
-            }
-            if (reqIdNew != null && !reqIdNew.equals(reqIdOld)) {
-                reqIdNew.getWatcherCollection().add(watcher);
-                reqIdNew = em.merge(reqIdNew);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -128,16 +81,6 @@ public class WatcherJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The watcher with id " + id + " no longer exists.", enfe);
             }
-            User userId = watcher.getUserId();
-            if (userId != null) {
-                userId.getWatcherCollection().remove(watcher);
-                userId = em.merge(userId);
-            }
-            Request reqId = watcher.getReqId();
-            if (reqId != null) {
-                reqId.getWatcherCollection().remove(watcher);
-                reqId = em.merge(reqId);
-            }
             em.remove(watcher);
             em.getTransaction().commit();
         } finally {
@@ -158,7 +101,9 @@ public class WatcherJpaController implements Serializable {
     private List<Watcher> findWatcherEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select object(o) from Watcher as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            cq.select(cq.from(Watcher.class));
+            Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -181,7 +126,10 @@ public class WatcherJpaController implements Serializable {
     public int getWatcherCount() {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createQuery("select count(o) from Watcher as o");
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            Root<Watcher> rt = cq.from(Watcher.class);
+            cq.select(em.getCriteriaBuilder().count(rt));
+            Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();

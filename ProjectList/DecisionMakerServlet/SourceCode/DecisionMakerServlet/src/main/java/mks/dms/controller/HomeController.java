@@ -3,6 +3,7 @@ package mks.dms.controller;
 import java.security.Principal;
 import java.util.List;
 
+import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.model.DurationUnit;
@@ -19,21 +20,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Handles requests for the application home page.
+ * <br/>
+ * Datum are stored in session:<br/>
+ * listRequestType: Types of request
+ * listUser: List of users [TODO] Change to ajax request in next version
+ * listDurationUnit: List of duration unit
  */
 @Controller
-@SessionAttributes({"lstReqTypes","listUsers", "listDurationUnits"})
+@SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment"})
 public class HomeController {
     /** Logging. */
     private final static Logger LOG = Logger.getLogger(HomeController.class);
     
     private final String ADMIN_USER = "admin";
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-//	@RequestMapping(value = "/", method = RequestMethod.GET)
-//	public String homeDefault(Model model) {
-//		return "home";
-//	}
     
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView root(Model model, Principal principal) {
@@ -56,27 +55,28 @@ public class HomeController {
 	    return mav;
 	}
 	
-	
-	
 	/**
 	* Put all common data into the session.
 	* <br/>
 	* lstRequestTypes: List of request types
-	* listUsers: List of Users
-	* listDurationUnits: List of Duration Units
+	* listUser: List of Users
+	* listDurationUnit: List of Duration Units
 	* @param mav
 	*/
 	private void shareCommonDataSession(ModelAndView mav) {
 	    MasterService masterService = new MasterService();
         List<RequestType> lstRequestTypes = masterService.getRequestTypes();
         LOG.debug("lstRequestTypes=" + lstRequestTypes);
-        mav.addObject("lstReqTypes", lstRequestTypes);
+        mav.addObject("listRequestType", lstRequestTypes);
         
         UserControllerService userService = new UserControllerService(); 
-        List<User> listUsers = userService.getAllUser();
-        mav.addObject("listUsers", listUsers);
+        List<User> listUser = userService.getAllUser();
+        mav.addObject("listUser", listUser);
         
-        List<DurationUnit> listDurationUnits = MasterService.getDurationUnits();
-        mav.addObject("listDurationUnits", listDurationUnits);
+        List<DurationUnit> listDurationUnit = MasterService.getDurationUnits();
+        mav.addObject("listDurationUnit", listDurationUnit);
+        
+        List<Department> listDepartment = masterService.getDepartments();
+        mav.addObject("listDepartment", listDepartment);
 	}
 }

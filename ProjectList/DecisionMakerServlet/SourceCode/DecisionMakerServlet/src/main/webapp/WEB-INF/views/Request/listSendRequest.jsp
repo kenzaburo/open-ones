@@ -272,7 +272,7 @@
 	<label class="col_1.5">Loại yêu cầu :</label>
 	<select id="reqType" class="col_2 column" name="reqType">
 		<option value="0">-- Tất cả --</option>
-		<c:forEach var="reqType" items="${lstReqTypes}">
+		<c:forEach var="reqType" items="${listRequestType}">
 			<c:choose>
 				<c:when test="${reqType.cd == param.newReqType}">
 					<option value="${reqType.cd}" selected="selected">${reqType.name}</option>

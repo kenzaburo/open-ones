@@ -18,7 +18,7 @@ public class RequestCreateModel implements Serializable {
     /* List of current user from database */
     //private List<User> listUser;
     
-    /* List of  Deparment from databse*/
+    /* List of  Department from database*/
     private List<Department> listDepartment;
 
     private String labels;
