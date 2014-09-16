@@ -9,7 +9,6 @@ $(document).ready(function () {
 	    dataType: 'json',
 	    type: 'GET',
 	    success: function (res) {
-	    	alert(res.countResponseRequest);
 	    	if (res.countResponseRequest > 0) {
 	    		$("#countResponse").html("<a class='button blue small' href='listSendRequest' >" + res.countResponseRequest + " New Response </a>");
 	    	}
@@ -27,7 +26,6 @@ $(document).ready(function () {
 	    dataType: 'json',
 	    type: 'GET',
 	    success: function (res) {
-	    	alert(res.countRequest);
 	    	if (res.countRequest > 0) {
 	    		$("#countRequest").html("<a class='button red small' href='listReceiveRequest' >" + res.countRequest + " New Request </a>");
 	    	}
