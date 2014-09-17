@@ -1,17 +1,26 @@
 package mks.dms.service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
 import mks.dms.dao.controller.ExRequestJpaController;
+import mks.dms.dao.controller.ExRequestTypeJpaController;
+import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.entity.Request;
+import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
+import mks.dms.extentity.ExUser;
+import mks.dms.model.RequestModel;
 import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import rocky.common.CommonUtil;
 
 /**
  * @description create service to bound of Jpa Controller
@@ -26,7 +35,11 @@ public class RequestService extends BaseService {
 	
 	/** Save = Create | Edit . */
 	public final static int SAVE_FAIL = -1;
+	
+	public final static int MODE_CREATE = 1;
 	public final static int CREATE_SUCCESS = 1;
+	
+	public final static int MODE_EDIT = 2;
 	public final static int EDIT_SUCCESS = 2;
 	/* Request Jpa controller */
 	private final ExRequestJpaController controller;
@@ -49,7 +62,7 @@ public class RequestService extends BaseService {
 	public int saveOrUpdate(Request request) {
 		// Init flag to check model exist
 		boolean flag = false;
-		Date currentDate = new Date();
+		
 		// Find request by controller to check exist
 		flag = (request.getId() != null) && (controller.findRequest(request.getId()) != null);
 		
@@ -85,18 +98,9 @@ public class RequestService extends BaseService {
 	                }
 	            }
 			
-	            
-	            request.setLastmodifiedbyUsername(username);
-	            request.setLastmodified(currentDate);
-
-	            if (user.getUsername().equals(request.getAssigneeUsername())) {
-	                request.setAssignerRead(1);
-	            } else {
-	                request.setAssignerRead(0);
-	            }
-	            request.setManagerRead(0);
-			    
+			    updateReferenceData(request, MODE_EDIT);
 				controller.edit(request);
+				
 				return EDIT_SUCCESS;
 			} catch (Exception ex) {
 				// Log data by throws exception inner
@@ -104,33 +108,107 @@ public class RequestService extends BaseService {
 				return SAVE_FAIL;
 			}
 		} else {
-            request.setStatus(AppCons.STATUS_CREATED);
-            // [TODO] Using meaningful constant
-            request.setCreatorRead(1);
-            
-            if (AppCons.TASK.equals(request.getRequesttypeCd())) {
-                if (username.equals(request.getAssigneeUsername())) {
-                    request.setStatus(AppCons.STATUS_DOING);
-                    
-                    // [TODO] Using meaningful constant
-                    request.setAssignerRead(1);
-                }
-                else {
-                    request.setAssignerRead(0);
-                }   
-            }
-            
-            // [TODO] Using meaningful constant
-            request.setManagerRead(0);
-            
-            request.setCreatedbyUsername(username);
-            request.setCreated(currentDate);
-		    
-			controller.create(request);
-			return CREATE_SUCCESS;
+		    updateReferenceData(request, MODE_CREATE);
+		    try {
+		        controller.create(request);
+		        return CREATE_SUCCESS;
+		    } catch (Exception ex) {
+		        LOG.error("Could note create the request id " + request.getId(), ex);
+                return SAVE_FAIL;
+		    }
 		}
 	}
 
+    /**
+    * [Give the description for method].
+    * @param request
+    * @param mode 1: Create (MODE_CREATE); 2: Edit (MODE_EDIT)
+    */
+    private void updateReferenceData(Request request, int mode) {
+        Date currentDate = new Date();
+        String username = user.getUsername();
+        
+        // Update request type name from request type cd
+        ExRequestTypeJpaController reqTypeJpaCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
+        RequestType reqType = reqTypeJpaCtrl.findRequestTypeByCd(request.getRequesttypeCd());
+        
+        if (reqType != null) {
+            request.setRequesttypeName(reqType.getName());
+        } else {
+            LOG.error("Could not found request type cd = " + request.getRequesttypeCd());
+        }
+        
+        // Get Full name of assignee from account
+        String assigneeAccount = request.getAssigneeUsername();
+        ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
+        if (assigneeAccount != null) {
+            User assigneeUser = userDaoCtrl.findUserByUsername(assigneeAccount);
+            request.setAssigneeName(ExUser.getFullname(assigneeUser));
+        } else {
+            // Do nothing
+        }
+        
+        // Get Full name of manager from account
+        String managerAccount = request.getManagerUsername();
+        
+        if (managerAccount != null) {
+            User managerUser = userDaoCtrl.findUserByUsername(managerAccount);
+            request.setManagerName(ExUser.getFullname(managerUser));
+        } else {
+            // Do nothing
+        }
+        
+        switch (mode) {
+            case MODE_CREATE:
+                request.setStatus(AppCons.STATUS_CREATED);
+                // [TODO] Using meaningful constant
+                request.setCreatorRead(1);
+                
+                if (AppCons.TASK.equals(request.getRequesttypeCd())) {
+                    if (username.equals(request.getAssigneeUsername())) {
+                        request.setStatus(AppCons.STATUS_DOING);
+                        
+                        // [TODO] Using meaningful constant
+                        request.setAssignerRead(1);
+                    }
+                    else {
+                        request.setAssignerRead(0);
+                    }   
+                }
+                
+                // [TODO] Using meaningful constant
+                request.setManagerRead(0);
+                
+                // Update System information
+                request.setCreatedbyUsername(username);
+                request.setCreated(currentDate);
+                
+                // Update full name of assignee
+                if (CommonUtil.isNNandNB(request.getAssigneeUsername())) {
+                    request.setAssigneeName(ExUser.getFullname(user));
+                }
+                break;
+            case MODE_EDIT:
+                request.setManagerRead(0);
+                
+                // Update System information
+                request.setLastmodifiedbyUsername(username);
+                request.setLastmodified(currentDate);
+
+                if (user.getUsername().equals(request.getAssigneeUsername())) {
+                    request.setAssignerRead(1);
+                } else {
+                    request.setAssignerRead(0);
+                }
+                
+                break;
+            default:
+                // Do nothing
+                LOG.warn("Do not support mode = " + mode);
+        }
+
+    }
+    
     /**
     * [Give the description for method].
     * @return

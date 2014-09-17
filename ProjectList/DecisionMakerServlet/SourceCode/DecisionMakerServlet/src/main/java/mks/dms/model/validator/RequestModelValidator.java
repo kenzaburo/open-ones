@@ -38,7 +38,7 @@ public class RequestModelValidator implements Validator {
 
     @Override
     public void validate(Object obj, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "title.required");   
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "required");   
     }
 
 }

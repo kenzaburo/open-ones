@@ -95,7 +95,11 @@ public class RequestController {
 
         // true passed to CustomDateEditor constructor means convert empty String to null
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));     
-        // binder.setValidator(validator);
+
+        // Refer: http://www.coderanch.com/t/524168/Spring/SessionAttributes-Validator-set-InitBinder
+        if (this.validator.supports(binder.getTarget().getClass())) {
+            binder.setValidator(this.validator);
+        }
     }
     
 	private static String username = "softeksolutionreport@gmail.com";
@@ -167,17 +171,13 @@ public class RequestController {
     * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
     */
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
-    public ModelAndView saveRequest(@ModelAttribute("model") @Validated RequestModel model, BindingResult bindingResult, Principal principal, HttpServletRequest httpRequest) {
+    public ModelAndView saveRequest(@ModelAttribute("model") @Validated RequestModel model, BindingResult bindingResult, Principal principal) {
         ModelAndView mav = new ModelAndView("createRequest");
         
         if (bindingResult.hasErrors()) {
             LOG.debug("Binding result; hasError=" + bindingResult.hasErrors());
             return mav;
         }
-        
-        // Model to re-display the saved request
-    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
-    	Date today = new Date();
     	
         User userLogin = userService.getUserByUsername(principal.getName());
         // Update login user for services
@@ -197,34 +197,26 @@ public class RequestController {
         LOG.debug("Start date=" + request.getStartdate());                         // Task | Leave
         LOG.debug("End date=" + request.getEnddate());                             // Task | Leave
         
-        if (model.getAttachments() != null) {
-            LOG.debug("Number of attachment: " + model.getAttachments().size());
-            LOG.debug("Name: " + model.getAttachments().get(0).getOriginalFilename());
-            try {
-                LOG.debug("Number of size: " + model.getAttachments().get(0).getBytes().length);
-            } catch (IOException ex) {
-                // TODO Auto-generated catch block
-                ex.printStackTrace();
-            }
-        } else {
-            LOG.debug("No attachment");
-        }
-        
         int saveOrUpdate = requestService.saveOrUpdate(request);
 
         
         // Send email if the request is "Leave"
-        if ((saveOrUpdate > 0) && (AppCons.LEAVE.equals(request.getRequesttypeCd()))) {
-            sendEmailLeave(request);
+        if (saveOrUpdate > 0) {
+            if (AppCons.LEAVE.equals(request.getRequesttypeCd())) {
+                sendEmailLeave(request);
+            }
+            
+            // Update request entity to model
+            AppUtil.parseRequestEntity2Model(request, model);
+
+            // Enable flag save.success
+            mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
+        } else {
+            // save.fail
+            mav.addObject(AppCons.SAVE_STATUS, AppCons.FAIL);
         }
 
-        
-		// Enable flag save.success
-        mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
         // Refresh model
-        //model.setRequest(request);
-        mav.addObject("model", model);
-        
         return mav;
     }
     

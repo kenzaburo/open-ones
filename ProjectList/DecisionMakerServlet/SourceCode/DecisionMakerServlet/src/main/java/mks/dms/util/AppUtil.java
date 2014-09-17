@@ -34,6 +34,18 @@ import mks.dms.model.RequestModel;
 public class AppUtil {
     private static final Logger LOG = Logger.getLogger(AppUtil.class);
 
+    public static RequestModel parseRequestEntity2Model(Request request, RequestModel model) {
+        model.setRequestId(request.getId());
+        
+        model.setFilename1(request.getFilename1());
+
+        return model;
+    }
+    /**
+    * Transfer data from model (view) to entity.
+    * @param model data from client
+    * @return entity for business layer
+    */
     public static Request parseRequestModel2Entity(RequestModel model) {
         Request request = new Request();
         
@@ -66,6 +78,42 @@ public class AppUtil {
         
         // For Announcement, Rule
         request.setDepartmentCd(model.getDepartmentCd());
+        
+        // Update attachment from models
+        List<MultipartFile> lstAttachment = model.getAttachments();
+        if (lstAttachment != null) {
+            int numOfFile = lstAttachment.size();
+            if (numOfFile >= 1) {
+                MultipartFile attachFile = lstAttachment.get(0);
+                request.setFilename1(attachFile.getOriginalFilename());
+                try {
+                    request.setAttachment1(attachFile.getBytes());
+                } catch (IOException ex) {
+                    LOG.warn("Could not get the content of attached file", ex);
+                }
+            }
+            
+            if (numOfFile >= 2) {
+                MultipartFile attachFile = lstAttachment.get(1);
+                request.setFilename2(attachFile.getOriginalFilename());
+                try {
+                    request.setAttachment2(attachFile.getBytes());
+                } catch (IOException ex) {
+                    LOG.warn("Could not get the content of attached file", ex);
+                }
+            }
+            
+            if (numOfFile >= 3) {
+                MultipartFile attachFile = lstAttachment.get(2);
+                request.setFilename3(attachFile.getOriginalFilename());
+                try {
+                    request.setAttachment3(attachFile.getBytes());
+                } catch (IOException ex) {
+                    LOG.warn("Could not get the content of attached file", ex);
+                }
+            }
+        }
+
         return request;
     }
 

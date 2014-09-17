@@ -1,15 +1,63 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!--    Task -->
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+
+<script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
+<link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
+
+<script>
+  $(function() {
+    $("#dialog-confirm-delete-attachment").hide();
+  }); 
+
+  function showConfirmDialog(requestId, requestTitle) {
+
+      $( "#dialog-confirm-delete-attachment").dialog({
+          resizable: false,
+          height:140,
+          modal: true,
+          buttons: {
+              "Xóa": function() {
+                  // Send http request to delete Announcement
+                  $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "deleteAttachment",
+
+                    data: {"id": requestId},
+                    success: function(res) {
+                        alert(res);
+                        //document.forms['listAnnouncement'].submit();
+                    },
+                    error: function(res) {
+                        //document.forms['listAnnouncement'].submit();
+                    }               
+                  });
+                  $( this ).dialog( "close" );
+              },
+              Cancel: function() {
+                  $( this ).dialog( "close" );
+              }
+          }
+      });
+  }
+</script>
+
+<div id="dialog-confirm-delete-attachment" title="Xóa file đính kèm?">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>File đính kèm sẽ bị xóa.</p>
+</div>
+<!-- Task -->
 <div id="make-task">
     <form:form name="createTask" id="createTask" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
       <input id="requestTypeCd" name="requestTypeCd" type="hidden" value="Task"/>
       <form:hidden path="requestId"/>
 		<div>
-		  <label for="title" class="col_2">Tiêu đề</label>
-		  <form:input path="title" id="title" type="text" required="required" class="col_8"/>
-          <form:errors path="title"></form:errors>
+		  <label for="title" class="col_2">Tiêu đề (*)</label>
+		  <form:input path="title" type="text" required="required" class="col_8"/>
+          <form:errors path="title" class="error"/>
 		</div>
 		<div>
 			<label for="content" class="col_2 left">Nội dung</label>
@@ -73,11 +121,11 @@
 		<div>
 		 	<label for="duration" class="col_2">Thời lượng</label>
 		 	<form:input path="duration" id="duration" type="text" class="col_2" style="display:inline;"/>
-      
+      ${durationUnit}
             <form:select path="durationUnit" id="durationUnit" class="col_2">
                 <c:forEach var="duration" items="${listDurationUnit}">
                   <c:choose>
-                    <c:when test="${durationUnit == duration.cd}">
+                    <c:when test="${model.durationUnit == duration.cd}">
                       <option value="${duration.cd}" selected="selected">${duration.name}</option>
                     </c:when>
                     <c:otherwise>
@@ -85,17 +133,26 @@
                     </c:otherwise>
                   </c:choose>
                 </c:forEach>
-            </form:select>
+            </form:select>  
 		</div>
     <%-- Refer: http://crunchify.com/spring-mvc-tutorial-how-to-upload-multiple-files-to-specific-location/ --%>
 		<div>
 		  <label for="attachment0" class="col_2">Đính kèm</label>
-		  <input name="attachments[0]" type="file" class="col_8"/>
+            <c:choose>
+                <c:when test="${not empty model.filename1}">
+                  ${model.filename1} 
+                  <a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title="Xóa ${model.filename1}"><i class="icon-remove"></i></a>
+                </c:when>
+                <c:otherwise>
+                  <input name="attachments[0]" type="file" class="col_8"/>
+                </c:otherwise>
+            </c:choose>
+		  
 		</div>
 
       <div>
-        <input type="submit" value="Save" class="button"/>
-         <input type="reset" value="Reset" class="button" />
+        <input type="submit" value='<s:message code="Save"/>' class="button"/>
+        <input type="reset" value='<s:message code="Reset"/>' class="button"/>
       </div>
   </form:form>
 </div>

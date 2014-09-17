@@ -64,50 +64,50 @@ public class RequestControllerService extends RequestService {
     * @param model
     * @param request output
     */
-    private void updateReferenceData(RequestModel model, Request request) {
-        // Update request type id, request type name from request type cd
-        ExRequestTypeJpaController reqTypeJpaCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
-        RequestType reqType = reqTypeJpaCtrl.findRequestTypeByCd(request.getRequesttypeCd());
-        
-        if (reqType != null) {
-            request.setRequesttypeName(reqType.getName());
-        } else {
-            LOG.error("Could not found request type cd = " + request.getRequesttypeCd());
-        }
-        
-        // Get code, name of assigned member by cd
-    	String assigneeCd = model.getAssigneeAccount();
-    	ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
-        if (assigneeCd != null) {
-            
-            User assigneeUser = userDaoCtrl.findUserByUsername(assigneeCd);
-            request.setAssigneeName(ExUser.getFullname(assigneeUser));
-        } else {
-            // Do nothing
-        }
-    	
-    	// Get code, name of manager by id
-        String managerAccount = model.getManagerAccount();
-    	
-        if (managerAccount != null) {
-            User managerUser = userDaoCtrl.findUserByUsername(managerAccount);
-            request.setManagerName(ExUser.getFullname(managerUser));
-        } else {
-            // Do nothing
-        }
-        
-        // Update attachment
-        List<MultipartFile> lstAttachment = model.getAttachments();
-        if (lstAttachment != null) {
-            MultipartFile attachFile = lstAttachment.get(0);
-            request.setFilename1(attachFile.getOriginalFilename());
-            try {
-                request.setAttachment1(attachFile.getBytes());
-            } catch (IOException ex) {
-                LOG.warn("Could not get the content of attached file", ex);
-            }
-        }
-    }
+//    private void updateReferenceData(RequestModel model, Request request) {
+//        // Update request type id, request type name from request type cd
+//        ExRequestTypeJpaController reqTypeJpaCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
+//        RequestType reqType = reqTypeJpaCtrl.findRequestTypeByCd(request.getRequesttypeCd());
+//        
+//        if (reqType != null) {
+//            request.setRequesttypeName(reqType.getName());
+//        } else {
+//            LOG.error("Could not found request type cd = " + request.getRequesttypeCd());
+//        }
+//        
+//        // Get code, name of assigned member by cd
+//    	String assigneeCd = model.getAssigneeAccount();
+//    	ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
+//        if (assigneeCd != null) {
+//            
+//            User assigneeUser = userDaoCtrl.findUserByUsername(assigneeCd);
+//            request.setAssigneeName(ExUser.getFullname(assigneeUser));
+//        } else {
+//            // Do nothing
+//        }
+//    	
+//    	// Get code, name of manager by id
+//        String managerAccount = model.getManagerAccount();
+//    	
+//        if (managerAccount != null) {
+//            User managerUser = userDaoCtrl.findUserByUsername(managerAccount);
+//            request.setManagerName(ExUser.getFullname(managerUser));
+//        } else {
+//            // Do nothing
+//        }
+//        
+//        // Update attachment
+//        List<MultipartFile> lstAttachment = model.getAttachments();
+//        if (lstAttachment != null) {
+//            MultipartFile attachFile = lstAttachment.get(0);
+//            request.setFilename1(attachFile.getOriginalFilename());
+//            try {
+//                request.setAttachment1(attachFile.getBytes());
+//            } catch (IOException ex) {
+//                LOG.warn("Could not get the content of attached file", ex);
+//            }
+//        }
+//    }
     
 //    /* Initialize model if it null*/
 //    private void initialize(Request model) {

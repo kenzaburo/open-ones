@@ -52,7 +52,9 @@ public class RequestModel implements Serializable {
     private List<Department> listDepartment;
     
     private List<MultipartFile> attachments;
-
+    // For display
+    private String filename1;
+    
     /**
      * Get value of requestId.
      * @return the requestId
@@ -275,6 +277,22 @@ public class RequestModel implements Serializable {
      */
     public void setAttachments(List<MultipartFile> attachments) {
         this.attachments = attachments;
+    }
+
+    /**
+     * Get value of filename1.
+     * @return the filename1
+     */
+    public String getFilename1() {
+        return filename1;
+    }
+
+    /**
+     * Set the value for filename1.
+     * @param filename1 the filename1 to set
+     */
+    public void setFilename1(String filename1) {
+        this.filename1 = filename1;
     }
 
     /**

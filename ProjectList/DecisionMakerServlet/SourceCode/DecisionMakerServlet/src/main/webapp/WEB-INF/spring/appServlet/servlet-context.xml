@@ -37,13 +37,32 @@
 	</bean>
     <bean id="requestValidator" class="mks.dms.model.validator.RequestModelValidator" />
 
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-      <property name="basenames" value="messages">
+    <!-- Refer: http://www.javablog.fr/spring-internationalization-with-message-source.html -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+      <property name="defaultEncoding" value="UTF-8" />
+      <property name="basenames">
+        <list>
+          <value>/WEB-INF/i18n/message</value>
+        </list>
       </property>
     </bean>
     
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
       <property name="defaultLocale" value="vi_VN" />
+    </bean>
+    
+
+    <!-- to supports the multiple languages -->
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+      <property name="interceptors">
+        <list>
+          <ref bean="localeChangeInterceptor" />
+        </list>
+      </property>
+    </bean>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+      <property name="paramName" value="language" />
     </bean>
     
     <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>

@@ -9,8 +9,9 @@
     <form:hidden path="requestId"/>
 
 		<div>
-		  <label for="title" class="col_2">Thông báo</label>
+		  <label for="title" class="col_2">Thông báo (*)</label>
 		  <form:input path="title" id="title" type="text" required="required" class="col_8"/>
+          <form:errors path="title" class="error"/>
 		</div>
 		
 		<div>
@@ -35,8 +36,8 @@
         </div>
 
       <div>
-         <input type="submit" value="Save" class="button"/>
-         <input type="reset" value="Reset" class="button" />
+        <input type="submit" value='<s:message code="Save"/>' class="button"/>
+        <input type="reset" value='<s:message code="Reset"/>' class="button"/>
       </div>
   </form:form>
 </div>
