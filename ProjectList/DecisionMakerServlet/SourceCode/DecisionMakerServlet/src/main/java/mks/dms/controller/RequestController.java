@@ -97,7 +97,8 @@ public class RequestController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));     
 
         // Refer: http://www.coderanch.com/t/524168/Spring/SessionAttributes-Validator-set-InitBinder
-        if (this.validator.supports(binder.getTarget().getClass())) {
+        
+        if ((validator != null) && (binder.getTarget() != null) && (validator.supports(binder.getTarget().getClass()))) {
             binder.setValidator(this.validator);
         }
     }

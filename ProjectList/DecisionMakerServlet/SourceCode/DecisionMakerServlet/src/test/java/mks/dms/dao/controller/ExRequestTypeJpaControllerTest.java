@@ -75,4 +75,17 @@ public class ExRequestTypeJpaControllerTest {
 //    	System.out.println(formater.parse(formater.format(today)));
     }
 
+    @Test
+    public void testDeleteAttachment() throws Exception {
+        ExRequestJpaController exDaoCtrl = new ExRequestJpaController(emf);
+        
+        int requestId = 3;
+        int fileId = 1;
+        exDaoCtrl.deleteAttachment(requestId, fileId);
+        
+        Request request = exDaoCtrl.findRequest(requestId);
+        assertNull(request.getFilename1());
+        assertNull(request.getAttachment1());
+    }
+
 }

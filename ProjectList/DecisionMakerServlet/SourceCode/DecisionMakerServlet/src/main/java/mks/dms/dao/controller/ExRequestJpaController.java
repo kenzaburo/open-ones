@@ -411,6 +411,7 @@ public class ExRequestJpaController extends RequestJpaController {
      * @throws NonexistentEntityException 
     */
     public void deleteAttachment(Integer requestId, Integer fileId) throws NonexistentEntityException, Exception {
+        LOG.debug("requestId=" + requestId + ";fileId=" + fileId);
         Request request = findRequest(requestId);
 
         if (fileId == 1) {

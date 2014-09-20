@@ -160,7 +160,7 @@ $(function(){
 		</div>
 	    <div>
 			<label for="title" class="col_2">Người Tạo: </label>
-			<input id="title" type="text" disabled="disabled" value="${request.createdbyName}" class="col_3 column"/>
+			<input id="title" type="text" disabled="disabled" value="${request.createdbyUsername}" class="col_3 column"/>
 		</div>
 		<div>
 			<label for="title" class="col_2">Người Nhận: </label>

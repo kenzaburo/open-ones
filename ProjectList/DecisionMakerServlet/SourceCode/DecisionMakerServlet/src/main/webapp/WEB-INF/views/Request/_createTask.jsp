@@ -33,6 +33,7 @@
                         //document.forms['listAnnouncement'].submit();
                     },
                     error: function(res) {
+                    	alert(res);
                         //document.forms['listAnnouncement'].submit();
                     }               
                   });
@@ -141,15 +142,13 @@
             <c:choose>
                 <c:when test="${not empty model.filename1}">
                   ${model.filename1} 
-                  <a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title="Xóa ${model.filename1}"><i class="icon-remove"></i></a>
+                  <a href="#" onclick='showConfirmDialog("${model.requestId}", "${model.title}")' title="Xóa ${model.filename1}"><i class="icon-remove"></i></a>
                 </c:when>
                 <c:otherwise>
                   <input name="attachments[0]" type="file" class="col_8"/>
                 </c:otherwise>
             </c:choose>
-		  
 		</div>
-
       <div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>
         <input type="reset" value='<s:message code="Reset"/>' class="button"/>
