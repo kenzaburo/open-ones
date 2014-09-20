@@ -27,7 +27,7 @@
                     contentType: 'application/json',
                     url: "deleteAttachment",
 
-                    data: {"id": requestId},
+                    data: {"id": requestId, "fileId" : 1},
                     success: function(res) {
                         alert(res);
                         //document.forms['listAnnouncement'].submit();

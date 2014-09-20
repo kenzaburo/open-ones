@@ -324,7 +324,26 @@ public class RequestController {
         }
         
         return jsonResult;
-    }    
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="deleteAttachment")
+    @ResponseBody
+    public String deleteAttachment(@RequestParam("id") Integer requestId, @RequestParam("fileId") Integer fileId) {
+        String jsonResult;
+
+        LOG.debug("id=" + requestId + ";fileId=" + fileId );
+
+        ExRequestJpaController daoCtrl = requestService.getDaoController();
+        try {
+            daoCtrl.deleteAttachment(requestId, fileId);
+            jsonResult = "{result: 'SUCCESS'}";
+        } catch (Exception ex) {
+            jsonResult = "{result: 'FAIL'}";
+            LOG.error("Could not delete the request id " + requestId, ex);
+        }
+        
+        return jsonResult;
+    } 
 
     @RequestMapping(value="detailRequest")
     public ModelAndView showDetailRequestPage(@RequestParam("id") int id, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {

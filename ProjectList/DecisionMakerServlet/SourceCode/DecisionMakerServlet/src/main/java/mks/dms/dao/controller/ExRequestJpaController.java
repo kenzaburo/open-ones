@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
+import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
 
@@ -401,4 +402,28 @@ public class ExRequestJpaController extends RequestJpaController {
 		}
 
 	}
+
+    /**
+    * [Give the description for method].
+    * @param requestId
+    * @param fileId start from 1
+     * @throws Exception 
+     * @throws NonexistentEntityException 
+    */
+    public void deleteAttachment(Integer requestId, Integer fileId) throws NonexistentEntityException, Exception {
+        Request request = findRequest(requestId);
+
+        if (fileId == 1) {
+            request.setFilename1(null);
+            request.setAttachment1(null);
+        } else if (fileId == 2) {
+            request.setFilename2(null);
+            request.setAttachment2(null);
+        } else if (fileId == 3) {
+            request.setFilename3(null);
+            request.setAttachment3(null);
+        }
+
+        this.edit(request);
+    }
 }
