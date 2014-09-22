@@ -1,6 +1,5 @@
 package mks.dms.service;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -13,12 +12,10 @@ import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
-import mks.dms.model.RequestModel;
 import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import rocky.common.CommonUtil;
 
@@ -31,7 +28,7 @@ import rocky.common.CommonUtil;
 public class RequestService extends BaseService {
 	
 	/* Logger to log information */
-	private final static Logger LOG = Logger.getLogger(RequestControllerService.class);
+	private final static Logger LOG = Logger.getLogger(RequestService.class);
 	
 	/** Save = Create | Edit . */
 	public final static int SAVE_FAIL = -1;
@@ -201,6 +198,16 @@ public class RequestService extends BaseService {
                     request.setAssignerRead(0);
                 }
                 
+                // if there is any attachment, 
+                if (CommonUtil.isNNandNB(request.getFilename1()) && (request.getAttachment1().length == 0)) {
+                    // Keep the current attach
+                    Request currentRequest = this.getDaoController().findRequest(request.getId());
+                    request.setFilename1(currentRequest.getFilename1());
+                    request.setAttachment1(currentRequest.getAttachment1());
+                } else {
+                    // Do nothing
+                }
+
                 break;
             default:
                 // Do nothing

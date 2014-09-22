@@ -16,33 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package mks.dms.model.validator;
-
-import mks.dms.model.RequestModel;
-
-import org.apache.log4j.Logger;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
+package mks.dms.info;
 
 /**
  * @author ThachLN
+ *
  */
-public class RequestModelValidator implements Validator {
-    private final static Logger LOG = Logger.getLogger(RequestModelValidator.class);
-
-    @Override
-    public boolean supports(Class<?> paramClass) {
-        return RequestModel.class.equals(paramClass);
+public class Result {
+    private String status;
+    private String description;
+    /**
+     * Get value of status.
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
     }
-
-    @Override
-    public void validate(Object obj, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "required");
-
-        RequestModel requestModel = (RequestModel) obj;
-        LOG.debug("duration=" + requestModel.getDuration());
-
+    /**
+     * Set the value for status.
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
-
+    /**
+     * Get value of description.
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+    /**
+     * Set the value for description.
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

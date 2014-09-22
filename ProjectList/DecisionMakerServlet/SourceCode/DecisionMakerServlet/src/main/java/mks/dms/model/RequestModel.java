@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Min;
+
 import mks.dms.dao.entity.Department;
 import mks.dms.util.AppCons;
 
@@ -40,6 +42,7 @@ public class RequestModel implements Serializable {
     
     private List<String> listLabel;
     
+    @Min(18)
     private Integer duration;
     /** Code of unit . */
     private Integer durationUnit;
@@ -52,7 +55,9 @@ public class RequestModel implements Serializable {
     private List<Department> listDepartment;
     
     private List<MultipartFile> attachments;
-    // For display
+    
+    /** For display and Keep file name in case of update the request 
+     */ 
     private String filename1;
     
     /**

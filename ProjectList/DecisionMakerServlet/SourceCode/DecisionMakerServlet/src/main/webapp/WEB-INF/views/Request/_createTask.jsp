@@ -6,6 +6,7 @@
 <script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
 <link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
+<link type="text/css" href="resources/css/app-validation.css" rel="stylesheet">
 
 <script>
   $(function() {
@@ -29,11 +30,15 @@
 
                     data: {"id": requestId, "fileId" : 1},
                     success: function(res) {
-                        alert(res);
-                        //document.forms['listAnnouncement'].submit();
+                        // alert("success:" + res.status);
+                        // display attachment
+                    	var attachHtml = '<label for="attachment0" class="col_2">Đính kèm</label>';
+                        attachHtml += '<br/><input name="attachments[0]" type="file" class="col_8"/>';
+                        
+                        $('#attachment').html(attachHtml);
                     },
                     error: function(res) {
-                    	alert(res);
+                    	alert("error:" + res.status);
                         //document.forms['listAnnouncement'].submit();
                     }               
                   });
@@ -122,7 +127,8 @@
 		<div>
 		 	<label for="duration" class="col_2">Thời lượng</label>
 		 	<form:input path="duration" id="duration" type="text" class="col_2" style="display:inline;"/>
-      ${durationUnit}
+            <form:errors path="duration" class="error"/>
+            
             <form:select path="durationUnit" id="durationUnit" class="col_2">
                 <c:forEach var="duration" items="${listDurationUnit}">
                   <c:choose>
@@ -137,17 +143,18 @@
             </form:select>  
 		</div>
     <%-- Refer: http://crunchify.com/spring-mvc-tutorial-how-to-upload-multiple-files-to-specific-location/ --%>
-		<div>
+		<div id="attachment">
 		  <label for="attachment0" class="col_2">Đính kèm</label>
-            <c:choose>
-                <c:when test="${not empty model.filename1}">
-                  ${model.filename1} 
-                  <a href="#" onclick='showConfirmDialog("${model.requestId}", "${model.title}")' title="Xóa ${model.filename1}"><i class="icon-remove"></i></a>
-                </c:when>
-                <c:otherwise>
-                  <input name="attachments[0]" type="file" class="col_8"/>
-                </c:otherwise>
-            </c:choose>
+          <c:choose>
+              <c:when test="${not empty model.filename1}">
+                ${model.filename1} 
+                <a href="#" onclick='showConfirmDialog("${model.requestId}", "${model.title}")' title="Xóa ${model.filename1}"><i class="icon-remove"></i></a>
+              </c:when>
+              <c:otherwise>
+                <input name="attachments[0]" type="file" class="col_8"/>
+              </c:otherwise>
+          </c:choose>
+          <form:hidden path="filename1"/>
 		</div>
       <div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>

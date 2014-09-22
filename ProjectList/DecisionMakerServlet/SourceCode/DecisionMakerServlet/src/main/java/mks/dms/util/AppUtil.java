@@ -60,6 +60,9 @@ public class AppUtil {
         request.setDuration(model.getDuration());
         request.setDurationunit(model.getDurationUnit());
         
+        // 
+        request.setFilename1(model.getFilename1());
+        
         List<MultipartFile> listAttachment = model.getAttachments();
 
         if ((listAttachment != null) && (listAttachment.size() > 0)) {

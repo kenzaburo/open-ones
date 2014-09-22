@@ -27,6 +27,7 @@ import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
+import mks.dms.info.Result;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.model.RequestModel;
 import mks.dms.service.MasterService;
@@ -329,21 +330,23 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.GET, value="deleteAttachment")
     @ResponseBody
-    public String deleteAttachment(@RequestParam("id") Integer requestId, @RequestParam("fileId") Integer fileId) {
-        String jsonResult;
+    public Result deleteAttachment(@RequestParam("id") Integer requestId, @RequestParam("fileId") Integer fileId) {
+        Result result = new Result();
 
         LOG.debug("id=" + requestId + ";fileId=" + fileId );
 
         ExRequestJpaController daoCtrl = requestService.getDaoController();
         try {
             daoCtrl.deleteAttachment(requestId, fileId);
-            jsonResult = "{result: 'SUCCESS'}";
+            result.setStatus("SUCCESS");
+            //jsonResult = "{\"result\": SUCCESS}";
         } catch (Exception ex) {
-            jsonResult = "{result: 'FAIL'}";
-            LOG.error("Could not delete the request id " + requestId, ex);
+            // jsonResult = "{\"result\": FAIL}";
+            //LOG.error("Could not delete the request id " + requestId, ex);
+            result.setStatus("FAIL");
         }
         
-        return jsonResult;
+        return result;
     } 
 
     @RequestMapping(value="detailRequest")
