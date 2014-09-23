@@ -943,7 +943,7 @@ public class RequestController {
     }
     
     @RequestMapping(value="response.request.count", method = RequestMethod.GET)
-    public @ResponseBody String countResponseRequest(Principal principal) throws JSONException{
+    public @ResponseBody String countResponseRequest(Principal principal,  HttpServletResponse response) throws JSONException{
         LOG.debug("principal.getName()=" + principal.getName());
     	User userLogin = userService.getUserByUsername(principal.getName());
     	String username = userLogin.getUsername();
@@ -962,11 +962,12 @@ public class RequestController {
         
 	    int count = 0;
 	    count = listApproveRequest.size() + listRejectedRequest.size() + listDoneTask.size() + listDoingTask.size();
-    	
+	    
+	    response.setContentType("text/plain");
+	    
 		JSONObject json = new JSONObject();
 		json.put("countResponseRequest", count);
     		
-//		return Json(json, "text/html");
     	return json.toString();
     } 
     
