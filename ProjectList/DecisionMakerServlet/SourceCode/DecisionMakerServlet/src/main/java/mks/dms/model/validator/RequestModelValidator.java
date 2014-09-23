@@ -18,6 +18,8 @@
  */
 package mks.dms.model.validator;
 
+import java.util.Date;
+
 import mks.dms.model.RequestModel;
 
 import org.apache.log4j.Logger;
@@ -43,6 +45,14 @@ public class RequestModelValidator implements Validator {
         RequestModel requestModel = (RequestModel) obj;
         LOG.debug("duration=" + requestModel.getDuration());
 
+        Date startDate = requestModel.getStartDate();
+        Date endDate = requestModel.getEndDate();
+        
+        if ((startDate != null) && (endDate != null)) {
+            if (startDate.after(endDate)) {
+                errors.rejectValue("startDate", "startDate.after.endDate");
+            }
+        }
     }
 
 }

@@ -119,6 +119,7 @@
             
             <label for="endDate" class="col_2">Ngày kết thúc</label>
             <form:input path="endDate" id="request_enddate" size="10" class="col_2"/>
+            <form:errors path="startDate"/>
 		</div>
 		<div>
 		 	<label for="listLabel" class="col_2">Nhãn</label>

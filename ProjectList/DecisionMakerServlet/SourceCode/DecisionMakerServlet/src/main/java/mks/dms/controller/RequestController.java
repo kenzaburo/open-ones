@@ -101,6 +101,8 @@ public class RequestController {
         
         if ((validator != null) && (binder.getTarget() != null) && (validator.supports(binder.getTarget().getClass()))) {
             binder.setValidator(this.validator);
+        } else {
+            LOG.warn("Could not set validator");
         }
     }
     
