@@ -61,7 +61,7 @@
       <input id="requestTypeCd" name="requestTypeCd" type="hidden" value="Task"/>
       <form:hidden path="requestId"/>
 		<div>
-		  <label for="title" class="col_2">Tiêu đề (*)</label>
+		  <label for="title" class="col_2">Tiêu đề (<span class="required">*</span>)</label>
 		  <form:input path="title" type="text" required="required" class="col_8"/>
           <form:errors path="title" class="error"/>
 		</div>
