@@ -5,12 +5,16 @@
 	<definition name="createRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/createRequest.jsp" />
 	</definition>
+    <definition name="browseRequest" extends="default">
+        <put-attribute name="body" value="/WEB-INF/views/Request/browseRequest.jsp" />
+    </definition>
+    
 	<definition name="detailRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/detailRequest.jsp" />
 	</definition>
     <!-- Edit request screen is same as Create request screen -->
 	<definition name="editRequest" extends="default">
-		<put-attribute name="body" value="/WEB-INF/views/Request/editRequest.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/Request/createRequest.jsp" />
 	</definition>
     <definition name="searchRequest" extends="default">
         <put-attribute name="body" value="/WEB-INF/views/Request/searchRequest.jsp" />

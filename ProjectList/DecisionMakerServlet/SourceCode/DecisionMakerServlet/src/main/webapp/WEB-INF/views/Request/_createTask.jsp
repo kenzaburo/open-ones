@@ -52,33 +52,34 @@
   }
 </script>
 
+<!-- Confirmation dialog for Delete attached file  -->
 <div id="dialog-confirm-delete-attachment" title="Xóa file đính kèm?">
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>File đính kèm sẽ bị xóa.</p>
 </div>
 <!-- Task -->
 <div id="make-task">
     <form:form name="createTask" id="createTask" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
-      <input id="requestTypeCd" name="requestTypeCd" type="hidden" value="Task"/>
-      <form:hidden path="requestId"/>
+      <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Task"/>
+      <form:hidden path="request.id"/>
 		<div>
 		  <label for="title" class="col_2">Tiêu đề (<span class="required">*</span>)</label>
-		  <form:input path="title" type="text" required="required" class="col_8"/>
-          <form:errors path="title" class="error"/>
+		  <form:input path="request.title" type="text" required="required" class="col_8"/>
+          <form:errors path="request.title" class="error"/>
 		</div>
 		<div>
 			<label for="content" class="col_2 left">Nội dung</label>
             
-			<form:textarea path="content" id="content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="taskContent" rows="15" placeholder="Mô tả chi tiết công việc"></form:textarea>
+			<form:textarea path="request.content" id="content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="taskContent" rows="15" placeholder="Mô tả chi tiết công việc"></form:textarea>
 		</div>
 
 		<div>
 			
-		 	<label for="assigneeAccount" class="col_2">Người thực hiện</label>
-		 	<form:select path="assigneeAccount" class="col_8 chosen-select">
+		 	<label for="assigneeUsername" class="col_2">Người thực hiện</label>
+		 	<form:select path="request.assigneeUsername" class="col_8 chosen-select">
                    <option value=""></option>
                 <c:forEach var="user" items="${listUser}">
                   <c:choose>
-                    <c:when test="${model.assigneeAccount == user.username}">
+                    <c:when test="${model.request.assigneeUsername == user.username}">
                       <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
@@ -90,12 +91,12 @@
             </form:select>
 		</div>
 		<div>
-            <label for="managerAccount" class="col_2">Người quản lý</label>
-            <form:select path="managerAccount" class="chosen-select col_8">
+            <label for="managerUsername" class="col_2">Người quản lý</label>
+            <form:select path="request.managerUsername" class="chosen-select col_8">
                     <option value=""></option>
                 <c:forEach var="user" items="${listUser}">
                   <c:choose>
-                    <c:when test="${model.managerAccount == user.username}">
+                    <c:when test="${model.request.managerUsername == user.username}">
                         <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
@@ -118,25 +119,25 @@
 <!-- 		</div> -->
 		<div>
             <label for="startDate" class="col_2">Ngày bắt đầu</label>
-            <form:input path="startDate" id="request_startdate" size="10" class="col_2"/>
+            <form:input path="request.startdate" id="request_startdate" size="10" class="col_2"/>
             
             <label for="endDate" class="col_2">Ngày kết thúc</label>
-            <form:input path="endDate" id="request_enddate" size="10" class="col_2"/>
-            <form:errors path="startDate" class="error"/>
+            <form:input path="request.enddate" id="request_enddate" size="10" class="col_2"/>
+            <form:errors path="request.startdate" class="error"/>
 		</div>
 		<div>
-		 	<label for="listLabel" class="col_2">Nhãn</label>
-		 	<form:input path="listLabel" type="text" class="col_8"/>
+		 	<label for="label" class="col_2">Nhãn</label>
+		 	<form:input path="request.label1" type="text" class="col_8"/>
 		</div>
 		<div>
 		 	<label for="duration" class="col_2">Thời lượng</label>
-		 	<form:input path="duration" id="duration" type="text" class="col_2" style="display:inline;"/>
-            <form:errors path="duration" class="error"/>
+		 	<form:input path="request.duration" type="text" class="col_2" style="display:inline;"/>
+            <form:errors path="request.duration" class="error"/>
             
-            <form:select path="durationUnit" id="durationUnit" class="col_2">
+            <form:select path="request.durationunit" class="col_2">
                 <c:forEach var="duration" items="${listDurationUnit}">
                   <c:choose>
-                    <c:when test="${model.durationUnit == duration.cd}">
+                    <c:when test="${model.request.durationunit == duration.cd}">
                       <option value="${duration.cd}" selected="selected">${duration.name}</option>
                     </c:when>
                     <c:otherwise>
@@ -150,15 +151,16 @@
 		<div id="attachment">
 		  <label for="attachment0" class="col_2">Đính kèm</label>
           <c:choose>
-              <c:when test="${not empty model.filename1}">
-                ${model.filename1} 
-                <a href="#" onclick='showConfirmDialog("${model.requestId}", "${model.title}")' title="Xóa ${model.filename1}"><i class="icon-remove"></i></a>
+              <c:when test="${not empty model.request.filename1}">
+                <a href="downloadFile?id=${model.request.id}" target="_blank" title="Download file đính kèm">${model.request.filename1}</a>
+                
+                <a href="#" onclick='showConfirmDialog("${model.request.id}", "${model.request.title}")' title="Xóa ${model.request.filename1}"><i class="icon-remove"></i></a>
               </c:when>
               <c:otherwise>
                 <input name="attachments[0]" type="file" class="col_8"/>
               </c:otherwise>
           </c:choose>
-          <form:hidden path="filename1"/>
+          <form:hidden path="request.filename1"/>
 		</div>
       <div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>

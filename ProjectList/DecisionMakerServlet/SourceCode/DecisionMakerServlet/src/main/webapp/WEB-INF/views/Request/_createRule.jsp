@@ -1,21 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <!--    Rule -->
 <div id="make-rule">
   <form:form name="createRule" class="horizontal" enctype="multipart/form-data" action="saveRequest" modelAttribute="model" method="POST">
-    <input id="requestTypeCd" name="requestTypeCd" type="hidden" value="Rule"/>
-    <form:hidden path="requestId"/>
+    <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Rule"/>
+    <form:hidden path="request.id"/>
         <div>
           <label for="title" class="col_2">Quy định (*)</label>
-          <form:input path="title" id="title" type="text" required="required" class="col_8"/>
-          <form:errors path="title" class="error"/>
+          <form:input path="request.title" type="text" required="required" class="col_8"/>
+          <form:errors path="request.title" class="error"/>
         </div>
         
         <div>
             <label for="content" class="col_2">Nội dung</label>
-            <form:textarea path="content" id="request.contentRule" class="ckeditor" rows="10"/>
+            <form:textarea path="request.content" id="request.contentRule" class="ckeditor" rows="10"/>
         </div>
         
         <div>

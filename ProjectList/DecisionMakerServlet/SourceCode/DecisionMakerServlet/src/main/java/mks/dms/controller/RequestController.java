@@ -65,6 +65,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class RequestController {
 	
 
+    private static final String MODEL = "model";
+
     /**  */
 	private static final Logger LOG = Logger.getLogger(RequestController.class);
 
@@ -161,9 +163,10 @@ public class RequestController {
         
         // Initial the request model
         RequestModel requestCreateModel = new RequestModel();
+        requestCreateModel.getRequest().setRequesttypeCd(AppCons.TASK);
 
         // Add object to modelandview
-        mav.addObject("model", requestCreateModel);
+        mav.addObject(MODEL, requestCreateModel);
         
     	return mav;
     }
@@ -177,7 +180,7 @@ public class RequestController {
     * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
     */
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
-    public ModelAndView saveRequest(@ModelAttribute("model") @Validated RequestModel model, BindingResult bindingResult, Principal principal) {
+    public ModelAndView saveRequest(@ModelAttribute(MODEL) @Validated RequestModel model, BindingResult bindingResult, Principal principal) {
         ModelAndView mav = new ModelAndView("createRequest");
         
         if (bindingResult.hasErrors()) {
@@ -190,7 +193,8 @@ public class RequestController {
         requestService.setUser(userLogin);
         
         // Debug data of model
-        Request request = AppUtil.parseRequestModel2Entity(model);
+        Request request = model.getRequest();
+        request = AppUtil.updateModelToEntity(model, request);
         
         //LOG.debug("type id=" + request.getRequesttypeId());
         LOG.debug("type cd=" + request.getRequesttypeCd());                       // have value from client
@@ -213,7 +217,7 @@ public class RequestController {
             }
             
             // Update request entity to model
-            AppUtil.parseRequestEntity2Model(request, model);
+            // AppUtil.parseRequestEntity2Model(request, model);
 
             // Enable flag save.success
             mav.addObject(AppCons.SAVE_STATUS, AppCons.SUCCESS);
@@ -279,7 +283,7 @@ public class RequestController {
         requestCreateModel.setRequest(request);;
         
         // Add object to modelandview
-        mav.addObject("model", requestCreateModel);
+        mav.addObject(MODEL, requestCreateModel);
 
         return mav;
     }
@@ -353,6 +357,37 @@ public class RequestController {
         return result;
     } 
 
+    /**
+    * [Give the description for method].
+    * This method will replace the method "showDetailRequestPage"
+    * @param id
+    * @param principal
+    * @return
+    */
+    @RequestMapping(value="browseRequest")
+    public ModelAndView browseRequest(@RequestParam("id") int id, Principal principal) {
+        ModelAndView mav = new ModelAndView("browseRequest");
+        
+        Request request = requestService.getDaoController().findRequest(id);
+        
+        RequestModel requestModel = new RequestModel();
+        requestModel.setRequest(request);
+        
+        mav.addObject(MODEL, requestModel);
+
+        return mav;
+    }
+    
+    /**
+    * [Give the description for method].
+    * @param id
+    * @param principal
+    * @return
+    * @throws IllegalOrphanException
+    * @throws NonexistentEntityException
+    * @throws Exception
+    * @{@link Deprecated}
+    */
     @RequestMapping(value="detailRequest")
     public ModelAndView showDetailRequestPage(@RequestParam("id") int id, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	Request request = requestService.getDaoController().findRequest(id);

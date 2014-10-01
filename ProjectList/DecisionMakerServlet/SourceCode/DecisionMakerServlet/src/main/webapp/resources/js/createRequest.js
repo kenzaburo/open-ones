@@ -15,7 +15,7 @@
 //	$("#make-leave").hide();
 //	showHideDetailedRequest(selectedReqType);
 //}
-
+var DATE_FORMAT= "dd-mm-yyyy";
 function showHideDetailedRequest(selectedReqType) {
 	//alert("selectedReqType" + selectedReqType);
 	if (selectedReqType == 'Announcement') {

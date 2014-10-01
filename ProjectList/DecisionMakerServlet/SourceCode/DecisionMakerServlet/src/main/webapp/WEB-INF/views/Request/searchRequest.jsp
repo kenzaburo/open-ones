@@ -1,3 +1,9 @@
+<%--
+  Modification:
+  - 2014/10/01 ThachLe:
+    + Change link "detailRequest" to "browseRequest": screen "Detail Request" will be replaced by "Browse Request"
+ --%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <script src="resources/handsontable/lib/jquery-1.10.2.js"></script>
@@ -83,7 +89,7 @@
 	            	for (var i = 0; i < res.length; i++) {
 		            	var obj = new Object();
 	        			obj.requestType = res[i].requestType;
-	        			obj.requestId = "<a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
+	        			obj.requestId = "<a href='browseRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
 	        			obj.managerName = res[i].managerName;
 	        			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
 	        			obj.startDay = res[i].startDate;
@@ -98,8 +104,8 @@
             		var $container = $("#example1");
                 	$container.handsontable({
                 		data: jsonArr,
-                	    colWidths: [150, 150, 100, 200, 300, 100],
-                	    colHeaders: ["Loại yêu cầu", "Tiêu đề", "Người nhận", "Thời gian", "Lý do", "Trạng thái"],
+                	    colWidths: [100, 200, 100, 200, 300, 100],
+                	    colHeaders: ["Loại yêu cầu", "Tiêu đề", "Người nhận", "Thời gian", "Nội dung", "Trạng thái"],
                 	    columns: [
     						{data: "requestType", renderer: "html"},
                 	     	{data: "requestId", renderer: "html"},

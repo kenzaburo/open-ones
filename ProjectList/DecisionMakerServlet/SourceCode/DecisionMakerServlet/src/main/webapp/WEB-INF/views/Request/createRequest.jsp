@@ -32,7 +32,7 @@
          <option value="0">-- Lựa chọn --</option>
          <c:forEach var="reqType" items="${listRequestType}">
            <c:choose>
-             <c:when test='${reqType.cd == model.requestTypeCd}'>
+             <c:when test='${reqType.cd == model.request.requesttypeCd}'>
                <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
              </c:when>
              <c:otherwise>

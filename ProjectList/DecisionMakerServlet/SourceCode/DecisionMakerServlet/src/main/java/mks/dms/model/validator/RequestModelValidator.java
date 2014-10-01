@@ -20,6 +20,7 @@ package mks.dms.model.validator;
 
 import java.util.Date;
 
+import mks.dms.dao.entity.Request;
 import mks.dms.model.RequestModel;
 
 import org.apache.log4j.Logger;
@@ -41,26 +42,27 @@ public class RequestModelValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         // Check title.required
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "request.title", "required");
 
         RequestModel requestModel = (RequestModel) obj;
-        LOG.debug("duration=" + requestModel.getDuration());
+        Request request = requestModel.getRequest();
+        LOG.debug("duration=" + request.getDuration());
 
         // Check start date <= end date
-        Date startDate = requestModel.getStartDate();
-        Date endDate = requestModel.getEndDate();
+        Date startDate = request.getStartdate();
+        Date endDate = request.getEnddate();
         
         if ((startDate != null) && (endDate != null)) {
             if (startDate.after(endDate)) {
-                errors.rejectValue("startDate", "startDate.after.endDate");
+                errors.rejectValue("request.startdate", "startDate.after.endDate");
             }
         }
         
         // Check duration > 0
-        Integer duration = requestModel.getDuration();
+        Integer duration = request.getDuration();
         if (duration != null) {
             if (duration <= 0) {
-                errors.rejectValue("duration", "number.positive");
+                errors.rejectValue("request.duration", "number.positive");
             }
         }
                 
