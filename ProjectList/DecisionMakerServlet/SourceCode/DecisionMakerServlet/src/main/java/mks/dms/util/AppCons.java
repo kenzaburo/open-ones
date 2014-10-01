@@ -48,5 +48,6 @@ public class AppCons {
     * Status of Request
     */
     public static final String STATUS_DOING = "Doing";
-    
+ 
+    public static final String DATE_FORMAT = "dd-MM-yyyy";
 }

@@ -138,7 +138,7 @@ public class RequestService extends BaseService {
         // Get Full name of assignee from account
         String assigneeAccount = request.getAssigneeUsername();
         ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
-        if (assigneeAccount != null) {
+        if (CommonUtil.isNNandNB(assigneeAccount)) {
             User assigneeUser = userDaoCtrl.findUserByUsername(assigneeAccount);
             request.setAssigneeName(ExUser.getFullname(assigneeUser));
         } else {
@@ -148,7 +148,7 @@ public class RequestService extends BaseService {
         // Get Full name of manager from account
         String managerAccount = request.getManagerUsername();
         
-        if (managerAccount != null) {
+        if (CommonUtil.isNNandNB(managerAccount)) {
             User managerUser = userDaoCtrl.findUserByUsername(managerAccount);
             request.setManagerName(ExUser.getFullname(managerUser));
         } else {

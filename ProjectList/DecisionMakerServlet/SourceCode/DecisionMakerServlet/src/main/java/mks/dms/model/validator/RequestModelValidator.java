@@ -40,11 +40,13 @@ public class RequestModelValidator implements Validator {
 
     @Override
     public void validate(Object obj, Errors errors) {
+        // Check title.required
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "required");
 
         RequestModel requestModel = (RequestModel) obj;
         LOG.debug("duration=" + requestModel.getDuration());
 
+        // Check start date <= end date
         Date startDate = requestModel.getStartDate();
         Date endDate = requestModel.getEndDate();
         
@@ -53,6 +55,15 @@ public class RequestModelValidator implements Validator {
                 errors.rejectValue("startDate", "startDate.after.endDate");
             }
         }
+        
+        // Check duration > 0
+        Integer duration = requestModel.getDuration();
+        if (duration != null) {
+            if (duration <= 0) {
+                errors.rejectValue("duration", "number.positive");
+            }
+        }
+                
     }
 
 }

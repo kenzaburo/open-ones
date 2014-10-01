@@ -38,7 +38,7 @@ public class RequestModel implements Serializable {
     private Date endDate;
     
     /** List accounts of watchers . */
-    private List<String> listWatcher;
+//    private List<String> listWatcher;
     
     private List<String> listLabel;
     
@@ -188,21 +188,21 @@ public class RequestModel implements Serializable {
         this.endDate = endDate;
     }
 
-    /**
-     * Get value of listWatcher.
-     * @return the listWatcher
-     */
-    public List<String> getListWatcher() {
-        return listWatcher;
-    }
-
-    /**
-     * Set the value for listWatcher.
-     * @param listWatcher the listWatcher to set
-     */
-    public void setListWatcher(List<String> listWatcher) {
-        this.listWatcher = listWatcher;
-    }
+//    /**
+//     * Get value of listWatcher.
+//     * @return the listWatcher
+//     */
+//    public List<String> getListWatcher() {
+//        return listWatcher;
+//    }
+//
+//    /**
+//     * Set the value for listWatcher.
+//     * @param listWatcher the listWatcher to set
+//     */
+//    public void setListWatcher(List<String> listWatcher) {
+//        this.listWatcher = listWatcher;
+//    }
 
     /**
      * Get value of listLabel.

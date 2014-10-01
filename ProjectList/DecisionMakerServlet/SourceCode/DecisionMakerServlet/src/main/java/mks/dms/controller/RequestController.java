@@ -63,7 +63,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment"})
 public class RequestController {
-	/**  */
+	
+
+    /**  */
 	private static final Logger LOG = Logger.getLogger(RequestController.class);
 
 	private final MasterService masterService;
@@ -91,7 +93,7 @@ public class RequestController {
     */
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
 
         // true passed to CustomDateEditor constructor means convert empty String to null
@@ -477,7 +479,7 @@ public class RequestController {
      **/
     @RequestMapping(value="rejectRequest")
     public String rejectRequest(HttpServletRequest req, Principal pricipal) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat formater = new SimpleDateFormat(AppCons.DATE_FORMAT);
     	Date today = new Date();
     	int id = Integer.parseInt(req.getParameter("requestId"));
     	String reasonReject = req.getParameter("rejectContent");
@@ -533,7 +535,7 @@ public class RequestController {
     
     @RequestMapping(value="addComment")
     public String addComment(HttpServletRequest req, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat formater = new SimpleDateFormat(AppCons.DATE_FORMAT);
     	Date today = new Date();
     	int id = Integer.parseInt(req.getParameter("requestId"));
     	String commentContent = req.getParameter("commentContent");
@@ -649,7 +651,7 @@ public class RequestController {
     
     @RequestMapping(value="send.request.load", method = RequestMethod.GET)
     public @ResponseBody String loadSendRequest(Principal principal) throws JSONException{
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
         User userLogin = userService.getUserByUsername(principal.getName());
     	// List<Request> listRequest = requestControllerService.getListRequestByCreatedbyCd(userLogin.getCd());
@@ -685,7 +687,7 @@ public class RequestController {
     
     @RequestMapping(value="receive.request.load", method = RequestMethod.GET)
     public @ResponseBody String loadReceiveRequest(Principal principal) throws JSONException{
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
         User userLogin = userService.getUserByUsername(principal.getName());
         String username = userLogin.getUsername();
@@ -732,7 +734,7 @@ public class RequestController {
     
     @RequestMapping(value="my.task.load", method = RequestMethod.GET)
     public @ResponseBody String loadMyListTask(Principal principal) throws JSONException{
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
         User userLogin = userService.getUserByUsername(principal.getName());
         String username = userLogin.getUsername();
@@ -773,7 +775,7 @@ public class RequestController {
     
     @RequestMapping(value="manage.task.load", method = RequestMethod.GET)
     public @ResponseBody String loadManageListTask(Principal principal) throws JSONException{
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
         User userLogin = userService.getUserByUsername(principal.getName());
         String username = userLogin.getUsername();
@@ -832,7 +834,7 @@ public class RequestController {
     	}
     	User userLogin = userService.getUserByUsername(principal.getName());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
     	for (Request request:listRequest) {
     		if (requestContent.equals("") && requestTitle.equals("")) {
@@ -1074,7 +1076,7 @@ public class RequestController {
     	
     	List<Request> listRequest = requestService.getDaoController().searchRequest(userCd, startDay, endDay, username, "", "Leave");
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
         if (departmentCd.equals("0") || departmentCd.equals("")) {
         	for (Request request:listRequest) {

@@ -75,9 +75,10 @@
 			
 		 	<label for="assigneeAccount" class="col_2">Người thực hiện</label>
 		 	<form:select path="assigneeAccount" class="col_8 chosen-select">
+                   <option value=""></option>
                 <c:forEach var="user" items="${listUser}">
                   <c:choose>
-                    <c:when test="${assigneeAccount == user.username}">
+                    <c:when test="${model.assigneeAccount == user.username}">
                       <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
@@ -91,9 +92,10 @@
 		<div>
             <label for="managerAccount" class="col_2">Người quản lý</label>
             <form:select path="managerAccount" class="chosen-select col_8">
+                    <option value=""></option>
                 <c:forEach var="user" items="${listUser}">
                   <c:choose>
-                    <c:when test="${managerAccount == user.username}">
+                    <c:when test="${model.managerAccount == user.username}">
                         <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
@@ -105,21 +107,22 @@
          		</c:forEach>
             </form:select>
 		</div>
-		<div>
-            <label for="listWatcher" class="col_2">Chia sẻ</label>
-            <form:select path="listWatcher" name="listWatcher" class="col_8 chosen-select" multiple="true">
-                <c:forEach var="user" items="${listUser}">
-                    <option value="${user.username}">${user.username}</option>
-                </c:forEach>
-            </form:select>
-		</div>
+<!-- 		<div> -->
+<!--             <label for="listWatcher" class="col_2">Chia sẻ</label> -->
+<%--             <form:select path="listWatcher" name="listWatcher" class="col_8 chosen-select" multiple="true"> --%>
+<!--                 <option value=""></option> -->
+<%--                 <c:forEach var="user" items="${listUser}"> --%>
+<%--                     <option value="${user.username}">${user.username}</option> --%>
+<%--                 </c:forEach> --%>
+<%--             </form:select> --%>
+<!-- 		</div> -->
 		<div>
             <label for="startDate" class="col_2">Ngày bắt đầu</label>
             <form:input path="startDate" id="request_startdate" size="10" class="col_2"/>
             
             <label for="endDate" class="col_2">Ngày kết thúc</label>
             <form:input path="endDate" id="request_enddate" size="10" class="col_2"/>
-            <form:errors path="startDate"/>
+            <form:errors path="startDate" class="error"/>
 		</div>
 		<div>
 		 	<label for="listLabel" class="col_2">Nhãn</label>
