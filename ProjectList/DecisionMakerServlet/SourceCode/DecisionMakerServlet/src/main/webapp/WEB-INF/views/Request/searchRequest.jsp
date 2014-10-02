@@ -131,9 +131,9 @@
 		
 	});
 </script>
-<h3>Tìm kiếm</h3>
+<h5>Tìm kiếm</h5>
 <div>
-	<label class="col_2">Loại yêu cầu :</label>
+	<label class="col_2">Loại yêu cầu:</label>
 	<select id="reqType" class="col_2 column" name="reqType">
 		<option value="0">-- Tất cả --</option>
 		<c:forEach var="reqType" items="${listRequestType}">
@@ -147,33 +147,33 @@
 			</c:choose>
 		</c:forEach>
 	</select>
-	<label class="col_2">Ngày bắt đầu : </label>
+	<label class="col_2">Ngày bắt đầu: </label>
 	<input id="startDate" type="date" class="col_2 column"/>
-	<label class="col_2">Ngày kết thúc : </label>
+	<label class="col_2">Ngày kết thúc: </label>
 	<input id="endDate" type="date" class="col_2 column"/>
 </div>
 <div>
 	
-	<label class="col_2">Người quản lý : </label>
+	<label class="col_2">Người quản lý: </label>
 	<select id="reqManager" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
         <c:forEach var="user" items="${listUser}">
             <option value="${user.username}">${user.username}</option>
         </c:forEach>
 	</select>
-	<label class="col_2">Người được giao : </label>
+	<label class="col_2">Người được giao: </label>
 	<select id="reqAssign" class="col_2 column">
 		<option value="0">-- Tất cả --</option>
         <c:forEach var="user" items="${listUser}">
             <option value="${user.username}">${user.username}</option>
         </c:forEach>
 	</select>
-	<button id="searchButton" style="margin-left: 0.83333333333333%;">Search</button>
+	<button id="searchButton" style="margin-left: 0.83333333333333%;">Tìm</button>
 </div>
 <div>
-	<label class="col_2">Tiêu đề : </label>
+	<label class="col_2">Tiêu đề: </label>
 	<input id="reqTitle" type="text" class="col_2 column"/>
-	<label class="col_2">Nội dung : </label>
+	<label class="col_2">Nội dung: </label>
 	<input id="reqContent" type="text" class="col_2 column"/>
 </div>
 

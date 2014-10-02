@@ -5,7 +5,7 @@
 
 <!-- Button Bar w/icons -->
 <ul class="button-bar">
-<li><a href=""><i class="icon-edit"></i> Sửa</a></li>&nbsp;&nbsp;
+<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i> Sửa</a></li>&nbsp;&nbsp;
 <li><a href=""><i class="icon-comment"></i> Comment</a></li>
 <li><a href=""><i class="icon-user-md"></i> Giao việc</a></li>
 <li><a href=""><i class="icon-tasks"></i> Thực hiện</a></li>

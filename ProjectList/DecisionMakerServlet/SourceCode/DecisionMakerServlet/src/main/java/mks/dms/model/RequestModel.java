@@ -27,7 +27,7 @@ public class RequestModel implements Serializable {
     private List<MultipartFile> attachments;
     
     /** Name of duration unit. For display only . */
-    private String durationUnit;
+    private String durationUnitName;
     
 //    /**
 //     * Get value of listLabel.
@@ -101,19 +101,19 @@ public class RequestModel implements Serializable {
     }
 
     /**
-     * Get value of durationUnit.
-     * @return the durationUnit
+     * Get value of durationUnitName.
+     * @return the durationUnitName
      */
-    public String getDurationUnit() {
-        return durationUnit;
+    public String getDurationUnitName() {
+        return durationUnitName;
     }
 
     /**
-     * Set the value for durationUnit.
-     * @param durationUnit the durationUnit to set
+     * Set the value for durationUnitName.
+     * @param durationUnitName the durationUnitName to set
      */
-    public void setDurationUnit(String durationUnit) {
-        this.durationUnit = durationUnit;
+    public void setDurationUnitName(String durationUnitName) {
+        this.durationUnitName = durationUnitName;
     }
 
 }

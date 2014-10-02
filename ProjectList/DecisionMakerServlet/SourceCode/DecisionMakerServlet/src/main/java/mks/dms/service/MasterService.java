@@ -270,4 +270,25 @@ public class MasterService extends BaseService {
     public static List<DurationUnit> getDurationUnits() {
         return lstDurationUnits;
     }
+    
+    /**
+    * Get name of unit.
+    * @param code 0: Giờ; 1: Ngày; 2: Tuần; 3: Tháng
+    * @return String of unit name
+    */
+    public static String getDurationUnitName(int code) {
+        String duName = null;
+        Iterator<DurationUnit> itDurationUnit = lstDurationUnits.iterator();
+
+        DurationUnit du;
+        String strCode = String.valueOf(code);
+        while (itDurationUnit.hasNext()) {
+            du = itDurationUnit.next();
+            if (du.getCd().equals(strCode)) {
+                duName = du.getName();
+            }
+        }
+
+        return duName;
+    }
 }

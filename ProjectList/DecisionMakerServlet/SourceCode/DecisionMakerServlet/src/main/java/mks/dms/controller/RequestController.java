@@ -373,6 +373,10 @@ public class RequestController {
         RequestModel requestModel = new RequestModel();
         requestModel.setRequest(request);
         
+        // Update durationUnitName from request to Model
+        String duName = MasterService.getDurationUnitName(request.getDurationunit());
+        requestModel.setDurationUnitName(duName);
+        
         mav.addObject(MODEL, requestModel);
 
         return mav;
