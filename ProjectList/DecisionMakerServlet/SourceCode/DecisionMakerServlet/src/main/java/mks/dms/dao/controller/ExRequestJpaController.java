@@ -199,21 +199,21 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      /Querying/JPQL
 	 */
 	public List<Request> searchRequest(String createdbyUsername, Date startDate,
-			Date endDate, String managerUsername, String assignCd,
+			Date endDate, String managerUsername, String assignUserName,
 			String requestTypeCd) {
 		EntityManager em = getEntityManager();
 		try {
 			String scriptQuery = "select r from Request r ";
 			if ((!createdbyUsername.equals("")) || ((startDate != null))
 					|| ((endDate != null)) || ((!managerUsername.equals("")))
-					|| ((!assignCd.equals("")))
+					|| ((!assignUserName.equals("")))
 					|| ((!requestTypeCd.equals("")))) {
 				scriptQuery += "WHERE ";
 			}
 			if (!createdbyUsername.equals("") && !createdbyUsername.equals("0")) {
 				if (((startDate != null)) || ((endDate != null))
 						|| ((!managerUsername.equals("")))
-						|| ((!assignCd.equals("")))
+						|| ((!assignUserName.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.createdbyUsername = :createdbyUsername AND ";
 				} else {
@@ -223,7 +223,7 @@ public class ExRequestJpaController extends RequestJpaController {
 			}
 			if (startDate != null) {
 				if (((endDate != null)) || ((!managerUsername.equals("")))
-						|| ((!assignCd.equals("")))
+						|| ((!assignUserName.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.startdate >= :startdate AND ";
 				} else {
@@ -231,7 +231,7 @@ public class ExRequestJpaController extends RequestJpaController {
 				}
 			}
 			if (endDate != null) {
-				if (((!managerUsername.equals(""))) || ((!assignCd.equals("")))
+				if (((!managerUsername.equals(""))) || ((!assignUserName.equals("")))
 						|| ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.enddate <= :enddate AND ";
 				} else {
@@ -240,17 +240,17 @@ public class ExRequestJpaController extends RequestJpaController {
 
 			}
 			if (!managerUsername.equals("0") && !managerUsername.equals("")) {
-				if ((!assignCd.equals("")) || ((!requestTypeCd.equals("")))) {
+				if ((!assignUserName.equals("")) || ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.managerUsername = :managerUsername AND ";
 				} else {
 					scriptQuery += "r.managerUsername = :managerUsername";
 				}
 			}
-			if (!assignCd.equals("0") && !assignCd.equals("")) {
+			if (!assignUserName.equals("0") && !assignUserName.equals("")) {
 				if (!requestTypeCd.equals("")) {
-					scriptQuery += "r.assigneeUsername = :assignCd AND ";
+					scriptQuery += "r.assigneeUsername = :assignUserName AND ";
 				} else {
-					scriptQuery += "r.assigneeUsername = :assignCd";
+					scriptQuery += "r.assigneeUsername = :assignUserName";
 				}
 			}
 			if (!requestTypeCd.equals("")) {
@@ -269,8 +269,8 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (!managerUsername.equals("0") && !managerUsername.equals("")) {
 				query.setParameter("managerUsername", managerUsername);
 			}
-			if (!assignCd.equals("0") && !assignCd.equals("")) {
-				query.setParameter("assignCd", assignCd);
+			if (!assignUserName.equals("0") && !assignUserName.equals("")) {
+				query.setParameter("assignUserName", assignUserName);
 			}
 			if (!requestTypeCd.equals("")) {
 				query.setParameter("requestTypeCd", requestTypeCd);

@@ -82,7 +82,7 @@
 				requestTitle = $("#reqTitle").val();
 			$.ajax({
 	            url: "search.request",
-	            data: {createdbyCd: "", startDate: startDay, endDate: endDay, managerId: requestManager, assignId: requestAssign, requestTypeCd: requestTypeCd, requestContent: requestContent, requestTitle: requestTitle},
+	            data: {createdbyUsername: "", startDate: startDay, endDate: endDay, managerUsername: requestManager, assignUsername: requestAssign, requestTypeCd: requestTypeCd, requestContent: requestContent, requestTitle: requestTitle},
 	            dataType: 'json',
 	            type: 'GET',
 	            success: function (res) {

@@ -863,13 +863,35 @@ public class RequestController {
     }
     
     @RequestMapping(value="search.request", method = RequestMethod.GET)
-    public @ResponseBody String searchRequest(Principal principal, @RequestParam("createdbyCd") String createdbyCd, @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate, @RequestParam("managerId") String managerCd, @RequestParam("assignId") String assignCd, @RequestParam("requestTypeCd") String requestTypeCd, @RequestParam("requestTitle") String requestTitle, @RequestParam("requestContent") String requestContent) throws JSONException {
+	public @ResponseBody
+			String searchRequest(Principal principal,
+			@RequestParam("createdbyUsername") String createdbyUsername,
+			@RequestParam("startDate") Date startDate,
+			@RequestParam("endDate") Date endDate,
+			@RequestParam("managerUsername") String managerUsername,
+			@RequestParam("assignUsername") String assignUsername,
+			@RequestParam("requestTypeCd") String requestTypeCd,
+			@RequestParam("requestTitle") String requestTitle,
+			@RequestParam("requestContent") String requestContent)
+			throws JSONException {
+    	
     	List<Request> listRequest;    	
-    	if (createdbyCd.equals("") && startDate == null && endDate == null && managerCd.equals("0") && assignCd.equals("0") && requestTypeCd.equals("0")) {
-    		// listRequest = requestControllerService.getAllRequest();
-    	    listRequest = requestService.getDaoController().findRequestEntities();
+    	if (createdbyUsername.equals("") && startDate == null && endDate == null && managerUsername.equals("0") && assignUsername.equals("0") && requestTypeCd.equals("0")) {
+    	    if (principal.getName().equals("admin") || principal.getName().equals("manager")) {
+    	    	listRequest = requestService.getDaoController().findRequestEntities();
+    	    }
+    	    else {
+    	    	List<Request> list1 = requestService.getDaoController().searchRequest(principal.getName(), null, null, "", "", "");
+    	    	List<Request> list2 = requestService.getDaoController().searchRequest("", null, null, principal.getName(), "", "");
+    	    	List<Request> list3 = requestService.getDaoController().searchRequest("", null, null, "", principal.getName(), "");
+    	    	list1.removeAll(list2);
+    	    	list1.addAll(list2);
+    	    	list1.removeAll(list3);
+    	    	list1.addAll(list3);
+    	    	listRequest = list1;
+    	    }
     	}else {
-    		listRequest = requestService.getDaoController().searchRequest(createdbyCd, startDate, endDate, managerCd, assignCd, requestTypeCd);
+    		listRequest = requestService.getDaoController().searchRequest(createdbyUsername, startDate, endDate, managerUsername, assignUsername, requestTypeCd);
     	}
     	User userLogin = userService.getUserByUsername(principal.getName());
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
@@ -1014,6 +1036,7 @@ public class RequestController {
     
     @RequestMapping(value="request.count", method = RequestMethod.GET)
     public @ResponseBody String countRequest(Principal principal) throws JSONException{
+
     	User userLogin = userService.getUserByUsername(principal.getName());
     	String username = userLogin.getUsername();
     	
