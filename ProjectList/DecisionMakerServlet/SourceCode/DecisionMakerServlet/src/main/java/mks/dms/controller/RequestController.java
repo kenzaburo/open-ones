@@ -27,6 +27,7 @@ import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
+import mks.dms.extentity.ExUser;
 import mks.dms.info.Result;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.model.RequestModel;
@@ -357,6 +358,34 @@ public class RequestController {
         return result;
     } 
 
+    @RequestMapping(method = RequestMethod.GET, value="updateAssignee")
+    @ResponseBody
+    public Result updateAssignee(@RequestParam("id") Integer requestId, 
+                                 @RequestParam("assigneeUsername") String assigneeUsername, @RequestParam("assigneeNote") String assigneeNote) {
+        Result result = new Result();
+
+        LOG.debug("id=" + requestId + ";assigneeUsername=" + assigneeUsername + ";assigneeNote=" + assigneeNote);
+
+        ExRequestJpaController daoCtrl = requestService.getDaoController();
+        try {
+            Request request = daoCtrl.findRequest(requestId);
+            request.setAssigneeUsername(assigneeUsername);
+            request.setAssigneeNote(assigneeNote);
+            User assignee = MasterService.findUserByUsername(assigneeUsername);
+            request.setAssigneeName(ExUser.getFullname(assignee));
+            
+            daoCtrl.edit(request);
+            result.setStatus("SUCCESS");
+            //jsonResult = "{\"result\": SUCCESS}";
+        } catch (Exception ex) {
+            // jsonResult = "{\"result\": FAIL}";
+            //LOG.error("Could not delete the request id " + requestId, ex);
+            result.setStatus("FAIL");
+        }
+        
+        return result;
+    }
+    
     /**
     * [Give the description for method].
     * This method will replace the method "showDetailRequestPage"

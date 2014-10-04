@@ -256,6 +256,11 @@ public class MasterService extends BaseService {
         return controller.findUserEntities();
     }
     
+    public static User findUserByUsername(String username) {
+        ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
+        return userDaoCtrl.findUserByUsername(username);
+    }
+    
     /**
     * [Give the description for method].
     * @return

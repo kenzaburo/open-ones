@@ -89,7 +89,6 @@ public class InitDataTest {
         
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
-        user.setDepartmentId(1);
         
         user.setUsername(username);
         user.setFirstname("User");
@@ -112,19 +111,18 @@ public class InitDataTest {
 
     @Test
     public void testInitCreateUserForTokutokuya() {
-        String username = "thang@tokutokuya.com.vn";
+        String username = "thang@test";
         boolean isEnable = true;
         User user = new User();
         
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
-        user.setDepartmentId(1);
         
         user.setUsername(username);
         user.setFirstname("Thang");
         user.setLastname("Chau Duc");
         user.setEnabled(isEnable);
-        user.setEmail("thang@tokutokuya.com.vn");
+        user.setEmail("thang@testemail");
         
         UserJpaController daoCtrl = new UserJpaController(emf);
         daoCtrl.create(user);
@@ -132,13 +130,12 @@ public class InitDataTest {
         
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
-        user.setDepartmentId(1);
         
-        user.setUsername("ngan@tokutokuya.com.vn");
+        user.setUsername("ngan@test");
         user.setFirstname("Ngan");
         user.setLastname("Ms");
         user.setEnabled(isEnable);
-        user.setEmail("ngan@tokutokuya.com.vn");
+        user.setEmail("ngan@testemail");
         
         daoCtrl.create(user);
 
@@ -152,7 +149,6 @@ public class InitDataTest {
         User user = new User();
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
-        user.setDepartmentId(1);
 
         user.setUsername(username);
         user.setEnabled(isEnable);
@@ -181,7 +177,6 @@ public class InitDataTest {
         user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("admin@gmail.com");
-        user.setDepartmentId(0);
         user.setDepartmentCd("System");
         user.setDepartmentName("System");
         

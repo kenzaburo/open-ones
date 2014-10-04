@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -59,7 +59,7 @@
                   <a href="downloadFile?id=${model.request.id}" target="_blank" title="Download file đính kèm">${model.request.filename1}</a>
                 </c:when>
                 <c:otherwise>
-                  <input name="attachments[0]" type="file" class="col_8"/>
+                  <s:message code="NONE"/>
                 </c:otherwise>
             </c:choose>
           </label>

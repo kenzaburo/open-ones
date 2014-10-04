@@ -88,6 +88,9 @@ public class Request implements Serializable {
     private String assigneeUsername;
     @Column(name = "ASSIGNEE_NAME")
     private String assigneeName;
+    @Lob
+    @Column(name = "ASSIGNEE_NOTE")
+    private String assigneeNote;
     @Column(name = "MANAGER_USERNAME")
     private String managerUsername;
     @Column(name = "MANAGER_NAME")
@@ -231,6 +234,14 @@ public class Request implements Serializable {
 
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
+    }
+
+    public String getAssigneeNote() {
+        return assigneeNote;
+    }
+
+    public void setAssigneeNote(String assigneeNote) {
+        this.assigneeNote = assigneeNote;
     }
 
     public String getManagerUsername() {

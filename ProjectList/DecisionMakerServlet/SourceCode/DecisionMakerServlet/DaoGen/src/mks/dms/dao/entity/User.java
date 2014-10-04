@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "User.findByFirstname", query = "SELECT u FROM User u WHERE u.firstname = :firstname"),
     @NamedQuery(name = "User.findByLastname", query = "SELECT u FROM User u WHERE u.lastname = :lastname"),
     @NamedQuery(name = "User.findByEnabled", query = "SELECT u FROM User u WHERE u.enabled = :enabled"),
-    @NamedQuery(name = "User.findByDepartmentId", query = "SELECT u FROM User u WHERE u.departmentId = :departmentId"),
     @NamedQuery(name = "User.findByDepartmentCd", query = "SELECT u FROM User u WHERE u.departmentCd = :departmentCd"),
     @NamedQuery(name = "User.findByDepartmentName", query = "SELECT u FROM User u WHERE u.departmentName = :departmentName"),
     @NamedQuery(name = "User.findByCreated", query = "SELECT u FROM User u WHERE u.created = :created"),
@@ -61,8 +60,6 @@ public class User implements Serializable {
     private String lastname;
     @Column(name = "ENABLED")
     private Boolean enabled;
-    @Column(name = "DEPARTMENT_ID")
-    private Integer departmentId;
     @Column(name = "DEPARTMENT_CD")
     private String departmentCd;
     @Column(name = "DEPARTMENT_NAME")
@@ -138,14 +135,6 @@ public class User implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public Integer getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(Integer departmentId) {
-        this.departmentId = departmentId;
     }
 
     public String getDepartmentCd() {

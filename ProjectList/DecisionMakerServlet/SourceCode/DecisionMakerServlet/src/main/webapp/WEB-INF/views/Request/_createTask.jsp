@@ -73,7 +73,7 @@
 
 		<div>
 			
-		 	<label for="assigneeUsername" class="col_2">Người thực hiện</label>
+		 	<label for="assigneeUsername" class="col_2"><s:message code="Assignee"/></label>
 		 	<form:select path="request.assigneeUsername" class="col_8 chosen-select">
                    <option value=""></option>
                 <c:forEach var="user" items="${listUser}">
