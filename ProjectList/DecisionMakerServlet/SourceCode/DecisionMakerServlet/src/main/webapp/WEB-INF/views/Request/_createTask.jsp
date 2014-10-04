@@ -68,7 +68,6 @@
 		</div>
 		<div>
 			<label for="content" class="col_2 left">Nội dung</label>
-            
 			<form:textarea path="request.content" id="content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="taskContent" rows="15" placeholder="Mô tả chi tiết công việc"></form:textarea>
 		</div>
 

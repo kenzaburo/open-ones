@@ -51,7 +51,7 @@ public class HomeController {
 	    }
 	    
 	    shareCommonDataSession(mav);
-	    
+	    mav.addObject("current", "home");
 	    return mav;
 	}
 	

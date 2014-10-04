@@ -38,7 +38,7 @@ public class RuleController {
         List<Request> lstRule = requestService.getListRule();
         
         mav.addObject("lstRule", lstRule);
-        
+        mav.addObject("current", "listRule");
         return mav;
     }
     

@@ -573,12 +573,18 @@ public class RequestController {
     }
     
     @RequestMapping(value="addComment")
-    public String addComment(HttpServletRequest req, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public ModelAndView showAddComment() {
+    	ModelAndView mav = new ModelAndView("addComment");
+    	return mav;
+    }
+    
+    @RequestMapping(value="saveComment")
+    public String processSaveComment(HttpServletRequest req, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	SimpleDateFormat formater = new SimpleDateFormat(AppCons.DATE_FORMAT);
     	Date today = new Date();
     	int id = Integer.parseInt(req.getParameter("requestId"));
     	String commentContent = req.getParameter("commentContent");
-    	
+    	ModelAndView mav = new ModelAndView("addComment");
 //    	Lay thong tin tai khoan dang nhap
 //    	Kiem tra tai khoan dang nhap phai tai khoan duoc yeu cau khong
 //    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
@@ -637,7 +643,7 @@ public class RequestController {
     	
     	requestService.saveOrUpdate(request);
     	
-    	return "redirect:detailRequest?id=" + id;
+    	return "redirect:browseRequest.html?id=" + id;
     }
     
     /**

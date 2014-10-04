@@ -31,5 +31,8 @@
 	<definition name="listLeaveRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/listLeaveRequest.jsp" />
 	</definition>
+	<definition name="addComment" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Request/addComment.jsp" />
+	</definition>
 	<definition name="detailContent" template="/WEB-INF/views/Request/detailContent.jsp"></definition>
 </tiles-definitions>

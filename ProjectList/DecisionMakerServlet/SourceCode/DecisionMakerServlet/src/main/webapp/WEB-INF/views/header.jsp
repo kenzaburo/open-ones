@@ -78,10 +78,31 @@ $(document).ready(function () {
 });
 </script>
 <ul class="menu">
-	<li class="current"><a href=""><i class="icon-home"></i>Trang chủ</a></li>
-  	<li><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>
-  	<li><a href="listRule"><i class="icon-legal"></i>Quy định</a></li>
-	  <li><a href="#"><i class="icon-eye-open"></i>Công việc</a>
+	<c:choose>
+		<c:when test="${current == 'home'}">
+			<li class="current"><a href="home"><i class="icon-home"></i>Trang chủ</a></li>
+		</c:when>
+		<c:otherwise>
+			<li><a href="home"><i class="icon-home"></i>Trang chủ</a></li>
+		</c:otherwise>
+	</c:choose>
+	<c:choose>
+		<c:when test="${current == 'listAnnouncement'}">
+			<li class="current"><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>
+		</c:when>
+		<c:otherwise>
+			<li><a href="listAnnouncement"><i class="icon-bullhorn"></i>Thông báo</a></li>
+		</c:otherwise>
+	</c:choose>
+  	<c:choose>
+		<c:when test="${current == 'listRule'}">
+			<li class="current"><a href="listRule"><i class="icon-legal"></i>Quy định</a></li>
+		</c:when>
+		<c:otherwise>
+			<li><a href="listRule"><i class="icon-legal"></i>Quy định</a></li>
+		</c:otherwise>
+	</c:choose>
+	<li><a href="#"><i class="icon-eye-open"></i>Công việc</a>
 	  	<ul>
 	      <li><a href="createRequest?model.request.requesttypeCd=Task"><i class="icon-magic"></i>Tạo việc mới</a></li>
 	      <li><a href="searchRequest?requestTypeCd=Task"><i class="icon-search"></i>Tìm công việc</a></li>

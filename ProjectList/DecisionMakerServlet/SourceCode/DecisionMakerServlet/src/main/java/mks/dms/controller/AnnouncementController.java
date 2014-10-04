@@ -38,7 +38,7 @@ public class AnnouncementController {
         List<Request> lstAnnouncement = requestService.getListAnnouncement();
         
         mav.addObject("lstAnnouncement", lstAnnouncement);
-        
+        mav.addObject("current", "listAnnouncement");
         return mav;
     }
     

@@ -253,7 +253,7 @@ public class ExRequestJpaController extends RequestJpaController {
 					scriptQuery += "r.assigneeUsername = :assignUserName";
 				}
 			}
-			if (!requestTypeCd.equals("")) {
+			if (!requestTypeCd.equals("") && !requestTypeCd.equals("0")) {
 				scriptQuery += "r.requesttypeCd = :requestTypeCd";
 			}
 			Query query = em.createQuery(scriptQuery);
@@ -275,9 +275,8 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (!requestTypeCd.equals("")) {
 				query.setParameter("requestTypeCd", requestTypeCd);
 			}
-			System.out.println(scriptQuery);
-			System.out.println(startDate);
-			System.out.println(endDate);
+			System.out.println("Script Query: " + scriptQuery);
+			System.out.println(requestTypeCd);
 			List<Request> listRequest = (List<Request>) query.getResultList();
 				
 			return listRequest;
