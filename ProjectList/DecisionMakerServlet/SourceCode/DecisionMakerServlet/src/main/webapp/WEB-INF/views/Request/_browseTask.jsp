@@ -64,4 +64,7 @@
             </c:choose>
           </label>
         </div>
+        <div>
+        	<a class="button" href="addComment?id=${model.request.id}">Add Comment</a>
+        </div>
 </div>

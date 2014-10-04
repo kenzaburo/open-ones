@@ -202,19 +202,23 @@ public class ExRequestJpaController extends RequestJpaController {
 			Date endDate, String managerUsername, String assignUserName,
 			String requestTypeCd) {
 		EntityManager em = getEntityManager();
+//		System.out.println("managerUsername: " + managerUsername);
+//    	System.out.println("createdbyUsername: " + createdbyUsername);
+//    	System.out.println("assignUsername: " +  assignUserName);
+//    	System.out.println("requestTypeCd: " + requestTypeCd);
 		try {
 			String scriptQuery = "select r from Request r ";
-			if ((!createdbyUsername.equals("")) || ((startDate != null))
-					|| ((endDate != null)) || ((!managerUsername.equals("")))
-					|| ((!assignUserName.equals("")))
-					|| ((!requestTypeCd.equals("")))) {
+			if ((!createdbyUsername.equals("0")) || ((startDate != null))
+					|| ((endDate != null)) || ((!managerUsername.equals("0")))
+					|| ((!assignUserName.equals("0")))
+					|| ((!requestTypeCd.equals("0")))) {
 				scriptQuery += "WHERE ";
 			}
-			if (!createdbyUsername.equals("") && !createdbyUsername.equals("0")) {
+			if (!createdbyUsername.equals("0")) {
 				if (((startDate != null)) || ((endDate != null))
-						|| ((!managerUsername.equals("")))
-						|| ((!assignUserName.equals("")))
-						|| ((!requestTypeCd.equals("")))) {
+						|| ((!managerUsername.equals("0")))
+						|| ((!assignUserName.equals("0")))
+						|| ((!requestTypeCd.equals("0")))) {
 					scriptQuery += "r.createdbyUsername = :createdbyUsername AND ";
 				} else {
 					scriptQuery += "r.createdbyUsername = :createdbyUsername ";
@@ -222,16 +226,16 @@ public class ExRequestJpaController extends RequestJpaController {
 
 			}
 			if (startDate != null) {
-				if (((endDate != null)) || ((!managerUsername.equals("")))
-						|| ((!assignUserName.equals("")))
-						|| ((!requestTypeCd.equals("")))) {
+				if (((endDate != null)) || ((!managerUsername.equals("0")))
+						|| ((!assignUserName.equals("0")))
+						|| ((!requestTypeCd.equals("0")))) {
 					scriptQuery += "r.startdate >= :startdate AND ";
 				} else {
 					scriptQuery += "r.startdate >= :startdate ";
 				}
 			}
 			if (endDate != null) {
-				if (((!managerUsername.equals(""))) || ((!assignUserName.equals("")))
+				if (((!managerUsername.equals("0"))) || ((!assignUserName.equals("0")))
 						|| ((!requestTypeCd.equals("")))) {
 					scriptQuery += "r.enddate <= :enddate AND ";
 				} else {
@@ -239,25 +243,25 @@ public class ExRequestJpaController extends RequestJpaController {
 				}
 
 			}
-			if (!managerUsername.equals("0") && !managerUsername.equals("")) {
-				if ((!assignUserName.equals("")) || ((!requestTypeCd.equals("")))) {
+			if (!managerUsername.equals("0")) {
+				if ((!assignUserName.equals("0")) || ((!requestTypeCd.equals("0")))) {
 					scriptQuery += "r.managerUsername = :managerUsername AND ";
 				} else {
 					scriptQuery += "r.managerUsername = :managerUsername";
 				}
 			}
-			if (!assignUserName.equals("0") && !assignUserName.equals("")) {
-				if (!requestTypeCd.equals("")) {
+			if (!assignUserName.equals("0")) {
+				if ((!requestTypeCd.equals("0"))) {
 					scriptQuery += "r.assigneeUsername = :assignUserName AND ";
 				} else {
 					scriptQuery += "r.assigneeUsername = :assignUserName";
 				}
 			}
-			if (!requestTypeCd.equals("") && !requestTypeCd.equals("0")) {
+			if (!requestTypeCd.equals("0")) {
 				scriptQuery += "r.requesttypeCd = :requestTypeCd";
 			}
 			Query query = em.createQuery(scriptQuery);
-			if (!createdbyUsername.equals("")) {
+			if (!createdbyUsername.equals("0")) {
 				query.setParameter("createdbyUsername", createdbyUsername);
 			}
 			if (startDate != null) {
@@ -266,13 +270,13 @@ public class ExRequestJpaController extends RequestJpaController {
 			if (endDate != null) {
 				query.setParameter("enddate", endDate);
 			}
-			if (!managerUsername.equals("0") && !managerUsername.equals("")) {
+			if (!managerUsername.equals("0")) {
 				query.setParameter("managerUsername", managerUsername);
 			}
-			if (!assignUserName.equals("0") && !assignUserName.equals("")) {
+			if (!assignUserName.equals("0")) {
 				query.setParameter("assignUserName", assignUserName);
 			}
-			if (!requestTypeCd.equals("")) {
+			if (!requestTypeCd.equals("0")) {
 				query.setParameter("requestTypeCd", requestTypeCd);
 			}
 			System.out.println("Script Query: " + scriptQuery);

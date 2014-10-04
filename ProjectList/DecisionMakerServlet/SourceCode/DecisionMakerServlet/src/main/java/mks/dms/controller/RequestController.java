@@ -183,7 +183,6 @@ public class RequestController {
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
     public ModelAndView saveRequest(@ModelAttribute(MODEL) @Validated RequestModel model, BindingResult bindingResult, Principal principal) {
         ModelAndView mav = new ModelAndView("createRequest");
-        
         if (bindingResult.hasErrors()) {
             LOG.debug("Binding result; hasError=" + bindingResult.hasErrors());
             return mav;
@@ -602,8 +601,9 @@ public class RequestController {
     }
     
     @RequestMapping(value="addComment")
-    public ModelAndView showAddComment() {
+    public ModelAndView showAddComment(@RequestParam("id") int requestId) {
     	ModelAndView mav = new ModelAndView("addComment");
+    	mav.addObject("requestId", requestId);
     	return mav;
     }
     
@@ -612,8 +612,7 @@ public class RequestController {
     	SimpleDateFormat formater = new SimpleDateFormat(AppCons.DATE_FORMAT);
     	Date today = new Date();
     	int id = Integer.parseInt(req.getParameter("requestId"));
-    	String commentContent = req.getParameter("commentContent");
-    	ModelAndView mav = new ModelAndView("addComment");
+    	String commentContent = req.getParameter("comment.content");
 //    	Lay thong tin tai khoan dang nhap
 //    	Kiem tra tai khoan dang nhap phai tai khoan duoc yeu cau khong
 //    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
@@ -909,23 +908,26 @@ public class RequestController {
 			@RequestParam("requestTitle") String requestTitle,
 			@RequestParam("requestContent") String requestContent)
 			throws JSONException {
-    	
+//    	System.out.println("managerUsername: " + managerUsername);
+//    	System.out.println("createdbyUsername: " + createdbyUsername);
+//    	System.out.println("assignUsername: " + assignUsername);
+//    	System.out.println("requestTypeCd: " + requestTypeCd);
+
     	List<Request> listRequest;    	
-    	if (createdbyUsername.equals("") && startDate == null && endDate == null && managerUsername.equals("0") && assignUsername.equals("0") && requestTypeCd.equals("0")) {
-    	    if (principal.getName().equals("admin") || principal.getName().equals("manager")) {
+    	if (createdbyUsername.equals("0") && startDate == null && endDate == null && managerUsername.equals("0") && assignUsername.equals("0") && requestTypeCd.equals("0")) {
+    	    System.out.println("Search All");
+    		if (principal.getName().equals("admin") || principal.getName().equals("manager")) {
     	    	listRequest = requestService.getDaoController().findRequestEntities();
     	    }
     	    else {
-    	    	List<Request> list1 = requestService.getDaoController().searchRequest(principal.getName(), null, null, "", "", "");
-    	    	List<Request> list2 = requestService.getDaoController().searchRequest("", null, null, principal.getName(), "", "");
-    	    	List<Request> list3 = requestService.getDaoController().searchRequest("", null, null, "", principal.getName(), "");
-    	    	list1.removeAll(list2);
-    	    	list1.addAll(list2);
-    	    	list1.removeAll(list3);
-    	    	list1.addAll(list3);
-    	    	listRequest = list1;
+    	    	List<Request> list2 = requestService.getDaoController().searchRequest("0", null, null, principal.getName(), "0", "0");
+    	    	List<Request> list3 = requestService.getDaoController().searchRequest("0", null, null, "0", principal.getName(), "0");
+    	    	list2.removeAll(list3);
+    	    	list2.addAll(list3);
+    	    	listRequest = list2;
     	    }
     	}else {
+    		System.out.println("Search Some");
     		listRequest = requestService.getDaoController().searchRequest(createdbyUsername, startDate, endDate, managerUsername, assignUsername, requestTypeCd);
     	}
     	User userLogin = userService.getUserByUsername(principal.getName());
