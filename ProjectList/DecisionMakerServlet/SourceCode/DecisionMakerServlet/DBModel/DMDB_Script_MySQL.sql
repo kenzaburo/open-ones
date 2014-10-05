@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS LABEL;
 DROP TABLE IF EXISTS USER_ROLE;
 DROP TABLE IF EXISTS TEMPLATE;
 DROP TABLE IF EXISTS REQUEST_DEPARTMENT;
+DROP TABLE IF EXISTS RATE;
+DROP TABLE IF EXISTS COMMENT;
 
 CREATE TABLE USER (
        ID INT NOT NULL AUTO_INCREMENT
@@ -139,7 +141,7 @@ CREATE TABLE REQUEST (
      , DURATIONUNIT INT          -- 0: hour; 1: day; 2: week; 3: moth; 4: year
      , DEPARTMENT_CD VARCHAR(10)
      , DEPARTMENT_NAME VARCHAR(50)
-     , STATUS VARCHAR(30)        -- Created | Rejected | Approved | Updated
+     , STATUS VARCHAR(30)                -- Created | Rejected | Approved | Updated | Finish | Done | Re-assign
 	 , COMMENT TEXT
      , CREATOR_READ INT
      , MANAGER_READ INT
@@ -152,6 +154,7 @@ CREATE TABLE REQUEST (
      , FILENAME2 VARCHAR(255)
      , ATTACHMENT3 BLOB
      , FILENAME3 VARCHAR(255)
+     , LIKES TEXT                         -- List of username: Mapping to String[] into entity
      , CREATED DATETIME NOT NULL
      , CREATEDBY_USERNAME VARCHAR(50)
      , LASTMODIFIED DATETIME
@@ -160,6 +163,28 @@ CREATE TABLE REQUEST (
      , INDEX (ASSIGNEE_USERNAME)
 );
 
+-- Rate for Task (when manager confirms a task is DONE); or Rate an employee
+CREATE TABLE RATE (
+       ID INT NOT NULL AUTO_INCREMENT
+     , REQ_ID INT
+     , USERNAME VARCHAR(50) 
+     , EMAIL VARCHAR(50)
+     , CONTENT TEXT                        --
+     , RANK CHAR(1)                        -- A | B | C | D | E 
+     , CREATED DATETIME NOT NULL
+     , PRIMARY KEY (ID)
+);
+
+-- Comment for Request
+CREATE TABLE COMMENT (
+       ID INT NOT NULL AUTO_INCREMENT
+     , REQ_ID INT
+     , USERNAME VARCHAR(50) 
+     , EMAIL VARCHAR(50)
+     , CONTENT TEXT                        --
+     , CREATED DATETIME NOT NULL
+     , PRIMARY KEY (ID)
+);
 
 CREATE TABLE WATCHER (
        ID INT NOT NULL  AUTO_INCREMENT

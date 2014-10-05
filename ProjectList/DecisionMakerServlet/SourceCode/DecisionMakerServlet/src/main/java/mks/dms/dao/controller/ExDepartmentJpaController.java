@@ -27,8 +27,10 @@ import javax.persistence.Query;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
+import mks.dms.dao.entity.User;
 
 import org.apache.log4j.Logger;
+import org.eclipse.persistence.jpa.config.NamedQuery;
 
 /**
  * @author ThachLe
@@ -44,23 +46,22 @@ public class ExDepartmentJpaController extends DepartmentJpaController {
 
     /**
     * [Give the description for method].
-    * @param cd department code
+    * @param deptCd department code
     * @return
     * null if no existed department code
     */
-    public Department findDepartmentByCd(String cd) {
-//        EntityManager em = getEntityManager();
-//        try {
-//            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-//            cq.select(cq.from(Department.class));
-//            cq.where();
-//            Query q = em.createQuery(cq);
-//
-//            return q.getResultList();
-//        } finally {
-//            em.close();
-//        }
-        return null;
+    public Department findDepartmentByCd(String deptCd) {
+        EntityManager em = getEntityManager();
+        
+        try {
+            Department dept = (Department) em.createNamedQuery("Department.findByCd")
+                    .setParameter("cd", deptCd)
+                    .getSingleResult();
+            
+            return dept;
+        } finally {
+            em.close();
+        }
     }
 
     /**

@@ -105,9 +105,9 @@
                     <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
                   </c:if>
                     
-                  <li><a href="#"><s:message code="View_Details"/></a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Comment</a></li>
+<%--                   <li><a href="#"><s:message code="View_Details"/></a></li> --%>
+<!--                   <li class="divider"></li> -->
+<!--                   <li><a href="#">Comment</a></li> -->
                 </ul>
             </div><!-- /btn-group -->
         </td>

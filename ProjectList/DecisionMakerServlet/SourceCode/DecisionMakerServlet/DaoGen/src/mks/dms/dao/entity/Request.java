@@ -8,6 +8,7 @@ package mks.dms.dao.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -139,6 +140,9 @@ public class Request implements Serializable {
     private byte[] attachment3;
     @Column(name = "FILENAME3")
     private String filename3;
+    @Lob
+    @Column(name = "LIKES")
+    private String likes;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -420,6 +424,14 @@ public class Request implements Serializable {
         this.filename3 = filename3;
     }
 
+    public String getLikes() {
+        return likes;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
+    }
+
     public Date getCreated() {
         return created;
     }
@@ -475,6 +487,44 @@ public class Request implements Serializable {
     @Override
     public String toString() {
         return "mks.dms.dao.entity.Request[ id=" + id + " ]";
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    // Below method are coded manually
+    
+    /**
+    * Set array of username into member "likes".
+    * member "likes" contains list of username with separator is a space
+    *
+    * @param arrLikes
+    */
+    public void setLikes(String[] arrLikes) {
+        StringBuffer sb = new StringBuffer();
+        int len = (arrLikes != null) ? arrLikes.length : 0;
+        
+        if (len > 0) {
+            sb.append(arrLikes[0]);
+            
+            for (int i = 1; i < len; i ++) {
+                sb.append(" ").append(arrLikes[i]);
+            }
+        }
+        
+        this.likes = sb.toString();
+    }
+
+    public String[] getListLikes() {
+        if (this.likes != null) {
+            return likes.split(" ");
+        }
+        
+        return null;
+    }
+    
+    public void addLike(String username) {
+        if ((username != null) && (!username.isEmpty())) {
+            this.likes += (" " + username);
+        }
     }
     
 }

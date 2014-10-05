@@ -9,22 +9,14 @@
 <link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
 <link type="text/css" href="resources/css/app-validation.css" rel="stylesheet">
 
-<!-- Task -->
-<div id="browse-task">
+<!-- Leave -->
+<div id="browse-leave">
 		<div>
   		  <H5>${model.request.title}</H5>
 		</div>
         <div>
           <label for="status" class="col_2"><s:message code="Status"/>:</label>
-          <c:choose>
-            <c:when test="${not empty model.request.status}">
-                 <label for="status" class="col_2"><s:message code="${model.request.status}"/></label>
-            </c:when>
-            <c:otherwise>
-                &nbsp;
-            </c:otherwise>
-          </c:choose>
-         
+          <label for="status" class="col_2"><s:message code="${model.request.status}"/></label>
         </div>
 
 		<div>
@@ -51,10 +43,6 @@
 		 	<label for="label" class="col_2"><s:message code="Label"/>:</label>
 		 	<label class="col_8">${model.request.label1}</label>
 		</div>
-		<div>
-		 	<label for="duration" class="col_2"><s:message code="Duration"/>:</label>
-		 	<label class="col_2">${model.request.duration} <span>${model.durationUnitName}</span></label>
-		</div>
 
 		<div id="attachment">
 		  <label for="attachment0" class="col_2"><s:message code="Attach"/>:</label>
@@ -69,7 +57,4 @@
             </c:choose>
           </label>
         </div>
-<!--         <div> -->
-<%--         	<a class="button" href="addComment?id=${model.request.id}">Add Comment</a> --%>
-<!--         </div> -->
 </div>

@@ -6,6 +6,8 @@
 <link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
 <%-- <script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script> --%>
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
+<script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
+<script type="text/javascript" src="resources/js/common.js"></script>
 
 <script>
   $(function() {
@@ -63,11 +65,11 @@
 </script>
 <!-- Button Bar w/icons -->
 <ul class="button-bar">
-<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i> Sửa</a></li>
-<li><a href="#"><i class="icon-comment"></i> Comment</a></li>
+<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
+<li><a href="addComment?id=${model.request.id}"><i class="icon-comment"></i><s:message code="Comment"/></a></li>
 <li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
 <li><a href="#" id="updateStatus"><i class="icon-tasks"></i> Thực hiện</a></li>
-<li><a href="#" id="finish"><i class="icon-check"></i> Kết thúc</a></li>
+<li><a href="#" id="finish"><i class="icon-check"></i><s:message code="Done"/></a></li>
 </ul>
 
 <div id="dialog-form" title="<s:message code="Assign"/>">
@@ -101,4 +103,16 @@
 </div>
 <c:if test='${model.request.requesttypeCd == "Task"}'>
     <jsp:include page="_browseTask.jsp"></jsp:include>
+</c:if>
+
+<c:if test='${model.request.requesttypeCd == "Leave"}'>
+    <jsp:include page="_browseLeave.jsp"></jsp:include>
+</c:if>
+
+<c:if test='${model.request.requesttypeCd == "Announcement"}'>
+    <jsp:include page="_browseAnnouncement.jsp"></jsp:include>
+</c:if>
+
+<c:if test='${model.request.requesttypeCd == "Rule"}'>
+    <jsp:include page="_browseRule.jsp"></jsp:include>
 </c:if>

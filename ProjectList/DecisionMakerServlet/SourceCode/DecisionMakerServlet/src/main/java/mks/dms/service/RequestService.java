@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExRequestTypeJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
+import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
@@ -155,6 +156,15 @@ public class RequestService extends BaseService {
             // Do nothing
         }
         
+        // Update Department name from Department code
+        if (CommonUtil.isNNandNB(request.getDepartmentCd())) {
+            Department dept = MasterService.findDepartmentByCd(request.getDepartmentCd());
+            request.setDepartmentName(dept.getName());
+        } else {
+            // Do nothing
+        }
+        
+        request.setStatus(AppCons.STATUS_CREATED);
         switch (mode) {
             case MODE_CREATE:
                 request.setStatus(AppCons.STATUS_CREATED);

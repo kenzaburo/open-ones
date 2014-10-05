@@ -22,20 +22,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
-import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
-import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.controller.UserJpaController;
-import mks.dms.dao.controller.exceptions.IllegalOrphanException;
-import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
-import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.model.DepartmentModel;
@@ -260,6 +252,13 @@ public class MasterService extends BaseService {
         ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
         return userDaoCtrl.findUserByUsername(username);
     }
+
+    public static Department findDepartmentByCd(String deptCd) {
+        ExDepartmentJpaController daoCtrl = new ExDepartmentJpaController(BaseService.getEmf());
+        
+        return daoCtrl.findDepartmentByCd(deptCd);
+    }
+
     
     /**
     * [Give the description for method].

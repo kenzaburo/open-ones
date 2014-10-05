@@ -13,13 +13,16 @@
     <class>mks.dms.dao.entity.Label</class>
     <class>mks.dms.dao.entity.UserRole</class>
     <class>mks.dms.dao.entity.RequestDepartment</class>
+    <class>mks.dms.dao.entity.Rate</class>
+    <class>mks.dms.dao.entity.Comment</class>
     
     <!-- For MySQL -->
 <!--     <properties> -->
 <!--       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dms?useUnicode=true&amp;characterEncoding=UTF-8"/> -->
-<!--       <property name="javax.persistence.jdbc.password" value=""/> -->
+<!--       <property name="javax.persistence.jdbc.password" value="root"/> -->
 <!--       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/> -->
 <!--       <property name="javax.persistence.jdbc.user" value="root"/> -->
+<!--       <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/> -->
 <!--     </properties> -->
     
     <!--  For HSQL Server Mode--> 

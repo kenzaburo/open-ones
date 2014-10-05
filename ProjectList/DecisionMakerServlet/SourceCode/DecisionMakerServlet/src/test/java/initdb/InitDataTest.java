@@ -87,8 +87,8 @@ public class InitDataTest {
         boolean isEnable = true;
         User user = new User();
         
-        user.setDepartmentCd("System");
-        user.setDepartmentName("System");
+        user.setDepartmentCd("All");
+        user.setDepartmentName("Tất cả");
         
         user.setUsername(username);
         user.setFirstname("User");
