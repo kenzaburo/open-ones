@@ -1,7 +1,13 @@
-﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
-<%@ page language="java" contentType="text/plain; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/plain; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+
+<c:set var="DATE_FORMAT" scope="application"><s:message code="DATE_FORMAT"/></c:set>
+
 <!-- Menu Horizontal -->
+<c:if test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
+
 <script type="text/javascript">
 $(document).ready(function () {
 	$.ajax({
@@ -77,6 +83,8 @@ $(document).ready(function () {
 	}, 90000);
 });
 </script>
+
+</c:if>
 <ul class="menu">
 	<c:choose>
 		<c:when test="${current == 'home'}">
@@ -106,7 +114,7 @@ $(document).ready(function () {
 	  	<ul>
 	      <li><a href="createRequest?model.request.requesttypeCd=Task"><i class="icon-magic"></i>Tạo việc mới</a></li>
 	      <li><a href="searchRequest?requestTypeCd=Task"><i class="icon-search"></i>Tìm công việc</a></li>
-	      <li class="divider"><a href="mylisttask"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
+	      <li class="divider"><a href="searchMyOpenRequest"><i class="icon-beer"></i>Việc đang làm của tôi</a></li>
 	  	</ul>
       </li>
 	<li><a href=""  onclick="return false"><i class="icon-magic"></i>Quản lý yêu cầu</a>
@@ -129,16 +137,16 @@ $(document).ready(function () {
 	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i>Thoát</a></li>
 	    </ul>
 	  </li>
-	  <s:authorize access="hasRole('ROLE_MANAGER')">
+	  <sec:authorize access="hasRole('ROLE_MANAGER')">
 	  
 	    <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i>Quản trị</a>
 	    <ul>
 	      <li class="left"><a href="listLeaveRequest"><i class="icon-desktop"></i>Quản lý đơn nghỉ phép</a></li>
 	    </ul>
 	  </li>
-	  </s:authorize>
+	  </sec:authorize>
 	  <%-- For Admin.START --%>
-	  <s:authorize access="hasRole('ROLE_ADMIN')">
+	  <sec:authorize access="hasRole('ROLE_ADMIN')">
 	  
 	    <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i>Cấu hình</a>
 	    <ul>
@@ -147,7 +155,7 @@ $(document).ready(function () {
 	      <li class="left"><a href="listLeaveRequest"><i class="icon-desktop"></i>Quản lý đơn nghỉ phép</a></li>
 	    </ul>
 	  </li>
-	  </s:authorize>
+	  </sec:authorize>
   <%-- For Admin.END --%>
 </ul>
 

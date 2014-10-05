@@ -19,7 +19,7 @@
 		</div>
         <div>
           <label for="status" class="col_2">Trạng thái:</label>
-          <label for="status" class="col_2">${model.request.status}</label>
+          <label for="status" class="col_2"><s:message code="${model.request.status}"/></label>
         </div>
 
 		<div>

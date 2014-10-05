@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
@@ -84,10 +84,10 @@
         </td>
         <td>
           <a href="#" title="Bạn thích qui định này"><i class="icon-thumbs-up"></i></a>
-          <s:authorize access="hasRole('ROLE_ADMIN')">
+          <sec:authorize access="hasRole('ROLE_ADMIN')">
             <a href="editRequest?id=${request.id}" title="Sửa"><i class="icon-edit"></i></a>
             <a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title="Xóa"><i class="icon-remove"></i></a>
-           </s:authorize>
+           </sec:authorize>
          </td>
       </tr>
     </c:forEach>

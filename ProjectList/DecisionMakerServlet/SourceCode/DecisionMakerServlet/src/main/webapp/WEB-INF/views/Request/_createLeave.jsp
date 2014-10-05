@@ -9,21 +9,21 @@
     <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Leave"/>
     <form:hidden path="request.id"/>
         <div>
-          <label for="title" class="col_2">Tiêu đề (*)</label>
+          <label for="title" class="col_2"><s:message code="Title"/><span class="required">*</span></label>
           <form:input path="request.title" type="text" required="required" class="col_8"/>
           <form:errors path="request.title" class="error"/>
         </div>
         <div>
-            <label for="content" class="col_2">Lý do</label>
+            <label for="content" class="col_2 left"><s:message code="Reason"/></label>
             <form:textarea path="request.content" id="content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="leaveContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></form:textarea>
         </div>
         <div>
           <input name="leaveCreate" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
         </div>	
         <div>
-		 	<label for="managerUsername" class="col_2">Quản lý</label>
+		 	<label for="managerUsername" class="col_2"><s:message code="Manager"/></label>
 		 	<form:select path="request.managerUsername" class="col_3"  title="Người sẽ nhận đơn và duyệt nghỉ phép">
-         		<option value="0">-- Chọn --</option>
+         		<option value=""></option>
          		<c:forEach var="user" items="${listUser}">
                   <c:choose>
                     <c:when test="${model.request.managerUsername == user.username}">
@@ -51,10 +51,11 @@
             <label for="label" class="col_2">Nhãn</label>
             <form:input path="request.label1" type="text" class="col_8"/>
         </div>
-        <div>
-          <label for="attachment1" class="col_2">Đính kèm</label>
-          <input name="attachments[0]" type="file" class="col_8"/>
-        </div>
+        
+        <jsp:include page="_createRequest_Attach.jsp">
+            <jsp:param name="requestType" value="Leave"/>
+        </jsp:include>
+        
       	<div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>
         <input type="reset" value='<s:message code="Reset"/>' class="button"/>

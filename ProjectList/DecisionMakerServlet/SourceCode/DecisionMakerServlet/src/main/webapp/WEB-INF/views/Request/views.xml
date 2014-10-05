@@ -8,6 +8,10 @@
     <definition name="browseRequest" extends="default">
         <put-attribute name="body" value="/WEB-INF/views/Request/browseRequest.jsp" />
     </definition>
+
+    <definition name="searchMyOpenRequest" extends="default">
+        <put-attribute name="body" value="/WEB-INF/views/Request/searchMyOpenRequest.jsp" />
+    </definition>
     
 	<definition name="detailRequest" extends="default">
 		<put-attribute name="body" value="/WEB-INF/views/Request/detailRequest.jsp" />

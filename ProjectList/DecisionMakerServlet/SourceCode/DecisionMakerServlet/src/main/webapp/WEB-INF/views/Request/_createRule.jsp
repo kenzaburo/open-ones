@@ -9,30 +9,36 @@
     <input id="request.requesttypeCd" name="request.requesttypeCd" type="hidden" value="Rule"/>
     <form:hidden path="request.id"/>
         <div>
-          <label for="title" class="col_2">Quy định (*)</label>
+          <label for="title" class="col_2"><s:message code="Rule"/><span class="required">*</span></label>
           <form:input path="request.title" type="text" required="required" class="col_8"/>
           <form:errors path="request.title" class="error"/>
         </div>
         
         <div>
-            <label for="content" class="col_2">Nội dung</label>
+            <label for="content" class="col_2 left"><s:message code="Content"/></label>
             <form:textarea path="request.content" id="request.contentRule" class="ckeditor" rows="10"/>
         </div>
         
         <div>
-          	<label for="scopes" class="col_2">Phạm vi áp dụng</label>
-          	<select id="departmentCd" class="col_2 column">
-				<option value="0">-- Tất cả --</option>
-		        <c:forEach var="dept" items="${listDepartment}">
-		            <option value="${dept.cd}">${dept.name}</option>
-		        </c:forEach>
-			</select>
+          <label for="scopes" class="col_2"><s:message code="Scope"/></label>
+          <form:select path="request.departmentCd" class="col_2">
+              <option value="0">-- Tất cả --</option>
+              <c:forEach var="dept" items="${listDepartment}">
+                <c:choose>
+                  <c:when test="${model.request.departmentCd == dept.cd}">
+                    <option value="${dept.cd}" selected="selected">${dept.name}</option>
+                  </c:when>
+                  <c:otherwise>
+                    <option value="${dept.cd}">${dept.name}</option>
+                  </c:otherwise>
+                </c:choose>
+              </c:forEach>
+          </form:select> 
         </div>
         
-        <div>
-          <label for="attachment1" class="col_2">Đính kèm</label>
-          <input name="attachments[0]" type="file" class="col_8"/>
-        </div>
+        <jsp:include page="_createRequest_Attach.jsp">
+            <jsp:param name="requestType" value="Rule"/>
+        </jsp:include>
 
       <div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>

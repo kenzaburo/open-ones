@@ -896,6 +896,18 @@ public class RequestController {
     	return mav;
     }
     
+    @RequestMapping(value="searchMyOpenRequest")
+    public ModelAndView searchMyOpenRequest(Principal principal) {
+        ModelAndView mav = new ModelAndView("searchMyOpenRequest");
+        String username = principal.getName();
+        
+        List<Request> lstRequest = requestService.findOpenRequest(username);
+        
+        mav.addObject("requests", lstRequest);
+        
+        return mav;
+    }
+    
     @RequestMapping(value="search.request", method = RequestMethod.GET)
 	public @ResponseBody
 			String searchRequest(Principal principal,

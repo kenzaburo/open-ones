@@ -279,4 +279,14 @@ public class RequestService extends BaseService {
         return i;
     }
 
+    /**
+    * Find all open request by username.
+    * [Todo]
+    * @param username
+    * @return
+    */
+    public List<Request> findOpenRequest(String username) {
+        return controller.findRequestEntities();
+    }
+
 }
