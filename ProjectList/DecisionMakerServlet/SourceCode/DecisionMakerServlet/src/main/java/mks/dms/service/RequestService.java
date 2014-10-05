@@ -159,7 +159,12 @@ public class RequestService extends BaseService {
         // Update Department name from Department code
         if (CommonUtil.isNNandNB(request.getDepartmentCd())) {
             Department dept = MasterService.findDepartmentByCd(request.getDepartmentCd());
-            request.setDepartmentName(dept.getName());
+            
+            if (dept != null) {
+                request.setDepartmentName(dept.getName());
+            } else {
+                // Do nothing
+            }
         } else {
             // Do nothing
         }

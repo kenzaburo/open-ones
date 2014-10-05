@@ -115,8 +115,8 @@ public class InitDataTest {
         boolean isEnable = true;
         User user = new User();
         
-        user.setDepartmentCd("System");
-        user.setDepartmentName("System");
+        user.setDepartmentCd("All");
+        user.setDepartmentName("Tất cả");
         
         user.setUsername(username);
         user.setFirstname("Thang");
@@ -128,8 +128,8 @@ public class InitDataTest {
         daoCtrl.create(user);
 
         
-        user.setDepartmentCd("System");
-        user.setDepartmentName("System");
+        user.setDepartmentCd("All");
+        user.setDepartmentName("Tất cả");
         
         user.setUsername("ngan@test");
         user.setFirstname("Ngan");
@@ -147,8 +147,8 @@ public class InitDataTest {
         String username = "user01";
         boolean isEnable = true;
         User user = new User();
-        user.setDepartmentCd("System");
-        user.setDepartmentName("System");
+        user.setDepartmentCd("All");
+        user.setDepartmentName("Tất cả");
 
         user.setUsername(username);
         user.setEnabled(isEnable);
@@ -177,8 +177,8 @@ public class InitDataTest {
         user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("admin@gmail.com");
-        user.setDepartmentCd("System");
-        user.setDepartmentName("System");
+        user.setDepartmentCd("All");
+        user.setDepartmentName("Tất cả");
         
         UserJpaController daoCtrl = new UserJpaController(emf);
         RoleJpaController daoRoleCtrl = new RoleJpaController(emf);
@@ -218,9 +218,9 @@ public class InitDataTest {
     public void testInitCreateDepartmentSystem() {
         boolean isEnable = true;
         Department department = new Department();
-        department.setCd("System");
+        department.setCd("All");
         department.setEnabled(isEnable);
-        department.setName("System");
+        department.setName("Tất cả");
         
         DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
         

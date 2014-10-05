@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
@@ -51,17 +52,22 @@ public class ExDepartmentJpaController extends DepartmentJpaController {
     * null if no existed department code
     */
     public Department findDepartmentByCd(String deptCd) {
+        Department dept = null;
         EntityManager em = getEntityManager();
         
         try {
-            Department dept = (Department) em.createNamedQuery("Department.findByCd")
+            dept = (Department) em.createNamedQuery("Department.findByCd")
                     .setParameter("cd", deptCd)
                     .getSingleResult();
             
             return dept;
+        } catch (NoResultException ex) {
+            // Do nothing
         } finally {
             em.close();
         }
+        
+        return dept;
     }
 
     /**
