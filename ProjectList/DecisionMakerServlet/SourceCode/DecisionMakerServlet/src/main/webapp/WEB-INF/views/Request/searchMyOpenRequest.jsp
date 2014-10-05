@@ -25,6 +25,13 @@
 <script src="resources/AdminLTE/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
 <script src="resources/AdminLTE/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
 
+<script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
+<link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
+
+<%-- Process confirmation delete request --%>
+<script type="text/javascript" src="resources/js/confirmFunction.js"></script>
+
+
 <!-- page script -->
 <script type="text/javascript">
     $(function() {
@@ -38,6 +45,9 @@
         });
     });
 </script>
+<jsp:include page="../_common/confirmDeleteRequest.jsp"/>
+
+
 <div class="box-body table-responsive">
   <table id="searchResult" class="table table-bordered table-hover">
     <thead>
@@ -76,7 +86,14 @@
         </td>
         <td>${request.assigneeUsername}</td>
         <td>${request.managerUsername}</td>
-        <td><s:message code="${request.status}"/></td>
+        <td>
+            <c:choose>
+                <c:when test="${not empty request.status}"><s:message code="${request.status}"/></c:when>
+                <c:otherwise>&nbsp;</c:otherwise>
+            </c:choose>
+            
+          
+        </td>
         <td><fmt:formatDate value="${request.created}" pattern="${DATE_FORMAT}"/></td>
         <td><fmt:formatDate value="${request.lastmodified}" pattern="${DATE_FORMAT}"/></td>
         <td><fmt:formatDate value="${request.enddate}" pattern="${DATE_FORMAT}"/></td>
@@ -85,7 +102,7 @@
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border: NONE" title="Thao tác"><i class="icon-cog"></i><span class="fa fa-caret-down"></span></button>
                 <ul class="dropdown-menu">
                   <c:if test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
-                    <li><a href="#"><s:message code="Delete"/></a></li>
+                    <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
                   </c:if>
                     
                   <li><a href="#"><s:message code="View_Details"/></a></li>
@@ -98,3 +115,5 @@
     </c:forEach>
   </table>
 </div>
+
+
