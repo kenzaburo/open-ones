@@ -116,7 +116,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByManagerCdAndStatusAndManagerRead(
+	public List<Request> getListRequestByManagerUsernameAndStatusAndManagerRead(
 			String managerUsername, String status, int managerRead) {
 		EntityManager em = getEntityManager();
 		try {
@@ -170,7 +170,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByCreatedbyCd(String createdbyUsername) {
+	public List<Request> getListRequestByCreatedbyUsername(String createdbyUsername) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
@@ -298,7 +298,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByManagerCd(String managerUsername) {
+	public List<Request> getListRequestByManagerUsername(String managerUsername) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
@@ -321,7 +321,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByAssignedCd(String assigneeUsername) {
+	public List<Request> getListRequestByAssigneeUsername(String assigneeUsername) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
@@ -344,7 +344,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByAssignedCdAndRequestTypeCd(String assigneeUsername, String requestTypeCd) {
+	public List<Request> getListRequestByAssigneeUsernameAndRequestTypeCd(String assigneeUsername, String requestTypeCd) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em
@@ -368,7 +368,7 @@ public class ExRequestJpaController extends RequestJpaController {
 	 *      ://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development
 	 *      /Querying/JPQL
 	 */
-	public List<Request> getListRequestByManagerCdAndRequestTypeCd(String managerUsername, String requestTypeCd) {
+	public List<Request> getListRequestByManagerUsernameAndRequestTypeCd(String managerUsername, String requestTypeCd) {
 		EntityManager em = getEntityManager();
 		try {
 			Query query = em

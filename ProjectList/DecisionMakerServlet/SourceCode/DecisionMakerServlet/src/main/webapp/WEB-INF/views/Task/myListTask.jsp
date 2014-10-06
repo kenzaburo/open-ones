@@ -1,117 +1,117 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script src="resources/handsontable/lib/jquery-1.10.2.js"></script>
-<script src="resources/handsontable/jquery.handsontable.full.js"></script>
-<script src="resources/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js"></script>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<link rel="stylesheet" media="screen" href="resources/handsontable/jquery.handsontable.full.css">
-<link rel="stylesheet" media="screen" href="resources/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
+<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<!-- bootstrap 3.0.2 -->
+<link href="resources/AdminLTE/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<!-- font Awesome -->
+<link href="resources/AdminLTE/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<!-- Ionicons -->
+<link href="resources/AdminLTE/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+
+<!-- DATA TABLES -->
+<link href="resources/AdminLTE/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+        
+<!-- jQuery -->
+<script src="resources/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+<!-- Bootstrap -->
+<script src="resources/AdminLTE/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- DATA TABES SCRIPT -->
+<script src="resources/AdminLTE/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+<script src="resources/AdminLTE/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
+<link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
+
+<%-- Process confirmation delete request --%>
+<script type="text/javascript" src="resources/js/confirmFunction.js"></script>
+
+
+<!-- page script -->
 <script type="text/javascript">
-	$(document).ready(function () {
-		var jsonArr = [];
-		$.ajax({
-            url: "my.task.load",
-            dataType: 'json',
-            type: 'GET',
-            success: function (res) {
-            	for (var i = 0; i < res.length; i++) {
-            		if (res[i].readStatus == 1) {
-            			var obj = new Object();
-            			obj.requestType = "<strong>" + res[i].requestType + "</strong>";
-            			obj.requestId = "<strong><a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a></strong>" ;
-            			obj.managerName = "<strong>" + res[i].managerName + "</strong>";
-            			obj.time = "<strong><span style='color:blue'>" + res[i].startDate + "</span> - <span style='color:red'>" + res[i].endDate + "</span></strong>";
-            			obj.content = "<strong>" + res[i].content.substr(0, 40) + "<a href='javascript: void(0)' onclick=" + '"' + "window.open('detailContent?id=" + res[i].requestId + "', 'windowname1', 'width=400, height=200'); return false;" + '"' + "> ... </a>" + "</strong>";
-            			obj.status = "<strong>" + res[i].status + "</strong>";
-            		}
-            		else {
-            			var obj = new Object();
-            			obj.requestType = res[i].requestType;
-            			obj.requestId = "<a href='detailRequest?id=" +res[i].requestId + "'>" + res[i].requestTitle + "</a>" ;
-            			obj.managerName = res[i].managerName;
-            			obj.time = "<span style='color:blue'>" + res[i].startDate + "</span> <strong>-</strong> <span style='color:red'>" + res[i].endDate + "</span>"
-            			obj.content = res[i].content.substr(0, 40) + "<a href='javascript: void(0)' onclick=" + '"' + "window.open('detailContent?id=" + res[i].requestId + "', 'windowname1', 'width=400, height=200'); return false;" + '"' + "> ... </a>";
-            			obj.status = res[i].status;
-            		}
-            		var jsonIn = JSON.stringify(obj);
-            		jsonArr.push(obj);
-            	}  
-            	     	  function strip_tags(input, allowed) {
-            	     	    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-            	     	    allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-            	     	    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-            	     	      commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-            	     	    return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
-            	     	      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-            	     	    });
-            	     	  }
-            	     	  
-            	     	  var safeHtmlRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-            	     	    var escaped = Handsontable.helper.stringify(value);
-            	     	    escaped = strip_tags(escaped, '<em><b><strong><a><big>'); //be sure you only allow certain HTML tags to avoid XSS threats (you should also remove unwanted HTML attributes)
-            	     	    td.innerHTML = escaped;
-            	     	    return td;
-            	     	  };
-            	     	  
-            	     	  var coverRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-            	     	    var escaped = Handsontable.helper.stringify(value);
-            	     	    if (escaped.indexOf('http') === 0) {
-            	     	      var $img = $('<img>');
-            	     	      $img.attr('src', value);
-            	     	      $img.on('mousedown', function (event) {
-            	     	        event.preventDefault(); //prevent selection quirk
-            	     	      });
-            	     	      $(td).empty().append($img); //empty is needed because you are rendering to an existing cell
-            	     	    }
-            	     	    else {
-            	     	      Handsontable.renderers.TextRenderer.apply(this, arguments); //render as text
-            	     	    }
-            	     	    return td;
-            	     	  };
-            	     	  
-            	     	  var $container = $("#example1");
-            	     	  $container.handsontable({
-            	     	  	data: jsonArr,
-            	     	   	colWidths: [150, 150, 100, 200, 300, 100],
-            	     	  	colHeaders: ["Loại yêu cầu", "Tiêu đề", "Người quản lý", "Thời gian", "Nội dung", "Trạng thái"],
-	           	     	    columns: [
-								{data: "requestType", renderer: "html"},
-	           	     	      	{data: "requestId", renderer: "html"},
-	           	     	      	{data: "managerName", renderer: "html"},
-	           	     	     	{data: "time", renderer: "html"},
-	           	     	     	{data: "content", renderer: "html"},
-	           	     	     	{data: "status", renderer: "html"},
-	           	     	    ],
-            	     	   cells: function(r,c, prop) {
-            	     	        var cellProperties = {};
-            	     	        cellProperties.readOnly = true;
-            	     	        return cellProperties;        
-            	     	    }	
-            	     	  });
-            	     	  
-            	     	  function bindDumpButton() {
-            	     	      $('body').on('click', 'button[name=dump]', function () {
-            	     	        var dump = $(this).data('dump');
-            	     	        var $container = $(dump);
-            	     	        console.log('data of ' + dump, $container.handsontable('getData'));
-            	     	      });
-            	     	    }
-            	     	  bindDumpButton();
-//             	$.each(res, function(i, item){
-                    
-//                 });
-
-//               	var handsontable = container.data('handsontable');
-//               	handsontable.loadData(res.data);
-            },
-            error: function() {
-            	alert("Fail");
-//             	alert($.parseJSON(data));
-            	
-//             	alert("Không thể lấy danh sách yêu cầu. Hãy liên hệ với người quản lý");
-            }
-         });
-	});
+    $(function() {
+        $('#searchResult').dataTable({
+            "bPaginate": true,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false
+        });
+    });
 </script>
-<h1>Công việc của tôi</h1>
-<div id="example1" class="handsontable" style="top:10px;"></div>
+<jsp:include page="../_common/confirmDeleteRequest.jsp"/>
+
+
+<div class="box-body table-responsive">
+  <table id="searchResult" class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th width="5px" title="Phân Loại">L</th>
+        <th width="200px" nowrap="nowrap">Tiêu đề</th>
+        <th width="50px" nowrap="nowrap">Người thực hiện</th>
+        <th width="50px" nowrap="nowrap">Người quản lý</th>
+        <th width="50px" nowrap="nowrap">Trạng thái</th>
+        <th width="40px" nowrap="nowrap">Ngày tạo</th>
+        <th width="40px" nowrap="nowrap">Ngày cập nhật</th>
+        <th width="40px" nowrap="nowrap">Ngày kết thúc</th>
+        <th width="5px" title="Thao tác">T</th>
+      </tr>
+    </thead>
+    <c:forEach var="request" items="${requests}" varStatus="status">
+      <tr>
+        <td>
+          <c:if test='${request.requesttypeCd == "Task"}'><i class="icon-magic"></i></c:if>
+          <c:if test='${request.requesttypeCd == "Rule"}'><i class="icon-reorder"></i></c:if>
+          <c:if test='${request.requesttypeCd == "Leave"}'><i class="icon-plane"></i></c:if>
+          <c:if test='${request.requesttypeCd == "Announcement"}'><i class="icon-bullhorn"></i></c:if>
+        </td>
+        <td>
+          <c:choose>
+            <c:when test="${not empty request.filename1}">
+                <a href="downloadFile?id=${request.id}" target="_blank" title="Tài liệu đính kèm: ${request.filename1}"><span class="glyphicon glyphicon-paperclip"></span></a>
+            </c:when>
+            <c:otherwise>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </c:otherwise>
+          </c:choose>
+          
+          
+          <a href="browseRequest?id=${request.id}" title='<s:message code="View_Details"/>'>${request.title}</a>
+        </td>
+        <td>${request.assigneeUsername}</td>
+        <td>${request.managerUsername}</td>
+        <td>
+            <c:choose>
+                <c:when test="${not empty request.status}"><s:message code="${request.status}"/></c:when>
+                <c:otherwise>&nbsp;</c:otherwise>
+            </c:choose>
+            
+          
+        </td>
+        <td><fmt:formatDate value="${request.created}" pattern="${DATE_FORMAT}"/></td>
+        <td><fmt:formatDate value="${request.lastmodified}" pattern="${DATE_FORMAT}"/></td>
+        <td><fmt:formatDate value="${request.enddate}" pattern="${DATE_FORMAT}"/></td>
+        <td style="width: 10px; padding-top: 0px; padding-bottom: 0px; padding-left: 2px; padding-right: 0px;">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border: NONE" title="Thao tác"><i class="icon-cog"></i><span class="fa fa-caret-down"></span></button>
+                <ul class="dropdown-menu">
+                  <c:if test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
+                    <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
+                  </c:if>
+                    
+<%--                   <li><a href="#"><s:message code="View_Details"/></a></li> --%>
+<!--                   <li class="divider"></li> -->
+<!--                   <li><a href="#">Comment</a></li> -->
+                </ul>
+            </div><!-- /btn-group -->
+        </td>
+      </tr>
+    </c:forEach>
+  </table>
+</div>
+
+

@@ -17,7 +17,7 @@
         <div>
           <label for="status" class="col_2"><s:message code="Status"/>:</label>
           <c:choose>
-            <c:when test="${not empty model.request.status}">
+            <c:when test="${not empty model.request.status && model.request.status == 'Doing'}">
                  <label for="status" class="col_2"><s:message code="${model.request.status}"/></label>
             </c:when>
             <c:otherwise>

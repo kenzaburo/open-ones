@@ -168,6 +168,7 @@ public class RequestController {
 
         // Add object to modelandview
         mav.addObject(MODEL, requestCreateModel);
+        mav.addObject("current", "listFunction");
         
     	return mav;
     }
@@ -523,7 +524,7 @@ public class RequestController {
     		request.setStatus("Approved");
     	}
     	if (request.getRequesttypeCd().equals("Task") && (request.getStatus().equals("Created") || request.getStatus().equals("Updated"))) {
-    		request.setStatus("Doing");
+    		request.setStatus("In-progress");
     		request.setManagerRead(0);
     	}
     	
@@ -628,7 +629,7 @@ public class RequestController {
     	if (request.getRequesttypeCd().equals("Task") || request.getRequesttypeCd().equals("Leave")) {
     		if (username.equals(request.getManagerUsername())) {
         		if (request.getStatus().equals("Confirm")) {
-        			request.setStatus("Doing");
+        			request.setStatus("In-progress");
             	}
         		request.setCreatorRead(0);
             	request.setAssignerRead(0);
@@ -708,9 +709,21 @@ public class RequestController {
     /**
      * Show myListTask page
      **/
-    @RequestMapping(value="mylisttask")
-    public ModelAndView showMyListTask() {
-    	ModelAndView mav = new ModelAndView("mylisttask");
+    @RequestMapping(value="myListTask")
+    public ModelAndView showMyListTask(Principal principal) {
+    	ModelAndView mav = new ModelAndView("myListTask");
+    	List<Request> listRequest1 = requestService.getDaoController().getListRequestByCreatedbyUsername(principal.getName());
+    	List<Request> listRequest2 = requestService.getDaoController().getListRequestByAssigneeUsername(principal.getName());
+    	List<Request> listRequest3 = requestService.getDaoController().getListRequestByManagerUsername(principal.getName());
+    	
+    	listRequest1.removeAll(listRequest2);
+    	listRequest1.addAll(listRequest2);
+    	listRequest1.removeAll(listRequest3);
+    	listRequest1.addAll(listRequest3);
+    	
+    	mav.addObject("requests", listRequest1);
+    	mav.addObject("current", "myListTask");
+    	
     	return mav;
     }
     
@@ -729,8 +742,8 @@ public class RequestController {
     	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
         dateFormat.setLenient(false);
         User userLogin = userService.getUserByUsername(principal.getName());
-    	// List<Request> listRequest = requestControllerService.getListRequestByCreatedbyCd(userLogin.getCd());
-        List<Request> listRequest = requestService.getDaoController().getListRequestByCreatedbyCd(userLogin.getUsername());
+    	// List<Request> listRequest = requestControllerService.getListRequestByCreatedbyUsername(userLogin.getCd());
+        List<Request> listRequest = requestService.getDaoController().getListRequestByCreatedbyUsername(userLogin.getUsername());
 
         List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listRequest) {
@@ -767,8 +780,8 @@ public class RequestController {
         User userLogin = userService.getUserByUsername(principal.getName());
         String username = userLogin.getUsername();
         
-    	List<Request> listManagerRequest = requestService.getDaoController().getListRequestByManagerCd(username);
-    	List<Request> listAssignerRequest = requestService.getDaoController().getListRequestByAssignedCd(username);
+    	List<Request> listManagerRequest = requestService.getDaoController().getListRequestByManagerUsername(username);
+    	List<Request> listAssignerRequest = requestService.getDaoController().getListRequestByAssigneeUsername(username);
     	List<Request> listRule = requestService.getDaoController().getListRequestByRequestTypeCd("Rule");
     	List<Request> listAnnouncement = requestService.getDaoController().getListRequestByRequestTypeCd("Announcement");
     	listAssignerRequest.removeAll(listManagerRequest);
@@ -814,7 +827,7 @@ public class RequestController {
         User userLogin = userService.getUserByUsername(principal.getName());
         String username = userLogin.getUsername();
         
-    	List<Request> listAssignerRequest = requestService.getDaoController().getListRequestByAssignedCdAndRequestTypeCd(username, "Task");
+    	List<Request> listAssignerRequest = requestService.getDaoController().getListRequestByAssigneeUsernameAndRequestTypeCd(username, "Task");
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listAssignerRequest) {
     		JSONObject json = new JSONObject();
@@ -855,7 +868,7 @@ public class RequestController {
         User userLogin = userService.getUserByUsername(principal.getName());
         String username = userLogin.getUsername();
         
-    	List<Request> listAssignerRequest = requestService.getDaoController().getListRequestByManagerCdAndRequestTypeCd(username, "Task");
+    	List<Request> listAssignerRequest = requestService.getDaoController().getListRequestByManagerUsernameAndRequestTypeCd(username, "Task");
     	List<JSONObject> listJson = new ArrayList<JSONObject>();
     	for (Request request:listAssignerRequest) {
     		JSONObject json = new JSONObject();
@@ -895,6 +908,7 @@ public class RequestController {
 //        mav.addObject("listRequestTypes", lstRequestTypes);
 //        List<User> listUsers = userService.getAllUser();
 //        mav.addObject("listUsers", listUsers);
+    	mav.addObject("current", "listFunction");
     	return mav;
     }
     
@@ -1091,10 +1105,10 @@ public class RequestController {
     	User userLogin = userService.getUserByUsername(principal.getName());
     	String username = userLogin.getUsername();
     	
-        List<Request> listCreatedRequest = requestService.getDaoController().getListRequestByManagerCdAndStatusAndManagerRead(username, "Created", 0);
-        List<Request> listConfirmRequest = requestService.getDaoController().getListRequestByManagerCdAndStatusAndManagerRead(username, "Confirm", 0);
-        List<Request> listUpdateRequest = requestService.getDaoController().getListRequestByManagerCdAndStatusAndManagerRead(username, "Updated", 0);
-        List<Request> listDoingRequest = requestService.getDaoController().getListRequestByManagerCdAndStatusAndManagerRead(username, "Doing", 0);
+        List<Request> listCreatedRequest = requestService.getDaoController().getListRequestByManagerUsernameAndStatusAndManagerRead(username, "Created", 0);
+        List<Request> listConfirmRequest = requestService.getDaoController().getListRequestByManagerUsernameAndStatusAndManagerRead(username, "Confirm", 0);
+        List<Request> listUpdateRequest = requestService.getDaoController().getListRequestByManagerUsernameAndStatusAndManagerRead(username, "Updated", 0);
+        List<Request> listDoingRequest = requestService.getDaoController().getListRequestByManagerUsernameAndStatusAndManagerRead(username, "Doing", 0);
         
         List<Request> listTaskRequest = requestService.getDaoController().getListRequestByAssignerCdAndStatusAndAssignerRead(username, "Created", 0);
         List<Request> listTaskRequest1 = requestService.getDaoController().getListRequestByAssignerCdAndStatusAndAssignerRead(username, "Updated", 0);

@@ -178,7 +178,7 @@ public class RequestService extends BaseService {
                 
                 if (AppCons.TASK.equals(request.getRequesttypeCd())) {
                     if (username.equals(request.getAssigneeUsername())) {
-                        request.setStatus(AppCons.STATUS_DOING);
+                        request.setStatus(AppCons.STATUS_INPROGRESS);
                         
                         // [TODO] Using meaningful constant
                         request.setAssignerRead(1);

@@ -68,7 +68,24 @@
 <li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
 <li><a href="addComment?id=${model.request.id}"><i class="icon-comment"></i><s:message code="Comment"/></a></li>
 <li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
-<li><a href="#" id="updateStatus"><i class="icon-tasks"></i> Thực hiện</a></li>
+<c:choose>
+	<c:when	test="${not empty model.request.status && model.request.status == 'Created'}">
+		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện</a></li>
+	</c:when>
+	<c:when	test="${not empty model.request.status && model.request.status == 'In-progress'}">
+		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
+	</c:when>
+	<c:when	test="${not empty model.request.status && model.request.status == 'Finish'}">
+		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện lại</a></li>
+	</c:when>
+	<c:when	test="${not empty model.request.status && model.request.status == 'Re-assign'}">
+		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
+	</c:when>
+	<c:otherwise>
+               &nbsp;
+    </c:otherwise>
+</c:choose>
+
 <li><a href="#" id="finish"><i class="icon-check"></i><s:message code="Done"/></a></li>
 </ul>
 
