@@ -3,6 +3,9 @@
 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
 	<definition name="system-error" extends="default">
-		<put-attribute name="body" value="/WEB-INF/views/SystemError/displaySystemError.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/System/displaySystemError.jsp" />
 	</definition>
+    <definition name="init-data" extends="default">
+        <put-attribute name="body" value="/WEB-INF/views/System/init-data.jsp" />
+    </definition>
 </tiles-definitions>

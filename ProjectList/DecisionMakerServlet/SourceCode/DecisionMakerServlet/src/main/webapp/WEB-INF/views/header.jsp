@@ -137,6 +137,7 @@ $(document).ready(function () {
 	<li class="right" style="display: inline-block;"><a href="#"><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
 		<ul>
 	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i>Thoát</a></li>
+         <li class="divider"><a href="init-data"><i class="icon-download-alt"></i><s:message code="Init_data"/></a></li>
 	    </ul>
 	</li>
 	<sec:authorize access="hasRole('ROLE_MANAGER')">
