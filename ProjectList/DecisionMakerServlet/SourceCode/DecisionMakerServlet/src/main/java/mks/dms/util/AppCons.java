@@ -50,5 +50,9 @@ public class AppCons {
     public static final String STATUS_DOING = "Doing";
     public static final String STATUS_INPROGRESS = "Doing";
  
+    public static final String STATUS_REJECTED = "Rejected";
+    public static final String STATUS_APPROVED = "Approved";
+    public static final String STATUS_REASSIGN = "Re-assigned";
+    
     public static final String DATE_FORMAT = "dd-MM-yyyy";
 }

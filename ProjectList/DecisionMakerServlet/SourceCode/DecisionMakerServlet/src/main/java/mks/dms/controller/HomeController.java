@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
  * listDurationUnit: List of duration unit
  */
 @Controller
-@SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment"})
+@SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment", "listStatus"})
 public class HomeController {
     /** Logging. */
     private final static Logger LOG = Logger.getLogger(HomeController.class);
@@ -78,5 +78,8 @@ public class HomeController {
         
         List<Department> listDepartment = masterService.getDepartments();
         mav.addObject("listDepartment", listDepartment);
+        
+        List<String> listStatus = masterService.getAllStatus();
+        mav.addObject("listStatus", listStatus);
 	}
 }

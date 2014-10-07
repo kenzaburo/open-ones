@@ -92,9 +92,9 @@
   </c:if>
 
 <div>
-  <label for="requestTypeCd" class="col_2">Loại yêu cầu</label>
+  <label for="requestTypeCd" class="col_2"><s:message code="Request_type"/></label>
       <select id="reqType" class="col_3" name="reqType">
-         <option value="0">-- Lựa chọn --</option>
+         <option value="0"><s:message code="Select_guide"/></option>
          <c:forEach var="reqType" items="${listRequestType}">
            <c:choose>
              <c:when test='${reqType.cd == model.request.requesttypeCd}'>

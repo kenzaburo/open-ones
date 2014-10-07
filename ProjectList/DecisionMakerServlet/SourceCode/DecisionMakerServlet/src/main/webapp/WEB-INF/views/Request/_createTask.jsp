@@ -70,19 +70,19 @@
 <%--             </form:select> --%>
 <!-- 		</div> -->
 		<div>
-            <label for="startDate" class="col_2">Ngày bắt đầu</label>
+            <label for="startDate" class="col_2"><s:message code="Start_date"/></label>
             <form:input path="request.startdate" id="request_startdate" size="10" class="col_2"/>
             
-            <label for="endDate" class="col_2">Ngày kết thúc</label>
+            <label for="endDate" class="col_2"><s:message code="End_date"/></label>
             <form:input path="request.enddate" id="request_enddate" size="10" class="col_2"/>
             <form:errors path="request.startdate" class="error"/>
 		</div>
 		<div>
-		 	<label for="label" class="col_2">Nhãn</label>
+		 	<label for="label" class="col_2"><s:message code="Label"/></label>
 		 	<form:input path="request.label1" type="text" class="col_8"/>
 		</div>
 		<div>
-		 	<label for="duration" class="col_2">Thời lượng</label>
+		 	<label for="duration" class="col_2"><s:message code="Duration"/></label>
 		 	<form:input path="request.duration" type="text" class="col_2" style="display:inline;"/>
             <form:errors path="request.duration" class="error"/>
             

@@ -3,6 +3,7 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -34,6 +35,65 @@
 
 <jsp:include page="../_common/confirmDeleteRequest.jsp"/>
 
+<div>
+  <H5><s:message code="Search"/></H5>
+</div>
+<%-- Search condition --%>
+<div>
+  <form:form name="searchTask" class="horizontal" enctype="multipart/form-data" action="searchRequest" modelAttribute="model" method="GET">
+    <div class="visible" style="background: #eee">
+        <label for="requestTypeCd"><s:message code="Request_type"/></label>
+        <select id="reqType" class="col_3" name="reqType">
+           <option value="0"><s:message code="All"/></option>
+           <c:forEach var="reqType" items="${listRequestType}">
+             <c:choose>
+               <c:when test='${reqType.cd == model.request.requesttypeCd}'>
+                 <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
+               </c:when>
+               <c:otherwise>
+                 <option value="${reqType.cd}">${reqType.name}</option>
+               </c:otherwise>
+             </c:choose>
+           </c:forEach>
+        </select>
+        
+        <label><s:message code="Assignee"/></label>
+        <form:select path="request.assigneeUsername">
+            <option value=""><s:message code="All"/></option>
+            <c:forEach var="user" items="${listUser}">
+              <c:choose>
+                <c:when test="${model.request.assigneeUsername == user.username}">
+                  <option value="${user.username}" selected="selected">${user.username}</option>
+                </c:when>
+                <c:otherwise>
+                  <option value="${user.username}">${user.username}</option>
+                </c:otherwise>
+              </c:choose>
+                
+            </c:forEach>
+        </form:select>
+        
+        <label><s:message code="Status"/></label>
+        <form:select path="request.status">
+            <option value=""><s:message code="All"/></option>
+            <c:forEach var="status" items="${listStatus}">
+              <c:choose>
+                <c:when test="${model.request.status == status}">
+                  <option value="${status}" selected="selected"><s:message code="${status}"/></option>
+                </c:when>
+                <c:otherwise>
+                  <option value="${status}"><s:message code="${status}"/></option>
+                </c:otherwise>
+              </c:choose>
+                
+            </c:forEach>
+        </form:select>
+        
+        <button class="pill" type="submit"><i class="button icon-search"></i></button>
+        
+    </div>
+  </form:form>
+</div>
 
 <div class="box-body table-responsive">
   <table id="searchResult" class="table table-bordered table-hover">

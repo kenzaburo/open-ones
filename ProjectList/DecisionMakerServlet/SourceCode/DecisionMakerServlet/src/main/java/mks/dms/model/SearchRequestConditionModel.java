@@ -18,10 +18,29 @@
  */
 package mks.dms.model;
 
+import mks.dms.dao.entity.Request;
+
 /**
  * @author ThachLN
  *
  */
 public class SearchRequestConditionModel {
+    private Request request;
 
+    /**
+     * Get value of request.
+     * @return the request
+     */
+    public Request getRequest() {
+        return request;
+    }
+
+    /**
+     * Set the value for request.
+     * @param request the request to set
+     */
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+    
 }

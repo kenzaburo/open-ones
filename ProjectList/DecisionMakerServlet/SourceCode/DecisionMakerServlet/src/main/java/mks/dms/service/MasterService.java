@@ -33,6 +33,7 @@ import mks.dms.dao.entity.User;
 import mks.dms.model.DepartmentModel;
 import mks.dms.model.DurationUnit;
 import mks.dms.model.MasterNode;
+import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -294,5 +295,22 @@ public class MasterService extends BaseService {
         }
 
         return duName;
+    }
+
+    /**
+    * Get all status of Task, Leave, Announcement, Rule.
+    * @return
+    */
+    public List<String> getAllStatus() {
+        List<String> lstStatus = new ArrayList<String>();
+        
+        lstStatus.add(AppCons.STATUS_CREATED);
+        lstStatus.add(AppCons.STATUS_DOING);
+        lstStatus.add(AppCons.STATUS_INPROGRESS);
+        lstStatus.add(AppCons.STATUS_REJECTED);
+        lstStatus.add(AppCons.STATUS_APPROVED);
+        lstStatus.add(AppCons.STATUS_REASSIGN);
+        
+        return lstStatus;
     }
 }
