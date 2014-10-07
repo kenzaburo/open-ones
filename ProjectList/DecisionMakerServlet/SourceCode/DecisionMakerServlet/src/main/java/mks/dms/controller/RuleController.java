@@ -35,7 +35,7 @@ public class RuleController {
     public ModelAndView listRule(Model model){
         ModelAndView mav = new ModelAndView("listRule");
         
-        List<Request> lstRule = requestService.getListRule();
+        List<Request> lstRule = requestService.findRule();
         
         mav.addObject("lstRule", lstRule);
         mav.addObject("current", "listRule");

@@ -35,7 +35,7 @@ public class AnnouncementController {
     public ModelAndView listAnnouncement(Model model){
         ModelAndView mav = new ModelAndView("listAnnouncement");
         
-        List<Request> lstAnnouncement = requestService.getListAnnouncement();
+        List<Request> lstAnnouncement = requestService.findAnnouncement();
         
         mav.addObject("lstAnnouncement", lstAnnouncement);
         mav.addObject("current", "listAnnouncement");

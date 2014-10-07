@@ -240,7 +240,7 @@ public class RequestService extends BaseService {
     * [Give the description for method].
     * @return
     */
-    public List<Request> getListAnnouncement() {
+    public List<Request> findAnnouncement() {
         List<Request> lstRequest;
         lstRequest = controller.findRequestByType(AppCons.ANNOUNCEMENT);
         
@@ -251,7 +251,7 @@ public class RequestService extends BaseService {
     * [Give the description for method].
     * @return
     */
-    public List<Request> getListRule() {
+    public List<Request> findRule() {
         List<Request> lstRequest;
         lstRequest = controller.findRequestByType(AppCons.RULE);
         
@@ -267,7 +267,7 @@ public class RequestService extends BaseService {
     * @param String username
     * @return
     */
-    public List<Request> getListLeave(String username) {
+    public List<Request> findLeave(String username) {
         List<Request> lstRequest;
         lstRequest = controller.findRequestByType(AppCons.LEAVE);
         
@@ -283,7 +283,7 @@ public class RequestService extends BaseService {
     * @param String username
     * @return
     */
-    public List<Request> getListTask(String username) {
+    public List<Request> findTask(String username) {
         List<Request> lstRequest;
         lstRequest = controller.findRequestByType(AppCons.TASK);
         

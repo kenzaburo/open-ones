@@ -34,7 +34,7 @@ public class TaskController {
     public ModelAndView listTask(Model model, Principal principal) {
         ModelAndView mav = new ModelAndView("listTask");
 
-        List<Request> lstTask = requestService.getListTask(principal.getName());
+        List<Request> lstTask = requestService.findTask(principal.getName());
 
         mav.addObject("lstTask", lstTask);
         mav.addObject("current", "listTask");

@@ -35,7 +35,7 @@ public class LeaveController {
     public ModelAndView listLeave(Model model, Principal principal) {
         ModelAndView mav = new ModelAndView("myListLeave");
 
-        List<Request> lstLeave = requestService.getListLeave(principal.getName());
+        List<Request> lstLeave = requestService.findLeave(principal.getName());
 
         mav.addObject("lstLeave", lstLeave);
         mav.addObject("current", "myListLeave");
