@@ -30,21 +30,8 @@
 
 <%-- Process confirmation delete request --%>
 <script type="text/javascript" src="resources/js/confirmFunction.js"></script>
+<script type="text/javascript" src="resources/js/data-table.js"></script>
 
-
-<!-- page script -->
-<script type="text/javascript">
-    $(function() {
-        $('#searchResult').dataTable({
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false
-        });
-    });
-</script>
 <jsp:include page="../_common/confirmDeleteRequest.jsp"/>
 
 

@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<div class="grid">
+
 
   <!--header-->
   <div id="header-container">
@@ -26,15 +26,17 @@
     <tiles:insertAttribute name="menu" />
   </div>
 
+<div class="grid">
   <!-- Content -->
   <div id="body-container">
     <tiles:insertAttribute name="body" />
   </div>
+</div> <!-- End Grid -->
 
   <div id="footer-container">
     <tiles:insertAttribute name="footer" />
   </div>
-</div> <!-- End Grid -->
+
 
 </body>
 </html>

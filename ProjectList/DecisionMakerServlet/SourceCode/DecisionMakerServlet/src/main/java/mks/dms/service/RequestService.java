@@ -25,6 +25,10 @@ import rocky.common.CommonUtil;
  * @author TriLVH
  *
  */
+/**
+ * @author ThachLN
+ *
+ */
 @Service
 public class RequestService extends BaseService {
 	
@@ -249,6 +253,38 @@ public class RequestService extends BaseService {
     public List<Request> getListRule() {
         List<Request> lstRequest;
         lstRequest = controller.findRequestByType(AppCons.RULE);
+        
+        return lstRequest;
+    }
+    
+    /**
+    * Get list of "Leave" which is relative to the given user.
+    * - Owner Leave request
+    * - Leave request is managed by the user
+    * - Leave request is shared to the user
+    * Todo
+    * @param String username
+    * @return
+    */
+    public List<Request> getListLeave(String username) {
+        List<Request> lstRequest;
+        lstRequest = controller.findRequestByType(AppCons.LEAVE);
+        
+        return lstRequest;
+    }
+    
+    /**
+    * Get list of Task which is relative to the given user.
+    *  - Assigned task
+    *  - Task is managed by the user
+    *  - Task is shared to the user
+    * Todo
+    * @param String username
+    * @return
+    */
+    public List<Request> getListTask(String username) {
+        List<Request> lstRequest;
+        lstRequest = controller.findRequestByType(AppCons.TASK);
         
         return lstRequest;
     }
