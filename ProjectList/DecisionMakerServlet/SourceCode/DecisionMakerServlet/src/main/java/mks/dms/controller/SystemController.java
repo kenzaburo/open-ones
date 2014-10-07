@@ -39,11 +39,10 @@ public class SystemController {
 
         mav.addObject("result", initResult);
 
-        if (initResult) {
-            ExRequestTypeJpaController reqTypeDaoCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
-            List<RequestType> lstRequestType = reqTypeDaoCtrl.findRequestTypeEntities();
-            mav.addObject("lstRequestType", lstRequestType);
-        }
+        ExRequestTypeJpaController reqTypeDaoCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
+        List<RequestType> lstRequestType = reqTypeDaoCtrl.findRequestTypeEntities();
+        mav.addObject("lstRequestType", lstRequestType);
+
         return mav;
     }
 

@@ -13,6 +13,7 @@ import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
+import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
@@ -337,6 +338,10 @@ public class RequestService extends BaseService {
     * @return
     */
     public List<Request> findOpenRequest(String username) {
+        return controller.findRequestEntities();
+    }
+
+    public List<Request> findRequestByCondition(String username, SearchRequestConditionModel searchCond) {
         return controller.findRequestEntities();
     }
 

@@ -31,14 +31,14 @@ public class LeaveController {
     }
 
 
-    @RequestMapping(value="listLeave" , method = RequestMethod.GET)
+    @RequestMapping(value="myListLeave" , method = RequestMethod.GET)
     public ModelAndView listLeave(Model model, Principal principal) {
-        ModelAndView mav = new ModelAndView("listLeave");
+        ModelAndView mav = new ModelAndView("myListLeave");
 
         List<Request> lstLeave = requestService.getListLeave(principal.getName());
 
         mav.addObject("lstLeave", lstLeave);
-        mav.addObject("current", "listLeave");
+        mav.addObject("current", "myListLeave");
         return mav;
     }
     

@@ -47,11 +47,11 @@
   <tbody>
     <c:choose>
         <c:when test="${result == true}">
-            <H3>Thiết lập dữ liệu thành công.</H3>
+            <H3><s:message code="Init_data_success"/></H3>
         </c:when>
         <c:otherwise>
             <label class="error">
-            Thiết lập dữ liệu không thành công.
+            <s:message code="Init_data_no_success"/>
             </label>
         </c:otherwise>
     </c:choose>

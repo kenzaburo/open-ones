@@ -2,7 +2,7 @@
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration
 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
-	<definition name="listLeave" extends="default">
-		<put-attribute name="body" value="/WEB-INF/views/Leave/listLeave.jsp" />
+	<definition name="myListLeave" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Leave/myListLeave.jsp" />
 	</definition>
 </tiles-definitions>

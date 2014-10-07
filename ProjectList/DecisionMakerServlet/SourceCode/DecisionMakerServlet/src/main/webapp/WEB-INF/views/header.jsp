@@ -84,50 +84,58 @@ $(document).ready(function () {
 <ul class="menu">
 	<c:choose>
 		<c:when test="${current == 'home'}">
-			<li class="current"><a href="home"><i class="icon-home"></i> Trang chủ</a></li>
+			<li class="current"><a href="home"><i class="icon-home"></i><s:message code="Home_page"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="home"><i class="icon-home"></i> Trang chủ</a></li>
+			<li><a href="home"><i class="icon-home"></i><s:message code="Home_page"/></a></li>
 		</c:otherwise>
 	</c:choose>
 	<c:choose>
 		<c:when test="${current == 'listAnnouncement'}">
-			<li class="current"><a href="listAnnouncement"><i class="icon-bullhorn"></i> Thông báo</a></li>
+			<li class="current"><a href="listAnnouncement"><i class="icon-bullhorn"></i><s:message code="Announcement"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="listAnnouncement"><i class="icon-bullhorn"></i> Thông báo</a></li>
+			<li><a href="listAnnouncement"><i class="icon-bullhorn"></i><s:message code="Announcement"/></a></li>
 		</c:otherwise>
 	</c:choose>
   	<c:choose>
 		<c:when test="${current == 'listRule'}">
-			<li class="current"><a href="listRule"><i class="icon-legal"></i> Quy định</a></li>
+			<li class="current"><a href="listRule"><i class="icon-legal"></i><s:message code="Rule"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="listRule"><i class="icon-legal"></i> Quy định</a></li>
+			<li><a href="listRule"><i class="icon-legal"></i><s:message code="Rule"/></a></li>
 		</c:otherwise>
 	</c:choose>
 	<c:choose>
 		<c:when test="${current == 'myListTask'}">
-			<li class="current"><a href="myListTask"><i class="icon-tasks"></i> Công việc</a></li>
+			<li class="current"><a href="myListTask"><i class="icon-tasks"></i><s:message code="Task"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="myListTask"><i class="icon-tasks"></i> Công việc</a></li>
+			<li><a href="myListTask"><i class="icon-tasks"></i><s:message code="Task"/></a></li>
 		</c:otherwise>
 	</c:choose>
+    <c:choose>
+        <c:when test="${current == 'myListLeave'}">
+            <li class="current"><a href="myListLeave"><i class="icon-Leaves"></i><s:message code="Leave"/></a></li>
+        </c:when>
+        <c:otherwise>
+            <li><a href="myListLeave"><i class="icon-Leaves"></i><s:message code="Leave"/></a></li>
+        </c:otherwise>
+    </c:choose>
 	<c:choose>
-		<c:when test="${current == 'listFunction'}">
-			<li class="current" style="display: inline-block;"><a href=""><i class="icon-wrench"></i> Chức năng</a>
+		<c:when test="${current == 'commonManagement'}">
+			<li class="current" style="display: inline-block;"><a href=""><i class="icon-wrench"></i><s:message code="Common_management"/></a>
 				<ul>
-			      <li><a href="createRequest"><i class="icon-magic"></i> Tạo mới</a></li>
-			      <li><a href="searchRequest"><i class="icon-search"></i> Tìm kiếm</a></li>
+			      <li><a href="createRequest"><i class="icon-magic"></i><s:message code="Create_request"/></a></li>
+			      <li><a href="searchRequest"><i class="icon-search"></i><s:message code="Search_request"/></a></li>
 			  	</ul>
 			</li>
 		</c:when>
 		<c:otherwise>
-			<li style="display: inline-block;"><a href=""><i class="icon-wrench"></i> Chức năng</a>
+			<li style="display: inline-block;"><a href=""><i class="icon-wrench"></i><s:message code="Common_management"/></a>
 				<ul>
-			      <li><a href="createRequest"><i class="icon-magic"></i> Tạo mới</a></li>
-			      <li><a href="searchRequest"><i class="icon-search"></i> Tìm kiếm</a></li>
+			      <li><a href="createRequest"><i class="icon-magic"></i><s:message code="Create_request"/></a></li>
+			      <li><a href="searchRequest"><i class="icon-search"></i><s:message code="Search_request"/></a></li>
 			  	</ul>
 			</li>
 		</c:otherwise>
@@ -136,29 +144,21 @@ $(document).ready(function () {
 	<li style="display: inline-block; margin-left:10px;" id="countResponse"></li>
 	<li class="right" style="display: inline-block;"><a href="#"><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
 		<ul>
-	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i>Thoát</a></li>
-         <li class="divider"><a href="init-data"><i class="icon-download-alt"></i><s:message code="Init_data"/></a></li>
+	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i><s:message code="Quit"/></a></li>
+          <li class="left divider"><a href="init-data"><i class="icon-download-alt"></i><s:message code="Init_data"/></a></li>
 	    </ul>
 	</li>
-	<sec:authorize access="hasRole('ROLE_MANAGER')">
-	  
-	    <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i>Quản trị</a>
-	    <ul>
-	      <li class="left"><a href="listLeaveRequest"><i class="icon-desktop"></i>Quản lý đơn nghỉ phép</a></li>
-	    </ul>
-	  </li>
-	  </sec:authorize>
-	  <%-- For Admin.START --%>
-	  <sec:authorize access="hasRole('ROLE_ADMIN')">
-	  
-	    <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i>Cấu hình</a>
-	    <ul>
-	      <li class="left"><a href="master.department"><i class="icon-sitemap"></i>Phòng ban</a></li>
-	      <li class="left"><a href="master.template"><i class="icon-bookmark-empty"></i>Biểu mẫu</a></li>
-	      <li class="left"><a href="listLeaveRequest"><i class="icon-desktop"></i>Quản lý đơn nghỉ phép</a></li>
-	    </ul>
-	  </li>
-	  </sec:authorize>
+
+    <%-- For Admin.START --%>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+    
+      <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i><s:message code="Configuration"/></a>
+      <ul>
+        <li class="left"><a href="master.department"><i class="icon-sitemap"></i><s:message code="Department"/></a></li>
+        <li class="left"><a href="master.template"><i class="icon-bookmark-empty"></i><s:message code="Template"/></a></li>
+      </ul>
+    </li>
+    </sec:authorize>
   <%-- For Admin.END --%>
 </ul>
 

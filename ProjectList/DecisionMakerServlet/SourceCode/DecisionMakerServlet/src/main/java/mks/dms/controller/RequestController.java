@@ -31,6 +31,7 @@ import mks.dms.extentity.ExUser;
 import mks.dms.info.Result;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.model.RequestModel;
+import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestService;
 import mks.dms.service.UserControllerService;
@@ -168,7 +169,7 @@ public class RequestController {
 
         // Add object to modelandview
         mav.addObject(MODEL, requestCreateModel);
-        mav.addObject("current", "listFunction");
+        mav.addObject("current", "commonManagement");
         
     	return mav;
     }
@@ -900,175 +901,177 @@ public class RequestController {
     	return listJson.toString();
     }
     
-    @RequestMapping(value="searchRequest")
-    public ModelAndView showSearchRequestPage() {
-    	ModelAndView mav = new ModelAndView("searchRequest");
-//    	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
-//    	LOG.debug("lstRequestTypes=" + lstRequestTypes);
-//        mav.addObject("listRequestTypes", lstRequestTypes);
-//        List<User> listUsers = userService.getAllUser();
-//        mav.addObject("listUsers", listUsers);
-    	mav.addObject("current", "listFunction");
-    	return mav;
-    }
+//    @RequestMapping(value="searchRequest")
+//    public ModelAndView showSearchRequestPage() {
+//    	ModelAndView mav = new ModelAndView("searchRequest");
+////    	List<RequestType> lstRequestTypes = masterService.getRequestTypes();
+////    	LOG.debug("lstRequestTypes=" + lstRequestTypes);
+////        mav.addObject("listRequestTypes", lstRequestTypes);
+////        List<User> listUsers = userService.getAllUser();
+////        mav.addObject("listUsers", listUsers);
+//    	mav.addObject("current", "listFunction");
+//    	return mav;
+//    }
     
-    @RequestMapping(value="searchMyOpenRequest")
-    public ModelAndView searchMyOpenRequest(Principal principal) {
-        ModelAndView mav = new ModelAndView("searchMyOpenRequest");
+    @RequestMapping(value="searchRequest")
+    public ModelAndView searchRequest(Principal principal) {
+        ModelAndView mav = new ModelAndView("searchRequest");
         String username = principal.getName();
         
-        List<Request> lstRequest = requestService.findOpenRequest(username);
+        SearchRequestConditionModel searchCond = null;
+        List<Request> lstRequest = requestService.findRequestByCondition(username, searchCond);
         
         mav.addObject("requests", lstRequest);
+        mav.addObject("current", "commonManagement");
         
         return mav;
     }
     
-    @RequestMapping(value="search.request", method = RequestMethod.GET)
-	public @ResponseBody
-			String searchRequest(Principal principal,
-			@RequestParam("createdbyUsername") String createdbyUsername,
-			@RequestParam("startDate") Date startDate,
-			@RequestParam("endDate") Date endDate,
-			@RequestParam("managerUsername") String managerUsername,
-			@RequestParam("assignUsername") String assignUsername,
-			@RequestParam("requestTypeCd") String requestTypeCd,
-			@RequestParam("requestTitle") String requestTitle,
-			@RequestParam("requestContent") String requestContent)
-			throws JSONException {
-//    	System.out.println("managerUsername: " + managerUsername);
-//    	System.out.println("createdbyUsername: " + createdbyUsername);
-//    	System.out.println("assignUsername: " + assignUsername);
-//    	System.out.println("requestTypeCd: " + requestTypeCd);
-
-    	List<Request> listRequest;    	
-    	if (createdbyUsername.equals("0") && startDate == null && endDate == null && managerUsername.equals("0") && assignUsername.equals("0") && requestTypeCd.equals("0")) {
-    	    System.out.println("Search All");
-    		if (principal.getName().equals("admin") || principal.getName().equals("manager")) {
-    	    	listRequest = requestService.getDaoController().findRequestEntities();
-    	    }
-    	    else {
-    	    	List<Request> list2 = requestService.getDaoController().searchRequest("0", null, null, principal.getName(), "0", "0");
-    	    	List<Request> list3 = requestService.getDaoController().searchRequest("0", null, null, "0", principal.getName(), "0");
-    	    	list2.removeAll(list3);
-    	    	list2.addAll(list3);
-    	    	listRequest = list2;
-    	    }
-    	}else {
-    		System.out.println("Search Some");
-    		listRequest = requestService.getDaoController().searchRequest(createdbyUsername, startDate, endDate, managerUsername, assignUsername, requestTypeCd);
-    	}
-    	User userLogin = userService.getUserByUsername(principal.getName());
-    	List<JSONObject> listJson = new ArrayList<JSONObject>();
-    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
-        dateFormat.setLenient(false);
-    	for (Request request:listRequest) {
-    		if (requestContent.equals("") && requestTitle.equals("")) {
-    			JSONObject json = new JSONObject();
-        		json.put("requestType", request.getRequesttypeName());
-        		json.put("requestId", request.getId());
-        		json.put("requestTitle", request.getTitle());
-                
-        		// Thach.modified.20140916
-        		if (request.getManagerUsername() != null) {
-                    json.put("managerName", request.getManagerName());
-                    json.put("managerId", request.getManagerUsername());
-                }
-        		// json.put("assignId", request.getManagerId());
-        		json.put("assignId", request.getAssigneeUsername());
-        		
-        		// Thach.Modified.20140916
-        		if (request.getStartdate() != null) {
-        		    json.put("startDate", dateFormat.format(request.getStartdate()));
-        		}
-        		
-        		// Thach.Modified.20140916
-        		if (request.getEnddate() != null) {
-        		    json.put("endDate", dateFormat.format(request.getEnddate()));
-        		}
-        		json.put("content", request.getContent());
-        		if (requestService.checkIsRead(request, userLogin) == 1) {
-        			json.put("readStatus", 1);
-        		}
-        		else {
-        			json.put("readStatus", 0);
-        		}
-        		json.put("status", request.getStatus());
-        		listJson.add(json);
-    		}
-    		else if (!requestContent.equals("") && requestTitle.equals("")) {
-    			
-    			if (request.getContent().toLowerCase().contains(requestContent.toLowerCase())) {
-    				JSONObject json = new JSONObject();
-            		json.put("requestType", request.getRequesttypeName());
-//            		json.put("requestType", request.getRequesttypeCd());
-            		json.put("requestId", request.getId());
-            		json.put("requestTitle", request.getTitle());
-            		//json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
-            		json.put("managerName", request.getManagerName());
-            		
-            		json.put("managerId", request.getManagerUsername());
-            		//json.put("assignId", request.getManagerId());
-            		json.put("assignId", request.getAssigneeUsername());
-            		json.put("startDate", dateFormat.format(request.getStartdate()));
-            		json.put("endDate", dateFormat.format(request.getEnddate()));
-            		json.put("content", request.getContent());
-            		if (requestService.checkIsRead(request, userLogin) == 1) {
-            			json.put("readStatus", 1);
-            		}
-            		else {
-            			json.put("readStatus", 0);
-            		}
-            		json.put("status", request.getStatus());
-            		listJson.add(json);
-    			}
-    		}
-    		else if (requestContent.equals("") && !requestTitle.equals("")) {
-    			if (request.getTitle().toLowerCase().contains(requestTitle.toLowerCase())) {
-    				JSONObject json = new JSONObject();
-            		json.put("requestType", request.getRequesttypeName());
-//            		json.put("requestType", request.getRequesttypeCd());
-            		json.put("requestId", request.getId());
-            		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerName());
-            		json.put("managerId", request.getManagerUsername());
-            		//json.put("assignId", request.getManagerId());
-            		json.put("assignId", request.getAssigneeUsername());
-            		json.put("startDate", dateFormat.format(request.getStartdate()));
-            		json.put("endDate", dateFormat.format(request.getEnddate()));
-            		json.put("content", request.getContent());
-            		if (requestService.checkIsRead(request, userLogin) == 1) {
-            			json.put("readStatus", 1);
-            		}
-            		else {
-            			json.put("readStatus", 0);
-            		}
-            		json.put("status", request.getStatus());
-            		listJson.add(json);
-    			}
-    		}
-    		else if (!requestContent.equals("") && !requestTitle.equals("")){
-    			System.out.println("Title and content not null");
-    			if (request.getTitle().toLowerCase().contains(requestTitle.toLowerCase()) && request.getContent().toLowerCase().contains(requestContent.toLowerCase())) {
-    				JSONObject json = new JSONObject();
-            		json.put("requestType", request.getRequesttypeName());
-//            		json.put("requestType", request.getRequesttypeCd());
-            		json.put("requestId", request.getId());
-            		json.put("requestTitle", request.getTitle());
-            		json.put("managerName", request.getManagerName());
-            		json.put("managerId", 1);
-            		json.put("assignId", 1);
-            		json.put("startDate", dateFormat.format(request.getStartdate()));
-            		json.put("endDate", dateFormat.format(request.getEnddate()));;
-            		json.put("content", request.getContent());
-//            		json.put("readStatus", request.getReadstatus());
-            		json.put("status", request.getStatus());
-            		listJson.add(json);
-    			}
-    		}
-    	}
-    	return listJson.toString();
-    }
+//    @RequestMapping(value="search.request", method = RequestMethod.GET)
+//	public @ResponseBody
+//			String searchRequest(Principal principal,
+//			@RequestParam("createdbyUsername") String createdbyUsername,
+//			@RequestParam("startDate") Date startDate,
+//			@RequestParam("endDate") Date endDate,
+//			@RequestParam("managerUsername") String managerUsername,
+//			@RequestParam("assignUsername") String assignUsername,
+//			@RequestParam("requestTypeCd") String requestTypeCd,
+//			@RequestParam("requestTitle") String requestTitle,
+//			@RequestParam("requestContent") String requestContent)
+//			throws JSONException {
+////    	System.out.println("managerUsername: " + managerUsername);
+////    	System.out.println("createdbyUsername: " + createdbyUsername);
+////    	System.out.println("assignUsername: " + assignUsername);
+////    	System.out.println("requestTypeCd: " + requestTypeCd);
+//
+//    	List<Request> listRequest;    	
+//    	if (createdbyUsername.equals("0") && startDate == null && endDate == null && managerUsername.equals("0") && assignUsername.equals("0") && requestTypeCd.equals("0")) {
+//    	    System.out.println("Search All");
+//    		if (principal.getName().equals("admin") || principal.getName().equals("manager")) {
+//    	    	listRequest = requestService.getDaoController().findRequestEntities();
+//    	    }
+//    	    else {
+//    	    	List<Request> list2 = requestService.getDaoController().searchRequest("0", null, null, principal.getName(), "0", "0");
+//    	    	List<Request> list3 = requestService.getDaoController().searchRequest("0", null, null, "0", principal.getName(), "0");
+//    	    	list2.removeAll(list3);
+//    	    	list2.addAll(list3);
+//    	    	listRequest = list2;
+//    	    }
+//    	}else {
+//    		System.out.println("Search Some");
+//    		listRequest = requestService.getDaoController().searchRequest(createdbyUsername, startDate, endDate, managerUsername, assignUsername, requestTypeCd);
+//    	}
+//    	User userLogin = userService.getUserByUsername(principal.getName());
+//    	List<JSONObject> listJson = new ArrayList<JSONObject>();
+//    	SimpleDateFormat dateFormat = new SimpleDateFormat(AppCons.DATE_FORMAT);
+//        dateFormat.setLenient(false);
+//    	for (Request request:listRequest) {
+//    		if (requestContent.equals("") && requestTitle.equals("")) {
+//    			JSONObject json = new JSONObject();
+//        		json.put("requestType", request.getRequesttypeName());
+//        		json.put("requestId", request.getId());
+//        		json.put("requestTitle", request.getTitle());
+//                
+//        		// Thach.modified.20140916
+//        		if (request.getManagerUsername() != null) {
+//                    json.put("managerName", request.getManagerName());
+//                    json.put("managerId", request.getManagerUsername());
+//                }
+//        		// json.put("assignId", request.getManagerId());
+//        		json.put("assignId", request.getAssigneeUsername());
+//        		
+//        		// Thach.Modified.20140916
+//        		if (request.getStartdate() != null) {
+//        		    json.put("startDate", dateFormat.format(request.getStartdate()));
+//        		}
+//        		
+//        		// Thach.Modified.20140916
+//        		if (request.getEnddate() != null) {
+//        		    json.put("endDate", dateFormat.format(request.getEnddate()));
+//        		}
+//        		json.put("content", request.getContent());
+//        		if (requestService.checkIsRead(request, userLogin) == 1) {
+//        			json.put("readStatus", 1);
+//        		}
+//        		else {
+//        			json.put("readStatus", 0);
+//        		}
+//        		json.put("status", request.getStatus());
+//        		listJson.add(json);
+//    		}
+//    		else if (!requestContent.equals("") && requestTitle.equals("")) {
+//    			
+//    			if (request.getContent().toLowerCase().contains(requestContent.toLowerCase())) {
+//    				JSONObject json = new JSONObject();
+//            		json.put("requestType", request.getRequesttypeName());
+////            		json.put("requestType", request.getRequesttypeCd());
+//            		json.put("requestId", request.getId());
+//            		json.put("requestTitle", request.getTitle());
+//            		//json.put("managerName", request.getManagerId().getLastname() + " " + request.getManagerId().getFirstname());
+//            		json.put("managerName", request.getManagerName());
+//            		
+//            		json.put("managerId", request.getManagerUsername());
+//            		//json.put("assignId", request.getManagerId());
+//            		json.put("assignId", request.getAssigneeUsername());
+//            		json.put("startDate", dateFormat.format(request.getStartdate()));
+//            		json.put("endDate", dateFormat.format(request.getEnddate()));
+//            		json.put("content", request.getContent());
+//            		if (requestService.checkIsRead(request, userLogin) == 1) {
+//            			json.put("readStatus", 1);
+//            		}
+//            		else {
+//            			json.put("readStatus", 0);
+//            		}
+//            		json.put("status", request.getStatus());
+//            		listJson.add(json);
+//    			}
+//    		}
+//    		else if (requestContent.equals("") && !requestTitle.equals("")) {
+//    			if (request.getTitle().toLowerCase().contains(requestTitle.toLowerCase())) {
+//    				JSONObject json = new JSONObject();
+//            		json.put("requestType", request.getRequesttypeName());
+////            		json.put("requestType", request.getRequesttypeCd());
+//            		json.put("requestId", request.getId());
+//            		json.put("requestTitle", request.getTitle());
+//            		json.put("managerName", request.getManagerName());
+//            		json.put("managerId", request.getManagerUsername());
+//            		//json.put("assignId", request.getManagerId());
+//            		json.put("assignId", request.getAssigneeUsername());
+//            		json.put("startDate", dateFormat.format(request.getStartdate()));
+//            		json.put("endDate", dateFormat.format(request.getEnddate()));
+//            		json.put("content", request.getContent());
+//            		if (requestService.checkIsRead(request, userLogin) == 1) {
+//            			json.put("readStatus", 1);
+//            		}
+//            		else {
+//            			json.put("readStatus", 0);
+//            		}
+//            		json.put("status", request.getStatus());
+//            		listJson.add(json);
+//    			}
+//    		}
+//    		else if (!requestContent.equals("") && !requestTitle.equals("")){
+//    			System.out.println("Title and content not null");
+//    			if (request.getTitle().toLowerCase().contains(requestTitle.toLowerCase()) && request.getContent().toLowerCase().contains(requestContent.toLowerCase())) {
+//    				JSONObject json = new JSONObject();
+//            		json.put("requestType", request.getRequesttypeName());
+////            		json.put("requestType", request.getRequesttypeCd());
+//            		json.put("requestId", request.getId());
+//            		json.put("requestTitle", request.getTitle());
+//            		json.put("managerName", request.getManagerName());
+//            		json.put("managerId", 1);
+//            		json.put("assignId", 1);
+//            		json.put("startDate", dateFormat.format(request.getStartdate()));
+//            		json.put("endDate", dateFormat.format(request.getEnddate()));;
+//            		json.put("content", request.getContent());
+////            		json.put("readStatus", request.getReadstatus());
+//            		json.put("status", request.getStatus());
+//            		listJson.add(json);
+//    			}
+//    		}
+//    	}
+//    	return listJson.toString();
+//    }
     
     @RequestMapping(value="response.request.count", method = RequestMethod.GET)
     public @ResponseBody String countResponseRequest(Principal principal,  HttpServletResponse response) throws JSONException{
