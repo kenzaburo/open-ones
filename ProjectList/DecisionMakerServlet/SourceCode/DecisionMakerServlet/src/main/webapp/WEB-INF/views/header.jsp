@@ -84,68 +84,68 @@ $(document).ready(function () {
 <ul class="menu">
 	<c:choose>
 		<c:when test="${current == 'home'}">
-			<li class="current"><a href="home"><i class="icon-home"></i><s:message code="Home_page"/></a></li>
+			<li class="current"><a href="home"><i class="icon-home"></i> <s:message code="Home_page"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="home"><i class="icon-home"></i><s:message code="Home_page"/></a></li>
+			<li><a href="home"><i class="icon-home"></i> <s:message code="Home_page"/></a></li>
 		</c:otherwise>
 	</c:choose>
 	<c:choose>
 		<c:when test="${current == 'listAnnouncement'}">
-			<li class="current"><a href="listAnnouncement"><i class="icon-bullhorn"></i><s:message code="Announcement"/></a></li>
+			<li class="current"><a href="listAnnouncement"><i class="icon-bullhorn"></i> <s:message code="Announcement"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="listAnnouncement"><i class="icon-bullhorn"></i><s:message code="Announcement"/></a></li>
+			<li><a href="listAnnouncement"><i class="icon-bullhorn"></i> <s:message code="Announcement"/></a></li>
 		</c:otherwise>
 	</c:choose>
   	<c:choose>
 		<c:when test="${current == 'listRule'}">
-			<li class="current"><a href="listRule"><i class="icon-legal"></i><s:message code="Rule"/></a></li>
+			<li class="current"><a href="listRule"><i class="icon-legal"></i> <s:message code="Rule"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="listRule"><i class="icon-legal"></i><s:message code="Rule"/></a></li>
+			<li><a href="listRule"><i class="icon-legal"></i> <s:message code="Rule"/></a></li>
 		</c:otherwise>
 	</c:choose>
 	<c:choose>
 		<c:when test="${current == 'myListTask'}">
-			<li class="current"><a href="myListTask"><i class="icon-tasks"></i><s:message code="Task"/></a></li>
+			<li class="current"><a href="myListTask"><i class="icon-tasks"></i> <s:message code="Task"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li><a href="myListTask"><i class="icon-tasks"></i><s:message code="Task"/></a></li>
+			<li><a href="myListTask"><i class="icon-tasks"></i> <s:message code="Task"/></a></li>
 		</c:otherwise>
 	</c:choose>
     <c:choose>
         <c:when test="${current == 'myListLeave'}">
-            <li class="current"><a href="myListLeave"><i class="icon-Leaves"></i><s:message code="Leave"/></a></li>
+            <li class="current"><a href="myListLeave"><i class="icon-beer"></i> <s:message code="Leave"/></a></li>
         </c:when>
         <c:otherwise>
-            <li><a href="myListLeave"><i class="icon-Leaves"></i><s:message code="Leave"/></a></li>
+            <li><a href="myListLeave"><i class="icon-beer"></i> <s:message code="Leave"/></a></li>
         </c:otherwise>
     </c:choose>
 	<c:choose>
 		<c:when test="${current == 'commonManagement'}">
-			<li class="current" style="display: inline-block;"><a href=""><i class="icon-wrench"></i><s:message code="Common_management"/></a>
+			<li class="current" style="display: inline-block;"><a href=""><i class="icon-wrench"></i> <s:message code="Common_management"/></a>
 				<ul>
-			      <li><a href="createRequest"><i class="icon-magic"></i><s:message code="Create_request"/></a></li>
-			      <li><a href="searchRequest"><i class="icon-search"></i><s:message code="Search_request"/></a></li>
+			      <li><a href="createRequest"><i class="icon-magic"></i> <s:message code="Create_request"/></a></li>
+			      <li><a href="searchRequest"><i class="icon-search"></i> <s:message code="Search_request"/></a></li>
 			  	</ul>
 			</li>
 		</c:when>
 		<c:otherwise>
-			<li style="display: inline-block;"><a href=""><i class="icon-wrench"></i><s:message code="Common_management"/></a>
+			<li style="display: inline-block;"><a href=""><i class="icon-wrench"></i> <s:message code="Common_management"/></a>
 				<ul>
-			      <li><a href="createRequest"><i class="icon-magic"></i><s:message code="Create_request"/></a></li>
-			      <li><a href="searchRequest"><i class="icon-search"></i><s:message code="Search_request"/></a></li>
+			      <li><a href="createRequest"><i class="icon-magic"></i> <s:message code="Create_request"/></a></li>
+			      <li><a href="searchRequest"><i class="icon-search"></i> <s:message code="Search_request"/></a></li>
 			  	</ul>
 			</li>
 		</c:otherwise>
 	</c:choose>
 	<li style="display: inline-block;" id="countRequest"></li>
 	<li style="display: inline-block; margin-left:10px;" id="countResponse"></li>
-	<li class="right" style="display: inline-block;"><a href="#"><i class="icon-user"></i>${pageContext.request.userPrincipal.name}</a>
+	<li class="right" style="display: inline-block;"><a href="#"><i class="icon-user"></i> ${pageContext.request.userPrincipal.name}</a>
 		<ul>
-	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i><s:message code="Quit"/></a></li>
-          <li class="left divider"><a href="init-data"><i class="icon-download-alt"></i><s:message code="Init_data"/></a></li>
+	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i> <s:message code="Quit"/></a></li>
+          <li class="left divider"><a href="init-data"><i class="icon-download-alt"></i> <s:message code="Init_data"/></a></li>
 	    </ul>
 	</li>
 

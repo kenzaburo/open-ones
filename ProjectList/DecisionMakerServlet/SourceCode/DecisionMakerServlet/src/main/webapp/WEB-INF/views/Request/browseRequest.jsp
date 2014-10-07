@@ -8,7 +8,22 @@
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
 <script type="text/javascript" src="resources/js/common.js"></script>
-
+<style>
+#disabled {
+   pointer-events: none;
+   cursor: default;
+   color:#A7A7A7; 
+}
+#disable{
+	
+	background:#dce5e8;
+	pointer-events: none;
+   	cursor: default; 
+	-webkit-box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff; 
+	-moz-box-shadow: 0px 0px 2px #bababa,  inset 0px 0px 1px #ffffff;  
+	box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;  
+}
+</style>
 <script>
   $(function() {
       var assignUsername = $( "#request.assigneeUsername" ),
@@ -65,28 +80,62 @@
 </script>
 <!-- Button Bar w/icons -->
 <ul class="button-bar">
-<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
-<li><a href="addComment?id=${model.request.id}"><i class="icon-comment"></i><s:message code="Comment"/></a></li>
-<li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
-<c:choose>
-	<c:when	test="${not empty model.request.status && model.request.status == 'Created'}">
-		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện</a></li>
-	</c:when>
-	<c:when	test="${not empty model.request.status && model.request.status == 'In-progress'}">
-		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
-	</c:when>
-	<c:when	test="${not empty model.request.status && model.request.status == 'Finish'}">
-		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện lại</a></li>
-	</c:when>
-	<c:when	test="${not empty model.request.status && model.request.status == 'Re-assign'}">
-		<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
-	</c:when>
-	<c:otherwise>
-               &nbsp;
-    </c:otherwise>
-</c:choose>
-
-<li><a href="#" id="finish"><i class="icon-check"></i><s:message code="Done"/></a></li>
+	<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
+	<li><a href="addComment?id=${model.request.id}"><i class="icon-comment"></i><s:message code="Comment"/></a></li>
+	<li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
+	<c:choose>
+		<c:when	test="${not empty model.request.status && model.request.status == 'Created'}">
+			<c:choose>
+				<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
+					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện</a></li>
+				</c:when>
+				<c:otherwise>
+		            <li id="disable"><a href="updateStatus?id=${model.request.id}" id="disabled"><i class="icon-tasks"></i> Thực hiện</a></li>
+		    	</c:otherwise>
+		    </c:choose>
+		</c:when>
+		<c:when	test="${not empty model.request.status && model.request.status == 'In-progress'}">
+			<c:choose>
+				<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
+					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
+				</c:when>
+				<c:otherwise>
+		            <li id="disable"><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks" id="disabled"></i> Hoàn thành</a></li>
+		    	</c:otherwise>
+		    </c:choose>
+		</c:when>
+		<c:when	test="${not empty model.request.status && model.request.status == 'Finish'}">
+			<c:choose>
+				<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
+					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện lại</a></li>
+				</c:when>
+				<c:otherwise>
+		            <li id="disable"><a href="updateStatus?id=${model.request.id}" id="disabled"><i class="icon-tasks"></i> Thực hiện lại</a></li>
+		    	</c:otherwise>
+		    </c:choose>
+		</c:when>
+		<c:when	test="${not empty model.request.status && model.request.status == 'Re-assign'}">
+			<c:choose>
+				<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
+					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
+				</c:when>
+				<c:otherwise>
+		            <li id="disable"><a href="updateStatus?id=${model.request.id}" id="disabled"><i class="icon-tasks"></i> Hoàn thành</a></li>
+		    	</c:otherwise>
+		    </c:choose>
+		</c:when>
+		<c:otherwise>
+	               &nbsp;
+	    </c:otherwise>
+	</c:choose>
+	<c:choose>
+		<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
+			<li><a href="#" id="finish"><i class="icon-check"></i><s:message code="Done"/></a></li>
+		</c:when>
+		<c:otherwise>
+			<li id="disable"><a href="#" id="finish"><i class="icon-check" id="disabled"></i><s:message code="Done"/></a></li>
+		</c:otherwise>
+	</c:choose>
 </ul>
 
 <div id="dialog-form" title="<s:message code="Assign"/>">

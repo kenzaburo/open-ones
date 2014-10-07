@@ -23,8 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mks.dms.dao.controller.ExRequestJpaController;
+import mks.dms.dao.controller.RateJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
@@ -914,21 +916,32 @@ public class RequestController {
 //    }
     
     @RequestMapping(value="updateRequest")
-    public String processUpdateRequest(@RequestParam("id") int requestId) {
+    public String processUpdateRequest(@RequestParam("id") int requestId, Principal principal) {
     	Request request = requestService.getDaoController().findRequest(requestId);
-    	if (request.getStatus().equals("Created")) {
+//    	User userLogin = userService.getUserByUsername(principal.getName());
+    	if (request.getStatus().equals("Created") && request.getAssigneeUsername().equals(principal.getName())) {
     		request.setStatus("In-progress");
     	}
-    	else if (request.getStatus().equals("In-progress")) {
+    	else if (request.getStatus().equals("In-progress") && request.getAssigneeUsername().equals(principal.getName())) {
     		request.setStatus("Finish");
     	}
-    	else if (request.getStatus().equals("Finish")) {
+    	else if (request.getStatus().equals("Finish") && request.getManagerUsername().equals(principal.getName())) {
     		request.setStatus("Re-assign");
     	}
-    	else if (request.getStatus().equals("Re-assign")) {
-    		request.setStatus("Finish");
+    	requestService.saveOrUpdate(request);
+    	return "redirect:browseRequest?id=" + requestId;
+    }
+    
+    @RequestMapping(value="confirmRequest")
+    public String processConfirmRequestIsDone(@RequestParam("id") int requestId, Principal principal) {
+    	Request request = requestService.getDaoController().findRequest(requestId);
+    	if (request.getStatus().equals("Finish") && request.getManagerUsername().equals(principal.getName())) {
+    		request.setStatus("Done");
     	}
     	requestService.saveOrUpdate(request);
+    	
+//    	tao moi rate o day
+    	
     	return "redirect:browseRequest?id=" + requestId;
     }
     
