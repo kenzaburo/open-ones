@@ -22,8 +22,10 @@ import java.util.List;
 
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
+import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
+import mks.dms.dao.entity.User;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -46,17 +48,23 @@ public class SystemService extends BaseService {
     public boolean initData() {
         // Create Types of requests
         boolean initOK = initRequestTypes();
-        
+
         if (initOK) {
-        // Create default Department
-         initOK = initCreateDepartmentSystem();
+            // Create default Department
+            initOK = initCreateDepartmentSystem();
         } else {
-            // Do nothing
+           return false;
         }
         
+        if (initOK) {
+            initUserSystem();
+        } else {
+            return false;
+        }
+
         return initOK;
     }
-    
+
     /**
     * [Give the description for method].
     * @return
@@ -119,4 +127,18 @@ public class SystemService extends BaseService {
         return true;
     }
 
+    public void initUserSystem() {
+        boolean isEnable = true;
+        User user = new User();
+
+        user.setUsername("admin");
+        user.setFirstname("Admin");
+        user.setLastname("Mr");
+        user.setEnabled(isEnable);
+        user.setEmail("lnthach@gmail.com");
+
+        
+        UserJpaController daoCtrl = new UserJpaController(emf);
+        daoCtrl.create(user);
+    }
 }
