@@ -913,6 +913,26 @@ public class RequestController {
 //    	return mav;
 //    }
     
+    @RequestMapping(value="updateRequest")
+    public String processUpdateRequest(@RequestParam("id") int requestId) {
+    	Request request = requestService.getDaoController().findRequest(requestId);
+    	if (request.getStatus().equals("Created")) {
+    		request.setStatus("In-progress");
+    	}
+    	else if (request.getStatus().equals("In-progress")) {
+    		request.setStatus("Finish");
+    	}
+    	else if (request.getStatus().equals("Finish")) {
+    		request.setStatus("Re-assign");
+    	}
+    	else if (request.getStatus().equals("Re-assign")) {
+    		request.setStatus("Finish");
+    	}
+    	requestService.saveOrUpdate(request);
+    	return "redirect:browseRequest?id=" + requestId;
+    }
+    
+    
     @RequestMapping(value="searchRequest")
     public ModelAndView searchRequest(Model model, Principal principal) {
         ModelAndView mav = new ModelAndView("searchRequest");
