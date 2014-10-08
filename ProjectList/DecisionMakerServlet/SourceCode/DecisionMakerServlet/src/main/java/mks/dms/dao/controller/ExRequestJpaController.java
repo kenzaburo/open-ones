@@ -6,11 +6,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
-import mks.dms.dao.entity.User;
+import mks.dms.model.SearchRequestConditionModel;
+import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 
@@ -429,5 +432,56 @@ public class ExRequestJpaController extends RequestJpaController {
         }
 
         this.edit(request);
+    }
+
+    /**
+    * [Give the description for method].
+    * @param searchCond
+    * @return
+    * @see http://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Criteria#Where
+    */
+    public List<Request> findRequestByCondition(SearchRequestConditionModel searchCond) {
+        List<Request> lstRequest;
+        EntityManager em = getEntityManager();
+        
+        // Searching condition
+        Request cond = (searchCond != null) ? searchCond.getRequest() : null ;
+        
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery cq = cb.createQuery();
+            
+            Root<Request> rootReq = cq.from(Request.class);
+            
+            // Condition: Request Type
+            if ((cond != null) && (cond.getRequesttypeCd() != null) && (!AppCons.ALL.equals(cond.getRequesttypeCd())) ){
+                cq.where(cb.equal(rootReq.get("requesttypeCd"), cond.getRequesttypeCd()));
+            } else {
+                // Do nothing
+            }
+
+            // Condition: Assignee
+            if ((cond != null) && (cond.getAssigneeUsername() != null) && (!AppCons.ALL.equals(cond.getAssigneeUsername())) ){
+                cq.where(cb.equal(rootReq.get("assigneeUsername"), cond.getAssigneeUsername()));
+            } else {
+                // Do nothing
+            }
+            
+            // Condition: Status
+            if ((cond != null) && (cond.getStatus() != null) && (!AppCons.ALL.equals(cond.getStatus())) ){
+                cq.where(cb.equal(rootReq.get("status"), cond.getStatus()));
+            } else {
+                // Do nothing
+            }
+            
+            Query query = em.createQuery(cq);
+            
+            lstRequest = query.getResultList();
+            
+        } finally {
+            em.close();
+        }
+        
+        return lstRequest;
     }
 }

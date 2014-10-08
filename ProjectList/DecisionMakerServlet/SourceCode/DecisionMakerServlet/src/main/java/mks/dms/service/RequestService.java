@@ -389,7 +389,7 @@ public class RequestService extends BaseService {
     }
 
     public List<Request> findRequestByCondition(String username, SearchRequestConditionModel searchCond) {
-        return controller.findRequestEntities();
+        return controller.findRequestByCondition(searchCond);
     }
 
 }

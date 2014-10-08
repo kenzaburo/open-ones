@@ -949,14 +949,12 @@ public class RequestController {
     
     
     @RequestMapping(value="searchRequest")
-    public ModelAndView searchRequest(Model model, Principal principal) {
+    public ModelAndView searchRequest(@ModelAttribute(MODEL) SearchRequestConditionModel searchConditionModel, Principal principal) {
         ModelAndView mav = new ModelAndView("searchRequest");
         String username = principal.getName();
         
-        SearchRequestConditionModel searchCond = null;
-        List<Request> lstRequest = requestService.findRequestByCondition(username, searchCond);
+        List<Request> lstRequest = requestService.findRequestByCondition(username, searchConditionModel);
         
-        SearchRequestConditionModel searchConditionModel = new SearchRequestConditionModel();
         mav.addObject(MODEL, searchConditionModel);
         mav.addObject("requests", lstRequest);
         mav.addObject("current", "commonManagement");

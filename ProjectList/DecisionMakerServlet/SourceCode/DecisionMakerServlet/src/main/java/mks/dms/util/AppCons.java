@@ -55,4 +55,5 @@ public class AppCons {
     public static final String STATUS_REASSIGN = "Re-assigned";
     
     public static final String DATE_FORMAT = "dd-MM-yyyy";
+    public static final String ALL = "All";
 }

@@ -86,7 +86,7 @@
   <%-- Display the result/error --%>
   <c:if test='${(not empty SAVE_STATUS) && (SAVE_STATUS == "SUCCESS")}'>
     <div id="" class="notice success">
-        <i class="icon-ok icon-large"></i>Lưu thành công!
+        <i class="icon-ok icon-large"></i><s:message code="Save_success"/>!
         <a href="#close" class="icon-remove"></a>
     </div>
   </c:if>

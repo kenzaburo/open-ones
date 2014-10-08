@@ -21,9 +21,13 @@ package mks.dms.service;
 import static org.junit.Assert.*;
 
 import java.util.Date;
+import java.util.List;
 
+import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.RequestJpaController;
 import mks.dms.dao.entity.Request;
+import mks.dms.model.SearchRequestConditionModel;
+import mks.dms.util.AppCons;
 
 import org.junit.After;
 import org.junit.Before;
@@ -70,4 +74,17 @@ public class RequestServiceTest {
         
     }
 
+    @Test
+    public void testFindByCondition() {
+        ExRequestJpaController reqCtrl = new ExRequestJpaController(BaseService.getEmf());
+        SearchRequestConditionModel searchCond = new SearchRequestConditionModel();
+        Request requestCond = new Request();
+        requestCond.setRequesttypeCd(AppCons.TASK);
+        searchCond.setRequest(requestCond );
+        
+        List<Request> foundRequests = reqCtrl.findRequestByCondition(searchCond);
+        
+        assertNotNull(foundRequests);
+        assertEquals(3, foundRequests.size());
+    }
 }

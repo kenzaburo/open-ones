@@ -40,11 +40,11 @@
 </div>
 <%-- Search condition --%>
 <div>
-  <form:form name="searchTask" class="horizontal" enctype="multipart/form-data" action="searchRequest" modelAttribute="model" method="GET">
+  <form:form name="searchRequest" class="horizontal" enctype="multipart/form-data" action="searchRequest" modelAttribute="model" method="GET">
     <div class="visible" style="background: #eee">
         <label for="requestTypeCd"><s:message code="Request_type"/></label>
-        <select id="reqType" class="col_3" name="reqType">
-           <option value="0"><s:message code="All"/></option>
+        <form:select path="request.requesttypeCd">
+           <option value="All"><s:message code="All"/></option>
            <c:forEach var="reqType" items="${listRequestType}">
              <c:choose>
                <c:when test='${reqType.cd == model.request.requesttypeCd}'>
@@ -55,11 +55,11 @@
                </c:otherwise>
              </c:choose>
            </c:forEach>
-        </select>
+        </form:select>
         
         <label><s:message code="Assignee"/></label>
         <form:select path="request.assigneeUsername">
-            <option value=""><s:message code="All"/></option>
+            <option value="All"><s:message code="All"/></option>
             <c:forEach var="user" items="${listUser}">
               <c:choose>
                 <c:when test="${model.request.assigneeUsername == user.username}">
@@ -75,7 +75,7 @@
         
         <label><s:message code="Status"/></label>
         <form:select path="request.status">
-            <option value=""><s:message code="All"/></option>
+            <option value="All"><s:message code="All"/></option>
             <c:forEach var="status" items="${listStatus}">
               <c:choose>
                 <c:when test="${model.request.status == status}">
