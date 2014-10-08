@@ -5,10 +5,13 @@ import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
+import mks.dms.dao.controller.ExRateJpaController;
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExRequestTypeJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
+import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
+import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
@@ -121,6 +124,50 @@ public class RequestService extends BaseService {
 		    }
 		}
 	}
+
+	/**
+	* Save Rate for the request.
+	* @param requestId Identifier of the request
+	* @param rate information of Rate
+	* ReqId is not required. It will be set from the requestId
+	* @throws ServiceException
+	* If requestId does not existed
+	*/
+	public void saveRate(Integer requestId, Rate rate) throws ServiceException {
+	    Request request = controller.findRequest(requestId);
+	    
+	    if (request == null) {
+	        throw new ServiceException(ServiceError.DATA_NO_EXIST);
+	    } else {
+	        // Do next step
+	    }
+	    
+	    // Find current Rate of the request
+	    ExRateJpaController rateDaoCtrl = new ExRateJpaController(BaseService.getEmf());
+	    Rate currRate = rateDaoCtrl.findLatestRateByRequestId(request.getId());
+	    
+	    if (currRate == null) {
+	        rate.setReqId(request.getId());
+	        
+	        rateDaoCtrl.create(rate);
+	    } else {
+	        // Update rate
+	        currRate.setRank(rate.getRank());
+	        currRate.setContent(rate.getContent());
+	        currRate.setUsername(rate.getUsername());
+	        currRate.setEmail(rate.getEmail());
+	        currRate.setCreated(new Date());
+	        
+	        try {
+                rateDaoCtrl.edit(currRate);
+            } catch (NonexistentEntityException ex) {
+                LOG.error("Could not update the Rate of RequestId '" + requestId + "'", ex);
+            } catch (Exception ex) {
+                LOG.error("Could not update the Rate of RequestId '" + requestId + "'", ex);
+            }
+	    }
+	}
+	
 
     /**
     * [Give the description for method].
