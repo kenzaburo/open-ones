@@ -915,17 +915,18 @@ public class RequestController {
 //    	return mav;
 //    }
     
-    @RequestMapping(value="updateRequest")
+    @RequestMapping(value="updateStatus")
     public String processUpdateRequest(@RequestParam("id") int requestId, Principal principal) {
     	Request request = requestService.getDaoController().findRequest(requestId);
-//    	User userLogin = userService.getUserByUsername(principal.getName());
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	requestService.setUser(userLogin);
     	if (request.getStatus().equals("Created") && request.getAssigneeUsername().equals(principal.getName())) {
     		request.setStatus("In-progress");
     	}
     	else if (request.getStatus().equals("In-progress") && request.getAssigneeUsername().equals(principal.getName())) {
     		request.setStatus("Finish");
     	}
-    	else if (request.getStatus().equals("Finish") && request.getManagerUsername().equals(principal.getName())) {
+    	else if (request.getStatus().equals("Finish") && (request.getManagerUsername().equals(principal.getName()) || request.getAssigneeUsername().equals(principal.getName()))) {
     		request.setStatus("Re-assign");
     	}
     	requestService.saveOrUpdate(request);
@@ -935,11 +936,12 @@ public class RequestController {
     @RequestMapping(value="confirmRequest")
     public String processConfirmRequestIsDone(@RequestParam("id") int requestId, Principal principal) {
     	Request request = requestService.getDaoController().findRequest(requestId);
+    	User userLogin = userService.getUserByUsername(principal.getName());
+    	requestService.setUser(userLogin);
     	if (request.getStatus().equals("Finish") && request.getManagerUsername().equals(principal.getName())) {
     		request.setStatus("Done");
     	}
     	requestService.saveOrUpdate(request);
-    	
 //    	tao moi rate o day
     	
     	return "redirect:browseRequest?id=" + requestId;

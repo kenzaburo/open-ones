@@ -76,25 +76,25 @@ public class RequestService extends BaseService {
 			    if (AppCons.TASK.equals(request.getRequesttypeCd())) {
 			       //if (request.getManagerId().getId() == userLogin.getId()) {
 	             if (username.equals(request.getManagerUsername())) {
-	                    request.setStatus("Updated");
+//	                    request.setStatus("Updated");
 	                    request.setAssignerRead(1);
 	                    request.setCreatorRead(1);
 	                }
 	             // else if (request.getCreatedbyId().getId() == userLogin.getId() && request.getAssignedId().getId() != userLogin.getId()) {
 	                else if (user.getUsername().equals(request.getCreatedbyUsername()) && !username.equals(request.getAssigneeUsername())) {
-	                    request.setStatus("Updated");
+//	                    request.setStatus("Updated");
 	                    request.setManagerRead(1);
 	                    request.setAssignerRead(1);
 	                }
 	             // else if (request.getAssignedId().getId() == userLogin.getId() && request.getCreatedbyId().getId() != userLogin.getId()) {
 	                else if (!user.getUsername().equals(request.getCreatedbyUsername()) && username.equals(request.getAssigneeUsername())) {
-	                    request.setStatus("Updated1");
+//	                    request.setStatus("Updated1");
 	                    request.setManagerRead(1);
 	                    request.setCreatorRead(1);
 	                }
 	             // else if (request.getAssignedId().getId() == userLogin.getId() && request.getCreatedbyId().getId() == userLogin.getId()) {
 	                else if (username.equals(request.getAssigneeUsername()) && user.getUsername().equals(request.getCreatedbyUsername())) {
-	                    request.setStatus("Updated");
+//	                    request.setStatus("Updated");
 	                    request.setManagerRead(1);
 	                    request.setAssignerRead(0);
 	                    request.setCreatorRead(0);
@@ -174,7 +174,7 @@ public class RequestService extends BaseService {
             // Do nothing
         }
         
-        request.setStatus(AppCons.STATUS_CREATED);
+//        request.setStatus(AppCons.STATUS_CREATED);
         switch (mode) {
             case MODE_CREATE:
                 request.setStatus(AppCons.STATUS_CREATED);

@@ -106,7 +106,7 @@
 		</c:when>
 		<c:when	test="${not empty model.request.status && model.request.status == 'Finish'}">
 			<c:choose>
-				<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
+				<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername || pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
 					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện lại</a></li>
 				</c:when>
 				<c:otherwise>
@@ -130,10 +130,10 @@
 	</c:choose>
 	<c:choose>
 		<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
-			<li><a href="#" id="finish"><i class="icon-check"></i><s:message code="Done"/></a></li>
+			<li><a href="confirmRequest?id=${model.request.id}" id="finish"><i class="icon-check"></i><s:message code="Done"/></a></li>
 		</c:when>
 		<c:otherwise>
-			<li id="disable"><a href="#" id="finish"><i class="icon-check" id="disabled"></i><s:message code="Done"/></a></li>
+			<li id="disable"><a href="confirmRequest?id=${model.request.id}" id="finish"><i class="icon-check" id="disabled"></i><s:message code="Done"/></a></li>
 		</c:otherwise>
 	</c:choose>
 </ul>

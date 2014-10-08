@@ -48,7 +48,7 @@ public class AppCons {
     * Status of Request
     */
     public static final String STATUS_DOING = "Doing";
-    public static final String STATUS_INPROGRESS = "Doing";
+    public static final String STATUS_INPROGRESS = "In-progress";
  
     public static final String STATUS_REJECTED = "Rejected";
     public static final String STATUS_APPROVED = "Approved";
