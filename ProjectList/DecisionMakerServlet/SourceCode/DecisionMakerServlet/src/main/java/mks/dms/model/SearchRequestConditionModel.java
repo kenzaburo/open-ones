@@ -18,17 +18,25 @@
  */
 package mks.dms.model;
 
+import java.util.List;
+
 import mks.dms.dao.entity.Request;
 
 /**
+ * Using member "request" to store the search condition: In case search condition of a field is multi values, the string
+ * of values are separated by a common. Ex, search request of type "Task or Rule", the value of field
+ * request.requesttypeCd = "Task,Rule"
+ * 
  * @author ThachLN
- *
  */
 public class SearchRequestConditionModel {
+
+    /** . */
     private Request request;
 
     /**
      * Get value of request.
+     * 
      * @return the request
      */
     public Request getRequest() {
@@ -37,10 +45,11 @@ public class SearchRequestConditionModel {
 
     /**
      * Set the value for request.
+     * 
      * @param request the request to set
      */
     public void setRequest(Request request) {
         this.request = request;
     }
-    
+
 }

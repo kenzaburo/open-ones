@@ -2,12 +2,18 @@
  --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<%-- Multi select --%>
+<link rel="stylesheet" type="text/css" href="resources/jquery-ui-multiselect-widget/css/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="resources/jquery-ui-multiselect-widget/assets/style.css" />
+<link rel="stylesheet" type="text/css" href="resources/jquery-ui-multiselect-widget/assets/prettify.css" />
+
 <!-- bootstrap 3.0.2 -->
 <link href="resources/AdminLTE/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <!-- font Awesome -->
@@ -29,11 +35,26 @@
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
 <link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
 
+
+<script type="text/javascript" src="resources/jquery-ui-multiselect-widget/js/jquery.multiselect.js"></script>
+<script type="text/javascript" src="resources/jquery-ui-multiselect-widget/assets/prettify.js"></script>
+
+
 <%-- Process confirmation delete request --%>
 <script type="text/javascript" src="resources/js/confirmFunction.js"></script>
 <script type="text/javascript" src="resources/js/data-table.js"></script>
 
 <jsp:include page="../_common/confirmDeleteRequest.jsp"/>
+
+<script type="text/javascript">
+$(function(){
+
+    $("select").multiselect({
+        selectedList: 4
+    });
+    
+});
+</script>
 
 <div>
   <H5><s:message code="Search"/></H5>
@@ -42,12 +63,12 @@
 <div>
   <form:form name="searchRequest" class="horizontal" enctype="multipart/form-data" action="searchRequest" modelAttribute="model" method="GET">
     <div class="visible" style="background: #eee">
-        <label for="requestTypeCd"><s:message code="Request_type"/></label>
-        <form:select path="request.requesttypeCd">
-           <option value="All"><s:message code="All"/></option>
+        <label for="request.requesttypeCd"><s:message code="Request_type"/></label>
+        <form:select path="request.requesttypeCd" multiple="multiple">
+<%--            <option value="All"><s:message code="All"/></option> --%>
            <c:forEach var="reqType" items="${listRequestType}">
              <c:choose>
-               <c:when test='${reqType.cd == model.request.requesttypeCd}'>
+               <c:when test='${fn:contains(model.request.requesttypeCd, reqType)}'>
                  <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
                </c:when>
                <c:otherwise>
@@ -59,10 +80,10 @@
         
         <label><s:message code="Assignee"/></label>
         <form:select path="request.assigneeUsername">
-            <option value="All"><s:message code="All"/></option>
+<%--             <option value="All"><s:message code="All"/></option> --%>
             <c:forEach var="user" items="${listUser}">
               <c:choose>
-                <c:when test="${model.request.assigneeUsername == user.username}">
+                <c:when test="${fn:contains(model.request.assigneeUsername, user.username)}">
                   <option value="${user.username}" selected="selected">${user.username}</option>
                 </c:when>
                 <c:otherwise>
@@ -75,10 +96,10 @@
         
         <label><s:message code="Status"/></label>
         <form:select path="request.status">
-            <option value="All"><s:message code="All"/></option>
+<%--             <option value="All"><s:message code="All"/></option> --%>
             <c:forEach var="status" items="${listStatus}">
               <c:choose>
-                <c:when test="${model.request.status == status}">
+                <c:when test="${fn:contains(model.request.status, status)}">
                   <option value="${status}" selected="selected"><s:message code="${status}"/></option>
                 </c:when>
                 <c:otherwise>

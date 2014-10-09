@@ -1,6 +1,8 @@
 package mks.dms.dao.controller;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -8,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
@@ -16,6 +19,9 @@ import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
+
+import rocky.common.CHARA;
+import rocky.common.CommonUtil;
 
 /**
  * This class extends interfaces of RequestJpaController. <br/>
@@ -443,45 +449,84 @@ public class ExRequestJpaController extends RequestJpaController {
     public List<Request> findRequestByCondition(SearchRequestConditionModel searchCond) {
         List<Request> lstRequest;
         EntityManager em = getEntityManager();
-        
+
         // Searching condition
-        Request cond = (searchCond != null) ? searchCond.getRequest() : null ;
-        
+        Request cond = (searchCond != null) ? searchCond.getRequest() : null;
+
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery cq = cb.createQuery();
-            
+
             Root<Request> rootReq = cq.from(Request.class);
-            
+            Predicate predicate = null;
             // Condition: Request Type
-            if ((cond != null) && (cond.getRequesttypeCd() != null) && (!AppCons.ALL.equals(cond.getRequesttypeCd())) ){
-                cq.where(cb.equal(rootReq.get("requesttypeCd"), cond.getRequesttypeCd()));
+            if ((cond != null) && (cond.getRequesttypeCd() != null) && (!AppCons.ALL.equals(cond.getRequesttypeCd()))) {
+                predicate = buildPredicate(cb, rootReq, "requesttypeCd", cond.getRequesttypeCd());
+                predicate = cb.and(predicate);
+
             } else {
                 // Do nothing
             }
 
             // Condition: Assignee
-            if ((cond != null) && (cond.getAssigneeUsername() != null) && (!AppCons.ALL.equals(cond.getAssigneeUsername())) ){
-                cq.where(cb.equal(rootReq.get("assigneeUsername"), cond.getAssigneeUsername()));
+            if ((cond != null) && (cond.getAssigneeUsername() != null)
+                    && (!AppCons.ALL.equals(cond.getAssigneeUsername()))) {
+                // cq.where(cb.equal(rootReq.get("assigneeUsername"), cond.getAssigneeUsername()));
+                Predicate predicateAssigee = buildPredicate(cb, rootReq, "assigneeUsername", cond.getAssigneeUsername());
+                predicate = cb.and(predicateAssigee);
             } else {
                 // Do nothing
             }
-            
+
             // Condition: Status
-            if ((cond != null) && (cond.getStatus() != null) && (!AppCons.ALL.equals(cond.getStatus())) ){
-                cq.where(cb.equal(rootReq.get("status"), cond.getStatus()));
+            if ((cond != null) && (cond.getStatus() != null) && (!AppCons.ALL.equals(cond.getStatus()))) {
+                // cq.where(cb.equal(rootReq.get("status"), cond.getStatus()));
+                Predicate predicateAssigee = buildPredicate(cb, rootReq, "status", cond.getStatus());
+                predicate = cb.and(predicateAssigee);
             } else {
                 // Do nothing
             }
-            
+
+            if (predicate != null) {
+                cq.where(predicate);
+            }
+
             Query query = em.createQuery(cq);
-            
+
             lstRequest = query.getResultList();
-            
+
         } finally {
             em.close();
         }
-        
+
         return lstRequest;
+    }
+
+    /**
+    * [Give the description for method].
+    * @param cb
+    * @param rootReq
+    * @param field
+    * @param value list of item separated by a common. Ex "Task,Rule"
+    * @return
+    */
+    private Predicate buildPredicate(CriteriaBuilder cb, Root<Request> rootReq, String field, String values) {
+        Predicate predicate = null;
+
+        if (CommonUtil.isNNandNB(values)) {
+            String[] arrValues = values.split(CHARA.COMMA);
+            
+            List<String> lstValues = Arrays.asList(arrValues);
+            Iterator<String> it = lstValues.iterator();
+            String val;
+            while (it.hasNext()) {
+                val = it.next();
+                
+                predicate = cb.equal(rootReq.get(field), val);
+                predicate = cb.or(predicate);
+            }
+        }
+
+        return predicate;
     }
 }
