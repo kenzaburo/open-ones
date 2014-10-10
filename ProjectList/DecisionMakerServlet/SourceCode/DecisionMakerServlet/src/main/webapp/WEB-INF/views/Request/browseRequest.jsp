@@ -94,7 +94,7 @@
 		    	</c:otherwise>
 		    </c:choose>
 		</c:when>
-		<c:when	test="${not empty model.request.status && model.request.status == 'In-progress'}">
+		<c:when	test='${not empty model.request.status && model.request.status == "Doing"}'>
 			<c:choose>
 				<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
 					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>

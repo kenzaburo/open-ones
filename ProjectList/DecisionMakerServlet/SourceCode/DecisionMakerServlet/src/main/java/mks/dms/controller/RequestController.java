@@ -914,9 +914,10 @@ public class RequestController {
     	User userLogin = userService.getUserByUsername(principal.getName());
     	requestService.setUser(userLogin);
     	if (request.getStatus().equals("Created") && request.getAssigneeUsername().equals(principal.getName())) {
-    		request.setStatus("In-progress");
+    		// request.setStatus("In-progress");
+    	    request.setStatus(AppCons.STATUS_DOING);
     	}
-    	else if (request.getStatus().equals("In-progress") && request.getAssigneeUsername().equals(principal.getName())) {
+    	else if (AppCons.STATUS_DOING.equals(request.getStatus()) && request.getAssigneeUsername().equals(principal.getName())) {
     		request.setStatus("Finish");
     	}
     	else if (request.getStatus().equals("Finish") && (request.getManagerUsername().equals(principal.getName()) || request.getAssigneeUsername().equals(principal.getName()))) {
