@@ -9,6 +9,7 @@ import javax.persistence.Persistence;
 
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
+import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.service.BaseService;
 import mks.dms.util.AppCons;
 
@@ -86,4 +87,21 @@ public class ExRequestControllerTest {
         
         assertEquals(5, lstTask.size());
     }
+    
+    @Test
+    public void testFindRequestByCondition() {
+        ExRequestJpaController daoCtrl = new ExRequestJpaController(BaseService.getEmf());
+        SearchRequestConditionModel searchCond = new SearchRequestConditionModel();
+        Request request = new Request();
+        searchCond.setRequest(request);
+        
+        request.setRequesttypeCd("Task,Rule");
+        
+        
+        List<Request> lstRequest = daoCtrl.findRequestByCondition(searchCond);
+        
+        assertNotNull(lstRequest);
+        assertEquals(5, lstRequest.size());
+    }
+
 }

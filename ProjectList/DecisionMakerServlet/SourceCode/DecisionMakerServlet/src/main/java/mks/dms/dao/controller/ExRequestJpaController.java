@@ -461,9 +461,8 @@ public class ExRequestJpaController extends RequestJpaController {
             Predicate predicate = null;
             // Condition: Request Type
             if ((cond != null) && (cond.getRequesttypeCd() != null) && (!AppCons.ALL.equals(cond.getRequesttypeCd()))) {
-                predicate = buildPredicate(cb, rootReq, "requesttypeCd", cond.getRequesttypeCd());
-                predicate = cb.and(predicate);
-
+                Predicate nextPredicate = buildPredicate(cb, rootReq, "requesttypeCd", cond.getRequesttypeCd());
+                predicate = (predicate == null) ? nextPredicate : cb.and(predicate, nextPredicate);
             } else {
                 // Do nothing
             }
@@ -473,7 +472,7 @@ public class ExRequestJpaController extends RequestJpaController {
                     && (!AppCons.ALL.equals(cond.getAssigneeUsername()))) {
                 // cq.where(cb.equal(rootReq.get("assigneeUsername"), cond.getAssigneeUsername()));
                 Predicate predicateAssigee = buildPredicate(cb, rootReq, "assigneeUsername", cond.getAssigneeUsername());
-                predicate = cb.and(predicateAssigee);
+                predicate = (predicate == null) ? predicateAssigee : cb.and(predicate, predicateAssigee);
             } else {
                 // Do nothing
             }
@@ -481,8 +480,8 @@ public class ExRequestJpaController extends RequestJpaController {
             // Condition: Status
             if ((cond != null) && (cond.getStatus() != null) && (!AppCons.ALL.equals(cond.getStatus()))) {
                 // cq.where(cb.equal(rootReq.get("status"), cond.getStatus()));
-                Predicate predicateAssigee = buildPredicate(cb, rootReq, "status", cond.getStatus());
-                predicate = cb.and(predicateAssigee);
+                Predicate predicateStatus = buildPredicate(cb, rootReq, "status", cond.getStatus());
+                predicate = (predicate == null) ? predicateStatus : cb.and(predicate, predicateStatus);
             } else {
                 // Do nothing
             }
@@ -522,8 +521,11 @@ public class ExRequestJpaController extends RequestJpaController {
             while (it.hasNext()) {
                 val = it.next();
                 
-                predicate = cb.equal(rootReq.get(field), val);
-                predicate = cb.or(predicate);
+                if (predicate == null) {
+                    predicate = cb.equal(rootReq.get(field), val);
+                } else {
+                    predicate = cb.or(predicate, cb.equal(rootReq.get(field), val));
+                }
             }
         }
 
