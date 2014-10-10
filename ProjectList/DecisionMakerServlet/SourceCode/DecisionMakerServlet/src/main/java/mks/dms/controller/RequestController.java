@@ -23,10 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mks.dms.dao.controller.ExRequestJpaController;
-import mks.dms.dao.controller.RateJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
@@ -67,9 +65,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment"})
 public class RequestController {
-	
-
-    private static final String MODEL = "model";
 
     /**  */
 	private static final Logger LOG = Logger.getLogger(RequestController.class);
@@ -170,7 +165,7 @@ public class RequestController {
         requestCreateModel.getRequest().setRequesttypeCd(AppCons.TASK);
 
         // Add object to modelandview
-        mav.addObject(MODEL, requestCreateModel);
+        mav.addObject(AppCons.MODEL, requestCreateModel);
         mav.addObject("current", "commonManagement");
         
     	return mav;
@@ -185,7 +180,7 @@ public class RequestController {
     * @see /DecisionMakerServlet/src/main/webapp/WEB-INF/views/Request/_createTask.jsp
     */
     @RequestMapping(value = "saveRequest", method = RequestMethod.POST)
-    public ModelAndView saveRequest(@ModelAttribute(MODEL) @Validated RequestModel model, BindingResult bindingResult, Principal principal) {
+    public ModelAndView saveRequest(@ModelAttribute(AppCons.MODEL) @Validated RequestModel model, BindingResult bindingResult, Principal principal) {
         ModelAndView mav = new ModelAndView("createRequest");
         if (bindingResult.hasErrors()) {
             LOG.debug("Binding result; hasError=" + bindingResult.hasErrors());
@@ -287,7 +282,7 @@ public class RequestController {
         requestCreateModel.setRequest(request);;
         
         // Add object to modelandview
-        mav.addObject(MODEL, requestCreateModel);
+        mav.addObject(AppCons.MODEL, requestCreateModel);
 
         return mav;
     }
@@ -411,7 +406,7 @@ public class RequestController {
             requestModel.setDurationUnitName(duName);
         }
         
-        mav.addObject(MODEL, requestModel);
+        mav.addObject(AppCons.MODEL, requestModel);
 
         return mav;
     }
@@ -523,14 +518,19 @@ public class RequestController {
     	User userLogin = userService.getUserByUsername(principal.getName());
     	
     	Request request = requestService.getDaoController().findRequest(id);
-    	if (request.getRequesttypeCd().equals("Leave")) {
-    		request.setStatus("Approved");
+    	// if (request.getRequesttypeCd().equals("Leave")) {
+    	if (AppCons.LEAVE.equals(request.getRequesttypeCd())) {
+    		// request.setStatus("Approved");
+    	    request.setStatus(AppCons.STATUS_APPROVED);
     	}
-    	if (request.getRequesttypeCd().equals("Task") && (request.getStatus().equals("Created") || request.getStatus().equals("Updated"))) {
-    		request.setStatus("In-progress");
-    		request.setManagerRead(0);
-    	}
-    	
+//    	if (request.getRequesttypeCd().equals("Task") && (request.getStatus().equals("Created") || request.getStatus().equals("Updated"))) {
+//    		request.setStatus("In-progress");
+//    		request.setManagerRead(0);
+//    	}
+        if (AppCons.TASK.equals(request.getRequesttypeCd()) && (AppCons.STATUS_FINISH.equals(request.getStatus()))) {
+            request.setStatus(AppCons.STATUS_DONE);
+            request.setManagerRead(0);
+        }    	
     	request.setLastmodified(today);
     	request.setCreatorRead(0);
     	
@@ -564,8 +564,10 @@ public class RequestController {
 //    	Neu phai
     	Request request = requestService.getDaoController().findRequest(id);
     	
-    	if (request.getRequesttypeCd().equals("Leave")) {
-    		request.setStatus("Rejected");
+    	//if (request.getRequesttypeCd().equals("Leave")) {
+    	if (AppCons.LEAVE.equals(request.getRequesttypeCd())) {
+    		//request.setStatus("Rejected");
+    	    request.setStatus(AppCons.STATUS_REJECTED);
         	request.setCreatorRead(0);
         	
         	User userLogin = userService.getUserByUsername(pricipal.getName());
@@ -579,6 +581,7 @@ public class RequestController {
         	}
     	}
     	
+    	// Thach: Task sẽ công có khái niệm Reject. File giải thích trong file AppCons.java
     	if (request.getRequesttypeCd().equals("Task")) {
     		request.setStatus("Rejected");
         	request.setCreatorRead(0);
@@ -613,6 +616,17 @@ public class RequestController {
     	return mav;
     }
     
+    /**
+    * Ghi rõ method này làm gì.
+    * Thach: logic xử lý "SaveComment" làm rất nhiều việc không liên quan: Set Reading, Reject.
+    * => Cần thiết kế lại cho rõ ràng.
+    * @param req
+    * @param principal
+    * @return
+    * @throws IllegalOrphanException
+    * @throws NonexistentEntityException
+    * @throws Exception
+    */
     @RequestMapping(value="saveComment")
     public String processSaveComment(HttpServletRequest req, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
     	SimpleDateFormat formater = new SimpleDateFormat(AppCons.DATE_FORMAT);
@@ -632,7 +646,7 @@ public class RequestController {
     	if (request.getRequesttypeCd().equals("Task") || request.getRequesttypeCd().equals("Leave")) {
     		if (username.equals(request.getManagerUsername())) {
         		if (request.getStatus().equals("Confirm")) {
-        			request.setStatus("In-progress");
+        			request.setStatus("In-progress"); // Thach: hãy dùng Constant trong AppCons; ko có status In-progress (hãy dùng AppCons.Doing)
             	}
         		request.setCreatorRead(0);
             	request.setAssignerRead(0);
@@ -706,27 +720,6 @@ public class RequestController {
 //        mav.addObject("listRequestTypes", lstRequestTypes);
 //        List<User> listUsers = userService.getAllUser();
 //        mav.addObject("listUsers", listUsers);
-    	return mav;
-    }
-    
-    /**
-     * Show myListTask page
-     **/
-    @RequestMapping(value="myListTask")
-    public ModelAndView showMyListTask(Principal principal) {
-    	ModelAndView mav = new ModelAndView("myListTask");
-    	List<Request> listRequest1 = requestService.getDaoController().getListRequestByCreatedbyUsername(principal.getName());
-    	List<Request> listRequest2 = requestService.getDaoController().getListRequestByAssigneeUsername(principal.getName());
-    	List<Request> listRequest3 = requestService.getDaoController().getListRequestByManagerUsername(principal.getName());
-    	
-    	listRequest1.removeAll(listRequest2);
-    	listRequest1.addAll(listRequest2);
-    	listRequest1.removeAll(listRequest3);
-    	listRequest1.addAll(listRequest3);
-    	
-    	mav.addObject("requests", listRequest1);
-    	mav.addObject("current", "myListTask");
-    	
     	return mav;
     }
     
@@ -949,13 +942,13 @@ public class RequestController {
     
     
     @RequestMapping(value="searchRequest")
-    public ModelAndView searchRequest(@ModelAttribute(MODEL) SearchRequestConditionModel searchConditionModel, Principal principal) {
+    public ModelAndView searchRequest(@ModelAttribute(AppCons.MODEL) SearchRequestConditionModel searchConditionModel, Principal principal) {
         ModelAndView mav = new ModelAndView("searchRequest");
         String username = principal.getName();
         
         List<Request> lstRequest = requestService.findRequestByCondition(username, searchConditionModel);
         
-        mav.addObject(MODEL, searchConditionModel);
+        mav.addObject(AppCons.MODEL, searchConditionModel);
         mav.addObject("requests", lstRequest);
         mav.addObject("current", "commonManagement");
         

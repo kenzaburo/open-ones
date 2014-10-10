@@ -46,14 +46,27 @@ public class AppCons {
     ////////////////////////////////////////////////////////
     /*
     * Status of Request
+    * Flows of Task:
+    *  Created => Doing => Finish       =>       Done          
+    *             \Change by owner/   \Change by manager/
+    *  Done => RE-assigned
+    *      \ Change by owner or manager /
+    *      
+    * Follow of Leave:
+    *  Create  => Rejected
+    *  Create  => Approved
+    *             
     */
     public static final String STATUS_DOING = "Doing";
-    public static final String STATUS_INPROGRESS = "In-progress";
  
     public static final String STATUS_REJECTED = "Rejected";
     public static final String STATUS_APPROVED = "Approved";
     public static final String STATUS_REASSIGN = "Re-assigned";
+    public static final String STATUS_DONE = "Finish";
+    public static final String STATUS_FINISH = "Done";
     
     public static final String DATE_FORMAT = "dd-MM-yyyy";
     public static final String ALL = "All";
+    public static final String MODEL = "model";
+
 }

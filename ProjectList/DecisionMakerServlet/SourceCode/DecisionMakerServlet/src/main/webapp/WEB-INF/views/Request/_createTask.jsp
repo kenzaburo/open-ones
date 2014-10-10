@@ -52,9 +52,7 @@
                         <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
-                      <c:if test="${user.username != pageContext.request.userPrincipal.name}">
                         <option value="${user.username}">${user.username}</option>
-                      </c:if>
                     </c:otherwise>
                   </c:choose>
          		</c:forEach>

@@ -17,6 +17,7 @@ import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
 import mks.dms.model.SearchRequestConditionModel;
+import mks.dms.model.SearchTaskConditionModel;
 import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
@@ -229,9 +230,7 @@ public class RequestService extends BaseService {
                 request.setCreatorRead(1);
                 
                 if (AppCons.TASK.equals(request.getRequesttypeCd())) {
-                    if (username.equals(request.getAssigneeUsername())) {
-                        request.setStatus(AppCons.STATUS_INPROGRESS);
-                        
+                    if (username.equals(request.getAssigneeUsername())) {                        
                         // [TODO] Using meaningful constant
                         request.setAssignerRead(1);
                     }
@@ -330,9 +329,9 @@ public class RequestService extends BaseService {
     * @param String username
     * @return
     */
-    public List<Request> findTask(String username) {
+    public List<Request> findTaskOfUser(SearchTaskConditionModel searchConditionModel) {
         List<Request> lstRequest;
-        lstRequest = controller.findRequestByType(AppCons.TASK);
+        lstRequest = controller.findTaskOfUser(searchConditionModel);
         
         return lstRequest;
     }

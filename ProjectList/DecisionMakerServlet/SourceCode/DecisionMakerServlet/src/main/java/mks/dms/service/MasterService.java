@@ -306,7 +306,6 @@ public class MasterService extends BaseService {
         
         lstStatus.add(AppCons.STATUS_CREATED);
         lstStatus.add(AppCons.STATUS_DOING);
-        lstStatus.add(AppCons.STATUS_INPROGRESS);
         lstStatus.add(AppCons.STATUS_REJECTED);
         lstStatus.add(AppCons.STATUS_APPROVED);
         lstStatus.add(AppCons.STATUS_REASSIGN);

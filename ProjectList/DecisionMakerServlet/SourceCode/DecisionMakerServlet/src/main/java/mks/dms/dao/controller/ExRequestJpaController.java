@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 import mks.dms.model.SearchRequestConditionModel;
+import mks.dms.model.SearchTaskConditionModel;
 import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
@@ -530,5 +531,77 @@ public class ExRequestJpaController extends RequestJpaController {
         }
 
         return predicate;
+    }
+
+   /**
+    * Find task of given user
+    *  - Assigned task
+    *  - Task is managed by the user
+    *  - Task is shared to the user
+    * @param searchConditionModel
+    * Members to be used:
+    * - assigneeUsername
+    * @return
+    */
+    public List<Request> findTaskOfUser(SearchTaskConditionModel searchConditionModel) {
+        List<Request> lstRequest;
+        EntityManager em = getEntityManager();
+
+        // Searching condition
+        Request cond = (searchConditionModel != null) ? searchConditionModel.getRequest() : null;
+
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery cq = cb.createQuery();
+
+            Root<Request> rootReq = cq.from(Request.class);
+            
+            // Build condition with Task
+            Predicate predicate = cb.equal(rootReq.get("requesttypeCd"), AppCons.TASK);
+
+            // Build condition assigned || manage 
+            // Condition: Assignee
+            if (cond != null) {
+                Predicate predicateOfUser = null;
+                String assignee = (cond.getAssigneeUsername() == null) ? CHARA.BLANK : cond.getAssigneeUsername();
+                String manager =  (cond.getManagerUsername() == null) ? CHARA.BLANK : cond.getManagerUsername();
+                
+                if ((assignee.isEmpty() && manager.isEmpty()) ||
+                     ((!assignee.isEmpty()) && (!manager.isEmpty()))   
+                    ) {
+                    predicateOfUser = cb.or(cb.equal(rootReq.get("assigneeUsername"), assignee)
+                                          , cb.equal(rootReq.get("managerUsername"), manager));
+                    
+                } else if (!assignee.isEmpty()) {
+                    predicateOfUser = cb.equal(rootReq.get("assigneeUsername"), assignee);
+                } else { // !manager.isEmpty()
+                    predicateOfUser = cb.equal(rootReq.get("managerUsername"), manager);
+                }
+                
+                predicate = cb.and(predicate, predicateOfUser);
+            }
+
+            // Condition: Status
+            if ((cond != null) && (cond.getStatus() != null) && (!AppCons.ALL.equals(cond.getStatus()))) {
+                // cq.where(cb.equal(rootReq.get("status"), cond.getStatus()));
+                Predicate predicateStatus = buildPredicate(cb, rootReq, "status", cond.getStatus());
+                predicate = (predicate == null) ? predicateStatus : cb.and(predicate, predicateStatus);
+            } else {
+                // Do nothing
+            }
+
+            if (predicate != null) {
+                cq.where(predicate);
+            }
+
+            Query query = em.createQuery(cq);
+
+            lstRequest = query.getResultList();
+
+        } finally {
+            em.close();
+        }
+
+        return lstRequest;
     }
 }

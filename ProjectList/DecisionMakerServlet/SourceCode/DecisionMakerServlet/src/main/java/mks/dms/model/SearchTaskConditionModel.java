@@ -27,7 +27,7 @@ import mks.dms.dao.entity.Request;
  * 
  * @author ThachLN
  */
-public class SearchRequestConditionModel {
+public class SearchTaskConditionModel {
 
     /** . */
     private Request request;
@@ -49,4 +49,18 @@ public class SearchRequestConditionModel {
     public void setRequest(Request request) {
         this.request = request;
     }
+
+    /**
+    * Transfer username to assignee user name of request.
+    * @param username
+    */
+    public void setUsername(String username) {
+        if (request == null) {
+            request = new Request();
+        }
+        
+        request.setAssigneeUsername(username);
+        
+    }
+
 }
