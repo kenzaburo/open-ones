@@ -9,10 +9,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-<%-- Multi select --%>
-<link rel="stylesheet" type="text/css" href="resources/jquery-ui-multiselect-widget/css/jquery.multiselect.css" />
-<link rel="stylesheet" type="text/css" href="resources/jquery-ui-multiselect-widget/assets/style.css" />
-<link rel="stylesheet" type="text/css" href="resources/jquery-ui-multiselect-widget/assets/prettify.css" />
+
 
 <!-- bootstrap 3.0.2 -->
 <link href="resources/AdminLTE/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -36,24 +33,27 @@
 <link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
 
 
-<script type="text/javascript" src="resources/jquery-ui-multiselect-widget/js/jquery.multiselect.js"></script>
-<script type="text/javascript" src="resources/jquery-ui-multiselect-widget/assets/prettify.js"></script>
-
-
 <%-- Process confirmation delete request --%>
 <script type="text/javascript" src="resources/js/confirmFunction.js"></script>
 <script type="text/javascript" src="resources/js/data-table.js"></script>
 
 <jsp:include page="../_common/confirmDeleteRequest.jsp"/>
 
-<script type="text/javascript">
-$(function(){
+<%-- Multi select --%>
+<link rel="stylesheet" href="resources/AdminLTE/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="resources/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
+<link rel="stylesheet" href="resources/bootstrap-multiselect/css/prettify.css" type="text/css">
 
-    $("select").multiselect({
-        selectedList: 4
-    });
-    
-});
+<script type="text/javascript" src="resources/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="resources/bootstrap-multiselect/js/prettify.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      includeSelectAllOption: true
+      $('.multiselect').multiselect({ 
+          includeSelectAllOption: true
+      });
+  });
 </script>
 
 <div>
@@ -64,11 +64,11 @@ $(function(){
   <form:form name="searchRequest" class="horizontal" enctype="multipart/form-data" action="searchRequest" modelAttribute="model" method="GET">
     <div class="visible" style="background: #eee">
         <label for="request.requesttypeCd"><s:message code="Request_type"/></label>
-        <form:select path="request.requesttypeCd" multiple="multiple">
+        <form:select path="request.requesttypeCd" multiple="multiple" class="multiselect">
 <%--            <option value="All"><s:message code="All"/></option> --%>
            <c:forEach var="reqType" items="${listRequestType}">
              <c:choose>
-               <c:when test='${fn:contains(model.request.requesttypeCd, reqType)}'>
+               <c:when test='${fn:contains(model.request.requesttypeCd, reqType.cd)}'>
                  <option value="${reqType.cd}" selected="selected">${reqType.name}</option>
                </c:when>
                <c:otherwise>
@@ -79,7 +79,7 @@ $(function(){
         </form:select>
         
         <label><s:message code="Assignee"/></label>
-        <form:select path="request.assigneeUsername">
+        <form:select path="request.assigneeUsername" multiple="multiple" class="multiselect">
 <%--             <option value="All"><s:message code="All"/></option> --%>
             <c:forEach var="user" items="${listUser}">
               <c:choose>
@@ -95,7 +95,7 @@ $(function(){
         </form:select>
         
         <label><s:message code="Status"/></label>
-        <form:select path="request.status">
+        <form:select path="request.status" multiple="multiple" class="multiselect">
 <%--             <option value="All"><s:message code="All"/></option> --%>
             <c:forEach var="status" items="${listStatus}">
               <c:choose>
