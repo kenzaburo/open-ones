@@ -71,10 +71,57 @@
               allFields.val( "" ).removeClass( "ui-state-error" );
           }
       });
+      
+      $( "#dialog-form1" ).dialog({
+          autoOpen: false,
+          height: 450,
+          width: 700,
+          modal: true,
+          buttons: {
+        	  '<s:message code="Done"/>': function() {
+                  // Send http request to update Assginee
+                  var frm = document.forms["finishRequest"];
+                  var requestId = frm.elements["request.id"].value ; // $('#request.id').val();
+                  var rateLevel = $("#level option:selected").val();
+                  var rateLevelDetail = $("#level option:selected").text();
+                  var confirmNote = $("#confirmNote").val();
+					
+                  alert(requestId);
+                  alert(rateLevel);
+                  $('#notification').html("Đang cập nhật...(" + requestId + "," + rateLevelDetail + ")");
+                  $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "confirm.Request",
 
-      $("#assignMember" )
-      .click(function() {
+                    data: {"id": requestId, "confirmNote": confirmNote, "rateLevel": rateLevel},
+                    success: function(res) {
+                      $('#notification').html("Thành công");
+                      // Refresh Assignee
+                      // window.location.reload();
+                      location.reload(true);
+                    },
+                    error: function(res) {
+                    	$('#notification').html("Có lỗi.");
+                    }               
+                  });
+                  $( this ).dialog( "close" );
+              },
+              '<s:message code="Cancel"/>': function() {
+                  $( this ).dialog( "close" );
+              }
+          },
+          close: function() {
+              allFields.val( "" ).removeClass( "ui-state-error" );
+          }
+      });
+
+      $("#assignMember" ).click(function() {
           $( "#dialog-form" ).dialog( "open" );
+      });
+      $("#finishRequest" ).click(function() {
+          $( "#dialog-form1" ).dialog( "open" );
       });
   });
 </script>
@@ -130,7 +177,7 @@
 	</c:choose>
 	<c:choose>
 		<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
-			<li><a href="confirmRequest?id=${model.request.id}" id="finish"><i class="icon-check"></i><s:message code="Done"/></a></li>
+			<li><a href="#" id="finishRequest"><i class="icon-check"></i><s:message code="Done"/></a></li>
 		</c:when>
 		<c:otherwise>
 			<li id="disable"><a href="confirmRequest?id=${model.request.id}" id="finish"><i class="icon-check" id="disabled"></i><s:message code="Done"/></a></li>
@@ -161,6 +208,28 @@
       <div>
         <label for="note" class="col_2"><s:message code="Note"/></label>
         <form:textarea path="request.assigneeNote" style="display:inline; position: relative; top:6px; left:10px;" cols="45" rows="14"></form:textarea>
+      </div>
+      <div>
+        <label id="notification"></label>
+      </div>
+    </form:form>
+</div>
+<div id="dialog-form1" title="<s:message code="Done"/>">
+    <form:form name="finishRequest" class="horizontal" action="confirmRequest" modelAttribute="model" method="POST">
+      <form:hidden path="request.id"/>
+      <div>
+        <label for="rateLevel" class="col_2"><s:message code="Level"/></label>
+        <form:select path="" class="col_4 chosen-select" id="level">
+               <option value="Bad"><s:message code="Bad"/></option>
+               <option value="Normal"><s:message code="Normal"/></option>
+               <option value="Good"><s:message code="Good"/></option>
+               <option value="Perfect"><s:message code="Perfect"/></option>
+               <option value="Excellent"><s:message code="Excellent"/></option>
+        </form:select>
+      </div>
+      <div>
+        <label for="note" class="col_2"><s:message code="Note"/></label>
+        <form:textarea path="" style="display:inline; position: relative; top:6px; left:10px;" cols="45" rows="14" id="confirmNote"></form:textarea>
       </div>
       <div>
         <label id="notification"></label>

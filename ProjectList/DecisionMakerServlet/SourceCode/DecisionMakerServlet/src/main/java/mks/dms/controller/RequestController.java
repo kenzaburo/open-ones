@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
@@ -34,6 +35,7 @@ import mks.dms.model.RequestModel;
 import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestService;
+import mks.dms.service.ServiceException;
 import mks.dms.service.UserControllerService;
 import mks.dms.util.AppCons;
 import mks.dms.util.AppUtil;
@@ -927,8 +929,8 @@ public class RequestController {
     	return "redirect:browseRequest?id=" + requestId;
     }
     
-    @RequestMapping(value="confirmRequest")
-    public String processConfirmRequestIsDone(@RequestParam("id") int requestId, Principal principal) {
+    @RequestMapping(value="confirm.Request")
+    public @ResponseBody String processConfirmRequestIsDone(@RequestParam("id") int requestId, @RequestParam("confirmNote") String confirmNote, @RequestParam("rateLevel") String rateLevel ,Principal principal) throws ServiceException {
     	Request request = requestService.getDaoController().findRequest(requestId);
     	User userLogin = userService.getUserByUsername(principal.getName());
     	requestService.setUser(userLogin);
@@ -936,9 +938,13 @@ public class RequestController {
     		request.setStatus("Done");
     	}
     	requestService.saveOrUpdate(request);
+    	Rate rate = new Rate();
+    	rate.setContent(confirmNote);
+//    	rate.setRank(rateLevel);
+    	requestService.saveRate(requestId, rate);
 //    	tao moi rate o day
-    	
-    	return "redirect:browseRequest?id=" + requestId;
+    	return "";
+//    	return "redirect:browseRequest?id=" + requestId;
     }
     
     
