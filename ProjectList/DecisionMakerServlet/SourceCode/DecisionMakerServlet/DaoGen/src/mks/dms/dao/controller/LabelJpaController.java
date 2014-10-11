@@ -12,14 +12,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Label;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 public class LabelJpaController implements Serializable {
 
@@ -101,9 +99,7 @@ public class LabelJpaController implements Serializable {
     private List<Label> findLabelEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Label.class));
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery("select object(o) from Label as o");
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -126,10 +122,7 @@ public class LabelJpaController implements Serializable {
     public int getLabelCount() {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Label> rt = cq.from(Label.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery("select count(o) from Label as o");
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();

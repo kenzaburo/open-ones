@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "parameter")
@@ -62,6 +62,7 @@ public class Parameter implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
     @Column(name = "CREATEDBY_USERNAME")
     private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
@@ -77,10 +78,11 @@ public class Parameter implements Serializable {
         this.id = id;
     }
 
-    public Parameter(Integer id, String cd, Date created) {
+    public Parameter(Integer id, String cd, Date created, String createdbyUsername) {
         this.id = id;
         this.cd = cd;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {

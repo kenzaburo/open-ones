@@ -106,7 +106,8 @@ public class RequestService extends BaseService {
 	            }
 			
 			    updateReferenceData(request, MODE_EDIT);
-				controller.edit(request);
+				// controller.edit(request);
+			    controller.merge(request);
 				
 				return EDIT_SUCCESS;
 			} catch (Exception ex) {

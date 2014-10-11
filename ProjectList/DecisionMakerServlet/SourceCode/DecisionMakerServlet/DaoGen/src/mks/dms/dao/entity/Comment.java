@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "comment")
@@ -35,7 +35,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Comment.findByReqId", query = "SELECT c FROM Comment c WHERE c.reqId = :reqId"),
     @NamedQuery(name = "Comment.findByUsername", query = "SELECT c FROM Comment c WHERE c.username = :username"),
     @NamedQuery(name = "Comment.findByEmail", query = "SELECT c FROM Comment c WHERE c.email = :email"),
-    @NamedQuery(name = "Comment.findByCreated", query = "SELECT c FROM Comment c WHERE c.created = :created")})
+    @NamedQuery(name = "Comment.findByCreated", query = "SELECT c FROM Comment c WHERE c.created = :created"),
+    @NamedQuery(name = "Comment.findByCreatedbyUsername", query = "SELECT c FROM Comment c WHERE c.createdbyUsername = :createdbyUsername"),
+    @NamedQuery(name = "Comment.findByLastmodified", query = "SELECT c FROM Comment c WHERE c.lastmodified = :lastmodified"),
+    @NamedQuery(name = "Comment.findByLastmodifiedbyUsername", query = "SELECT c FROM Comment c WHERE c.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
 public class Comment implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,8 +46,10 @@ public class Comment implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
     @Column(name = "REQ_ID")
-    private Integer reqId;
+    private int reqId;
+    @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
     @Column(name = "EMAIL")
@@ -56,6 +61,14 @@ public class Comment implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
+    @Column(name = "CREATEDBY_USERNAME")
+    private String createdbyUsername;
+    @Column(name = "LASTMODIFIED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastmodified;
+    @Column(name = "LASTMODIFIEDBY_USERNAME")
+    private String lastmodifiedbyUsername;
 
     public Comment() {
     }
@@ -64,9 +77,12 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Comment(Integer id, Date created) {
+    public Comment(Integer id, int reqId, String username, Date created, String createdbyUsername) {
         this.id = id;
+        this.reqId = reqId;
+        this.username = username;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {
@@ -77,11 +93,11 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Integer getReqId() {
+    public int getReqId() {
         return reqId;
     }
 
-    public void setReqId(Integer reqId) {
+    public void setReqId(int reqId) {
         this.reqId = reqId;
     }
 
@@ -115,6 +131,30 @@ public class Comment implements Serializable {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getCreatedbyUsername() {
+        return createdbyUsername;
+    }
+
+    public void setCreatedbyUsername(String createdbyUsername) {
+        this.createdbyUsername = createdbyUsername;
+    }
+
+    public Date getLastmodified() {
+        return lastmodified;
+    }
+
+    public void setLastmodified(Date lastmodified) {
+        this.lastmodified = lastmodified;
+    }
+
+    public String getLastmodifiedbyUsername() {
+        return lastmodifiedbyUsername;
+    }
+
+    public void setLastmodifiedbyUsername(String lastmodifiedbyUsername) {
+        this.lastmodifiedbyUsername = lastmodifiedbyUsername;
     }
 
     @Override

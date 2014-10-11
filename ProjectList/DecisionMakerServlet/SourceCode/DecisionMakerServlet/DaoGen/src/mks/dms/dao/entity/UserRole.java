@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "user_role")
@@ -56,6 +56,7 @@ public class UserRole implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
     @Column(name = "CREATEDBY_USERNAME")
     private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
@@ -71,10 +72,11 @@ public class UserRole implements Serializable {
         this.id = id;
     }
 
-    public UserRole(Integer id, String username, Date created) {
+    public UserRole(Integer id, String username, Date created, String createdbyUsername) {
         this.id = id;
         this.username = username;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {

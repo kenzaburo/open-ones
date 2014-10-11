@@ -35,7 +35,7 @@ public class SystemController {
     public ModelAndView listAnnouncement(Model model, Principal principal) {
         ModelAndView mav = new ModelAndView("init-data");
 
-        boolean initResult = systemService.initData();
+        boolean initResult = systemService.initData(principal.getName());
 
         mav.addObject("result", initResult);
 

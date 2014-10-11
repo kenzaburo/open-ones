@@ -8,7 +8,6 @@ package mks.dms.dao.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "request")
@@ -147,6 +146,7 @@ public class Request implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
     @Column(name = "CREATEDBY_USERNAME")
     private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
@@ -162,10 +162,11 @@ public class Request implements Serializable {
         this.id = id;
     }
 
-    public Request(Integer id, String title, Date created) {
+    public Request(Integer id, String title, Date created, String createdbyUsername) {
         this.id = id;
         this.title = title;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {
@@ -526,5 +527,4 @@ public class Request implements Serializable {
             this.likes += (" " + username);
         }
     }
-    
 }

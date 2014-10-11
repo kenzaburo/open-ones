@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "template")
@@ -64,6 +64,7 @@ public class Template implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
     @Column(name = "CREATEDBY_USERNAME")
     private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
@@ -79,11 +80,12 @@ public class Template implements Serializable {
         this.id = id;
     }
 
-    public Template(Integer id, String cd, String name, Date created) {
+    public Template(Integer id, String cd, String name, Date created, String createdbyUsername) {
         this.id = id;
         this.cd = cd;
         this.name = name;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {

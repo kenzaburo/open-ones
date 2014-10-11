@@ -7,14 +7,19 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Comment;
+import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
+import mks.dms.dao.entity.Watcher;
 import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.model.SearchTaskConditionModel;
 import mks.dms.util.AppCons;
@@ -441,6 +446,16 @@ public class ExRequestJpaController extends RequestJpaController {
         this.edit(request);
     }
 
+    public void merge(Request request) {
+        EntityManager em = getEntityManager();
+        
+        try {
+            em.merge(request);
+        } finally {
+            em.close();
+        }
+    }
+    
     /**
     * [Give the description for method].
     * @param searchCond
@@ -603,5 +618,58 @@ public class ExRequestJpaController extends RequestJpaController {
         }
 
         return lstRequest;
+    }
+    
+    /* 
+    * [Explain the description for this method here].
+    * Delete:
+    *  + RATE
+    *  + COMMENT
+    *  + WATCHER
+    *  + REQUEST_DEPARTMENT
+    * @param id given request id
+    * @see mks.dms.dao.controller.RequestJpaController#destroy(java.lang.Integer)
+    */
+    @Override
+    public void destroy(Integer reqId) throws NonexistentEntityException {
+        EntityManager em = null;
+        Class[] arrReferClass = {Rate.class, Comment.class, Watcher.class};
+        
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            // Remove referenced item
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            
+            // Delete referenced class of request
+            CriteriaDelete cd;
+            Root rootRate;
+            Query queryDelete;
+            for (int i = 0; i < arrReferClass.length; i++) {
+                cd = cb.createCriteriaDelete(arrReferClass[i]);
+                
+                rootRate = cd.getRoot();
+                
+                cd.where(cb.equal(rootRate.get("reqId"), reqId));
+               
+                queryDelete = em.createQuery(cd);
+                queryDelete.executeUpdate();
+            }
+                        
+            // Delete request
+            Request request;
+            try {
+                request = em.getReference(Request.class, reqId);
+                request.getId();
+            } catch (EntityNotFoundException enfe) {
+                throw new NonexistentEntityException("The request with id " + reqId + " no longer exists.", enfe);
+            }
+            em.remove(request);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 }

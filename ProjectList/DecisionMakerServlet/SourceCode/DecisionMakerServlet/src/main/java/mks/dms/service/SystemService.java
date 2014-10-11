@@ -18,6 +18,7 @@
  */
 package mks.dms.service;
 
+import java.util.Date;
 import java.util.List;
 
 import mks.dms.dao.controller.DepartmentJpaController;
@@ -42,22 +43,23 @@ public class SystemService extends BaseService {
 
     /**
     * [Give the description for method].
+     * @param username 
     * @return
     * false: Data is existed | Error during create data
     */
-    public boolean initData() {
+    public boolean initData(String username) {
         // Create Types of requests
-        boolean initOK = initRequestTypes();
+        boolean initOK = initRequestTypes(username);
 
         if (initOK) {
             // Create default Department
-            initOK = initCreateDepartmentSystem();
+            initOK = initCreateDepartmentSystem(username);
         } else {
            return false;
         }
         
         if (initOK) {
-            initUserSystem();
+            initUserSystem(username);
         } else {
             return false;
         }
@@ -67,10 +69,11 @@ public class SystemService extends BaseService {
 
     /**
     * [Give the description for method].
+     * @param username 
     * @return
     * false: Data is existed or error
     */
-    private boolean initRequestTypes() {
+    private boolean initRequestTypes(String username) {
         RequestTypeJpaController daoCtrl = new RequestTypeJpaController(emf);
         List<RequestType> lstRequestType = daoCtrl.findRequestTypeEntities();
         if (CommonUtil.isNNandNB(lstRequestType)) {
@@ -81,22 +84,30 @@ public class SystemService extends BaseService {
             requestType.setCd("Task");
             requestType.setName("Công việc");
             requestType.setEnabled(true);
-
+            requestType.setCreated(new Date());
+            requestType.setCreatedbyUsername(username);
+            
             daoCtrl.create(requestType);
 
             requestType.setId(null);
             requestType.setCd("Rule");
             requestType.setName("Quy định");
+            requestType.setCreated(new Date());
+            requestType.setCreatedbyUsername(username);
             daoCtrl.create(requestType);
 
             requestType.setId(null);
             requestType.setCd("Announcement");
             requestType.setName("Thông báo");
+            requestType.setCreated(new Date());
+            requestType.setCreatedbyUsername(username);
             daoCtrl.create(requestType);
 
             requestType.setId(null);
             requestType.setCd("Leave");
             requestType.setName("Nghỉ phép");
+            requestType.setCreated(new Date());
+            requestType.setCreatedbyUsername(username);
             daoCtrl.create(requestType);
         }
 
@@ -105,10 +116,11 @@ public class SystemService extends BaseService {
     
     /**
     * [Give the description for method].
+     * @param username 
     * @return
     * false: Data is existed or error
     */
-    private boolean initCreateDepartmentSystem() {
+    private boolean initCreateDepartmentSystem(String username) {
         DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
         List<Department> lstDepartment = daoCtrl.findDepartmentEntities();
 
@@ -120,6 +132,8 @@ public class SystemService extends BaseService {
             department.setCd("All");
             department.setEnabled(isEnable);
             department.setName("Tất cả");
+            department.setCreated(new Date());
+            department.setCreatedbyUsername(username);
 
             daoCtrl.create(department);
         }
@@ -127,7 +141,7 @@ public class SystemService extends BaseService {
         return true;
     }
 
-    public void initUserSystem() {
+    public void initUserSystem(String username) {
         boolean isEnable = true;
         User user = new User();
 
@@ -136,7 +150,8 @@ public class SystemService extends BaseService {
         user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("lnthach@gmail.com");
-
+        user.setCreated(new Date());
+        user.setCreatedbyUsername(username);
         
         UserJpaController daoCtrl = new UserJpaController(emf);
         daoCtrl.create(user);

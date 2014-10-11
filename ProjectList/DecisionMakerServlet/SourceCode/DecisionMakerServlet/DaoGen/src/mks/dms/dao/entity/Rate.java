@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "rate")
@@ -36,7 +36,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Rate.findByUsername", query = "SELECT r FROM Rate r WHERE r.username = :username"),
     @NamedQuery(name = "Rate.findByEmail", query = "SELECT r FROM Rate r WHERE r.email = :email"),
     @NamedQuery(name = "Rate.findByRank", query = "SELECT r FROM Rate r WHERE r.rank = :rank"),
-    @NamedQuery(name = "Rate.findByCreated", query = "SELECT r FROM Rate r WHERE r.created = :created")})
+    @NamedQuery(name = "Rate.findByCreated", query = "SELECT r FROM Rate r WHERE r.created = :created"),
+    @NamedQuery(name = "Rate.findByCreatedbyUsername", query = "SELECT r FROM Rate r WHERE r.createdbyUsername = :createdbyUsername"),
+    @NamedQuery(name = "Rate.findByLastmodified", query = "SELECT r FROM Rate r WHERE r.lastmodified = :lastmodified"),
+    @NamedQuery(name = "Rate.findByLastmodifiedbyUsername", query = "SELECT r FROM Rate r WHERE r.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
 public class Rate implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,8 +47,10 @@ public class Rate implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
     @Column(name = "REQ_ID")
-    private Integer reqId;
+    private int reqId;
+    @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
     @Column(name = "EMAIL")
@@ -59,6 +64,14 @@ public class Rate implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
+    @Column(name = "CREATEDBY_USERNAME")
+    private String createdbyUsername;
+    @Column(name = "LASTMODIFIED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastmodified;
+    @Column(name = "LASTMODIFIEDBY_USERNAME")
+    private String lastmodifiedbyUsername;
 
     public Rate() {
     }
@@ -67,9 +80,12 @@ public class Rate implements Serializable {
         this.id = id;
     }
 
-    public Rate(Integer id, Date created) {
+    public Rate(Integer id, int reqId, String username, Date created, String createdbyUsername) {
         this.id = id;
+        this.reqId = reqId;
+        this.username = username;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {
@@ -80,11 +96,11 @@ public class Rate implements Serializable {
         this.id = id;
     }
 
-    public Integer getReqId() {
+    public int getReqId() {
         return reqId;
     }
 
-    public void setReqId(Integer reqId) {
+    public void setReqId(int reqId) {
         this.reqId = reqId;
     }
 
@@ -126,6 +142,30 @@ public class Rate implements Serializable {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getCreatedbyUsername() {
+        return createdbyUsername;
+    }
+
+    public void setCreatedbyUsername(String createdbyUsername) {
+        this.createdbyUsername = createdbyUsername;
+    }
+
+    public Date getLastmodified() {
+        return lastmodified;
+    }
+
+    public void setLastmodified(Date lastmodified) {
+        this.lastmodified = lastmodified;
+    }
+
+    public String getLastmodifiedbyUsername() {
+        return lastmodifiedbyUsername;
+    }
+
+    public void setLastmodifiedbyUsername(String lastmodifiedbyUsername) {
+        this.lastmodifiedbyUsername = lastmodifiedbyUsername;
     }
 
     @Override

@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "department")
@@ -70,6 +70,7 @@ public class Department implements Serializable {
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
     @Column(name = "CREATEDBY_USERNAME")
     private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
@@ -85,12 +86,13 @@ public class Department implements Serializable {
         this.id = id;
     }
 
-    public Department(Integer id, int parentid, String cd, String name, Date created) {
+    public Department(Integer id, int parentid, String cd, String name, Date created, String createdbyUsername) {
         this.id = id;
         this.parentid = parentid;
         this.cd = cd;
         this.name = name;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {

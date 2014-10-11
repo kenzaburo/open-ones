@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
@@ -56,6 +57,9 @@ public class ExUserJpaController extends UserJpaController {
             User user = (User) query.getSingleResult();
             
             return user;
+        } catch (NoResultException nsEx) { 
+            LOG.warn("User '" + username + "' not found.", nsEx);
+            return null;
         } finally {
             em.close();
         }

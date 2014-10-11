@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 
 import java.util.Date;
 
+import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Request;
 import mks.dms.service.BaseService;
 import mks.dms.service.RequestService;
@@ -80,6 +81,17 @@ public class ExRequestJpaControllerTest {
         assertEquals(2, likes.length);
         assertEquals("user1", likes[0]);
         assertEquals("user2@test", likes[1]);
+        
+    }
+    
+    @Test
+    public void testDestroy() {
+        ExRequestJpaController daoCtrl = new ExRequestJpaController(BaseService.getEmf());
+        try {
+            daoCtrl.destroy(1);
+        } catch (NonexistentEntityException ex) {
+            fail(ex.getMessage());
+        }
         
     }
     

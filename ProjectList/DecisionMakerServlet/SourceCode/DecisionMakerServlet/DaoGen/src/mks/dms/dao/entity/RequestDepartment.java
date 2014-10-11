@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "request_department")
@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "RequestDepartment.findAll", query = "SELECT r FROM RequestDepartment r"),
     @NamedQuery(name = "RequestDepartment.findById", query = "SELECT r FROM RequestDepartment r WHERE r.id = :id"),
-    @NamedQuery(name = "RequestDepartment.findByRequestId", query = "SELECT r FROM RequestDepartment r WHERE r.requestId = :requestId"),
+    @NamedQuery(name = "RequestDepartment.findByReqId", query = "SELECT r FROM RequestDepartment r WHERE r.reqId = :reqId"),
     @NamedQuery(name = "RequestDepartment.findByDepartmentId", query = "SELECT r FROM RequestDepartment r WHERE r.departmentId = :departmentId"),
     @NamedQuery(name = "RequestDepartment.findByCreated", query = "SELECT r FROM RequestDepartment r WHERE r.created = :created"),
     @NamedQuery(name = "RequestDepartment.findByCreatedbyUsername", query = "SELECT r FROM RequestDepartment r WHERE r.createdbyUsername = :createdbyUsername"),
@@ -44,14 +44,17 @@ public class RequestDepartment implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "REQUEST_ID")
-    private Integer requestId;
+    @Basic(optional = false)
+    @Column(name = "REQ_ID")
+    private int reqId;
+    @Basic(optional = false)
     @Column(name = "DEPARTMENT_ID")
-    private Integer departmentId;
+    private int departmentId;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
     @Column(name = "CREATEDBY_USERNAME")
     private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
@@ -67,9 +70,12 @@ public class RequestDepartment implements Serializable {
         this.id = id;
     }
 
-    public RequestDepartment(Integer id, Date created) {
+    public RequestDepartment(Integer id, int reqId, int departmentId, Date created, String createdbyUsername) {
         this.id = id;
+        this.reqId = reqId;
+        this.departmentId = departmentId;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {
@@ -80,19 +86,19 @@ public class RequestDepartment implements Serializable {
         this.id = id;
     }
 
-    public Integer getRequestId() {
-        return requestId;
+    public int getReqId() {
+        return reqId;
     }
 
-    public void setRequestId(Integer requestId) {
-        this.requestId = requestId;
+    public void setReqId(int reqId) {
+        this.reqId = reqId;
     }
 
-    public Integer getDepartmentId() {
+    public int getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(Integer departmentId) {
+    public void setDepartmentId(int departmentId) {
         this.departmentId = departmentId;
     }
 

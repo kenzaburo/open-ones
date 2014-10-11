@@ -2,6 +2,9 @@
  --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <div class="box-body table-responsive">
   <table id="searchResult" class="table table-bordered table-hover">
@@ -56,9 +59,17 @@
             <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border: NONE" title="Thao tác"><i class="icon-cog"></i><span class="fa fa-caret-down"></span></button>
                 <ul class="dropdown-menu">
-                  <c:if test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
-                    <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
-                  </c:if>
+                  <c:choose>
+                    <c:when test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
+                      <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
+                    </c:when>
+                   
+                    <c:otherwise>
+                        <sec:authorize access="hasRole('ROLE_ADMIN')">
+                          <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
+                        </sec:authorize>
+                    </c:otherwise>
+                  </c:choose>
                     
 <%--                   <li><a href="#"><s:message code="View_Details"/></a></li> --%>
 <!--                   <li class="divider"></li> -->

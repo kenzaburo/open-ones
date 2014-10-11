@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -23,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLN
+ * @author ThachLe
  */
 @Entity
 @Table(name = "watcher")
@@ -32,7 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Watcher.findAll", query = "SELECT w FROM Watcher w"),
     @NamedQuery(name = "Watcher.findById", query = "SELECT w FROM Watcher w WHERE w.id = :id"),
     @NamedQuery(name = "Watcher.findByReqId", query = "SELECT w FROM Watcher w WHERE w.reqId = :reqId"),
-    @NamedQuery(name = "Watcher.findByUserUsername", query = "SELECT w FROM Watcher w WHERE w.userUsername = :userUsername"),
+    @NamedQuery(name = "Watcher.findByUsername", query = "SELECT w FROM Watcher w WHERE w.username = :username"),
+    @NamedQuery(name = "Watcher.findByEmail", query = "SELECT w FROM Watcher w WHERE w.email = :email"),
     @NamedQuery(name = "Watcher.findByCreated", query = "SELECT w FROM Watcher w WHERE w.created = :created"),
     @NamedQuery(name = "Watcher.findByCreatedbyUsername", query = "SELECT w FROM Watcher w WHERE w.createdbyUsername = :createdbyUsername"),
     @NamedQuery(name = "Watcher.findByLastmodified", query = "SELECT w FROM Watcher w WHERE w.lastmodified = :lastmodified"),
@@ -47,12 +49,19 @@ public class Watcher implements Serializable {
     @Basic(optional = false)
     @Column(name = "REQ_ID")
     private int reqId;
-    @Column(name = "USER_USERNAME")
-    private String userUsername;
+    @Basic(optional = false)
+    @Column(name = "USERNAME")
+    private String username;
+    @Column(name = "EMAIL")
+    private String email;
+    @Lob
+    @Column(name = "CONTENT")
+    private String content;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+    @Basic(optional = false)
     @Column(name = "CREATEDBY_USERNAME")
     private String createdbyUsername;
     @Column(name = "LASTMODIFIED")
@@ -68,10 +77,12 @@ public class Watcher implements Serializable {
         this.id = id;
     }
 
-    public Watcher(Integer id, int reqId, Date created) {
+    public Watcher(Integer id, int reqId, String username, Date created, String createdbyUsername) {
         this.id = id;
         this.reqId = reqId;
+        this.username = username;
         this.created = created;
+        this.createdbyUsername = createdbyUsername;
     }
 
     public Integer getId() {
@@ -90,12 +101,28 @@ public class Watcher implements Serializable {
         this.reqId = reqId;
     }
 
-    public String getUserUsername() {
-        return userUsername;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserUsername(String userUsername) {
-        this.userUsername = userUsername;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getCreated() {
