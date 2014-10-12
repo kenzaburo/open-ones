@@ -10,7 +10,6 @@
 
 <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
-
 <!-- bootstrap 3.0.2 -->
 <link href="resources/AdminLTE/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <!-- font Awesome -->
@@ -20,7 +19,11 @@
 
 <!-- DATA TABLES -->
 <link href="resources/AdminLTE/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
-        
+
+<%-- Multi select --%>
+<link rel="stylesheet" href="resources/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
+<link rel="stylesheet" href="resources/bootstrap-multiselect/css/prettify.css" type="text/css">
+
 <!-- jQuery -->
 <script src="resources/jquery/1.9.1/jquery-1.9.1.min.js"></script>
 <!-- Bootstrap -->
@@ -40,10 +43,6 @@
 <jsp:include page="../_common/confirmDeleteRequest.jsp"/>
 
 <%-- Multi select --%>
-<link rel="stylesheet" href="resources/AdminLTE/css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="resources/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
-<link rel="stylesheet" href="resources/bootstrap-multiselect/css/prettify.css" type="text/css">
-
 <script type="text/javascript" src="resources/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="resources/bootstrap-multiselect/js/prettify.js"></script>
 

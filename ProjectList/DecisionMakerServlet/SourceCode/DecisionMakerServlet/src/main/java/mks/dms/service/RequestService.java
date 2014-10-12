@@ -17,6 +17,7 @@ import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
+import mks.dms.model.SearchLeaveConditionModel;
 import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.model.SearchTaskConditionModel;
 import mks.dms.util.AppCons;
@@ -315,9 +316,9 @@ public class RequestService extends BaseService {
     * @param String username
     * @return
     */
-    public List<Request> findLeave(String username) {
+    public List<Request> findLeaveOfUser(SearchLeaveConditionModel searchConditionModel) {
         List<Request> lstRequest;
-        lstRequest = controller.findRequestByType(AppCons.LEAVE);
+        lstRequest = controller.findLeaveOfUser(searchConditionModel);
         
         return lstRequest;
     }

@@ -4,12 +4,14 @@ import java.security.Principal;
 import java.util.List;
 
 import mks.dms.dao.entity.Request;
+import mks.dms.model.SearchLeaveConditionModel;
 import mks.dms.service.RequestService;
+import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,10 +34,11 @@ public class LeaveController {
 
 
     @RequestMapping(value="myListLeave" , method = RequestMethod.GET)
-    public ModelAndView listLeave(Model model, Principal principal) {
+    public ModelAndView showMyListLeave(@ModelAttribute(AppCons.MODEL) SearchLeaveConditionModel searchLeaveModel, Principal principal) {
         ModelAndView mav = new ModelAndView("myListLeave");
 
-        List<Request> lstLeave = requestService.findLeave(principal.getName());
+        searchLeaveModel.setUsername(principal.getName());
+        List<Request> lstLeave = requestService.findLeaveOfUser(searchLeaveModel);
 
         mav.addObject("lstLeave", lstLeave);
         mav.addObject("current", "myListLeave");
