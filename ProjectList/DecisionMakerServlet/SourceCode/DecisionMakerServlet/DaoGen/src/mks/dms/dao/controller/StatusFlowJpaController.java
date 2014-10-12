@@ -15,15 +15,15 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.RequestDepartment;
+import mks.dms.dao.entity.StatusFlow;
 
 /**
  *
  * @author ThachLe
  */
-public class RequestDepartmentJpaController implements Serializable {
+public class StatusFlowJpaController implements Serializable {
 
-    public RequestDepartmentJpaController(EntityManagerFactory emf) {
+    public StatusFlowJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -32,12 +32,12 @@ public class RequestDepartmentJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(RequestDepartment requestDepartment) {
+    public void create(StatusFlow statusFlow) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(requestDepartment);
+            em.persist(statusFlow);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -46,19 +46,19 @@ public class RequestDepartmentJpaController implements Serializable {
         }
     }
 
-    public void edit(RequestDepartment requestDepartment) throws NonexistentEntityException, Exception {
+    public void edit(StatusFlow statusFlow) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            requestDepartment = em.merge(requestDepartment);
+            statusFlow = em.merge(statusFlow);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = requestDepartment.getId();
-                if (findRequestDepartment(id) == null) {
-                    throw new NonexistentEntityException("The requestDepartment with id " + id + " no longer exists.");
+                Integer id = statusFlow.getId();
+                if (findStatusFlow(id) == null) {
+                    throw new NonexistentEntityException("The statusFlow with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -74,14 +74,14 @@ public class RequestDepartmentJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            RequestDepartment requestDepartment;
+            StatusFlow statusFlow;
             try {
-                requestDepartment = em.getReference(RequestDepartment.class, id);
-                requestDepartment.getId();
+                statusFlow = em.getReference(StatusFlow.class, id);
+                statusFlow.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The requestDepartment with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The statusFlow with id " + id + " no longer exists.", enfe);
             }
-            em.remove(requestDepartment);
+            em.remove(statusFlow);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -90,19 +90,19 @@ public class RequestDepartmentJpaController implements Serializable {
         }
     }
 
-    public List<RequestDepartment> findRequestDepartmentEntities() {
-        return findRequestDepartmentEntities(true, -1, -1);
+    public List<StatusFlow> findStatusFlowEntities() {
+        return findStatusFlowEntities(true, -1, -1);
     }
 
-    public List<RequestDepartment> findRequestDepartmentEntities(int maxResults, int firstResult) {
-        return findRequestDepartmentEntities(false, maxResults, firstResult);
+    public List<StatusFlow> findStatusFlowEntities(int maxResults, int firstResult) {
+        return findStatusFlowEntities(false, maxResults, firstResult);
     }
 
-    private List<RequestDepartment> findRequestDepartmentEntities(boolean all, int maxResults, int firstResult) {
+    private List<StatusFlow> findStatusFlowEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(RequestDepartment.class));
+            cq.select(cq.from(StatusFlow.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -114,20 +114,20 @@ public class RequestDepartmentJpaController implements Serializable {
         }
     }
 
-    public RequestDepartment findRequestDepartment(Integer id) {
+    public StatusFlow findStatusFlow(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(RequestDepartment.class, id);
+            return em.find(StatusFlow.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getRequestDepartmentCount() {
+    public int getStatusFlowCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<RequestDepartment> rt = cq.from(RequestDepartment.class);
+            Root<StatusFlow> rt = cq.from(StatusFlow.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

@@ -23,10 +23,13 @@ import java.util.List;
 
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
+import mks.dms.dao.controller.StatusFlowJpaController;
 import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.RequestType;
+import mks.dms.dao.entity.StatusFlow;
 import mks.dms.dao.entity.User;
+import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -59,12 +62,81 @@ public class SystemService extends BaseService {
         }
         
         if (initOK) {
-            initUserSystem(username);
+            initOK = initUserSystem(username);
         } else {
             return false;
         }
+        
+        if (initOK) {
+            initOK = initStatusFlow(username);
+        } else {
+            return false;
+        }     
 
         return initOK;
+    }
+
+    private boolean initStatusFlow(String username) {
+        StatusFlowJpaController daoCtrl = new StatusFlowJpaController(emf);
+        StatusFlow statusFlow = new StatusFlow();
+        int seqNo = 0;
+        // For Task of Owner.START
+        statusFlow.setRequesttypeCd(AppCons.TASK);
+        statusFlow.setCreated(new Date());
+        statusFlow.setCreatedbyUsername(username);
+        statusFlow.setTypeUser(AppCons.TYPE_USER.Owner.toString());
+        
+        statusFlow.setCurrentStatus(AppCons.STATUS_CREATED);
+        statusFlow.setNextStatus(AppCons.STATUS_DOING);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+        
+        statusFlow.setCurrentStatus(AppCons.STATUS_DOING);
+        statusFlow.setNextStatus(AppCons.STATUS_FINISH);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+        
+        statusFlow.setCurrentStatus(AppCons.STATUS_FINISH);
+        statusFlow.setNextStatus(AppCons.STATUS_REASSIGN);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+
+        statusFlow.setCurrentStatus(AppCons.STATUS_REASSIGN);
+        statusFlow.setNextStatus(AppCons.STATUS_DOING);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+        // For Task of Owner.END
+        
+        // For Task of Manager.START
+        statusFlow.setTypeUser(AppCons.TYPE_USER.Manager.toString());
+        statusFlow.setCurrentStatus(AppCons.STATUS_FINISH);
+        statusFlow.setNextStatus(AppCons.STATUS_DONE);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+        
+        statusFlow.setCurrentStatus(AppCons.STATUS_DONE);
+        statusFlow.setNextStatus(AppCons.STATUS_REASSIGN);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+        // For Task of Manager.END
+        
+        // For Leave of Manager.START
+        statusFlow.setRequesttypeCd(AppCons.LEAVE);
+        statusFlow.setTypeUser(AppCons.TYPE_USER.Manager.toString());
+        statusFlow.setCreated(new Date());
+        statusFlow.setCreatedbyUsername(username);
+        
+        statusFlow.setCurrentStatus(AppCons.STATUS_CREATED);
+        statusFlow.setNextStatus(AppCons.STATUS_APPROVED);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+        
+        statusFlow.setCurrentStatus(AppCons.STATUS_CREATED);
+        statusFlow.setNextStatus(AppCons.STATUS_REJECTED);
+        statusFlow.setSeqNo(seqNo++);
+        daoCtrl.create(statusFlow);
+        // For Leave of Manager.END
+        return true;
     }
 
     /**
@@ -79,13 +151,14 @@ public class SystemService extends BaseService {
         if (CommonUtil.isNNandNB(lstRequestType)) {
             return false;
         } else {
-
+            int seqNo = 0;
             RequestType requestType = new RequestType();
             requestType.setCd("Task");
             requestType.setName("Công việc");
             requestType.setEnabled(true);
             requestType.setCreated(new Date());
             requestType.setCreatedbyUsername(username);
+            requestType.setSeqNo(seqNo++);
             
             daoCtrl.create(requestType);
 
@@ -94,6 +167,8 @@ public class SystemService extends BaseService {
             requestType.setName("Quy định");
             requestType.setCreated(new Date());
             requestType.setCreatedbyUsername(username);
+            requestType.setSeqNo(seqNo++);
+            
             daoCtrl.create(requestType);
 
             requestType.setId(null);
@@ -101,6 +176,7 @@ public class SystemService extends BaseService {
             requestType.setName("Thông báo");
             requestType.setCreated(new Date());
             requestType.setCreatedbyUsername(username);
+            requestType.setSeqNo(seqNo++);
             daoCtrl.create(requestType);
 
             requestType.setId(null);
@@ -108,6 +184,8 @@ public class SystemService extends BaseService {
             requestType.setName("Nghỉ phép");
             requestType.setCreated(new Date());
             requestType.setCreatedbyUsername(username);
+            requestType.setSeqNo(seqNo++);
+            
             daoCtrl.create(requestType);
         }
 
@@ -141,7 +219,7 @@ public class SystemService extends BaseService {
         return true;
     }
 
-    public void initUserSystem(String username) {
+    public boolean initUserSystem(String username) {
         boolean isEnable = true;
         User user = new User();
 
@@ -155,5 +233,7 @@ public class SystemService extends BaseService {
         
         UserJpaController daoCtrl = new UserJpaController(emf);
         daoCtrl.create(user);
+        
+        return true;
     }
 }

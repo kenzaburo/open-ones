@@ -17,8 +17,9 @@
             <label for="content" class="col_2 left"><s:message code="Reason"/></label>
             <form:textarea path="request.content" id="content" style="display:inline; position: relative; top:6px; left:10px;" cols="100" name="leaveContent" rows="15" placeholder="Mô tả chi tiết lý do và sắp xếp công việc đảm bảo không ảnh hưởng"></form:textarea>
         </div>
+        <%-- Default assignee of leave --%>
         <div>
-          <input name="leaveCreate" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
+          <input name="request.assigneeUsername" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
         </div>	
         <div>
 		 	<label for="managerUsername" class="col_2"><s:message code="Manager"/></label>
@@ -30,9 +31,7 @@
                         <option value="${user.username}" selected="selected">${user.username}</option>
                     </c:when>
                     <c:otherwise>
-                      <c:if test="${user.username != pageContext.request.userPrincipal.name}">
                         <option value="${user.username}">${user.username}</option>
-                      </c:if>
                     </c:otherwise>
                   </c:choose>
          			
@@ -58,7 +57,7 @@
         
       	<div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>
-        <input type="reset" value='<s:message code="Reset"/>' class="button"/>
+        <input type="submit" value='<s:message code="Back"/>' class="button"/>
       	</div>
   </form:form>
 </div>

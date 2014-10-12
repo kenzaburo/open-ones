@@ -68,5 +68,11 @@ public class AppCons {
     public static final String DATE_FORMAT = "dd-MM-yyyy";
     public static final String ALL = "All";
     public static final String MODEL = "model";
+    
+    public enum TYPE_USER {
+        Owner,
+        Manager,
+        Creator
+    };
 
 }

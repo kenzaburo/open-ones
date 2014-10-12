@@ -22,13 +22,23 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.entity.Department;
+import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
+import mks.dms.dao.entity.StatusFlow;
 import mks.dms.dao.entity.User;
 import mks.dms.model.DepartmentModel;
 import mks.dms.model.DurationUnit;
@@ -302,14 +312,51 @@ public class MasterService extends BaseService {
     * @return
     */
     public List<String> getAllStatus() {
-        List<String> lstStatus = new ArrayList<String>();
+        EntityManager em = getEmf().createEntityManager();
+        String strQuery = "SELECT DISTINCT s.currentStatus FROM StatusFlow s ORDER BY s.seqNo";
         
-        lstStatus.add(AppCons.STATUS_CREATED);
-        lstStatus.add(AppCons.STATUS_DOING);
-        lstStatus.add(AppCons.STATUS_REJECTED);
-        lstStatus.add(AppCons.STATUS_APPROVED);
-        lstStatus.add(AppCons.STATUS_REASSIGN);
+        Query query = em.createQuery(strQuery);
+        List<String> lstStatus = query.getResultList();
         
         return lstStatus;
+    }
+    
+    /**
+    * Get available status of current request.
+    * @param request
+    * @param typeOfUser
+    * @return
+    */
+    public String getNextStatus(Request request, AppCons.TYPE_USER typeOfUser) {
+        EntityManager em = getEmf().createEntityManager();
+        
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        
+        CriteriaQuery cq = cb.createQuery();
+        Root root = cq.from(StatusFlow.class);
+        
+        cq.select(root.get("nextStatus")).distinct(true);
+
+        String currentStatus = request.getStatus();
+        
+        Predicate predicate = cb.equal(root.get("currentStatus"), currentStatus);
+        predicate = cb.and(predicate, cb.equal(root.get("requesttypeCd"), request.getRequesttypeCd()));
+        
+        if (typeOfUser != null) {
+            predicate = cb.and(predicate, cb.equal(root.get("typeUser"), typeOfUser.toString()));
+        }
+        
+        cq.where(predicate);
+        
+        Query query = em.createQuery(cq);
+        
+        try {
+        
+            return (String) query.getSingleResult();
+        } catch (NoResultException nrEx) {
+            LOG.info("typeOfUser=" + typeOfUser + ".Next step of status '" + currentStatus + "' not found");
+            return null;
+        }
+        
     }
 }

@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -665,6 +666,84 @@ public class ExRequestJpaController extends RequestJpaController {
                 throw new NonexistentEntityException("The request with id " + reqId + " no longer exists.", enfe);
             }
             em.remove(request);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public void updateStatus(Integer requestId, String status, String username, Comment comment) {
+        EntityManager em = null;
+        
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            // Remove referenced item
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaUpdate<Request> cu = cb.createCriteriaUpdate(Request.class);
+            
+            Root<Request> rootRequest = cu.from(Request.class);
+            
+            cu.set(rootRequest.get("status"), status);
+            cu.set(rootRequest.get("lastmodified"), new Date());
+            cu.set(rootRequest.get("lastmodifiedbyUsername"), username);
+            
+            cu.where(cb.equal(rootRequest.get("id"), requestId));
+            Query updateQuery = em.createQuery(cu);
+            
+            int affected = updateQuery.executeUpdate();
+            
+            if (affected == 1) {
+                // Add comment
+                em.persist(comment);
+            }
+            
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    
+    @Override
+    public void edit(Request request) throws NonexistentEntityException, Exception {
+        EntityManager em = null;
+        
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            // Remove referenced item
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaUpdate<Request> cu = cb.createCriteriaUpdate(Request.class);
+            
+            Root<Request> rootRequest = cu.from(Request.class);
+
+            cu.set(rootRequest.get("title"), request.getTitle());
+            cu.set(rootRequest.get("content"), request.getContent());
+            cu.set(rootRequest.get("assigneeUsername"), request.getAssigneeUsername());
+            cu.set(rootRequest.get("assigneeName"), request.getAssigneeName());
+            cu.set(rootRequest.get("managerUsername"), request.getManagerUsername());
+            cu.set(rootRequest.get("managerName"), request.getManagerName());
+            cu.set(rootRequest.get("startdate"), request.getStartdate());
+            cu.set(rootRequest.get("enddate"), request.getEnddate());
+            cu.set(rootRequest.get("label1"), request.getLabel1());
+            cu.set(rootRequest.get("duration"), request.getDuration());
+            cu.set(rootRequest.get("durationunit"), request.getDurationunit());            
+            cu.set(rootRequest.get("filename1"), request.getFilename1());
+            cu.set(rootRequest.get("attachment1"), request.getAttachment1());
+            // cu.set(rootRequest.get("status"), request.getStatus());
+            
+            cu.set(rootRequest.get("lastmodified"), new Date());
+            cu.set(rootRequest.get("lastmodifiedbyUsername"), request.getLastmodifiedbyUsername());
+            
+            cu.where(cb.equal(rootRequest.get("id"), request.getId()));
+            Query updateQuery = em.createQuery(cu);
+            
+            int affected = updateQuery.executeUpdate();
+            LOG.info("Affected record: " + affected);
             em.getTransaction().commit();
         } finally {
             if (em != null) {

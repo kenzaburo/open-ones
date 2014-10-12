@@ -385,6 +385,16 @@ public class RequestController {
         
         return result;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "updateStatus")
+    public String updateStatus(@RequestParam("id") Integer requestId, @RequestParam("status") String status,
+            @RequestParam("note") String note, Principal principal) {
+        LOG.debug("id=" + requestId + ";status=" + status + ";note=" + note);
+
+        requestService.updateStatus(requestId, status, principal.getName(), note);
+
+        return "redirect:browseRequest?id=" + requestId;
+    }
     
     /**
     * [Give the description for method].
@@ -408,8 +418,30 @@ public class RequestController {
             requestModel.setDurationUnitName(duName);
         }
         
+        String ownerNextStatus = null;
+        String username = principal.getName();
+        if (username.equals(request.getAssigneeUsername())) {
+           ownerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Owner);
+        } else if (username.equals(request.getCreatedbyUsername())) {
+           ownerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Owner);
+        } else {
+            // Do nothing
+        }
+        
+        String managerNextStatus = null;
+        if (username.equals(request.getManagerUsername())) {
+            managerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Manager);
+        } else if (username.equals(request.getManagerUsername())) {
+            managerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Manager);
+        } else {
+            // Do nothing
+        }
+        
         mav.addObject(AppCons.MODEL, requestModel);
-
+        mav.addObject("ownerNextStatus", ownerNextStatus);
+        mav.addObject("managerNextStatus", managerNextStatus);
+        
+        
         return mav;
     }
     
@@ -574,13 +606,13 @@ public class RequestController {
         	
         	User userLogin = userService.getUserByUsername(pricipal.getName());
 //        	luu lý do reject
-        	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
-        	if (request.getComment() != null && !request.getComment().equals("")) {
-        		request.setComment(request.getComment() + fullReasonReject);
-        	}
-        	else {
-        		request.setComment(fullReasonReject);
-        	}
+//        	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
+//        	if (request.getComment() != null && !request.getComment().equals("")) {
+//        		request.setComment(request.getComment() + fullReasonReject);
+//        	}
+//        	else {
+//        		request.setComment(fullReasonReject);
+//        	}
     	}
     	
     	// Thach: Task sẽ công có khái niệm Reject. File giải thích trong file AppCons.java
@@ -590,13 +622,13 @@ public class RequestController {
         	request.setManagerRead(0);
         	User userLogin = userService.getUserByUsername(pricipal.getName());
 //        	luu lý do reject
-        	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
-        	if (request.getComment() != null && !request.getComment().equals("")) {
-        		request.setComment(request.getComment() + fullReasonReject);
-        	}
-        	else {
-        		request.setComment(fullReasonReject);
-        	}
+//        	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
+//        	if (request.getComment() != null && !request.getComment().equals("")) {
+//        		request.setComment(request.getComment() + fullReasonReject);
+//        	}
+//        	else {
+//        		request.setComment(fullReasonReject);
+//        	}
     	}
     	
     	request.setLastmodified(today);
@@ -677,14 +709,14 @@ public class RequestController {
 //    	}
 	    	
     		
-    	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + commentContent + " \n";
-    	if (request.getComment() != null) {
-    		request.setComment(request.getComment() + fullReasonReject);
-    	}
-    	else {
-    		request.setComment(fullReasonReject);
-    	}
-    	request.setLastmodified(today);
+//    	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + commentContent + " \n";
+//    	if (request.getComment() != null) {
+//    		request.setComment(request.getComment() + fullReasonReject);
+//    	}
+//    	else {
+//    		request.setComment(fullReasonReject);
+//    	}
+//    	request.setLastmodified(today);
     	
 //    	Bo sung them thong tin sau
 //    	request.setLastmodifiedbyAccount(lastmodifiedbyAccount);

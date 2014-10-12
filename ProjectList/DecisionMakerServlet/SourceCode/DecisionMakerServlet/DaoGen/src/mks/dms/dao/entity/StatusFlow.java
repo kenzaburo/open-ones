@@ -26,39 +26,42 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ThachLe
  */
 @Entity
-@Table(name = "requesttype")
+@Table(name = "status_flow")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "RequestType.findAll", query = "SELECT r FROM RequestType r"),
-    @NamedQuery(name = "RequestType.findById", query = "SELECT r FROM RequestType r WHERE r.id = :id"),
-    @NamedQuery(name = "RequestType.findBySeqNo", query = "SELECT r FROM RequestType r WHERE r.seqNo = :seqNo"),
-    @NamedQuery(name = "RequestType.findByCd", query = "SELECT r FROM RequestType r WHERE r.cd = :cd"),
-    @NamedQuery(name = "RequestType.findByName", query = "SELECT r FROM RequestType r WHERE r.name = :name"),
-    @NamedQuery(name = "RequestType.findByDescription", query = "SELECT r FROM RequestType r WHERE r.description = :description"),
-    @NamedQuery(name = "RequestType.findByEnabled", query = "SELECT r FROM RequestType r WHERE r.enabled = :enabled"),
-    @NamedQuery(name = "RequestType.findByCreated", query = "SELECT r FROM RequestType r WHERE r.created = :created"),
-    @NamedQuery(name = "RequestType.findByCreatedbyUsername", query = "SELECT r FROM RequestType r WHERE r.createdbyUsername = :createdbyUsername"),
-    @NamedQuery(name = "RequestType.findByLastmodified", query = "SELECT r FROM RequestType r WHERE r.lastmodified = :lastmodified"),
-    @NamedQuery(name = "RequestType.findByLastmodifiedbyUsername", query = "SELECT r FROM RequestType r WHERE r.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
-public class RequestType implements Serializable {
+    @NamedQuery(name = "StatusFlow.findAll", query = "SELECT s FROM StatusFlow s"),
+    @NamedQuery(name = "StatusFlow.findById", query = "SELECT s FROM StatusFlow s WHERE s.id = :id"),
+    @NamedQuery(name = "StatusFlow.findBySeqNo", query = "SELECT s FROM StatusFlow s WHERE s.seqNo = :seqNo"),
+    @NamedQuery(name = "StatusFlow.findByRequesttypeCd", query = "SELECT s FROM StatusFlow s WHERE s.requesttypeCd = :requesttypeCd"),
+    @NamedQuery(name = "StatusFlow.findByTypeUser", query = "SELECT s FROM StatusFlow s WHERE s.typeUser = :typeUser"),
+    @NamedQuery(name = "StatusFlow.findByCurrentStatus", query = "SELECT s FROM StatusFlow s WHERE s.currentStatus = :currentStatus"),
+    @NamedQuery(name = "StatusFlow.findByNextStatus", query = "SELECT s FROM StatusFlow s WHERE s.nextStatus = :nextStatus"),
+    @NamedQuery(name = "StatusFlow.findByCreated", query = "SELECT s FROM StatusFlow s WHERE s.created = :created"),
+    @NamedQuery(name = "StatusFlow.findByCreatedbyUsername", query = "SELECT s FROM StatusFlow s WHERE s.createdbyUsername = :createdbyUsername"),
+    @NamedQuery(name = "StatusFlow.findByLastmodified", query = "SELECT s FROM StatusFlow s WHERE s.lastmodified = :lastmodified"),
+    @NamedQuery(name = "StatusFlow.findByLastmodifiedbyUsername", query = "SELECT s FROM StatusFlow s WHERE s.lastmodifiedbyUsername = :lastmodifiedbyUsername")})
+public class StatusFlow implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
     @Column(name = "SEQ_NO")
-    private Integer seqNo;
+    private int seqNo;
     @Basic(optional = false)
-    @Column(name = "CD")
-    private String cd;
+    @Column(name = "REQUESTTYPE_CD")
+    private String requesttypeCd;
     @Basic(optional = false)
-    @Column(name = "NAME")
-    private String name;
-    @Column(name = "DESCRIPTION")
-    private String description;
-    @Column(name = "ENABLED")
-    private Boolean enabled;
+    @Column(name = "TYPE_USER")
+    private String typeUser;
+    @Basic(optional = false)
+    @Column(name = "CURRENT_STATUS")
+    private String currentStatus;
+    @Basic(optional = false)
+    @Column(name = "NEXT_STATUS")
+    private String nextStatus;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -72,17 +75,20 @@ public class RequestType implements Serializable {
     @Column(name = "LASTMODIFIEDBY_USERNAME")
     private String lastmodifiedbyUsername;
 
-    public RequestType() {
+    public StatusFlow() {
     }
 
-    public RequestType(Integer id) {
+    public StatusFlow(Integer id) {
         this.id = id;
     }
 
-    public RequestType(Integer id, String cd, String name, Date created, String createdbyUsername) {
+    public StatusFlow(Integer id, int seqNo, String requesttypeCd, String typeUser, String currentStatus, String nextStatus, Date created, String createdbyUsername) {
         this.id = id;
-        this.cd = cd;
-        this.name = name;
+        this.seqNo = seqNo;
+        this.requesttypeCd = requesttypeCd;
+        this.typeUser = typeUser;
+        this.currentStatus = currentStatus;
+        this.nextStatus = nextStatus;
         this.created = created;
         this.createdbyUsername = createdbyUsername;
     }
@@ -95,44 +101,44 @@ public class RequestType implements Serializable {
         this.id = id;
     }
 
-    public Integer getSeqNo() {
+    public int getSeqNo() {
         return seqNo;
     }
 
-    public void setSeqNo(Integer seqNo) {
+    public void setSeqNo(int seqNo) {
         this.seqNo = seqNo;
     }
 
-    public String getCd() {
-        return cd;
+    public String getRequesttypeCd() {
+        return requesttypeCd;
     }
 
-    public void setCd(String cd) {
-        this.cd = cd;
+    public void setRequesttypeCd(String requesttypeCd) {
+        this.requesttypeCd = requesttypeCd;
     }
 
-    public String getName() {
-        return name;
+    public String getTypeUser() {
+        return typeUser;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTypeUser(String typeUser) {
+        this.typeUser = typeUser;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCurrentStatus() {
+        return currentStatus;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public String getNextStatus() {
+        return nextStatus;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setNextStatus(String nextStatus) {
+        this.nextStatus = nextStatus;
     }
 
     public Date getCreated() {
@@ -177,10 +183,10 @@ public class RequestType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RequestType)) {
+        if (!(object instanceof StatusFlow)) {
             return false;
         }
-        RequestType other = (RequestType) object;
+        StatusFlow other = (StatusFlow) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -189,7 +195,7 @@ public class RequestType implements Serializable {
 
     @Override
     public String toString() {
-        return "mks.dms.dao.entity.RequestType[ id=" + id + " ]";
+        return "mks.dms.dao.entity.StatusFlow[ id=" + id + " ]";
     }
     
 }

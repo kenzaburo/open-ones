@@ -10,6 +10,7 @@ import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExRequestTypeJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Comment;
 import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
@@ -106,8 +107,8 @@ public class RequestService extends BaseService {
 	            }
 			
 			    updateReferenceData(request, MODE_EDIT);
-				// controller.edit(request);
-			    controller.merge(request);
+				controller.edit(request);
+			    // controller.merge(request);
 				
 				return EDIT_SUCCESS;
 			} catch (Exception ex) {
@@ -390,6 +391,31 @@ public class RequestService extends BaseService {
 
     public List<Request> findRequestByCondition(String username, SearchRequestConditionModel searchCond) {
         return controller.findRequestByCondition(searchCond);
+    }
+
+    public void updateStatus(Integer requestId, String status, String username, String commentContent) {
+        // Check request is exist
+        Request request = controller.findRequest(requestId);
+        if (request != null) {
+            User user = MasterService.findUserByUsername(username);
+            // Update status 
+            
+            // Add comment
+            Comment comment = new Comment();
+            
+            comment.setReqId(requestId);
+            comment.setReqStatus(status);
+            comment.setContent(commentContent);
+            comment.setUsername(username);
+            comment.setCreated(new Date());
+            comment.setCreatedbyUsername(username);
+            comment.setEmail(user.getEmail());
+            
+            
+            controller.updateStatus(requestId, status, username, comment);
+        } else {
+            // Do nothing
+        }
     }
 
 }

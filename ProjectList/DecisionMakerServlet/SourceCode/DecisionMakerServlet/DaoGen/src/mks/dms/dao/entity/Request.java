@@ -111,9 +111,6 @@ public class Request implements Serializable {
     private String departmentName;
     @Column(name = "STATUS")
     private String status;
-    @Lob
-    @Column(name = "COMMENT")
-    private String comment;
     @Column(name = "CREATOR_READ")
     private Integer creatorRead;
     @Column(name = "MANAGER_READ")
@@ -142,6 +139,9 @@ public class Request implements Serializable {
     @Lob
     @Column(name = "LIKES")
     private String likes;
+    @Lob
+    @Column(name = "FOR_USER")
+    private String forUser;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -329,14 +329,6 @@ public class Request implements Serializable {
         this.status = status;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public Integer getCreatorRead() {
         return creatorRead;
     }
@@ -431,6 +423,14 @@ public class Request implements Serializable {
 
     public void setLikes(String likes) {
         this.likes = likes;
+    }
+
+    public String getForUser() {
+        return forUser;
+    }
+
+    public void setForUser(String forUser) {
+        this.forUser = forUser;
     }
 
     public Date getCreated() {

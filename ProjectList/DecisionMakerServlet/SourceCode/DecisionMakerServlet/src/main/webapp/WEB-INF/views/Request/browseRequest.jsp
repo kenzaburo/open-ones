@@ -23,6 +23,14 @@
 	-moz-box-shadow: 0px 0px 2px #bababa,  inset 0px 0px 1px #ffffff;  
 	box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;  
 }
+
+.disable {
+    background:#dce5e8;
+    pointer-events: none;
+    cursor: default; 
+}
+
+
 </style>
 <script>
   $(function() {
@@ -125,64 +133,36 @@
       });
   });
 </script>
-<!-- Button Bar w/icons -->
+<!-- Button Bar for Owner -->
 <ul class="button-bar">
 	<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
 	<li><a href="addComment?id=${model.request.id}"><i class="icon-comment"></i><s:message code="Comment"/></a></li>
 	<li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
-	<c:choose>
-		<c:when	test="${not empty model.request.status && model.request.status == 'Created'}">
-			<c:choose>
-				<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
-					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện</a></li>
-				</c:when>
-				<c:otherwise>
-		            <li id="disable"><a href="updateStatus?id=${model.request.id}" id="disabled"><i class="icon-tasks"></i> Thực hiện</a></li>
-		    	</c:otherwise>
-		    </c:choose>
-		</c:when>
-		<c:when	test='${not empty model.request.status && model.request.status == "Doing"}'>
-			<c:choose>
-				<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
-					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
-				</c:when>
-				<c:otherwise>
-		            <li id="disable"><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks" id="disabled"></i> Hoàn thành</a></li>
-		    	</c:otherwise>
-		    </c:choose>
-		</c:when>
-		<c:when	test="${not empty model.request.status && model.request.status == 'Finish'}">
-			<c:choose>
-				<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername || pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
-					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Thực hiện lại</a></li>
-				</c:when>
-				<c:otherwise>
-		            <li id="disable"><a href="updateStatus?id=${model.request.id}" id="disabled"><i class="icon-tasks"></i> Thực hiện lại</a></li>
-		    	</c:otherwise>
-		    </c:choose>
-		</c:when>
-		<c:when	test="${not empty model.request.status && model.request.status == 'Re-assign'}">
-			<c:choose>
-				<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
-					<li><a href="updateStatus?id=${model.request.id}"><i class="icon-tasks"></i> Hoàn thành</a></li>
-				</c:when>
-				<c:otherwise>
-		            <li id="disable"><a href="updateStatus?id=${model.request.id}" id="disabled"><i class="icon-tasks"></i> Hoàn thành</a></li>
-		    	</c:otherwise>
-		    </c:choose>
-		</c:when>
-		<c:otherwise>
-	               &nbsp;
-	    </c:otherwise>
-	</c:choose>
-	<c:choose>
-		<c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
-			<li><a href="#" id="finishRequest"><i class="icon-check"></i><s:message code="Done"/></a></li>
-		</c:when>
-		<c:otherwise>
-			<li id="disable"><a href="confirmRequest?id=${model.request.id}" id="finish"><i class="icon-check" id="disabled"></i><s:message code="Done"/></a></li>
-		</c:otherwise>
-	</c:choose>
+    <%-- Setting label for button of owner --%>
+	<c:if test="${not empty ownerNextStatus}">
+		<c:choose>
+			<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
+				<li><a href="updateStatus?id=${model.request.id}&status=${ownerNextStatus}&note=" title='<s:message code="Update_next_status"/>'><i class="icon-tasks"></i><s:message code="${ownerNextStatus}"/></a></li>
+			</c:when>
+			<c:otherwise>
+	            <li class="disable"><a href="#" class="disable"><i class="icon-tasks disable"></i><s:message code="${ownerNextStatus}"/></a></li>
+	    	</c:otherwise>
+	    </c:choose>
+	</c:if>
+</ul>
+
+<!-- Button Bar for Manager -->
+<ul class="button-bar">
+    <c:if test="${not empty managerNextStatus}">
+      <c:choose>
+          <c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
+              <li><a href="updateStatus?id=${model.request.id}&status=${managerNextStatus}&note=" title='<s:message code="Update_next_status"/>'><i class="icon-tasks"></i><s:message code="${managerNextStatus}"/></a></li>
+          </c:when>
+          <c:otherwise>
+              <li class="disable"><a href="#" class="disable"><i class="icon-check disable"></i><s:message code="${managerNextStatus}"/></a></li>
+          </c:otherwise>
+      </c:choose>
+    </c:if>
 </ul>
 
 <div id="dialog-form" title="<s:message code="Assign"/>">

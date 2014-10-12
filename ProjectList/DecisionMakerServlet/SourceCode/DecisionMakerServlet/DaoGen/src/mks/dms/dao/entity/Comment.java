@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c"),
     @NamedQuery(name = "Comment.findById", query = "SELECT c FROM Comment c WHERE c.id = :id"),
     @NamedQuery(name = "Comment.findByReqId", query = "SELECT c FROM Comment c WHERE c.reqId = :reqId"),
+    @NamedQuery(name = "Comment.findByReqStatus", query = "SELECT c FROM Comment c WHERE c.reqStatus = :reqStatus"),
     @NamedQuery(name = "Comment.findByUsername", query = "SELECT c FROM Comment c WHERE c.username = :username"),
     @NamedQuery(name = "Comment.findByEmail", query = "SELECT c FROM Comment c WHERE c.email = :email"),
     @NamedQuery(name = "Comment.findByCreated", query = "SELECT c FROM Comment c WHERE c.created = :created"),
@@ -49,6 +50,9 @@ public class Comment implements Serializable {
     @Basic(optional = false)
     @Column(name = "REQ_ID")
     private int reqId;
+    @Basic(optional = false)
+    @Column(name = "REQ_STATUS")
+    private String reqStatus;
     @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
@@ -77,9 +81,10 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Comment(Integer id, int reqId, String username, Date created, String createdbyUsername) {
+    public Comment(Integer id, int reqId, String reqStatus, String username, Date created, String createdbyUsername) {
         this.id = id;
         this.reqId = reqId;
+        this.reqStatus = reqStatus;
         this.username = username;
         this.created = created;
         this.createdbyUsername = createdbyUsername;
@@ -99,6 +104,14 @@ public class Comment implements Serializable {
 
     public void setReqId(int reqId) {
         this.reqId = reqId;
+    }
+
+    public String getReqStatus() {
+        return reqStatus;
+    }
+
+    public void setReqStatus(String reqStatus) {
+        this.reqStatus = reqStatus;
     }
 
     public String getUsername() {

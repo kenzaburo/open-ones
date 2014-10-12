@@ -11,6 +11,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -26,6 +27,8 @@ import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.Template;
 import mks.dms.dao.entity.User;
 //import mks.dms.dao.entity.UserRole;
+
+import mks.dms.service.SystemService;
 
 import org.junit.Test;
 
@@ -47,37 +50,9 @@ public class InitDataTest {
      * Test of create method, of class RequestTypeJpaController.
      */
     @Test
-    public void testInitRequestTypes() {
-        System.out.println("create");
-        RequestType requestType = new RequestType();
-        requestType.setCd("Task");
-        requestType.setName("Công việc");
-        requestType.setEnabled(true);
-        
-
-        RequestTypeJpaController daoCtrl = new RequestTypeJpaController(emf);
-        daoCtrl.create(requestType);
-        
-        requestType.setId(null);
-        requestType.setCd("Rule");
-        requestType.setName("Quy định");
-        daoCtrl.create(requestType);
-
-        requestType.setId(null);
-        requestType.setCd("Announcement");
-        requestType.setName("Thông báo");
-        daoCtrl.create(requestType);
-        
-        requestType.setId(null);
-        requestType.setCd("Leave");
-        requestType.setName("Nghỉ phép");
-        daoCtrl.create(requestType);
-        
-        // Find created request types
-        List<RequestType> requestTypes = daoCtrl.findRequestTypeEntities();
-        assertNotNull(requestTypes);
-        assertEquals(4, requestTypes.size());
-
+    public void testInitSystemData() {
+        SystemService systemService = new SystemService();
+        systemService.initData("admin");
     }
 
     @Test
@@ -95,6 +70,8 @@ public class InitDataTest {
         user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("user@gmail.com");
+        user.setCreated(new Date());
+        user.setCreatedbyUsername("admin");
         
         UserJpaController daoCtrl = new UserJpaController(emf);
         daoCtrl.create(user);
@@ -117,6 +94,8 @@ public class InitDataTest {
         
         user.setDepartmentCd("All");
         user.setDepartmentName("Tất cả");
+        user.setCreated(new Date());
+        user.setCreatedbyUsername("admin");
         
         user.setUsername(username);
         user.setFirstname("Thang");
@@ -149,6 +128,8 @@ public class InitDataTest {
         User user = new User();
         user.setDepartmentCd("All");
         user.setDepartmentName("Tất cả");
+        user.setCreated(new Date());
+        user.setCreatedbyUsername("admin");
 
         user.setUsername(username);
         user.setEnabled(isEnable);
@@ -171,26 +152,16 @@ public class InitDataTest {
     public void testInitCreateUserSystem() {
         boolean isEnable = true;
         User user = new User();
-
-        user.setUsername("admin");
-        user.setFirstname("Admin");
-        user.setLastname("Mr");
-        user.setEnabled(isEnable);
-        user.setEmail("admin@gmail.com");
-        user.setDepartmentCd("All");
-        user.setDepartmentName("Tất cả");
         
         UserJpaController daoCtrl = new UserJpaController(emf);
-        RoleJpaController daoRoleCtrl = new RoleJpaController(emf);
-        daoCtrl.create(user);
-
-        user = new User();
 
         user.setUsername("manager");
         user.setFirstname("Manager");
         user.setLastname("Mr");
         user.setEnabled(isEnable);
         user.setEmail("manager@gmail.com");
+        user.setCreated(new Date());
+        user.setCreatedbyUsername("admin");
         daoCtrl.create(user);
     }
     
@@ -214,23 +185,28 @@ public class InitDataTest {
 //        daoCtrl.create(userRole);
 //    }
     
-    @Test
-    public void testInitCreateDepartmentSystem() {
-        boolean isEnable = true;
-        Department department = new Department();
-        department.setCd("All");
-        department.setEnabled(isEnable);
-        department.setName("Tất cả");
-        
-        DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
-        
-        daoCtrl.create(department);
-    }
+//    @Test
+//    public void testInitCreateDepartmentSystem() {
+//        boolean isEnable = true;
+//        Department department = new Department();
+//        department.setCd("All");
+//        department.setEnabled(isEnable);
+//        department.setName("Tất cả");
+//        department.setCreated(new Date());
+//        department.setCreatedbyUsername("admin");
+//        
+//        DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
+//        
+//        daoCtrl.create(department);
+//    }
 
     @Test
     public void testInitCreateTemplate() {
         Template template = new Template();
         template.setCd("tokutokuya-rule");
+        template.setName("Thong bao");
+        template.setCreated(new Date());
+        template.setCreatedbyUsername("admin");
         
         String content;
         try {
