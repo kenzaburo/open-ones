@@ -234,6 +234,13 @@
       <version>3.1.4.RELEASE</version>
     </dependency>
     
+    <!-- JPA eclipselink -->
+    <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>eclipselink</artifactId>
+        <version>2.5.2</version>
+    </dependency>
+    
     <!--  
     <dependency>
       <groupId>mysql</groupId>
