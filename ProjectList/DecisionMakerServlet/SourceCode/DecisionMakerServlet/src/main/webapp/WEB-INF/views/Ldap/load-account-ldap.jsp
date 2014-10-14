@@ -122,7 +122,7 @@
             startCols: 5,
             rowHeaders: true,
             colHeaders: ['Tài khoản', 'Email', 'Họ', 'Tên', 'Trạng thái'],
-            colWidths: [160, 160, 150, 100],
+            colWidths: [160, 160, 150, 100, 110],
             manualColumnResize: true,
             minSpareRows: 1
         });

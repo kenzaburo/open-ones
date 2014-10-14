@@ -3,8 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-<form action="saveComment">
-	<input type="hidden" name="requestId" value=${requestId}>
+<form:form enctype="multipart/form-data" action="saveComment" method="POST">
+	<input type="hidden" name="requestId" value="${requestId}"/>
 	<div style="position:relative; top:10px;">
 		<label for="content" class="col_2 left">Comment:</label>
 		<br>
@@ -15,4 +15,4 @@
 <!-- 		<a class="button" id="addComment">Add</a> -->
 		<a class="button" href="browseRequest.html?id=${requestId}"><s:message code="Back"/></a>
 	</div>
-</form>
+</form:form>
