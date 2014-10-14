@@ -50,7 +50,10 @@
   $(document).ready(function() {
       includeSelectAllOption: true
       $('.multiselect').multiselect({ 
-          includeSelectAllOption: true
+          includeSelectAllOption: true,
+          nonSelectedText: '',
+          nSelectedText: 'mục chọn',
+          selectAllText: 'Chọn tất cả'
       });
   });
 </script>

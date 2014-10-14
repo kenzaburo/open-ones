@@ -8,6 +8,11 @@ $(function() {
         "bFilter": false,
         "bSort": true,
         "bInfo": true,
-        "bAutoWidth": false
+        "bAutoWidth": false,
+        oLanguage: {
+            // sUrl: 'http://cdn.datatables.net/plug-ins/a5734b29083/i18n/Vietnamese.json'
+        	sUrl: 'resources/AdminLTE/js/plugins/datatables/Vietnamese.json'
+        }
     });
+
 });
