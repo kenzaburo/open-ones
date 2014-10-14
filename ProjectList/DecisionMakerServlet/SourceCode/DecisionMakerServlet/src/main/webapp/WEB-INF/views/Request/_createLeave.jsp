@@ -19,7 +19,15 @@
         </div>
         <%-- Default assignee of leave --%>
         <div>
-          <input name="request.assigneeUsername" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
+          <c:choose>
+            <c:when test="${not empty request.assigneeUsername}">
+                <form:input path="request.assigneeUsername" class="col_8"/>
+            </c:when>
+            <c:otherwise>
+                <input name="request.assigneeUsername" type="hidden" class="col_8" value="${pageContext.request.userPrincipal.name}"/>
+            </c:otherwise>
+          </c:choose>
+          
         </div>	
         <div>
 		 	<label for="managerUsername" class="col_2"><s:message code="Manager"/></label>
@@ -45,6 +53,7 @@
         <div>
             <label for="endDate" class="col_2">Ngày kết thúc</label>
             <form:input path="request.enddate" id="request_enddate_leave" class="col_2"/>
+            <form:errors path="request.startdate" class="error"/>
         </div>
         <div>
             <label for="label" class="col_2">Nhãn</label>
@@ -57,7 +66,14 @@
         
       	<div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>
-        <input type="submit" value='<s:message code="Back"/>' class="button"/>
+        <c:choose>
+            <c:when test="${not empty model.request.id}">
+                <a href="browseRequest?id=${model.request.id}" title='' class="button"><s:message code="Back"/></a>
+            </c:when>
+            <c:otherwise>
+                <input type="submit" disabled="disabled" value='<s:message code="Back"/>' class="button"/>
+            </c:otherwise>
+        </c:choose>
       	</div>
   </form:form>
 </div>

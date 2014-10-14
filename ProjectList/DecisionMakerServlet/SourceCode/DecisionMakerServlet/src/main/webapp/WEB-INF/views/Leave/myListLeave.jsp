@@ -51,8 +51,9 @@
   <thead>
     <tr>
       <th width="20px"><s:message code="No"/></th>
-      <th width="300px"><s:message code="Leave"/></th>
-      <th width="100px"><s:message code="Reason"/></th>
+      <th width="90px"><s:message code="Leave_person"/></th>
+      <th width="200px"><s:message code="Leave"/></th>
+      <th width="300px"><s:message code="Reason"/></th>
       <th width="80px"><s:message code="From_date"/></th>
       <th width="80px"><s:message code="To_date"/></th>
       <th width="90px"><s:message code="Attach"/></th>
@@ -64,8 +65,9 @@
     <c:forEach var="request" items="${lstLeave}" varStatus="status">
       <tr>
         <td>${status.count}.</td>
-        <td><a href="#">${request.title}</a></td>
-        <td><a href="#">${request.content}</a></td>
+        <td title="${request.assigneeName}">${request.assigneeUsername}</td>
+        <td><a href="browseRequest?id=${request.id}">${request.title}</a></td>
+        <td><label title="${request.content}">${request.content}</label></td>
         <td><fmt:formatDate value="${request.startdate}" pattern="${DATE_FORMAT}"/></td>
         <td><fmt:formatDate value="${request.enddate}" pattern="${DATE_FORMAT}"/></td>
         <td>

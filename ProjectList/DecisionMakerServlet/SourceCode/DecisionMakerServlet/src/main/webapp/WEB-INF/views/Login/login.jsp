@@ -30,7 +30,13 @@
         <div>
           <button type="submit" id="loginBtn">Đăng nhập</button>
         </div>
+        <div>
+        <br/>
+          Chương trình hiển thị tốt nhất trên trình duyệt: Chrome, Firefox.
+        </div>
       </div>
     </div>
+    
   </form>
+  
 </div>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
+import mks.dms.dao.controller.ExCommentJpaController;
 import mks.dms.dao.controller.ExRateJpaController;
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.ExRequestTypeJpaController;
@@ -393,6 +394,10 @@ public class RequestService extends BaseService {
     public List<Request> findRequestByCondition(String username, SearchRequestConditionModel searchCond) {
         return controller.findRequestByCondition(searchCond);
     }
+    
+    public List<Request> findRequestOfUserByCondition(String username, SearchRequestConditionModel searchCond) {
+        return controller.findRequestOfUserByCondition(username, searchCond);
+    }
 
     public void updateStatus(Integer requestId, String status, String username, String commentContent) {
         // Check request is exist
@@ -402,21 +407,64 @@ public class RequestService extends BaseService {
             // Update status 
             
             // Add comment
-            Comment comment = new Comment();
+            Comment comment = null;
             
-            comment.setReqId(requestId);
-            comment.setReqStatus(status);
-            comment.setContent(commentContent);
-            comment.setUsername(username);
-            comment.setCreated(new Date());
-            comment.setCreatedbyUsername(username);
-            comment.setEmail(user.getEmail());
-            
+            if (CommonUtil.isNNandNB(commentContent)) {
+                comment = new Comment();
+
+                comment.setReqId(requestId);
+                comment.setReqStatus(status);
+                comment.setContent(commentContent);
+                comment.setUsername(username);
+                comment.setCreated(new Date());
+                comment.setCreatedbyUsername(username);
+                comment.setEmail(user.getEmail());
+            } else {
+                // Do nothing
+            }
             
             controller.updateStatus(requestId, status, username, comment);
         } else {
             // Do nothing
         }
+    }
+
+    public List<Comment> findCommentByRequestId(Integer requestId) {
+        ExCommentJpaController commentDaoCtrl = new ExCommentJpaController(BaseService.getEmf());
+        
+        return commentDaoCtrl.findCommentByRequestId(requestId);
+    }
+
+    public void addComment(int requestId, String commentContent, String username) {
+        // Check request is exist
+        Request request = controller.findRequest(requestId);
+        if (request != null) {
+            User user = MasterService.findUserByUsername(username);
+            // Update status 
+            
+            // Add comment
+            Comment comment = null;
+            
+            if (CommonUtil.isNNandNB(commentContent)) {
+                comment = new Comment();
+
+                comment.setReqId(requestId);
+                comment.setReqStatus(request.getStatus());
+                comment.setContent(commentContent);
+                comment.setUsername(username);
+                comment.setCreated(new Date());
+                comment.setCreatedbyUsername(username);
+                comment.setEmail(user.getEmail());
+                
+                ExCommentJpaController commentDaoCtrl = new ExCommentJpaController(BaseService.getEmf());
+                commentDaoCtrl.create(comment);
+            } else {
+                // Do nothing
+            }
+        } else {
+            // Do nothing
+        }
+        
     }
 
 }

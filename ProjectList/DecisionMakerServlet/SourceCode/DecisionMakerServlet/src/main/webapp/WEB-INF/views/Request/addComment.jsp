@@ -1,20 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script>
-$(function() {
-	$("#addComment").click(function(){
-		
-	});
-});
-</script>
-<ul class="button-bar" style="position: relative; left: 3%;">
-	<li><a href=""><i class="icon-edit"></i> Sửa</a></li>
-	<li><a href=""><i class="icon-comment"></i> Comment</a></li>
-	<li><a href=""><i class="icon-pushpin"></i> Giao việc</a></li>
-	<li><a href=""><i class="icon-tasks"></i>Thực hiện</a></li>
-	<li><a href=""><i class="icon-check"></i>Kết thúc</a></li>
-</ul>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+
 <form action="saveComment">
 	<input type="hidden" name="requestId" value=${requestId}>
 	<div style="position:relative; top:10px;">
@@ -25,6 +13,6 @@ $(function() {
 	<div style="position:relative; top:40px; left: 3%">
 		<input type="submit" value="Add">
 <!-- 		<a class="button" id="addComment">Add</a> -->
-		<a class="button" href="browseRequest.html?id=${requestId}">Cancel </a>
+		<a class="button" href="browseRequest.html?id=${requestId}"><s:message code="Back"/></a>
 	</div>
 </form>

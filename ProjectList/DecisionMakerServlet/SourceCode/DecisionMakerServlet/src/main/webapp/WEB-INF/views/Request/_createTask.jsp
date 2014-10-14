@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
@@ -103,7 +103,16 @@
 
       <div>
         <input type="submit" value='<s:message code="Save"/>' class="button"/>
-        <input type="reset" value='<s:message code="Reset"/>' class="button"/>
+        
+        <c:choose>
+            <c:when test="${not empty model.request.id}">
+                <a href="browseRequest?id=${model.request.id}" title='' class="button"><s:message code="Back"/></a>
+            </c:when>
+            <c:otherwise>
+                <input type="submit" disabled="disabled" value='<s:message code="Back"/>' class="button"/>
+            </c:otherwise>
+        </c:choose>
+        
       </div>
   </form:form>
 </div>

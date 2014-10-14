@@ -77,10 +77,10 @@ public class MasterServiceTest {
         request.setStatus(AppCons.STATUS_CREATED);
         request.setRequesttypeCd(AppCons.TASK);
         
-        String onwerNextStatus = masterService.getNextStatus(request , AppCons.TYPE_USER.Owner);
+        List<String> lstOnwerNextStatus = masterService.getNextStatus(request , AppCons.TYPE_USER.Owner);
         
 
-        assertEquals(AppCons.STATUS_DOING, onwerNextStatus);
+        assertEquals(AppCons.STATUS_DOING, lstOnwerNextStatus.get(0));
     }
 
 }

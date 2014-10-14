@@ -19,8 +19,7 @@
                     url: "deleteRequest",
 
                     data: {"id": requestId},
-                    success: function(res) {
-                        alert(res);
+                    success: function(res) {s
                         location.reload(true);
                     },
                     error: function(res) {

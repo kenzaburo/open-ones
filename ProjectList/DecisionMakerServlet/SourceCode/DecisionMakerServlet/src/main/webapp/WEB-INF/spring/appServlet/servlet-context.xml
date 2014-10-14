@@ -35,7 +35,8 @@
 			</list>
 		</property>
 	</bean>
-    <bean id="requestValidator" class="mks.dms.model.validator.RequestModelValidator" />
+    <bean id="requestValidator" class="mks.dms.model.validator.RequestModelValidator"/>
+    <bean id="changePasswordValidator" class="mks.dms.model.validator.ChangePasswordModelValidator"/>
 
     <!-- Refer: http://www.javablog.fr/spring-internationalization-with-message-source.html -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

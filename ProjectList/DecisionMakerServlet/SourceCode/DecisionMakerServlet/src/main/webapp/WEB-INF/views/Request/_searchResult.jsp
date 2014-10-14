@@ -60,7 +60,7 @@
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border: NONE" title="Thao tác"><i class="icon-cog"></i><span class="fa fa-caret-down"></span></button>
                 <ul class="dropdown-menu">
                   <c:choose>
-                    <c:when test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
+                    <c:when test="${(request.createdbyUsername == pageContext.request.userPrincipal.name) || (request.managerUsername == pageContext.request.userPrincipal.name)}">
                       <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
                     </c:when>
                    

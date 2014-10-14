@@ -2,11 +2,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!-- bootstrap 3.0.2 -->
+<link href="resources/AdminLTE/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+
+<link href="resources/AdminLTE/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<!-- font Awesome -->
+<link href="resources/AdminLTE/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<!-- Ionicons -->
+<link href="resources/AdminLTE/css/ionicons.min.css" rel="stylesheet" type="text/css" />
 
 <link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
 <%-- <script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script> --%>
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
 <script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
+
+<!-- Bootstrap -->
+<script src="resources/AdminLTE/js/bootstrap.min.js" type="text/javascript"></script>
+
 <script type="text/javascript" src="resources/js/common.js"></script>
 <style>
 #disabled {
@@ -137,23 +151,39 @@
 <ul class="button-bar">
 	<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
 	<li><a href="addComment?id=${model.request.id}"><i class="icon-comment"></i><s:message code="Comment"/></a></li>
-	<li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
+    <c:choose>
+        <c:when test='${request.requesttypeCd == "Task"}'>
+            <li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
+        </c:when>
+        <c:otherwise>
+            <li class="disable"><a href="#" class="disable"><i class="icon-user-md disable"></i><s:message code="Assign"/></a></li>
+        </c:otherwise>
+    </c:choose>
+	
     <%-- Setting label for button of owner --%>
-	<c:if test="${not empty ownerNextStatus}">
-		<c:choose>
-			<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
-				<li><a href="updateStatus?id=${model.request.id}&status=${ownerNextStatus}&note=" title='<s:message code="Update_next_status"/>'><i class="icon-tasks"></i><s:message code="${ownerNextStatus}"/></a></li>
-			</c:when>
-			<c:otherwise>
-	            <li class="disable"><a href="#" class="disable"><i class="icon-tasks disable"></i><s:message code="${ownerNextStatus}"/></a></li>
-	    	</c:otherwise>
-	    </c:choose>
-	</c:if>
+    <c:choose>
+    	<c:when test="${not empty listOwnerNextStatus}">
+          <c:forEach var="ownerNextStatus" items="${listOwnerNextStatus}">
+    		<c:choose>
+    			<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
+    				<li><a href="updateStatus?id=${model.request.id}&status=${ownerNextStatus}&note=" title='<s:message code="Update_next_status"/>'><i class="icon-tasks"></i><s:message code="${ownerNextStatus}"/></a></li>
+    			</c:when>
+    			<c:otherwise>
+    	            <li class="disable"><a href="#" class="disable"><i class="icon-tasks disable"></i><s:message code="${ownerNextStatus}"/></a></li>
+    	    	</c:otherwise>
+    	    </c:choose>
+          </c:forEach>
+    	</c:when>
+       <c:otherwise>
+         <li class="disable"><a href="#" class="disable" title='<s:message code="No_define"/>'><i class="icon-tasks disable"></i><s:message code="No_define"/></a></li>
+       </c:otherwise>
+   </c:choose>
 </ul>
 
 <!-- Button Bar for Manager -->
 <ul class="button-bar">
-    <c:if test="${not empty managerNextStatus}">
+    <c:if test="${not empty listManagerNextStatus}">
+     <c:forEach var="managerNextStatus" items="${listManagerNextStatus}">
       <c:choose>
           <c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
               <li><a href="updateStatus?id=${model.request.id}&status=${managerNextStatus}&note=" title='<s:message code="Update_next_status"/>'><i class="icon-tasks"></i><s:message code="${managerNextStatus}"/></a></li>
@@ -162,6 +192,7 @@
               <li class="disable"><a href="#" class="disable"><i class="icon-check disable"></i><s:message code="${managerNextStatus}"/></a></li>
           </c:otherwise>
       </c:choose>
+      </c:forEach>
     </c:if>
 </ul>
 
@@ -231,3 +262,50 @@
 <c:if test='${model.request.requesttypeCd == "Rule"}'>
     <jsp:include page="_browseRule.jsp"></jsp:include>
 </c:if>
+
+<%-- Display comments --%>
+<c:if test="${not empty listComment}">
+<ul class="timeline">
+    <!-- timeline time label -->
+    <li class="time-label">
+        <span class="bg-red">
+            <s:message code="Comment"/>
+        </span>
+    </li>
+    <!-- /.timeline-label -->
+
+    <!-- timeline item -->
+    <c:forEach var="comment" items="${listComment}">
+    <li>
+        <!-- timeline icon -->
+        <i class="fa  fa-comments bg-blue"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i><fmt:formatDate value="${request.created}" pattern="${DATETIME_FORMAT}"/></span>
+
+            <h4 class="timeline-header"><a href="#">${comment.username}</a></h4>
+
+            <div class="timeline-body">
+                ${comment.content}
+            </div>
+
+            <div class='timeline-footer'>
+               <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border: NONE" title="Thao tác"><i class="icon-cog"></i><span class="fa fa-caret-down"></span></button>
+                  <ul class="dropdown-menu">
+                    <c:if test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
+                      <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
+                      <li><a href="#" title='<s:message code="Edit"/>'><s:message code="Edit"/></a></li>
+                    </c:if>
+                  </ul>
+              </div><!-- /btn-group -->
+            </div>
+        </div>
+    </li>
+    </c:forEach>
+    <!-- END timeline item -->
+</ul>
+</c:if>
+<div>
+<br/>
+<input type="submit" disabled="disabled" value='<s:message code="Back"/>' class="button"/>
+</div>

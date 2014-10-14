@@ -4,8 +4,11 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
 <c:set var="DATE_FORMAT" scope="application"><s:message code="DATE_FORMAT"/></c:set>
+<c:set var="DATETIME_FORMAT" scope="application"><s:message code="DATETIME_FORMAT"/></c:set>
+<c:set var="TIME_FORMAT" scope="application"><s:message code="TIME_FORMAT"/></c:set>
 
 <!-- Menu Horizontal -->
+<%--
 <script>
 $(document).ready(function () {
 	$.ajax({
@@ -81,6 +84,7 @@ $(document).ready(function () {
 	}, 90000);
 });
 </script>
+--%>
 <ul class="menu">
 	<c:choose>
 		<c:when test="${current == 'home'}">
@@ -144,8 +148,11 @@ $(document).ready(function () {
 	<li style="display: inline-block; margin-left:10px;" id="countResponse"></li>
 	<li class="right" style="display: inline-block;"><a href="#"><i class="icon-user"></i> ${pageContext.request.userPrincipal.name}</a>
 		<ul>
+          <li class="left"><a href="change-password"><i class="icon-reply"></i><s:message code="Change_password"/></a></li>
 	      <li class="left"><a href="j_spring_security_logout"><i class="icon-coffee"></i> <s:message code="Quit"/></a></li>
+          <sec:authorize access="hasRole('ROLE_ADMIN')">
           <li class="left divider"><a href="init-data"><i class="icon-download-alt"></i> <s:message code="Init_data"/></a></li>
+          </sec:authorize>
 	    </ul>
 	</li>
 
@@ -154,8 +161,11 @@ $(document).ready(function () {
     
       <li class="right" style="display: inline-block;"><a href=""><i class="icon-cog"></i><s:message code="Configuration"/></a>
       <ul>
+      <%--
         <li class="left"><a href="master.department"><i class="icon-sitemap"></i><s:message code="Department"/></a></li>
         <li class="left"><a href="master.template"><i class="icon-bookmark-empty"></i><s:message code="Template"/></a></li>
+       --%>
+        <li class="left divider"><a href="load-account-ldap"><i class="icon-group"></i><s:message code="Load_account_from_ldap"/></a></li>
       </ul>
     </li>
     </sec:authorize>

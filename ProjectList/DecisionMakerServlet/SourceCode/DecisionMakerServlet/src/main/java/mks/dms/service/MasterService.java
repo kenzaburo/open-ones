@@ -19,8 +19,11 @@
 package mks.dms.service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -66,6 +69,11 @@ public class MasterService extends BaseService {
     
     /* Request service to work with request */
     private RequestService requestService = null;
+    
+    /* Use for record result of import data from Ldap to Database. */
+    public enum ImportResult {
+        Account_existed, Success, Error
+    }
     
     public List<Department> getDepartments() {
         DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
@@ -168,6 +176,71 @@ public class MasterService extends BaseService {
         
         
         return createdOK;
+    }
+    
+    /**
+    * [Give the description for method].
+    * @param groupDn
+    * @param data
+    * Structure of a row:
+    * User name, Email, Last name, First name
+     * @param authUsername 
+    * @return Map(username, result)
+    * result: Account_existed | Success | Error
+    */
+    public Map<String, ImportResult> importUser(String groupDn, List<Object[]> data, String authUsername) {
+        Map<String, ImportResult> mapResult = new HashMap<String, ImportResult>();
+        
+        Iterator<Object[]> itRowData = data.iterator();
+        
+        ExUserJpaController userDaoCtrl = new ExUserJpaController(emf);
+
+        User user;
+        String username;
+        String email;
+        String lastname;
+        String firstname;
+        Object[] dataRow;
+        ImportResult result;
+        while (itRowData.hasNext()) {
+            dataRow = itRowData.next();
+            
+            if (isNotEmptyRow(dataRow)) {
+                username = (String) dataRow[0];
+                email = (String) dataRow[1];
+                lastname = (String) dataRow[2];
+                firstname = (String) dataRow[3];
+
+                user = new User();
+                user.setUsername(username);
+                user.setEmail(email);
+                user.setLastname(lastname);
+                user.setFirstname(firstname);
+                
+                user.setDepartmentCd(groupDn);
+                user.setDepartmentName(groupDn);
+                user.setEnabled(true);
+                user.setCreated(new Date());
+                user.setCreatedbyUsername(authUsername);
+                
+                // Check exist
+                if (userDaoCtrl.findUserByUsername(username) != null) {
+                    result = ImportResult.Account_existed;
+                } else {
+                    try {
+                        userDaoCtrl.create(user);
+                        result = ImportResult.Success;
+                    } catch (Exception ex) {
+                        result = ImportResult.Error;
+                        LOG.error("Could not create user '" + user.getUsername() + "'", ex);
+                    }
+                }
+                
+                mapResult.put(username, result);
+            }
+        }
+        
+        return mapResult;
     }
     
     /**
@@ -327,7 +400,7 @@ public class MasterService extends BaseService {
     * @param typeOfUser
     * @return
     */
-    public String getNextStatus(Request request, AppCons.TYPE_USER typeOfUser) {
+    public List<String> getNextStatus(Request request, AppCons.TYPE_USER typeOfUser) {
         EntityManager em = getEmf().createEntityManager();
         
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -352,7 +425,7 @@ public class MasterService extends BaseService {
         
         try {
         
-            return (String) query.getSingleResult();
+            return query.getResultList();
         } catch (NoResultException nrEx) {
             LOG.info("typeOfUser=" + typeOfUser + ".Next step of status '" + currentStatus + "' not found");
             return null;

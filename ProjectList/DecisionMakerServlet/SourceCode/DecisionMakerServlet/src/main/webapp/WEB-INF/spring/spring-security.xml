@@ -7,25 +7,36 @@
 http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
 http://www.springframework.org/schema/security 
 http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-    
-    <http auto-config="true"  use-expressions="true">
-        <intercept-url pattern="/login" access="permitAll" />
-        <intercept-url pattern="/logout" access="permitAll" />
-        <intercept-url pattern="/accessdenied" access="permitAll" />
-        <intercept-url pattern="/resources/**" access="permitAll"/>
-        <intercept-url pattern="/img/**" access="permitAll"/>
-        <intercept-url pattern="/**" access="hasAnyRole('ROLE_USER', 'ROLE_MANAGER', 'ROLE_ADMIN')" />
+    <beans:bean id="webSecurityExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
+    <http auto-config="true">
+        <intercept-url pattern="/login" access="ROLE_ANONYMOUS" />
+        <intercept-url pattern="/resources/**" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
+        <intercept-url pattern="/img/**" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
+        <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
         <form-login login-page="/login" default-target-url="/home" authentication-failure-url="/login?error" />
         <logout logout-success-url="/login" />
     </http>
     
-    <authentication-manager alias="authenticationManager">
-        <authentication-provider>
-            <user-service>
-                <user name="user" password="user" authorities="ROLE_USER" />
-                <user name="manager" password="manager" authorities="ROLE_MANAGER" />
-                <user name="admin" password="admin" authorities="ROLE_ADMIN" />
-            </user-service>
-        </authentication-provider>
+<!--     <authentication-manager alias="authenticationManager"> -->
+<!--         <authentication-provider> -->
+<!--             <user-service> -->
+<!--                 <user name="user" password="user" authorities="ROLE_USER" /> -->
+<!--                 <user name="manager" password="manager" authorities="ROLE_MANAGER" /> -->
+<!--                 <user name="admin" password="admin" authorities="ROLE_ADMIN" /> -->
+<!--             </user-service> -->
+<!--         </authentication-provider> -->
+<!--     </authentication-manager> -->
+    
+    <!-- Using LDAP -->
+    <authentication-manager>
+        <ldap-authentication-provider 
+            user-search-filter="(uid={0})"
+            user-search-base="ou=Users"
+            group-search-filter="(member={0})"
+            group-search-base="ou=Groups"
+            group-role-attribute="cn"
+            role-prefix="ROLE_">
+        </ldap-authentication-provider>
     </authentication-manager>
+    <ldap-server url="ldap://localhost:389/dc=yourdomain,dc=com" manager-dn="cn=Manager,dc=yourdomain,dc=com" manager-password="yourpassword" />
 </beans:beans>

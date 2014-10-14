@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
+import mks.dms.dao.entity.Comment;
 import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
@@ -66,7 +67,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment"})
-public class RequestController {
+public class RequestController extends BaseController {
 
     /**  */
 	private static final Logger LOG = Logger.getLogger(RequestController.class);
@@ -418,29 +419,32 @@ public class RequestController {
             requestModel.setDurationUnitName(duName);
         }
         
-        String ownerNextStatus = null;
+        List<String> listOwnerNextStatus = null;
         String username = principal.getName();
         if (username.equals(request.getAssigneeUsername())) {
-           ownerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Owner);
+           listOwnerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Owner);
         } else if (username.equals(request.getCreatedbyUsername())) {
-           ownerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Owner);
+           listOwnerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Owner);
         } else {
             // Do nothing
         }
         
-        String managerNextStatus = null;
+        List<String> listManagerNextStatus = null;
         if (username.equals(request.getManagerUsername())) {
-            managerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Manager);
-        } else if (username.equals(request.getManagerUsername())) {
-            managerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Manager);
+            listManagerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Manager);
+        } else if (username.equals(request.getCreatedbyUsername())) {
+            listManagerNextStatus = masterService.getNextStatus(request, AppCons.TYPE_USER.Owner);
         } else {
             // Do nothing
         }
         
+        // Get comments
+        List<Comment> listComment = requestService.findCommentByRequestId(request.getId());
+                
         mav.addObject(AppCons.MODEL, requestModel);
-        mav.addObject("ownerNextStatus", ownerNextStatus);
-        mav.addObject("managerNextStatus", managerNextStatus);
-        
+        mav.addObject("listOwnerNextStatus", listOwnerNextStatus);
+        mav.addObject("listManagerNextStatus", listManagerNextStatus);
+        mav.addObject("listComment", listComment);
         
         return mav;
     }
@@ -651,81 +655,17 @@ public class RequestController {
     }
     
     /**
-    * Ghi rõ method này làm gì.
-    * Thach: logic xử lý "SaveComment" làm rất nhiều việc không liên quan: Set Reading, Reject.
-    * => Cần thiết kế lại cho rõ ràng.
+    * Add comment for request.
     * @param req
     * @param principal
     * @return
-    * @throws IllegalOrphanException
-    * @throws NonexistentEntityException
-    * @throws Exception
     */
     @RequestMapping(value="saveComment")
-    public String processSaveComment(HttpServletRequest req, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	SimpleDateFormat formater = new SimpleDateFormat(AppCons.DATE_FORMAT);
-    	Date today = new Date();
-    	int id = Integer.parseInt(req.getParameter("requestId"));
-    	String commentContent = req.getParameter("comment.content");
-//    	Lay thong tin tai khoan dang nhap
-//    	Kiem tra tai khoan dang nhap phai tai khoan duoc yeu cau khong
-//    	Neu khong phai -> quay lai trang home -> hien thong bao "Ban khong co quyen nay"
+    public String processSaveComment(@RequestParam("requestId") int requestId, @RequestParam("comment.content") String commentContent, Principal principal) {
+
+        requestService.addComment(requestId, commentContent, principal.getName());
     	
-//    	Neu phai
-    	
-    	User userLogin = userService.getUserByUsername(principal.getName());
-    	String username = userLogin.getUsername();
-    	
-    	Request request = requestService.getDaoController().findRequest(id);
-    	if (request.getRequesttypeCd().equals("Task") || request.getRequesttypeCd().equals("Leave")) {
-    		if (username.equals(request.getManagerUsername())) {
-        		if (request.getStatus().equals("Confirm")) {
-        			request.setStatus("In-progress"); // Thach: hãy dùng Constant trong AppCons; ko có status In-progress (hãy dùng AppCons.Doing)
-            	}
-        		request.setCreatorRead(0);
-            	request.setAssignerRead(0);
-        	}
-        	
-        	if (!request.getCreatedbyUsername().equals(request.getAssigneeUsername())) {
-        		if (username.equals(request.getCreatedbyUsername())) {
-    	    		request.setAssignerRead(0);
-    	    		request.setManagerRead(0);
-    	    	}
-    	    	
-    	    	if (username.equals(request.getAssigneeUsername())) {
-    	    		request.setAssignerRead(0);
-    	    		request.setManagerRead(0);
-    	    	}
-        	}
-        	else {
-        		if (username.equals(request.getCreatedbyUsername())) {
-        			request.setManagerRead(0);
-        		}
-        	}
-    	}
-    	
-//    	if (request.getRequesttypeCd().equals("Rule") || request.getRequesttypeCd().equals("Announcement")) {
-//    		
-//    	}
-	    	
-    		
-//    	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + commentContent + " \n";
-//    	if (request.getComment() != null) {
-//    		request.setComment(request.getComment() + fullReasonReject);
-//    	}
-//    	else {
-//    		request.setComment(fullReasonReject);
-//    	}
-//    	request.setLastmodified(today);
-    	
-//    	Bo sung them thong tin sau
-//    	request.setLastmodifiedbyAccount(lastmodifiedbyAccount);
-//    	request.setLastmodifiedbyId(lastmodifiedbyId);
-//    	request.setLastmodifiedbyName(lastmodifiedbyName);
-    	
-    	requestService.saveOrUpdate(request);
-    	
-    	return "redirect:browseRequest.html?id=" + id;
+    	return "redirect:browseRequest.html?id=" + requestId;
     }
     
     /**
@@ -985,7 +925,14 @@ public class RequestController {
         ModelAndView mav = new ModelAndView("searchRequest");
         String username = principal.getName();
         
-        List<Request> lstRequest = requestService.findRequestByCondition(username, searchConditionModel);
+        List<Request> lstRequest = null;
+        if (isInRole(principal, "ROLE_ADMIN")) {
+            // Unlimit 
+            lstRequest = requestService.findRequestByCondition(username, searchConditionModel);
+        } else {
+            // Limit to request relate to user
+            lstRequest = requestService.findRequestOfUserByCondition(username, searchConditionModel);
+        }
         
         mav.addObject(AppCons.MODEL, searchConditionModel);
         mav.addObject("requests", lstRequest);
@@ -1144,6 +1091,11 @@ public class RequestController {
     public @ResponseBody String countResponseRequest(Principal principal,  HttpServletResponse response) throws JSONException{
         LOG.debug("principal.getName()=" + principal.getName());
     	User userLogin = userService.getUserByUsername(principal.getName());
+    	
+    	if (userLogin == null) {
+    	    return null;
+    	}
+
     	String username = userLogin.getUsername();
     	
         List<Request> listApproveRequest = requestService.getDaoController().getListRequestByCreatorCdAndStatusAndCreatorRead(username, "Approved", 0);
@@ -1173,6 +1125,9 @@ public class RequestController {
     public @ResponseBody String countRequest(Principal principal) throws JSONException{
 
     	User userLogin = userService.getUserByUsername(principal.getName());
+    	if (userLogin == null) {
+    	    return null;
+    	}
     	String username = userLogin.getUsername();
     	
         List<Request> listCreatedRequest = requestService.getDaoController().getListRequestByManagerUsernameAndStatusAndManagerRead(username, "Created", 0);

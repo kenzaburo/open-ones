@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Comment;
@@ -521,6 +522,79 @@ public class ExRequestJpaController extends RequestJpaController {
 
     /**
     * [Give the description for method].
+    * @param username
+    * @param searchCond
+    * @return
+    * @see findRequestByCondition
+    */
+    public List<Request> findRequestOfUserByCondition(String username, SearchRequestConditionModel searchCond) {
+        List<Request> lstRequest;
+        EntityManager em = getEntityManager();
+
+        // Searching condition
+        Request cond = (searchCond != null) ? searchCond.getRequest() : null;
+
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery cq = cb.createQuery();
+
+            // Sub query.START
+            Subquery sq = cq.subquery(Request.class);
+            Root<Request> rootSub = cq.from(Request.class);
+            // 3 groups of request: assigned to user; managed by user; created by user
+            Predicate predicateOfUser = cb.or(cb.equal(rootSub.get("assigneeUsername"), username)
+                                            , cb.equal(rootSub.get("managerUsername"), username)
+                                            , cb.equal(rootSub.get("createdbyUsername"), username));
+            sq.where(predicateOfUser);
+
+            // Sub query.END
+            
+            Root<Request> rootReq = cq.from(Request.class);
+            Predicate predicate = null;
+            // Condition: Request Type
+            if ((cond != null) && (cond.getRequesttypeCd() != null) && (!AppCons.ALL.equals(cond.getRequesttypeCd()))) {
+                Predicate nextPredicate = buildPredicate(cb, rootReq, "requesttypeCd", cond.getRequesttypeCd());
+                predicate = (predicate == null) ? nextPredicate : cb.and(predicate, nextPredicate);
+            } else {
+                // Do nothing
+            }
+
+            // Condition: Assignee
+            if ((cond != null) && (cond.getAssigneeUsername() != null)
+                    && (!AppCons.ALL.equals(cond.getAssigneeUsername()))) {
+                // cq.where(cb.equal(rootReq.get("assigneeUsername"), cond.getAssigneeUsername()));
+                Predicate predicateAssigee = buildPredicate(cb, rootReq, "assigneeUsername", cond.getAssigneeUsername());
+                predicate = (predicate == null) ? predicateAssigee : cb.and(predicate, predicateAssigee);
+            } else {
+                // Do nothing
+            }
+
+            // Condition: Status
+            if ((cond != null) && (cond.getStatus() != null) && (!AppCons.ALL.equals(cond.getStatus()))) {
+                // cq.where(cb.equal(rootReq.get("status"), cond.getStatus()));
+                Predicate predicateStatus = buildPredicate(cb, rootReq, "status", cond.getStatus());
+                predicate = (predicate == null) ? predicateStatus : cb.and(predicate, predicateStatus);
+            } else {
+                // Do nothing
+            }
+
+            if (predicate != null) {
+                cq.where(cb.and(predicate, cb.in(sq)));
+            }
+
+            Query query = em.createQuery(cq);
+
+            lstRequest = query.getResultList();
+
+        } finally {
+            em.close();
+        }
+
+        return lstRequest;
+    }
+    
+    /**
+    * [Give the description for method].
     * @param cb
     * @param rootReq
     * @param field
@@ -587,12 +661,18 @@ public class ExRequestJpaController extends RequestJpaController {
                      ((!assignee.isEmpty()) && (!manager.isEmpty()))   
                     ) {
                     predicateOfUser = cb.or(cb.equal(rootReq.get("assigneeUsername"), assignee)
-                                          , cb.equal(rootReq.get("managerUsername"), manager));
+                                          , cb.equal(rootReq.get("managerUsername"), manager)
+                                          , cb.equal(rootReq.get("createdbyUsername"), assignee)
+                                          );
                     
                 } else if (!assignee.isEmpty()) {
-                    predicateOfUser = cb.equal(rootReq.get("assigneeUsername"), assignee);
+                    predicateOfUser = cb.or(cb.equal(rootReq.get("assigneeUsername"), assignee)
+                                          , cb.equal(rootReq.get("createdbyUsername"), assignee)
+                                           );
                 } else { // !manager.isEmpty()
-                    predicateOfUser = cb.equal(rootReq.get("managerUsername"), manager);
+                    predicateOfUser = cb.or(cb.equal(rootReq.get("managerUsername"), manager)
+                                          , cb.equal(rootReq.get("createdbyUsername"), assignee)
+                                           );
                 }
                 
                 predicate = cb.and(predicate, predicateOfUser);
@@ -760,7 +840,9 @@ public class ExRequestJpaController extends RequestJpaController {
             
             if (affected == 1) {
                 // Add comment
-                em.persist(comment);
+                if (comment != null) {
+                    em.persist(comment);
+                }
             }
             
             em.getTransaction().commit();
@@ -814,4 +896,6 @@ public class ExRequestJpaController extends RequestJpaController {
             }
         }
     }
+
+
 }
