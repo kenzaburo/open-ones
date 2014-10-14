@@ -14,29 +14,14 @@
 <link href="resources/AdminLTE/css/ionicons.min.css" rel="stylesheet" type="text/css" />
 
 <link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
-<%-- <script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script> --%>
+
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
-<script type="text/javascript" src="resources/ckeditor-3.6.6.1/ckeditor.js"></script>
 
 <!-- Bootstrap -->
 <script src="resources/AdminLTE/js/bootstrap.min.js" type="text/javascript"></script>
 
 <script type="text/javascript" src="resources/js/common.js"></script>
 <style>
-#disabled {
-   pointer-events: none;
-   cursor: default;
-   color:#A7A7A7; 
-}
-#disable{
-	
-	background:#dce5e8;
-	pointer-events: none;
-   	cursor: default; 
-	-webkit-box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff; 
-	-moz-box-shadow: 0px 0px 2px #bababa,  inset 0px 0px 1px #ffffff;  
-	box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;  
-}
 
 .disable {
     background:#dce5e8;
@@ -268,7 +253,7 @@
 <ul class="timeline">
     <!-- timeline time label -->
     <li class="time-label">
-        <span class="bg-red">
+        <span>
             <s:message code="Comment"/>
         </span>
     </li>
@@ -278,26 +263,28 @@
     <c:forEach var="comment" items="${listComment}">
     <li>
         <!-- timeline icon -->
-        <i class="fa  fa-comments bg-blue"></i>
+        <i class="fa  fa-comments"></i>
         <div class="timeline-item">
-            <span class="time"><i class="fa fa-clock-o"></i><fmt:formatDate value="${request.created}" pattern="${DATETIME_FORMAT}"/></span>
+            <span class="time"><i class="fa fa-clock-o"></i><fmt:formatDate value="${comment.created}" pattern="${DATETIME_FORMAT}"/></span>
 
-            <h4 class="timeline-header"><a href="#">${comment.username}</a></h4>
+            <span class="timeline-header">${comment.username}</span>
 
             <div class="timeline-body">
                 ${comment.content}
             </div>
 
             <div class='timeline-footer'>
+             <c:if test="${comment.createdbyUsername == pageContext.request.userPrincipal.name}">
                <div class="input-group-btn">
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border: NONE" title="Thao tác"><i class="icon-cog"></i><span class="fa fa-caret-down"></span></button>
                   <ul class="dropdown-menu">
-                    <c:if test="${request.createdbyUsername == pageContext.request.userPrincipal.name}">
+                    
                       <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
                       <li><a href="#" title='<s:message code="Edit"/>'><s:message code="Edit"/></a></li>
-                    </c:if>
+                    
                   </ul>
               </div><!-- /btn-group -->
+             </c:if>
             </div>
         </div>
     </li>
