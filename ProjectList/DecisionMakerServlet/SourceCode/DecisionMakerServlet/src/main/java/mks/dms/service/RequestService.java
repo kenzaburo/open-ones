@@ -467,4 +467,34 @@ public class RequestService extends BaseService {
         
     }
 
+    /**
+    * [Give the description for method].
+    * @param requestId reserved
+    * @param commentId
+    * @return
+    */
+    public Comment findCommentById(int requestId, int commentId) {
+        ExCommentJpaController comDaoCtrl = new ExCommentJpaController(BaseService.getEmf());
+        return comDaoCtrl.findComment(commentId);
+    }
+
+    /**
+    * [Give the description for method].
+    * @param requestId reserved
+    * @param commentId
+    * @return
+    */
+    public boolean deleteComment(int requestId, int commentId) {
+        ExCommentJpaController comDaoCtrl = new ExCommentJpaController(BaseService.getEmf());
+        try {
+            comDaoCtrl.destroy(commentId);
+            
+            return true;
+        } catch (NonexistentEntityException ex) {
+            LOG.error("Could not delete comment '" + commentId + "' of request '" + requestId + "'", ex);
+        }
+        
+        return false;
+    }
+
 }

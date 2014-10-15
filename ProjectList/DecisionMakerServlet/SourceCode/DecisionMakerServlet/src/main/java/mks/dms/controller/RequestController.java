@@ -667,7 +667,36 @@ public class RequestController extends BaseController {
     	
     	return "redirect:browseRequest.html?id=" + requestId;
     }
-    
+
+    @RequestMapping(method = RequestMethod.GET, value="deleteComment")
+    @ResponseBody
+    public String deleteComment(@RequestParam("reqId") int requestId, @RequestParam("comId") int commentId, Principal principal) {
+        String result = "{\"success\":true}";
+        
+        // Check security
+        // Only creator | ROLE_ADMIN can delete the comment
+        Comment comment = requestService.findCommentById(requestId, commentId);
+        if (comment != null) {
+            String username = principal.getName();
+            boolean isOwner = (comment.getCreatedbyUsername() !=null) ? comment.getCreatedbyUsername().equals(username) : false;
+            if (isInRole(principal, "ROLE_ADMIN") || isOwner) {
+                // Perform delete
+                boolean isDeleted = requestService.deleteComment(requestId, commentId);
+                if (isDeleted) {
+                    result = "{\"success\":true}";
+                } else {
+                    result = "{\"error\":true}";
+                }
+            } else {
+                result = "{\"error\":true}";
+            }
+        } else {
+            // Comment not found.
+            // It can be delete by other
+            result = "{\"error\":true}";
+        }
+        return result;
+    }
     /**
      * Show listSendRequest page
      **/

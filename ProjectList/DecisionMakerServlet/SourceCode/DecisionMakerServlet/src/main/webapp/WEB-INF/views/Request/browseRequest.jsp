@@ -21,6 +21,8 @@
 <script src="resources/AdminLTE/js/bootstrap.min.js" type="text/javascript"></script>
 
 <script type="text/javascript" src="resources/js/common.js"></script>
+<%@ include file="../_common/confirmDeleteComment.jsp" %>
+
 <style>
 
 .disable {
@@ -31,6 +33,7 @@
 
 
 </style>
+
 <script>
   $(function() {
       var assignUsername = $( "#request.assigneeUsername" ),
@@ -279,7 +282,7 @@
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border: NONE" title="Thao tác"><i class="icon-cog"></i><span class="fa fa-caret-down"></span></button>
                   <ul class="dropdown-menu">
                     
-                      <li><a href="#" onclick='showConfirmDialog("${request.id}", "${request.title}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
+                      <li><a href="#" onclick='showConfirmDialogComment("deleteComment", "${model.request.id}", "${comment.id}")' title='<s:message code="Delete"/>'><s:message code="Delete"/></a></li>
                       <li><a href="#" title='<s:message code="Edit"/>'><s:message code="Edit"/></a></li>
                     
                   </ul>
