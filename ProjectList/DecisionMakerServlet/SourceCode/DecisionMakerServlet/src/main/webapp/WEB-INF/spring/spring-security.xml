@@ -17,26 +17,26 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
         <logout logout-success-url="/login" />
     </http>
     
-<!--     <authentication-manager alias="authenticationManager"> -->
-<!--         <authentication-provider> -->
-<!--             <user-service> -->
-<!--                 <user name="user" password="user" authorities="ROLE_USER" /> -->
-<!--                 <user name="manager" password="manager" authorities="ROLE_MANAGER" /> -->
-<!--                 <user name="admin" password="admin" authorities="ROLE_ADMIN" /> -->
-<!--             </user-service> -->
-<!--         </authentication-provider> -->
-<!--     </authentication-manager> -->
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider>
+            <user-service>
+                <user name="user" password="user" authorities="ROLE_USER" />
+                <user name="manager" password="manager" authorities="ROLE_MANAGER" />
+                <user name="admin" password="admin" authorities="ROLE_ADMIN" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
     
     <!-- Using LDAP -->
-    <authentication-manager>
-        <ldap-authentication-provider 
-            user-search-filter="(uid={0})"
-            user-search-base="ou=Users"
-            group-search-filter="(member={0})"
-            group-search-base="ou=Groups"
-            group-role-attribute="cn"
-            role-prefix="ROLE_">
-        </ldap-authentication-provider>
-    </authentication-manager>
-    <ldap-server url="ldap://localhost:389/dc=yourdomain,dc=com" manager-dn="cn=Manager,dc=yourdomain,dc=com" manager-password="yourpassword" />
+<!--     <authentication-manager> -->
+<!--         <ldap-authentication-provider  -->
+<!--             user-search-filter="(uid={0})" -->
+<!--             user-search-base="ou=Users" -->
+<!--             group-search-filter="(member={0})" -->
+<!--             group-search-base="ou=Groups" -->
+<!--             group-role-attribute="cn" -->
+<!--             role-prefix="ROLE_"> -->
+<!--         </ldap-authentication-provider> -->
+<!--     </authentication-manager> -->
+<!--     <ldap-server url="ldap://localhost:389/dc=yourdomain,dc=com" manager-dn="cn=Manager,dc=yourdomain,dc=com" manager-password="yourpassword" /> -->
 </beans:beans>
