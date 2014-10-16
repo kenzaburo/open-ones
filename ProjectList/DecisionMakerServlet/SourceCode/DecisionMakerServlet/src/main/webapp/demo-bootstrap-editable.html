@@ -1,0 +1,74 @@
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+
+<link href="resources/AdminLTE/css/bootstrap.css" rel="stylesheet">
+<script src="resources/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+<script src="resources/AdminLTE/js/bootstrap.min.js"></script>
+
+<link href="resources/x-editable/css/bootstrap-editable.css" rel="stylesheet">
+<script src="resources/x-editable/js/bootstrap-editable.min.js"></script>
+
+
+<title>Demo inline edit</title>
+
+<script>
+$.fn.editable.defaults.mode = 'inline';
+$(document).ready(function () {
+  $('#username').editable({
+  });
+});
+</script>
+</head>
+<body class="loginPage">
+  <div class="row" style="margin-top: 20px">
+    <div class="container">
+      <H3>Demo inline edit</H3>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="container">
+    
+
+<div class="center grid">
+  <form action="j_spring_security_check" method='POST' class="vertical">
+    <div class="col_5">
+      <div>
+        <label for="username" class="left">Tài khoản:</label>
+          <a href="#" id="username" data-type="text" data-pk="1" data-name="username" data-url="url" data-original-title="Tài khoản">Nhập tài khoản</a>
+      </div>
+      <div>
+        <label for="password" class="left">Mật khẩu:</label>
+        <div>
+          <a href="#" id="password" data-type="text" data-pk="1" data-name="username" data-url="url" data-original-title="Mật khẩu">Nhập mật khẩu</a>
+        </div>
+      </div>
+      <div>
+      </div>
+  
+      <div>
+        <div>
+          <button type="submit" id="loginBtn">Đăng nhập</button>
+        </div>
+        <div>
+        <br/>
+          Chương trình hiển thị tốt nhất trên trình duyệt: Chrome, Firefox.
+        </div>
+      </div>
+    </div>
+    
+  </form>
+  
+</div>
+
+  </div>
+</body>
+</html>

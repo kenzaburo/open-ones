@@ -172,7 +172,7 @@ CREATE TABLE RATE (
      , USERNAME VARCHAR(50) NOT NULL
      , EMAIL VARCHAR(50)
      , CONTENT TEXT                        --
-     , RANK CHAR(1)                        -- A | B | C | D | E 
+     , RANK VARCHAR(10)                        -- A | B | C | D | E 
      , CREATED DATETIME NOT NULL
      , CREATEDBY_USERNAME VARCHAR(50) NOT NULL
      , LASTMODIFIED DATETIME

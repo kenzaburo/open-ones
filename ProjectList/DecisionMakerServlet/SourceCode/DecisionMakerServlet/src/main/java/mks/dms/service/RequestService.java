@@ -497,4 +497,9 @@ public class RequestService extends BaseService {
         return false;
     }
 
+    public boolean updateComment(Integer requestId, Integer commentId, Integer commentContent, String username) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

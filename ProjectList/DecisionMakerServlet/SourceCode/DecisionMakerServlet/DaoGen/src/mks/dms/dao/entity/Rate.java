@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "rate")
@@ -59,7 +59,7 @@ public class Rate implements Serializable {
     @Column(name = "CONTENT")
     private String content;
     @Column(name = "RANK")
-    private Character rank;
+    private String rank;
     @Basic(optional = false)
     @Column(name = "CREATED")
     @Temporal(TemporalType.TIMESTAMP)
@@ -128,11 +128,11 @@ public class Rate implements Serializable {
         this.content = content;
     }
 
-    public Character getRank() {
+    public String getRank() {
         return rank;
     }
 
-    public void setRank(Character rank) {
+    public void setRank(String rank) {
         this.rank = rank;
     }
 

@@ -20,6 +20,11 @@
 <!-- Bootstrap -->
 <script src="resources/AdminLTE/js/bootstrap.min.js" type="text/javascript"></script>
 
+<%-- Inline editor: http://vitalets.github.io/x-editable/ --%>
+<link href="resources/x-editable/css/bootstrap-editable.css" rel="stylesheet">
+<script src="resources/x-editable/js/bootstrap-editable.min.js"></script>
+
+ 
 <script type="text/javascript" src="resources/js/common.js"></script>
 <%@ include file="../_common/confirmDeleteComment.jsp" %>
 
@@ -135,6 +140,16 @@
       });
   });
 </script>
+
+<%-- For inline editor in comments --%>
+<script>
+  $.fn.editable.defaults.mode = 'inline';
+  $(document).ready(function () {
+    $('#commentContent').editable({
+    });
+  });
+</script>
+
 <!-- Button Bar for Owner -->
 <ul class="button-bar">
 	<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
@@ -273,7 +288,7 @@
             <span class="timeline-header">${comment.username}</span>
 
             <div class="timeline-body">
-                ${comment.content}
+              <a href="#" id="commentContent" data-type="textarea" data-name="commentContent" data-pk="1" data-title="Enter comments" data-url="updateComment?reqId=${model.request.id}&comId=${comment.id}">${comment.content}</a>
             </div>
 
             <div class='timeline-footer'>

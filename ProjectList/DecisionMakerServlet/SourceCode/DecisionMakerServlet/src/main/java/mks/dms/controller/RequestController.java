@@ -359,6 +359,28 @@ public class RequestController extends BaseController {
         return result;
     } 
 
+    @RequestMapping(method = RequestMethod.GET, value="updateComment")
+    @ResponseBody
+    public Result updateComment(@RequestParam("reqId") Integer requestId, @RequestParam("comId") Integer commentId,
+            @RequestParam("comContent") Integer commentContent, Principal principal) {
+        Result result = new Result();
+
+        LOG.debug("requestId=" + requestId + ";commentId=" + commentId);
+
+        String username = principal.getName();
+        
+        try {
+            boolean isOK = requestService.updateComment(requestId, commentId, commentContent, username);
+            result.setStatus("SUCCESS");
+
+        } catch (Exception ex) {
+
+            result.setStatus("FAIL");
+        }
+        
+        return result;
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value="updateAssignee")
     @ResponseBody
     public Result updateAssignee(@RequestParam("id") Integer requestId, 

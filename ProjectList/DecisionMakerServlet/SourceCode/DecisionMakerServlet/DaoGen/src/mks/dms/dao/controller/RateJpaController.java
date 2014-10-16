@@ -19,7 +19,7 @@ import mks.dms.dao.entity.Rate;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 public class RateJpaController implements Serializable {
 

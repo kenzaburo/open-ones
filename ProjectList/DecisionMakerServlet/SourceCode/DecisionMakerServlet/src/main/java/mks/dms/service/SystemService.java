@@ -76,6 +76,12 @@ public class SystemService extends BaseService {
         return initOK;
     }
 
+    /**
+    * [Give the description for method].
+    * owner: Assignee or Creator
+    * @param username
+    * @return
+    */
     private boolean initStatusFlow(String username) {
         StatusFlowJpaController daoCtrl = new StatusFlowJpaController(emf);
         StatusFlow statusFlow = new StatusFlow();
