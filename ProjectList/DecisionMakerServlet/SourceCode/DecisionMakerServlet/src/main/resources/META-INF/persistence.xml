@@ -16,6 +16,7 @@
     <class>mks.dms.dao.entity.Rate</class>
     <class>mks.dms.dao.entity.Comment</class>
     <class>mks.dms.dao.entity.StatusFlow</class>
+    <class>mks.dms.dao.entity.ReadStatus</class>
     
     <!-- For MySQL -->
 <!--     <properties> -->
