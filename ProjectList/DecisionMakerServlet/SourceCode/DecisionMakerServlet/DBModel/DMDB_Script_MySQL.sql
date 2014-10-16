@@ -143,10 +143,7 @@ CREATE TABLE REQUEST (
      , DURATIONUNIT INT          -- 0: hour; 1: day; 2: week; 3: moth; 4: year
      , DEPARTMENT_CD VARCHAR(10)
      , DEPARTMENT_NAME VARCHAR(50)
-     , STATUS VARCHAR(30)                -- Created | Doing | Rejected | Approved | Updated | Finish | Done | Re-assign
-     , CREATOR_READ INT
-     , MANAGER_READ INT
-     , ASSIGNER_READ INT
+     , STATUS VARCHAR(30)                -- Created | Doing | Rejected | Approved | Updated | Finish | Done | Re-assignT
      , PLANEFFORT INT
      , PLANUNIT VARCHAR(50)
      , ATTACHMENT1 BLOB
@@ -194,6 +191,23 @@ CREATE TABLE COMMENT (
      , CREATEDBY_USERNAME VARCHAR(50) NOT NULL
      , LASTMODIFIED DATETIME
      , LASTMODIFIEDBY_USERNAME VARCHAR(50)
+     , PRIMARY KEY (ID)
+     , INDEX (REQ_ID)
+     , INDEX (USERNAME)
+);
+
+-- Reading status for Request
+CREATE TABLE READ_STATUS (
+       ID INT NOT NULL AUTO_INCREMENT
+     , REQ_ID INT NOT NULL
+     , REQ_STATUS VARCHAR(30) NOT NULL
+     , USERNAME VARCHAR(50) NOT NULL 
+     , EMAIL VARCHAR(50)
+     , IS_READ INT                    -- 0: Not read; 1: Read
+     , CREATED DATETIME NOT NULL
+     , CREATEDBY_USERNAME VARCHAR(50) NOT NULL
+     , LASTMODIFIED DATETIME
+     , LASTMODIFIEDBY_USERNAME VARCHAR(50)     
      , PRIMARY KEY (ID)
      , INDEX (REQ_ID)
      , INDEX (USERNAME)
