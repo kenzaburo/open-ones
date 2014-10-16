@@ -210,7 +210,7 @@ $(document).ready(function () {
     </c:if>
 </ul>
 
-<div id="dialog-form" title="<s:message code="Assign"/>">
+<div id="dialog-form" style="display: none;" title="<s:message code="Assign"/>">
     <form:form name="assignMember" class="horizontal" action="updateAssignee" modelAttribute="model" method="POST">
       <form:hidden path="request.id"/>
       <div>
@@ -239,7 +239,7 @@ $(document).ready(function () {
       </div>
     </form:form>
 </div>
-<div id="dialog-form1" title="<s:message code="Done"/>">
+<div id="dialog-form1" style="display: none;" title="<s:message code="Done"/>">
     <form:form name="finishRequest" class="horizontal" action="confirmRequest" modelAttribute="model" method="POST">
       <form:hidden path="request.id"/>
       <div>
