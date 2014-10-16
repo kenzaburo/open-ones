@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ThachLe
+ * @author ThachLN
  */
 @Entity
 @Table(name = "request")
@@ -49,9 +49,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Request.findByDepartmentCd", query = "SELECT r FROM Request r WHERE r.departmentCd = :departmentCd"),
     @NamedQuery(name = "Request.findByDepartmentName", query = "SELECT r FROM Request r WHERE r.departmentName = :departmentName"),
     @NamedQuery(name = "Request.findByStatus", query = "SELECT r FROM Request r WHERE r.status = :status"),
-    @NamedQuery(name = "Request.findByCreatorRead", query = "SELECT r FROM Request r WHERE r.creatorRead = :creatorRead"),
-    @NamedQuery(name = "Request.findByManagerRead", query = "SELECT r FROM Request r WHERE r.managerRead = :managerRead"),
-    @NamedQuery(name = "Request.findByAssignerRead", query = "SELECT r FROM Request r WHERE r.assignerRead = :assignerRead"),
     @NamedQuery(name = "Request.findByPlaneffort", query = "SELECT r FROM Request r WHERE r.planeffort = :planeffort"),
     @NamedQuery(name = "Request.findByPlanunit", query = "SELECT r FROM Request r WHERE r.planunit = :planunit"),
     @NamedQuery(name = "Request.findByFilename1", query = "SELECT r FROM Request r WHERE r.filename1 = :filename1"),
@@ -111,12 +108,6 @@ public class Request implements Serializable {
     private String departmentName;
     @Column(name = "STATUS")
     private String status;
-    @Column(name = "CREATOR_READ")
-    private Integer creatorRead;
-    @Column(name = "MANAGER_READ")
-    private Integer managerRead;
-    @Column(name = "ASSIGNER_READ")
-    private Integer assignerRead;
     @Column(name = "PLANEFFORT")
     private Integer planeffort;
     @Column(name = "PLANUNIT")
@@ -329,30 +320,6 @@ public class Request implements Serializable {
         this.status = status;
     }
 
-    public Integer getCreatorRead() {
-        return creatorRead;
-    }
-
-    public void setCreatorRead(Integer creatorRead) {
-        this.creatorRead = creatorRead;
-    }
-
-    public Integer getManagerRead() {
-        return managerRead;
-    }
-
-    public void setManagerRead(Integer managerRead) {
-        this.managerRead = managerRead;
-    }
-
-    public Integer getAssignerRead() {
-        return assignerRead;
-    }
-
-    public void setAssignerRead(Integer assignerRead) {
-        this.assignerRead = assignerRead;
-    }
-
     public Integer getPlaneffort() {
         return planeffort;
     }
@@ -489,42 +456,5 @@ public class Request implements Serializable {
     public String toString() {
         return "mks.dms.dao.entity.Request[ id=" + id + " ]";
     }
-
-    //////////////////////////////////////////////////////////////////////
-    // Below method are coded manually
     
-    /**
-    * Set array of username into member "likes".
-    * member "likes" contains list of username with separator is a space
-    *
-    * @param arrLikes
-    */
-    public void setLikes(String[] arrLikes) {
-        StringBuffer sb = new StringBuffer();
-        int len = (arrLikes != null) ? arrLikes.length : 0;
-        
-        if (len > 0) {
-            sb.append(arrLikes[0]);
-            
-            for (int i = 1; i < len; i ++) {
-                sb.append(" ").append(arrLikes[i]);
-            }
-        }
-        
-        this.likes = sb.toString();
-    }
-
-    public String[] getListLikes() {
-        if (this.likes != null) {
-            return likes.split(" ");
-        }
-        
-        return null;
-    }
-    
-    public void addLike(String username) {
-        if ((username != null) && (!username.isEmpty())) {
-            this.likes += (" " + username);
-        }
-    }
 }

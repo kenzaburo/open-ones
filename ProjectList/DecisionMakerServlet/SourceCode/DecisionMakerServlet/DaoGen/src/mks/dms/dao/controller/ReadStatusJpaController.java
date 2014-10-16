@@ -15,15 +15,15 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
-import mks.dms.dao.entity.Request;
+import mks.dms.dao.entity.ReadStatus;
 
 /**
  *
  * @author ThachLN
  */
-public class RequestJpaController implements Serializable {
+public class ReadStatusJpaController implements Serializable {
 
-    public RequestJpaController(EntityManagerFactory emf) {
+    public ReadStatusJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -32,12 +32,12 @@ public class RequestJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Request request) {
+    public void create(ReadStatus readStatus) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(request);
+            em.persist(readStatus);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -46,19 +46,19 @@ public class RequestJpaController implements Serializable {
         }
     }
 
-    public void edit(Request request) throws NonexistentEntityException, Exception {
+    public void edit(ReadStatus readStatus) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            request = em.merge(request);
+            readStatus = em.merge(readStatus);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = request.getId();
-                if (findRequest(id) == null) {
-                    throw new NonexistentEntityException("The request with id " + id + " no longer exists.");
+                Integer id = readStatus.getId();
+                if (findReadStatus(id) == null) {
+                    throw new NonexistentEntityException("The readStatus with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -74,14 +74,14 @@ public class RequestJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Request request;
+            ReadStatus readStatus;
             try {
-                request = em.getReference(Request.class, id);
-                request.getId();
+                readStatus = em.getReference(ReadStatus.class, id);
+                readStatus.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The request with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The readStatus with id " + id + " no longer exists.", enfe);
             }
-            em.remove(request);
+            em.remove(readStatus);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -90,19 +90,19 @@ public class RequestJpaController implements Serializable {
         }
     }
 
-    public List<Request> findRequestEntities() {
-        return findRequestEntities(true, -1, -1);
+    public List<ReadStatus> findReadStatusEntities() {
+        return findReadStatusEntities(true, -1, -1);
     }
 
-    public List<Request> findRequestEntities(int maxResults, int firstResult) {
-        return findRequestEntities(false, maxResults, firstResult);
+    public List<ReadStatus> findReadStatusEntities(int maxResults, int firstResult) {
+        return findReadStatusEntities(false, maxResults, firstResult);
     }
 
-    private List<Request> findRequestEntities(boolean all, int maxResults, int firstResult) {
+    private List<ReadStatus> findReadStatusEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Request.class));
+            cq.select(cq.from(ReadStatus.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -114,20 +114,20 @@ public class RequestJpaController implements Serializable {
         }
     }
 
-    public Request findRequest(Integer id) {
+    public ReadStatus findReadStatus(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Request.class, id);
+            return em.find(ReadStatus.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getRequestCount() {
+    public int getReadStatusCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Request> rt = cq.from(Request.class);
+            Root<ReadStatus> rt = cq.from(ReadStatus.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
