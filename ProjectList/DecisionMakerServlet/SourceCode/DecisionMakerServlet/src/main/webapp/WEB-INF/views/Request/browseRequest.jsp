@@ -17,16 +17,24 @@
 
 <script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
 
-<!-- Bootstrap -->
+ <%-- 
+<script type="text/javascript" src="resources/js/common.js"></script>
+--%>
+<%@ include file="../_common/confirmDeleteComment.jsp" %>
+
+
 <script src="resources/AdminLTE/js/bootstrap.min.js" type="text/javascript"></script>
 
-<%-- Inline editor: http://vitalets.github.io/x-editable/ --%>
 <link href="resources/x-editable/css/bootstrap-editable.css" rel="stylesheet">
 <script src="resources/x-editable/js/bootstrap-editable.min.js"></script>
 
- 
-<script type="text/javascript" src="resources/js/common.js"></script>
-<%@ include file="../_common/confirmDeleteComment.jsp" %>
+<%-- Support inline edit when user click on a comment --%>
+<script>
+$(document).ready(function () {
+  $('#commentContent').editable();  
+  $.fn.editable.defaults.mode = 'inline';
+});
+</script>
 
 <style>
 
@@ -288,7 +296,7 @@
             <span class="timeline-header">${comment.username}</span>
 
             <div class="timeline-body">
-              <a href="#" id="commentContent" data-type="textarea" data-name="commentContent" data-pk="1" data-title="Enter comments" data-url="updateComment?reqId=${model.request.id}&comId=${comment.id}">${comment.content}</a>
+              <a href="#" id="commentContent" data-type="textarea" data-name="${comment.id}" data-pk="${model.request.id}" data-title="Enter comments" data-url="updateComment?requestId=${model.request.id}&commentId=${comment.id}">${comment.content}</a>
             </div>
 
             <div class='timeline-footer'>

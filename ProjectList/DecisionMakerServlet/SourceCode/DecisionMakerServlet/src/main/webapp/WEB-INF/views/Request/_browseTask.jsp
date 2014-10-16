@@ -4,10 +4,6 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<script type="text/javascript" src="resources/jquery/1.9.1/jquery-1.9.1.js"></script>
-<script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
-<link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
-<link type="text/css" href="resources/css/app-validation.css" rel="stylesheet">
 
 <!-- Task -->
 <div id="browse-task">

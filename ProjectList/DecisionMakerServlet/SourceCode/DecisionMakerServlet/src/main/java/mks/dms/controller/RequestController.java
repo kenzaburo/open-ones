@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -34,6 +35,7 @@ import mks.dms.info.Result;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.model.RequestModel;
 import mks.dms.model.SearchRequestConditionModel;
+import mks.dms.model.UpdateCommentModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.RequestService;
 import mks.dms.service.ServiceException;
@@ -359,18 +361,18 @@ public class RequestController extends BaseController {
         return result;
     } 
 
-    @RequestMapping(method = RequestMethod.GET, value="updateComment")
+    @RequestMapping(method = RequestMethod.POST, value="updateComment")
     @ResponseBody
-    public Result updateComment(@RequestParam("reqId") Integer requestId, @RequestParam("comId") Integer commentId,
-            @RequestParam("comContent") Integer commentContent, Principal principal) {
+    public Result updateComment(UpdateCommentModel model, BindingResult bindingResult, Principal principal) {
         Result result = new Result();
 
-        LOG.debug("requestId=" + requestId + ";commentId=" + commentId);
+        LOG.debug("requestId=" + model.getRequestId() + ";commentId=" + model.getCommentId());
 
         String username = principal.getName();
         
         try {
-            boolean isOK = requestService.updateComment(requestId, commentId, commentContent, username);
+            boolean isOK = requestService.updateComment(model.getRequestId(), model.getCommentId(), model.getValue(), username);
+            
             result.setStatus("SUCCESS");
 
         } catch (Exception ex) {
@@ -380,6 +382,29 @@ public class RequestController extends BaseController {
         
         return result;
     }
+    
+    
+//    @RequestMapping(method = RequestMethod.GET, value="updateComment")
+//    @ResponseBody
+//    public Result updateComment(@RequestParam("reqId") Integer requestId, @RequestParam("comId") Integer commentId,
+//            @RequestParam("comContent") Integer commentContent, Principal principal) {
+//        Result result = new Result();
+//
+//        LOG.debug("requestId=" + requestId + ";commentId=" + commentId);
+//
+//        String username = principal.getName();
+//        
+//        try {
+//            boolean isOK = requestService.updateComment(requestId, commentId, commentContent, username);
+//            result.setStatus("SUCCESS");
+//
+//        } catch (Exception ex) {
+//
+//            result.setStatus("FAIL");
+//        }
+//        
+//        return result;
+//    }
     
     @RequestMapping(method = RequestMethod.GET, value="updateAssignee")
     @ResponseBody
@@ -471,102 +496,6 @@ public class RequestController extends BaseController {
         return mav;
     }
     
-    /**
-    * [Give the description for method].
-    * @param id
-    * @param principal
-    * @return
-    * @throws IllegalOrphanException
-    * @throws NonexistentEntityException
-    * @throws Exception
-    * @{@link Deprecated}
-    */
-    @RequestMapping(value="detailRequest")
-    public ModelAndView showDetailRequestPage(@RequestParam("id") int id, Principal principal) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	Request request = requestService.getDaoController().findRequest(id);
-    	ModelAndView mav = new ModelAndView("detailRequest");
-    	mav.addObject("request", request);
-//    	kiem tra tai khoan dang nhap phai tai khoan duoc nhan request ko
-//    	neu phai
-    	
-    	User userLogin = userService.getUserByUsername(principal.getName());
-    	String username = userLogin.getUsername();
-    	
-    	if (AppCons.LEAVE.equals(request.getRequesttypeCd())) {
-    		if (username.equals(request.getManagerUsername())) {
-        		if (request.getManagerRead() == 0) {
-            		request.setManagerRead(1);
-            		// requestService.saveOrUpdate(request);
-            		requestService.getDaoController().edit(request);
-            	}
-        		mav.addObject("isManager", Boolean.TRUE);
-        	}
-        	
-        	if (username.equals(request.getCreatedbyUsername())) {
-    	    	if (request.getCreatorRead() == 0) {
-    	    		request.setCreatorRead(1);
-    	    		requestService.getDaoController().edit(request);
-    	    		
-    	    	}
-    	    	mav.addObject("isCreator", Boolean.TRUE);
-        	}
-    	}
-
-    	if (AppCons.TASK.equals(request.getRequesttypeCd())) {
-    	    
-    		if (request.getAssigneeUsername().equals(request.getCreatedbyUsername())) {
-    			if (username.equals(request.getManagerUsername())) {
-            		if (request.getManagerRead() == 0) {
-                		request.setManagerRead(1);
-                		requestService.getDaoController().edit(request);
-                	}
-            		mav.addObject("isManager", Boolean.TRUE);
-            	}
-            	
-            	if (username.equals(request.getCreatedbyUsername())) {
-        	    	if (request.getCreatorRead() == 0) {
-        	    		request.setCreatorRead(1);
-        	    		request.setAssignerRead(1);
-        	    		requestService.getDaoController().edit(request);
-        	    	}
-        	    	mav.addObject("isCreatorAssigner", Boolean.TRUE);
-            	}
-            	
-            	
-    		}
-    		else {
-    			if (username.equals(request.getAssigneeUsername())) {
-    				if (request.getAssignerRead() == 0) {
-    					request.setAssignerRead(1);
-    					requestService.getDaoController().edit(request);
-    				}
-    				mav.addObject("isAssigner", Boolean.TRUE);
-    			}
-    			if (username.equals(request.getManagerUsername())) {
-            		if (request.getManagerRead() == 0) {
-                		request.setManagerRead(1);
-                		requestService.getDaoController().edit(request);
-                	}
-            		mav.addObject("isManager", Boolean.TRUE);
-            	}
-    			if (username.equals(request.getCreatedbyUsername())) {
-        	    	if (request.getCreatorRead() == 0) {
-        	    		request.setCreatorRead(1);
-        	    		requestService.getDaoController().edit(request);
-        	    	}
-        	    	mav.addObject("isCreator", Boolean.TRUE);
-            	}
-    		}
-    	}
-    	if (AppCons.RULE.equals(request.getRequesttypeCd()) || AppCons.ANNOUNCEMENT.equals(request.getRequesttypeCd())) {
-    		if (username.equals(request.getCreatedbyUsername())) {
-    			mav.addObject("isRead", Boolean.TRUE);
-    		}
-//    		kiem tra user dang nhap co thuoc cac phong ban trong pham vi ko
-//    		neu phai set isRead True
-    	}
-    	return mav;
-    }
     
     /**
      * Process when approveRequest
@@ -589,10 +518,10 @@ public class RequestController extends BaseController {
 //    	}
         if (AppCons.TASK.equals(request.getRequesttypeCd()) && (AppCons.STATUS_FINISH.equals(request.getStatus()))) {
             request.setStatus(AppCons.STATUS_DONE);
-            request.setManagerRead(0);
+
         }    	
     	request.setLastmodified(today);
-    	request.setCreatorRead(0);
+
     	
     	
 //    	request.setLastmodified(today);
@@ -628,7 +557,6 @@ public class RequestController extends BaseController {
     	if (AppCons.LEAVE.equals(request.getRequesttypeCd())) {
     		//request.setStatus("Rejected");
     	    request.setStatus(AppCons.STATUS_REJECTED);
-        	request.setCreatorRead(0);
         	
         	User userLogin = userService.getUserByUsername(pricipal.getName());
 //        	luu lý do reject
@@ -644,8 +572,7 @@ public class RequestController extends BaseController {
     	// Thach: Task sẽ công có khái niệm Reject. File giải thích trong file AppCons.java
     	if (request.getRequesttypeCd().equals("Task")) {
     		request.setStatus("Rejected");
-        	request.setCreatorRead(0);
-        	request.setManagerRead(0);
+
         	User userLogin = userService.getUserByUsername(pricipal.getName());
 //        	luu lý do reject
 //        	String fullReasonReject = userLogin.getLastname() + " " + userLogin.getFirstname() + " (" + formater.format(today) + ") : " + reasonReject + " \n";
@@ -1211,11 +1138,8 @@ public class RequestController extends BaseController {
     	
     	Request request = requestService.getDaoController().findRequest(requestId);
     	request.setStatus("Confirm");
-    	request.setManagerRead(0);
-    	// if (request.getAssigneeUsername().equals(userLogin.getCd()) && !request.getCreatedbyUsername().equals(request.getAssigneeUsername())) {
-    	if (username.equals(request.getAssigneeUsername()) && (!request.getCreatedbyUsername().equals(request.getAssigneeUsername()))) {
-    		request.setCreatorRead(0);
-    	}
+
+
     	requestService.saveOrUpdate(request);
     	return "redirect:detailRequest?id=" + request.getId(); 
     }
@@ -1225,9 +1149,7 @@ public class RequestController extends BaseController {
 //    	User userLogin = userService.getUserByUsername(principal.getName());
     	Request request = requestService.getDaoController().findRequest(requestId);
     	request.setStatus("Done");
-    	request.setManagerRead(1);
-    	request.setAssignerRead(0);
-    	request.setCreatorRead(0);
+
     	requestService.saveOrUpdate(request);
     	return "redirect:detailRequest?id=" + request.getId();	
     }
