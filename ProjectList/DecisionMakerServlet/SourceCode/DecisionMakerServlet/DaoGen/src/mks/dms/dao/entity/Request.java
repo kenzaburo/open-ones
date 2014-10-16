@@ -457,4 +457,41 @@ public class Request implements Serializable {
         return "mks.dms.dao.entity.Request[ id=" + id + " ]";
     }
     
+    //////////////////////////////////////////////////////////////////////
+    // Below method are coded manually
+    
+    /**
+    * Set array of username into member "likes".
+    * member "likes" contains list of username with separator is a space
+    *
+    * @param arrLikes
+    */
+    public void setLikes(String[] arrLikes) {
+        StringBuffer sb = new StringBuffer();
+        int len = (arrLikes != null) ? arrLikes.length : 0;
+        
+        if (len > 0) {
+            sb.append(arrLikes[0]);
+            
+            for (int i = 1; i < len; i ++) {
+                sb.append(" ").append(arrLikes[i]);
+            }
+        }
+        
+        this.likes = sb.toString();
+    }
+
+    public String[] getListLikes() {
+        if (this.likes != null) {
+            return likes.split(" ");
+        }
+        
+        return null;
+    }
+    
+    public void addLike(String username) {
+        if ((username != null) && (!username.isEmpty())) {
+            this.likes += (" " + username);
+        }
+    }
 }
