@@ -65,7 +65,7 @@ $(document).ready(function () {
                   var requestId = frm.elements["request.id"].value ; // $('#request.id').val();
                   var assigneeUsername = frm.elements['request.assigneeUsername'].value;
                   var assigneeNote = frm.elements['request.assigneeNote'].value;
-
+				  
                   $('#notification').html("Đang cập nhật...(" + requestId + "," + assigneeUsername + ")");
                   $.ajax({
                     type: 'GET',
@@ -108,9 +108,7 @@ $(document).ready(function () {
                   var rateLevel = $("#level option:selected").val();
                   var rateLevelDetail = $("#level option:selected").text();
                   var confirmNote = $("#confirmNote").val();
-					
-                  alert(requestId);
-                  alert(rateLevel);
+                  
                   $('#notification').html("Đang cập nhật...(" + requestId + "," + rateLevelDetail + ")");
                   $.ajax({
                     type: 'GET',
@@ -170,10 +168,9 @@ $(document).ready(function () {
             <li class="disable"><a href="#" class="disable"><i class="icon-user-md disable"></i><s:message code="Assign"/></a></li>
         </c:otherwise>
     </c:choose>
-	
     <%-- Setting label for button of owner --%>
-    <c:choose>
-    	<c:when test="${not empty listOwnerNextStatus}">
+<%--     <c:choose> --%>
+    	<c:if test="${not empty listOwnerNextStatus}">
           <c:forEach var="ownerNextStatus" items="${listOwnerNextStatus}">
     		<c:choose>
     			<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
@@ -184,23 +181,29 @@ $(document).ready(function () {
     	    	</c:otherwise>
     	    </c:choose>
           </c:forEach>
-    	</c:when>
-       <c:otherwise>
-         <li class="disable"><a href="#" class="disable" title='<s:message code="No_define"/>'><i class="icon-tasks disable"></i><s:message code="No_define"/></a></li>
-       </c:otherwise>
-   </c:choose>
-</ul>
-
+    	</c:if>
+<%--        <c:otherwise> --%>
+<%--          <li class="disable"><a href="#" class="disable" title='<s:message code="No_define"/>'><i class="icon-tasks disable"></i><s:message code="No_define"/></a></li> --%>
+<%--        </c:otherwise> --%>
+<%--    </c:choose> --%>
+<!-- </ul> -->
 <!-- Button Bar for Manager -->
-<ul class="button-bar">
+<!-- <ul class="button-bar"> -->
     <c:if test="${not empty listManagerNextStatus}">
      <c:forEach var="managerNextStatus" items="${listManagerNextStatus}">
       <c:choose>
           <c:when test="${pageContext.request.userPrincipal.name == model.request.managerUsername}">
-              <li><a href="updateStatus?id=${model.request.id}&status=${managerNextStatus}&note=" title='<s:message code="Update_next_status"/>'><i class="icon-tasks"></i><s:message code="${managerNextStatus}"/></a></li>
+          	<c:choose>
+          		<c:when test="${model.request.status == 'Finish'}">
+          			<li><a href="#" title='<s:message code="Update_next_status"/>' id="finishRequest"><i class="icon-tasks"></i><s:message code="${managerNextStatus}"/></a></li>
+          		</c:when>
+          		<c:otherwise>
+          			<li><a href="updateStatus?id=${model.request.id}&status=${managerNextStatus}&note=" title='<s:message code="Update_next_status"/>'><i class="icon-tasks"></i><s:message code="${managerNextStatus}"/></a></li>
+          		</c:otherwise>
+          	</c:choose>
           </c:when>
           <c:otherwise>
-              <li class="disable"><a href="#" class="disable"><i class="icon-check disable"></i><s:message code="${managerNextStatus}"/></a></li>
+            <li class="disable"><a href="#" class="disable"><i class="icon-check disable"></i><s:message code="${managerNextStatus}"/></a></li>
           </c:otherwise>
       </c:choose>
       </c:forEach>
@@ -242,11 +245,9 @@ $(document).ready(function () {
       <div>
         <label for="rateLevel" class="col_2"><s:message code="Level"/></label>
         <form:select path="" class="col_4 chosen-select" id="level">
-               <option value="Bad"><s:message code="Bad"/></option>
-               <option value="Normal"><s:message code="Normal"/></option>
-               <option value="Good"><s:message code="Good"/></option>
-               <option value="Perfect"><s:message code="Perfect"/></option>
-               <option value="Excellent"><s:message code="Excellent"/></option>
+        	 <c:forEach var="rank" items="${listRank}">
+        	 	<option value="${rank.value}"><s:message code="${rank.value}"/></option>
+             </c:forEach>
         </form:select>
       </div>
       <div>

@@ -27,6 +27,7 @@ import mks.dms.dao.controller.ExRequestJpaController;
 import mks.dms.dao.controller.exceptions.IllegalOrphanException;
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Comment;
+import mks.dms.dao.entity.Parameter;
 import mks.dms.dao.entity.Rate;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
@@ -37,6 +38,7 @@ import mks.dms.model.RequestModel;
 import mks.dms.model.SearchRequestConditionModel;
 import mks.dms.model.UpdateCommentModel;
 import mks.dms.service.MasterService;
+import mks.dms.service.ParameterService;
 import mks.dms.service.RequestService;
 import mks.dms.service.ServiceException;
 import mks.dms.service.UserControllerService;
@@ -82,15 +84,18 @@ public class RequestController extends BaseController {
 	
 	private final UserControllerService userService;
 	
+	private final ParameterService parameterService;
+	
 	@Autowired
     @Qualifier("requestValidator")
     private Validator validator;
 	
     @Autowired
-    public RequestController(MasterService masterService, RequestService requestService, UserControllerService userService) {
+    public RequestController(MasterService masterService, RequestService requestService, UserControllerService userService, ParameterService parameterService) {
         this.masterService = masterService;
         this.requestService = requestService;
         this.userService = userService;
+        this.parameterService = parameterService;
     }
 	
     /**
@@ -455,6 +460,8 @@ public class RequestController extends BaseController {
     public ModelAndView browseRequest(@RequestParam("id") int id, Principal principal) {
         ModelAndView mav = new ModelAndView("browseRequest");
         
+        List<Parameter> listRank = parameterService.getParameterByCd("Rank");
+        
         Request request = requestService.getDaoController().findRequest(id);
         
         RequestModel requestModel = new RequestModel();
@@ -492,6 +499,7 @@ public class RequestController extends BaseController {
         mav.addObject("listOwnerNextStatus", listOwnerNextStatus);
         mav.addObject("listManagerNextStatus", listManagerNextStatus);
         mav.addObject("listComment", listComment);
+        mav.addObject("listRank", listRank);
         
         return mav;
     }
@@ -880,21 +888,34 @@ public class RequestController extends BaseController {
     }
     
     @RequestMapping(value="confirm.Request")
-    public @ResponseBody String processConfirmRequestIsDone(@RequestParam("id") int requestId, @RequestParam("confirmNote") String confirmNote, @RequestParam("rateLevel") String rateLevel ,Principal principal) throws ServiceException {
+    @ResponseBody
+    public Result processConfirmRequestIsDone(@RequestParam("id") int requestId, @RequestParam("confirmNote") String confirmNote, @RequestParam("rateLevel") String rateLevel ,Principal principal) throws ServiceException {
+    	Result result = new Result();
+    	
     	Request request = requestService.getDaoController().findRequest(requestId);
-    	User userLogin = userService.getUserByUsername(principal.getName());
-    	requestService.setUser(userLogin);
-    	if (request.getStatus().equals("Finish") && request.getManagerUsername().equals(principal.getName())) {
-    		request.setStatus("Done");
+    	if (request.getStatus().equals(AppCons.STATUS_FINISH) && request.getManagerUsername().equals(principal.getName())) {
+    		requestService.updateStatus(requestId, AppCons.STATUS_DONE, principal.getName(), "Kết thúc");
     	}
-    	requestService.saveOrUpdate(request);
-    	Rate rate = new Rate();
-    	rate.setContent(confirmNote);
-//    	rate.setRank(rateLevel);
-    	requestService.saveRate(requestId, rate);
-//    	tao moi rate o day
-    	return "";
-//    	return "redirect:browseRequest?id=" + requestId;
+    	try {
+        	Rate rate = new Rate();
+        	rate.setContent(confirmNote);
+        	if (rateLevel.equals("Bad"))
+        		rate.setRank(AppCons.BAD);
+        	else if (rateLevel.equals("Normal"))
+        		rate.setRank(AppCons.NORMAL);
+        	else if (rateLevel.equals("Good"))
+        		rate.setRank(AppCons.GOOD);
+        	else if (rateLevel.equals("Perfect"))
+        		rate.setRank(AppCons.PERFECT);
+        	else if (rateLevel.equals("Excellent"))
+        		rate.setRank(AppCons.EXCELLENT);
+        	requestService.saveRate(requestId, rate);
+    		result.setStatus("SUCCESS");
+    	}
+    	catch (Exception ex) {
+    		result.setStatus("FAIL");
+    	}
+    	return result;
     }
     
     

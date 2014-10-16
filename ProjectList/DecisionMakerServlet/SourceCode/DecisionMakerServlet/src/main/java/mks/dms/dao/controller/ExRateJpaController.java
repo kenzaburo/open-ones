@@ -40,6 +40,7 @@ public class ExRateJpaController extends RateJpaController {
     * @return
     */
     public Rate findLatestRateByRequestId(Integer id) {
+    	
         String strQuery = "SELECT r FROM Rate r WHERE r.reqId = :reqId ORDER BY r.created desc";
         EntityManager em = getEntityManager();
         
@@ -49,8 +50,10 @@ public class ExRateJpaController extends RateJpaController {
         query.setMaxResults(1);
         
         Rate rate = (Rate) query.getSingleResult();
-        
-        return rate;
+        if (rate != null) 
+        	return rate;
+        else
+        	return null;
     }
 
 }

@@ -37,6 +37,16 @@ public class AppCons {
     public static final String SUCCESS = "SUCCESS";
     public static final String FAIL = "FAIL";
     
+	////////////////////////////////////////////////////////
+	/*
+	* Rate
+	*/
+    public static final String BAD = "Bad";
+    public static final String NORMAL = "Normal";
+    public static final String GOOD = "Good";
+    public static final String PERFECT = "Perfect";
+    public static final String EXCELLENT = "Excellent";
+    
     ////////////////////////////////////////////////////////
     /*
     * Status of Request
@@ -62,8 +72,8 @@ public class AppCons {
     public static final String STATUS_REJECTED = "Rejected";
     public static final String STATUS_APPROVED = "Approved";
     public static final String STATUS_REASSIGN = "Re-assigned";
-    public static final String STATUS_DONE = "Finish";
-    public static final String STATUS_FINISH = "Done";
+    public static final String STATUS_DONE = "Done";
+    public static final String STATUS_FINISH = "Finish";
     
     public static final String DATE_FORMAT = "dd-MM-yyyy";
     public static final String ALL = "All";
