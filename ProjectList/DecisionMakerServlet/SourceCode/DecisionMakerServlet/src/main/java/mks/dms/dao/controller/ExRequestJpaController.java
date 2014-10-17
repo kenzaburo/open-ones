@@ -810,10 +810,11 @@ public class ExRequestJpaController extends RequestJpaController {
             }
             em.remove(request);
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            LOG.error("Could not delete request '" + reqId, ex);
+            em.getTransaction().rollback();
         } finally {
-            if (em != null) {
-                em.close();
-            }
+            if (em != null) { em.close(); }
         }
     }
 
@@ -846,12 +847,63 @@ public class ExRequestJpaController extends RequestJpaController {
             }
             
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            em.getTransaction().rollback();
+            LOG.error("Could not update status for request '" + requestId + "';status=" + status + ";username="
+                    + username + ";comment=" + comment, ex);
         } finally {
-            if (em != null) {
-                em.close();
-            }
+            if (em != null) { em.close(); }
         }
     }
+    
+    /**
+    * Update status of request to done and create Rate (level, note)
+    * @param requestId
+    * @param status
+    * @param rate
+    * @param username
+    */
+    public boolean confirmDone(Integer requestId, String status, Rate rate, String username) {
+        EntityManager em = null;
+        
+        try {
+            // Step 1: Update status of request
+            em = getEntityManager();
+            em.getTransaction().begin();
+            // Remove referenced item
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaUpdate<Request> cu = cb.createCriteriaUpdate(Request.class);
+            
+            Root<Request> rootRequest = cu.from(Request.class);
+
+            cu.set(rootRequest.get("status"), status);
+            
+            cu.set(rootRequest.get("lastmodified"), new Date());
+            cu.set(rootRequest.get("lastmodifiedbyUsername"), username);
+            
+            cu.where(cb.equal(rootRequest.get("id"), requestId));
+            Query updateQuery = em.createQuery(cu);
+            
+            int affected = updateQuery.executeUpdate();
+            LOG.info("Affected record: " + affected);
+            
+            // Step 2: Add Rate
+            em.persist(rate);
+            
+            // Commit
+            em.getTransaction().commit();
+            
+            return true;
+        } catch (Exception ex) {
+            LOG.error("Could not update request '" + requestId + "'; status=" + status, ex);
+            em.getTransaction().rollback();
+        } finally {
+            if (em != null) { em.close(); }
+        }
+        
+        return false;
+    }
+        
     
     @Override
     public void edit(Request request) throws NonexistentEntityException, Exception {
@@ -890,10 +942,11 @@ public class ExRequestJpaController extends RequestJpaController {
             int affected = updateQuery.executeUpdate();
             LOG.info("Affected record: " + affected);
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            em.getTransaction().rollback();
+            LOG.error("Could not edit request '" + request.getId() + "'", ex);
         } finally {
-            if (em != null) {
-                em.close();
-            }
+            if (em != null) { em.close(); }
         }
     }
 

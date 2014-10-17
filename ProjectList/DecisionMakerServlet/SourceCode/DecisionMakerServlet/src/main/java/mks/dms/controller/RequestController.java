@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,6 +32,7 @@ import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
 import mks.dms.info.Result;
+import mks.dms.model.ConfirmRequestDoneModel;
 import mks.dms.model.RequestCreateModel;
 import mks.dms.model.RequestModel;
 import mks.dms.model.SearchRequestConditionModel;
@@ -70,7 +70,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author ThachLe, TruongTho
  */
 @Controller
-@SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment"})
+@SessionAttributes({"listRequestType","listUser", "listDurationUnit", "listDepartment", "listParameterRank"})
 public class RequestController extends BaseController {
 
     /**  */
@@ -413,7 +413,7 @@ public class RequestController extends BaseController {
     
     @RequestMapping(method = RequestMethod.GET, value="updateAssignee")
     @ResponseBody
-    public Result updateAssignee(@RequestParam("id") Integer requestId, 
+    public Result updateAssignee(@RequestParam("requestId") Integer requestId, 
                                  @RequestParam("assigneeUsername") String assigneeUsername, @RequestParam("assigneeNote") String assigneeNote) {
         Result result = new Result();
 
@@ -460,7 +460,7 @@ public class RequestController extends BaseController {
     public ModelAndView browseRequest(@RequestParam("id") int id, Principal principal) {
         ModelAndView mav = new ModelAndView("browseRequest");
         
-        List<Parameter> listRank = parameterService.getParameterByCd("Rank");
+        List<Parameter> listParameterRank = parameterService.getParameterByCd(AppCons.PARAM_RANK);
         
         Request request = requestService.getDaoController().findRequest(id);
         
@@ -499,7 +499,7 @@ public class RequestController extends BaseController {
         mav.addObject("listOwnerNextStatus", listOwnerNextStatus);
         mav.addObject("listManagerNextStatus", listManagerNextStatus);
         mav.addObject("listComment", listComment);
-        mav.addObject("listRank", listRank);
+        mav.addObject("listParameterRank", listParameterRank);
         
         return mav;
     }
@@ -1152,17 +1152,16 @@ public class RequestController extends BaseController {
     	return json.toString();
     }
     
-    @RequestMapping(value="confirm.task", method = RequestMethod.GET)
-    public String confirmTask(Principal principal, @RequestParam("requestId") int requestId) throws IllegalOrphanException, NonexistentEntityException, Exception {
-    	User userLogin = userService.getUserByUsername(principal.getName());
-    	String username = userLogin.getUsername();
+    @RequestMapping(value="confirmRequestDone", method = RequestMethod.GET)
+    @ResponseBody
+    public Result confirmRequestDone(ConfirmRequestDoneModel model, Principal principal) {
+        Result result = new Result();
+    	String username = principal.getName();
     	
-    	Request request = requestService.getDaoController().findRequest(requestId);
-    	request.setStatus("Confirm");
+    	boolean success = requestService.confirmDone(model.getRequestId(), model.getRateLevel(), model.getConfirmNote(), username);
 
-
-    	requestService.saveOrUpdate(request);
-    	return "redirect:detailRequest?id=" + request.getId(); 
+    	result.setStatus(success ? "success" : "error");
+    	return result; 
     }
     
     @RequestMapping(value="completedtask")

@@ -84,5 +84,11 @@ public class AppCons {
         Manager,
         Creator
     };
+    
+    ////////////////////////////////////////////////////////
+    /*
+    * Parameters
+    */
+    public static final String PARAM_RANK = "Rank";
 
 }

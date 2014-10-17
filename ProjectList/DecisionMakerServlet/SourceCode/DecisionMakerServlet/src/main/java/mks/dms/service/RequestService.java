@@ -359,6 +359,51 @@ public class RequestService extends BaseService {
         }
     }
 
+    /**
+    * Confirm status DONE.
+    * <br/>
+    * Two tasks are perform in a transaction
+    * - Update status of request to DONE
+    * - Add Rate 
+    * @param requestId
+    * @param rateLevel
+    * @param commentContent
+    * @param username
+    * @return
+    */
+    public boolean confirmDone(Integer requestId, String rateLevel, String commentContent, String username) {
+        // Check request is exist
+        Request request = controller.findRequest(requestId);
+        if (request != null) {
+            User user = MasterService.findUserByUsername(username);
+            // Update status 
+            
+            // Add Rate
+            Rate rate = null;
+            
+            if (CommonUtil.isNNandNB(commentContent) || CommonUtil.isNNandNB(rateLevel)) {
+                rate = new Rate();
+
+                rate.setReqId(requestId);
+                rate.setRank(rateLevel);
+                rate.setContent(commentContent);
+                rate.setUsername(username);
+                rate.setEmail(user.getEmail());
+                rate.setCreated(new Date());
+                rate.setCreatedbyUsername(username);
+                
+            } else {
+                // Do nothing
+            }
+            
+            return controller.confirmDone(requestId, AppCons.STATUS_DONE, rate, username);
+        } else {
+            // Do nothing
+        }
+        
+        return false;
+    }
+
     public List<Comment> findCommentByRequestId(Integer requestId) {
         ExCommentJpaController commentDaoCtrl = new ExCommentJpaController(BaseService.getEmf());
         

@@ -73,7 +73,7 @@ $(document).ready(function () {
                     contentType: 'application/json',
                     url: "updateAssignee",
 
-                    data: {"id": requestId, "assigneeUsername": assigneeUsername, "assigneeNote": assigneeNote},
+                    data: {"requestId": requestId, "assigneeUsername": assigneeUsername, "assigneeNote": assigneeNote},
                     success: function(res) {
                       $('#notification').html("Thành công");
                       // Refresh Assignee
@@ -95,7 +95,7 @@ $(document).ready(function () {
           }
       });
       
-      $( "#dialog-form1" ).dialog({
+      $( "#dialog-form-done" ).dialog({
           autoOpen: false,
           height: 450,
           width: 700,
@@ -105,18 +105,17 @@ $(document).ready(function () {
                   // Send http request to update Assginee
                   var frm = document.forms["finishRequest"];
                   var requestId = frm.elements["request.id"].value ; // $('#request.id').val();
-                  var rateLevel = $("#level option:selected").val();
-                  var rateLevelDetail = $("#level option:selected").text();
+                  var rateLevel = $("#level").val();
                   var confirmNote = $("#confirmNote").val();
-                  
-                  $('#notification').html("Đang cập nhật...(" + requestId + "," + rateLevelDetail + ")");
+                  alert("confirmNote=" + confirmNote + ";rateLevel=" + rateLevel);
+                  $('#notification').html("Đang cập nhật...(" + requestId + "," + rateLevel + ")");
                   $.ajax({
                     type: 'GET',
                     dataType: 'json',
                     contentType: 'application/json',
-                    url: "confirm.Request",
+                    url: "confirmRequestDone",
 
-                    data: {"id": requestId, "confirmNote": confirmNote, "rateLevel": rateLevel},
+                    data: {"requestId": requestId, "rateLevel": rateLevel, "confirmNote": confirmNote},
                     success: function(res) {
                       $('#notification').html("Thành công");
                       // Refresh Assignee
@@ -142,7 +141,7 @@ $(document).ready(function () {
           $( "#dialog-form" ).dialog( "open" );
       });
       $("#finishRequest" ).click(function() {
-          $( "#dialog-form1" ).dialog( "open" );
+          $( "#dialog-form-done" ).dialog( "open" );
       });
   });
 </script>
@@ -161,7 +160,7 @@ $(document).ready(function () {
 	<li><a href="editRequest?id=${model.request.id}"><i class="icon-edit"></i><s:message code="Edit"/></a></li>
 	<li><a href="addComment?id=${model.request.id}"><i class="icon-comment"></i><s:message code="Comment"/></a></li>
     <c:choose>
-        <c:when test='${request.requesttypeCd == "Task"}'>
+        <c:when test='${model.request.requesttypeCd == "Task"}'>
             <li><a href="#" id="assignMember"><i class="icon-user-md"></i><s:message code="Assign"/></a></li>
         </c:when>
         <c:otherwise>
@@ -169,8 +168,8 @@ $(document).ready(function () {
         </c:otherwise>
     </c:choose>
     <%-- Setting label for button of owner --%>
-<%--     <c:choose> --%>
-    	<c:if test="${not empty listOwnerNextStatus}">
+    <c:choose>
+    	<c:when test="${not empty listOwnerNextStatus}">
           <c:forEach var="ownerNextStatus" items="${listOwnerNextStatus}">
     		<c:choose>
     			<c:when test="${pageContext.request.userPrincipal.name == model.request.assigneeUsername}">
@@ -181,14 +180,14 @@ $(document).ready(function () {
     	    	</c:otherwise>
     	    </c:choose>
           </c:forEach>
-    	</c:if>
-<%--        <c:otherwise> --%>
-<%--          <li class="disable"><a href="#" class="disable" title='<s:message code="No_define"/>'><i class="icon-tasks disable"></i><s:message code="No_define"/></a></li> --%>
-<%--        </c:otherwise> --%>
-<%--    </c:choose> --%>
-<!-- </ul> -->
+    	</c:when>
+       <c:otherwise>
+         <li class="disable"><a href="#" class="disable" title='<s:message code="No_define"/>'><i class="icon-tasks disable"></i><s:message code="${model.request.status}"/></a></li>
+       </c:otherwise>
+   </c:choose>
+</ul>
 <!-- Button Bar for Manager -->
-<!-- <ul class="button-bar"> -->
+<ul class="button-bar">
     <c:if test="${not empty listManagerNextStatus}">
      <c:forEach var="managerNextStatus" items="${listManagerNextStatus}">
       <c:choose>
@@ -210,6 +209,7 @@ $(document).ready(function () {
     </c:if>
 </ul>
 
+<%-- Dialog for assign member --%>
 <div id="dialog-form" style="display: none;" title="<s:message code="Assign"/>">
     <form:form name="assignMember" class="horizontal" action="updateAssignee" modelAttribute="model" method="POST">
       <form:hidden path="request.id"/>
@@ -239,14 +239,16 @@ $(document).ready(function () {
       </div>
     </form:form>
 </div>
-<div id="dialog-form1" style="display: none;" title="<s:message code="Done"/>">
+
+<%-- Dialog for confirm task Done --%>
+<div id="dialog-form-done" style="display: none;" title="<s:message code="Done"/>">
     <form:form name="finishRequest" class="horizontal" action="confirmRequest" modelAttribute="model" method="POST">
       <form:hidden path="request.id"/>
       <div>
         <label for="rateLevel" class="col_2"><s:message code="Level"/></label>
         <form:select path="" class="col_4 chosen-select" id="level">
-        	 <c:forEach var="rank" items="${listRank}">
-        	 	<option value="${rank.value}"><s:message code="${rank.value}"/></option>
+        	 <c:forEach var="paramRank" items="${listParameterRank}">
+        	 	<option value="${paramRank.value}"><s:message code="${paramRank.value}"/></option>
              </c:forEach>
         </form:select>
       </div>

@@ -22,10 +22,12 @@ import java.util.Date;
 import java.util.List;
 
 import mks.dms.dao.controller.DepartmentJpaController;
+import mks.dms.dao.controller.ParameterJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
 import mks.dms.dao.controller.StatusFlowJpaController;
 import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.entity.Department;
+import mks.dms.dao.entity.Parameter;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.StatusFlow;
 import mks.dms.dao.entity.User;
@@ -73,6 +75,12 @@ public class SystemService extends BaseService {
             return false;
         }     
 
+        if (initOK) {
+            initOK = initParameter(username);
+        } else {
+            return false;
+        }
+        
         return initOK;
     }
 
@@ -225,7 +233,7 @@ public class SystemService extends BaseService {
         return true;
     }
 
-    public boolean initUserSystem(String username) {
+    private boolean initUserSystem(String username) {
         boolean isEnable = true;
         User user = new User();
 
@@ -239,6 +247,40 @@ public class SystemService extends BaseService {
         
         UserJpaController daoCtrl = new UserJpaController(emf);
         daoCtrl.create(user);
+        
+        return true;
+    }
+    
+    public boolean initParameter(String username) {
+        Parameter parameter = new Parameter();
+        parameter.setCreatedbyUsername(username);
+        parameter.setCreated(new Date());
+        parameter.setCd(AppCons.PARAM_RANK);
+        parameter.setEnabled(true);
+        
+        
+        ParameterJpaController paramDaoCtrl = new ParameterJpaController(emf);
+
+        String name= "A";
+        String value = "A";
+        parameter.setId(null);
+        parameter.setName(name);
+        parameter.setValue(value);
+        paramDaoCtrl.create(parameter);
+        
+        name= "B";
+        value = "B";
+        parameter.setId(null);
+        parameter.setName(name);
+        parameter.setValue(value);
+        paramDaoCtrl.create(parameter);
+        
+        name= "C";
+        value = "C";
+        parameter.setId(null);
+        parameter.setName(name);
+        parameter.setValue(value);
+        paramDaoCtrl.create(parameter);
         
         return true;
     }
