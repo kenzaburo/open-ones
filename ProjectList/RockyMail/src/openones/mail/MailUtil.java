@@ -119,18 +119,18 @@ public class MailUtil {
         String mailServer = props.getProperty("MailServer");
         String userLogin = props.getProperty("MailUser");
         String passLogin = props.getProperty("MailPass");
-        String serverPort = props.getProperty("MailPort");
+        int serverPort = Integer.valueOf(props.getProperty("MailPort"));
         String SSL = props.getProperty("SSL");
 
         LOG.debug("props= : " + mailServer + " - " + userLogin + " - " + passLogin + " - " + serverPort + " - " + SSL);
 
-        ServerMail server = new ServerMail();
-        server.setServerName(mailServer);
-        server.setUserLogin(userLogin);
-        server.setPassLogin(passLogin);
+        MailServerInfo server = new MailServerInfo();
+        server.setName(mailServer);
+        server.setUsername(userLogin);
+        server.setPassword(passLogin);
         // server.setServerAuth(Boolean.parseBoolean(SSL));
-        server.setServerAuth((userLogin != null) && (userLogin.length() > 1));
-        server.setServerPort(serverPort);
+        server.setRequireAuth((userLogin != null) && (userLogin.length() > 1));
+        server.setPort(serverPort);
 
         // get content of HTML file from path.
         String content = CommonUtil.getContent(templatePath, true, Constant.DEF_ENCODE);
@@ -169,19 +169,25 @@ public class MailUtil {
      * @param mail
      *            : from, to, ImageFormat, attachedFile, body.
      */
-    public static void sendSimpleHtmlEmail(ServerMail smtpServer, MailInfo mail) throws MessagingException {
+    public static void sendSimpleHtmlEmail(MailServerInfo smtpServer, MailInfo mail) throws MessagingException {
         // try {
         Properties props = new Properties();
         props.clear();
 
         // Lay ten server
-        props.put("mail.smtp.host", smtpServer.getServerName());
-        props.put("mail.smtp.auth", smtpServer.isServerAuth());
-        props.put("mail.smtp.port", smtpServer.getServerPort());
-        props.put("mail.smtp.socketFactory.port", smtpServer.getServerPort());
+        props.put("mail.smtp.host", smtpServer.getName());
+        props.put("mail.smtp.auth", smtpServer.isRequireAuth());
+        props.put("mail.smtp.port", smtpServer.getPort());
+        props.put("mail.smtp.socketFactory.port", smtpServer.getPort());
+        
+        if (smtpServer.isEnableStarttls()) {
+            props.put("mail.smtp.starttls.enable", "true");
+        } else {
+            // Do nothing
+        }
 
-        final String login = smtpServer.getUserLogin();
-        final String pwd = smtpServer.getPassLogin();
+        final String login = smtpServer.getUsername();
+        final String pwd = smtpServer.getPassword();
 
         Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -200,8 +206,11 @@ public class MailUtil {
     public static Message buildMessage(MailInfo mail, Session session) throws MessagingException {
         Message msg = new MimeMessage(session);
         Address addrFrom = new InternetAddress(mail.getMailFrom());
-        Address[] listTo = new Address[mail.getMailTo().length];
-        for (int i = 0; i < mail.getMailTo().length; i++) {
+        
+        int len = ((mail != null) && (mail.getMailTo() != null)) ? mail.getMailTo().length : 0;
+        
+        Address[] listTo = new Address[len];
+        for (int i = 0; i < len; i++) {
             listTo[i] = new InternetAddress(mail.getMailTo()[i]);
         }
 
@@ -211,13 +220,14 @@ public class MailUtil {
 
         // create the second message part
         BodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setContent(mail.getMailBody(), "text/html");
+        messageBodyPart.setContent(mail.getMailBody(), "text/html; charset=utf-8");
         Multipart multipart = new MimeMultipart("related");
         multipart.addBodyPart(messageBodyPart);
 
         // second part (the image(s) )
         if (mail.getImage() != null) {
-            for (int i = 0; i < mail.getImage().length; i++) {
+            len = ((mail != null) & (mail.getImage() != null) ? mail.getImage().length : 0);
+            for (int i = 0; i < len; i++) {
                 messageBodyPart = new MimeBodyPart();
                 DataSource fds = new FileDataSource(mail.getImage()[i].getImgSrc());
                 messageBodyPart.setDataHandler(new DataHandler(fds));
@@ -228,7 +238,8 @@ public class MailUtil {
 
         // attach file
         if (mail.getAttachedFile() != null) {
-            for (int i = 0; i < mail.getAttachedFile().length; i++) {
+            len = ((mail != null) & (mail.getAttachedFile() != null) ? mail.getAttachedFile().length : 0);
+            for (int i = 0; i < len; i++) {
                 messageBodyPart = new MimeBodyPart();
                 DataSource source = new FileDataSource(mail.getAttachedFile()[i]);
                 messageBodyPart.setDataHandler(new DataHandler(source));
@@ -259,6 +270,13 @@ public class MailUtil {
      */
     public static void sendSimpleTextEmail(String from, String to, String subject, String body, String mailhost,
             String port, String username, String password) throws MessagingException {
+        boolean isStartLTS = false;
+
+        sendSimpleTextEmail(from, to, subject, body, mailhost, port, username, password, isStartLTS);
+    }
+
+    public static void sendSimpleTextEmail(String from, String to, String subject, String body, String mailhost,
+            String port, String username, String password, boolean isStartLTS) throws MessagingException {
         Properties props = System.getProperties();
 
         // Attempt to authenticate the user using the AUTH command
@@ -266,6 +284,11 @@ public class MailUtil {
         props.put("mail.smtp.port", port);
         props.put("mail.smtp.socketFactory.port", port);
 
+        if (isStartLTS) {
+            props.put("mail.smtp.starttls.enable", "true");
+        } else {
+            // Do nothing
+        }
         // Get a Session object
         Session session = Session.getInstance(props, null);
         // try {
@@ -294,11 +317,6 @@ public class MailUtil {
         transport.close();
 
         LOG.debug("\nMail was sent successfully.");
-        // } catch (AddressException e) {
-        // e.printStackTrace();
-        // } catch (MessagingException e) {
-        // e.printStackTrace();
-        // }
     }
 
     /**
