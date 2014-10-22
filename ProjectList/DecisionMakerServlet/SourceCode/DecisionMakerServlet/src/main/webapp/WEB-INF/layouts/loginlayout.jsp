@@ -5,24 +5,35 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script src="resources/jquery/1.9.1/jquery-1.9.1.min.js"></script>
-<script src="resources/htmlkickstart/js/kickstart.js"></script> 
-<link rel="stylesheet" href="resources/htmlkickstart/css/kickstart.css" media="all" /> 
-<link rel='stylesheet' href='resources/css/main.css' type='text/css' />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+<!-- Optional: Include the jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- Optional: Incorporate the Bootstrap JavaScript plugins -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
 <title>Login</title>
 
 
 </head>
-<body class="loginPage">
-  <div class="row" style="margin-top: 20px">
-    <div class="container">
-      <H3>Đăng nhập vào hệ thống</H3>
-    </div>
+<body>
+<div class="container">
+  <%-- header --%>
+  <div class="header">
+  	<nav class="navbar navbar-static-top" role="navigation">
+  		<div class="navbar-right">
+  		  <a href="#" class="btn btn-success btn-sm">Đăng ký</a>
+  		</div>
+  	</nav>
   </div>
-
+  
   <!-- Content -->
   <div class="container">
     <tiles:insertAttribute name="body" />
   </div>
+</div>
 </body>
 </html>
