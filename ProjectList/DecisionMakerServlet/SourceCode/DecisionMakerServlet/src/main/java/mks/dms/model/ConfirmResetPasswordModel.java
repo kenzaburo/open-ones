@@ -24,10 +24,29 @@ import java.io.Serializable;
  * @author ThachLN
  */
 public class ConfirmResetPasswordModel implements Serializable {
+    private Boolean validKey = null;
     private String email;
 
     private String newPassword;
     private String confirmNewPassword;
+    private Boolean matchedPassword = null;
+
+    /**
+     * Get value of validKey.
+     * @return the validKey
+     */
+    public Boolean getValidKey() {
+        return validKey;
+    }
+
+    /**
+     * Set the value for validKey.
+     * @param validKey the validKey to set
+     */
+    public void setValidKey(Boolean validKey) {
+        this.validKey = validKey;
+    }
+    
     /**
      * Get value of email.
      * @return the email
@@ -71,4 +90,17 @@ public class ConfirmResetPasswordModel implements Serializable {
         this.confirmNewPassword = confirmNewPassword;
     }
 
+	/**
+	 * @return the matchedPassword
+	 */
+	public Boolean getMatchedPassword() {
+		return matchedPassword;
+	}
+
+	/**
+	 * @param matchedPassword the matchedPassword to set
+	 */
+	public void setMatchedPassword(Boolean matchedPassword) {
+		this.matchedPassword = matchedPassword;
+	}
 }

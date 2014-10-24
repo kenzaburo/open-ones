@@ -24,6 +24,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import rocky.common.CommonUtil;
+
 /**
  * @author ThachLN
  */
@@ -42,11 +44,11 @@ public class ConfirmResetPasswordModelValidator implements Validator {
 
         ConfirmResetPasswordModel confirmResetPasswordModel = (ConfirmResetPasswordModel) obj;
         String newPassword = confirmResetPasswordModel.getNewPassword();
-        String connfirmNewPassword = confirmResetPasswordModel.getConfirmNewPassword();
+        String confirmNewPassword = confirmResetPasswordModel.getConfirmNewPassword();
 
         
-        if ((newPassword != null) && (!newPassword.equals(connfirmNewPassword))) {
-             errors.rejectValue("matchedPassword", "Password_must_match");
+        if (CommonUtil.isNNandNB(newPassword) && CommonUtil.isNNandNB(confirmNewPassword) && (!newPassword.equals(confirmNewPassword))) {
+             errors.rejectValue("matchedPassword", "Passwords_must_match");
         }
     }
 

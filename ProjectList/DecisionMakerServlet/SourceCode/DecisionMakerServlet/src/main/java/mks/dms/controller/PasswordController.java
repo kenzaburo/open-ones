@@ -78,7 +78,7 @@ public class PasswordController {
         }
         
         if ((confirmResetPasswdValidator != null) && (binder.getTarget() != null) && (confirmResetPasswdValidator.supports(binder.getTarget().getClass()))) {
-            binder.setValidator(this.confirmResetPasswdValidator);
+            binder.addValidators(this.confirmResetPasswdValidator);
         } else {
             LOG.warn("Could not set confirmResetPasswdValidator");
         }
@@ -146,28 +146,6 @@ public class PasswordController {
 
         return mav;
     }
-
-    /**
-    * [Give the description for method].
-    * @param key1 encoded of date (format: yyyy-MM-dd HH:mm:ss)
-    * @param key2 encoded of number
-    * @return
-    */
-    @RequestMapping(value = "confirm-reset-password", method = RequestMethod.GET)
-    public ModelAndView goConfirmResetPassword(@RequestParam("email") String email, @RequestParam("key1") String key1, @RequestParam("key2") String key2) {
-        ModelAndView mav = new ModelAndView("confirm-reset-password");
-        
-        String decodedKey1 = new String(Base64.decode(key1));
-        String decodedKey2 = new String(Base64.decode(key2));
-        
-        ParameterService parameterService = new ParameterService();
-        boolean validKey = parameterService.checkKey(email, decodedKey1, decodedKey2);
-        
-        mav.addObject("result", validKey);
-        mav.addObject(AppCons.MODEL, new ConfirmResetPasswordModel());
-
-        return mav;
-    }
     
     /**
     * Processing when user click hyperlink reset password from email.
@@ -204,6 +182,33 @@ public class PasswordController {
         return mav;
     }
 
+
+    /**
+    * [Give the description for method].
+    * @param key1 encoded of date (format: yyyy-MM-dd HH:mm:ss)
+    * @param key2 encoded of number
+    * @return
+    */
+    @RequestMapping(value = "confirm-reset-password", method = RequestMethod.GET)
+    public ModelAndView goConfirmResetPassword(@RequestParam("email") String email, @RequestParam("key1") String key1, @RequestParam("key2") String key2) {
+        ModelAndView mav = new ModelAndView("confirm-reset-password");
+        
+        String decodedKey1 = new String(Base64.decode(key1));
+        String decodedKey2 = new String(Base64.decode(key2));
+        
+        ParameterService parameterService = new ParameterService();
+        boolean validKey = parameterService.checkKey(email, decodedKey1, decodedKey2);
+        
+        // Prepare initial data for screen set new password
+        ConfirmResetPasswordModel model = new ConfirmResetPasswordModel();
+        model.setEmail(email);
+        model.setValidKey(validKey);
+        
+        mav.addObject(AppCons.MODEL, model);
+
+        return mav;
+    }
+    
     /**
     * [Give the description for method].
     * @param model used email, newPassword, confirmNewPassword
@@ -211,7 +216,7 @@ public class PasswordController {
     * @return
     */
     @RequestMapping(value = "confirmResetPassword", method = RequestMethod.POST)
-    public ModelAndView confirmResetPassword(@ModelAttribute(AppCons.MODEL) ConfirmResetPasswordModel model, BindingResult bindingResult) {
+    public ModelAndView confirmResetPassword(@ModelAttribute(AppCons.MODEL) @Validated ConfirmResetPasswordModel model, BindingResult bindingResult) {
         ModelAndView mav = new ModelAndView("confirm-reset-password");
         
         if (bindingResult.hasErrors()) {

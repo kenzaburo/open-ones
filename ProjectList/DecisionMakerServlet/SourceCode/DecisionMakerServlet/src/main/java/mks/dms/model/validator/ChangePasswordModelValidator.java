@@ -49,7 +49,7 @@ public class ChangePasswordModelValidator implements Validator {
 
         
         if ((newPassword != null) && (!newPassword.equals(connfirmNewPassword))) {
-             errors.rejectValue("matchedPassword", "Password_must_match");
+             errors.rejectValue("matchedPassword", "Passwords_must_match");
         }
 
                 
