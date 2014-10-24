@@ -10,6 +10,11 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
     <beans:bean id="webSecurityExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
     <http auto-config="true">
         <intercept-url pattern="/login" access="ROLE_ANONYMOUS" />
+        <intercept-url pattern="/reset-password" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
+        <intercept-url pattern="/confirm-reset-password" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
+        <intercept-url pattern="/resetPassword" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
+        <intercept-url pattern="/confirmResetPassword" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
+
         <intercept-url pattern="/resources/**" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
         <intercept-url pattern="/img/**" access="ROLE_ANONYMOUS,IS_AUTHENTICATED_FULLY" />
         <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />

@@ -40,9 +40,8 @@ import rocky.common.CommonUtil;
 
 public class ExRequestJpaController extends RequestJpaController {
 
-	/** Logging. */
-	private final static Logger LOG = Logger
-			.getLogger(ExDepartmentJpaController.class);
+    /** Logging. */
+    private final static Logger LOG = Logger.getLogger(ExDepartmentJpaController.class);
 
 	public ExRequestJpaController(EntityManagerFactory emf) {
 		super(emf);

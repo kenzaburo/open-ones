@@ -83,6 +83,12 @@ CREATE TABLE REQUESTTYPE (
      , PRIMARY KEY (ID)
 );
 
+/**
+ * Case reset password
+ * CD = "ResetPasswd"
+ * NAME = account
+ * VALUE = yyyy-MM-dd HH:mm:ss
+ */
 CREATE TABLE PARAMETER (
        ID INT NOT NULL AUTO_INCREMENT
      , CD VARCHAR(20) NOT NULL

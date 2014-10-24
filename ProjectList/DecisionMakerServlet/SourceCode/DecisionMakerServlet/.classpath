@@ -38,5 +38,6 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/hsqldb.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/mysql-connector-java-5.1.24-bin.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/openldap-api-0.0.3-20141015142145.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/rocky-mail-0.0.4-201410295051808.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

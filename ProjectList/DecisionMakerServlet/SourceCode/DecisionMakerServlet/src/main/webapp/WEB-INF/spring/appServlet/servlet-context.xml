@@ -37,6 +37,7 @@
 	</bean>
     <bean id="requestValidator" class="mks.dms.model.validator.RequestModelValidator"/>
     <bean id="changePasswordValidator" class="mks.dms.model.validator.ChangePasswordModelValidator"/>
+    <bean id="confirmResetPasswordValidator" class="mks.dms.model.validator.ConfirmResetPasswordModelValidator"/>
 
     <!-- Refer: http://www.javablog.fr/spring-internationalization-with-message-source.html -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
@@ -73,5 +74,16 @@
                 <ref bean="jacksonMessageConverter" />
             </list>
         </property>
+    </bean>
+    
+    <!-- Configuration -->
+    <bean id="mailServerInfo" class="openones.mail.MailServerInfo">
+        <property name="name" value="smtp.googlemail.com"/>
+        <property name="port" value="587"/>
+        <property name="requireAuth" value="true"/>
+        <property name="enableStarttls" value="true"/>
+        <property name="username" value="youremail"/>
+        <property name="password" value="yourpassword"/>
+        
     </bean>
 </beans>

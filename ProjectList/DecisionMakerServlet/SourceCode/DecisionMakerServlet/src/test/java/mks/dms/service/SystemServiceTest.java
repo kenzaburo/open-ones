@@ -18,7 +18,7 @@
  */
 package mks.dms.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -58,16 +58,40 @@ public class SystemServiceTest {
     @Test
     public void testInitParam() {
         SystemService systemService = new SystemService();
-        systemService.initParameter("admin");
+        systemService.initParameterRank("admin");
         
         // Verify
         ExParameterJpaController paramDaoCtrl = new ExParameterJpaController(BaseService.getEmf());
-        List<Parameter> listParam = paramDaoCtrl.getParameterByCd(AppCons.PARAM_RANK);
+        List<Parameter> listParam = paramDaoCtrl.findParameterByCd(AppCons.PARAM_RANK);
         
         assertEquals(3, listParam.size());
         
         assertEquals("A", listParam.get(0).getName());
         
+    }
+
+    @Test
+    public void testInitParamEmail() {
+        SystemService systemService = new SystemService();
+        systemService.initParameterEmail("admin");
+        
+        // Verify
+        ExParameterJpaController paramDaoCtrl = new ExParameterJpaController(BaseService.getEmf());
+        List<Parameter> listParam = paramDaoCtrl.findParameterByCd(AppCons.PARAM_EMAIL);
+        
+        String value = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_SUBJECT, true);
+        
+        
+        assertEquals("[DMS] Khôi phục mật khẩu", value);
+        
+        value = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_FROM_ADDR, true);
+        assertEquals("service@mks.com.vn", value);
+        
+        value = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_FROM_NAME, true);
+        assertEquals("MeKong Solution Service", value);
+        
+        value = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_LINK, true);
+        assertEquals("http://tokutokuya.mks.com.vn/decisionmaker/confirm-reset-password", value);     
     }
 
 }

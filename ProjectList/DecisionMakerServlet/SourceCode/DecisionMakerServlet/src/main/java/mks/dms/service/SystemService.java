@@ -76,7 +76,13 @@ public class SystemService extends BaseService {
         }     
 
         if (initOK) {
-            initOK = initParameter(username);
+            initOK = initParameterRank(username);
+        } else {
+            return false;
+        }
+
+        if (initOK) {
+            initOK = initParameterEmail(username);
         } else {
             return false;
         }
@@ -251,7 +257,7 @@ public class SystemService extends BaseService {
         return true;
     }
     
-    public boolean initParameter(String username) {
+    public boolean initParameterRank(String username) {
         Parameter parameter = new Parameter();
         parameter.setCreatedbyUsername(username);
         parameter.setCreated(new Date());
@@ -284,4 +290,53 @@ public class SystemService extends BaseService {
         
         return true;
     }
+    
+    public boolean initParameterEmail(String username) {
+        String name;
+        String value;
+        
+        Parameter parameter = new Parameter();
+        parameter.setCreatedbyUsername(username);
+        parameter.setCreated(new Date());
+        parameter.setCd(AppCons.PARAM_EMAIL);
+        parameter.setEnabled(true);
+        
+        
+        ParameterJpaController paramDaoCtrl = new ParameterJpaController(emf);
+        
+        // Subject
+        name = AppCons.PARAM_RESET_PASSWORD_SUBJECT;
+        value = "[DMS] Khôi phục mật khẩu";
+        parameter.setId(null);
+        parameter.setName(name);
+        parameter.setValue(value);
+        paramDaoCtrl.create(parameter);
+        
+        // From email address
+        name = AppCons.PARAM_RESET_PASSWORD_FROM_ADDR;
+        value = "service@mks.com.vn";
+        parameter.setId(null);
+        parameter.setName(name);
+        parameter.setValue(value);
+        paramDaoCtrl.create(parameter);
+        
+        // From email name
+        name = AppCons.PARAM_RESET_PASSWORD_FROM_NAME;
+        value = "MeKong Solution Service";
+        parameter.setId(null);
+        parameter.setName(name);
+        parameter.setValue(value);
+        paramDaoCtrl.create(parameter);
+
+        // Reset link
+        name = AppCons.PARAM_RESET_PASSWORD_LINK;
+        value = "http://tokutokuya.mks.com.vn/decisionmaker/confirm-reset-password";
+        parameter.setId(null);
+        parameter.setName(name);
+        parameter.setValue(value);
+        paramDaoCtrl.create(parameter);
+        
+        return true;
+    }
+
 }

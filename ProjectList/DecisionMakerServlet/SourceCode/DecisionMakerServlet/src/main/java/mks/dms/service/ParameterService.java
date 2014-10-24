@@ -1,5 +1,6 @@
 package mks.dms.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,9 +8,12 @@ import javax.persistence.EntityManagerFactory;
 
 import mks.dms.dao.controller.ExParameterJpaController;
 import mks.dms.dao.entity.Parameter;
+import mks.dms.util.AppCons;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+
+import rocky.common.CommonUtil;
 
 @Service
 public class ParameterService extends BaseService {
@@ -27,7 +31,21 @@ public class ParameterService extends BaseService {
 	}
 	
 	public List<Parameter> getParameterByCd(String cd) {
-		List<Parameter> listParameter = controller.getParameterByCd(cd);
+		List<Parameter> listParameter = controller.findParameterByCd(cd);
 		return listParameter;
 	}
+
+    /**
+    * [Give the description for method].
+    * @param dateKey
+    * @param randomKey
+    * @return
+    */
+    public boolean checkKey(String email, String dateKey, String randomKey) {
+        //Date dteVal = CommonUtil.parse(dateKey,  AppCons.DATETIME_FORMAT);
+        Parameter parameter = controller.findParameterByDescription(AppCons.RESET_PASSWORD, email, dateKey, randomKey);
+        
+        
+        return (parameter != null);
+    }
 }

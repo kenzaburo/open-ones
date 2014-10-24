@@ -3,6 +3,9 @@
 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
 	<definition name="login" extends="loginlayout">
-		<put-attribute name="body" value="/WEB-INF/views/Login/login.jsp" />
+      <put-attribute name="login-header" value="/WEB-INF/views/Login/login-header.jsp" />
+      <put-attribute name="left-body" value="/WEB-INF/views/Login/login-body-left.jsp" />
+	  <put-attribute name="right-body" value="/WEB-INF/views/Login/login-body-right.jsp" />
+      <put-attribute name="login-footer" value="/WEB-INF/views/Login/login-footer.jsp" />
 	</definition>
-</tiles-definitions>
+ </tiles-definitions>

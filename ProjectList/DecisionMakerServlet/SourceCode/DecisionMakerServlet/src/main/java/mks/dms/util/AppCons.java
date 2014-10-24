@@ -90,5 +90,13 @@ public class AppCons {
     * Parameters
     */
     public static final String PARAM_RANK = "Rank";
+    public static final String PARAM_EMAIL = "Email";
+    
+    public static final String RESET_PASSWORD = "ResetPasswd";
+    public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String PARAM_RESET_PASSWORD_SUBJECT = "ResetPasswdSubject";
+    public static final String PARAM_RESET_PASSWORD_LINK = "ResetPasswdLink";
+    public static final String PARAM_RESET_PASSWORD_FROM_ADDR = "ResetPasswdFromEmail";
+    public static final String PARAM_RESET_PASSWORD_FROM_NAME = "ResetPasswdFromName";
 
 }

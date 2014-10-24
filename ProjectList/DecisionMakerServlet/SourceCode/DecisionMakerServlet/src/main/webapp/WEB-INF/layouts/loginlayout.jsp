@@ -23,16 +23,23 @@
 <div class="container">
   <%-- header --%>
   <div class="header">
-  	<nav class="navbar navbar-static-top" role="navigation">
-  		<div class="navbar-right">
-  		  <a href="#" class="btn btn-success btn-sm">Đăng ký</a>
-  		</div>
-  	</nav>
+    <tiles:insertAttribute name="login-header" />
   </div>
   
   <!-- Content -->
-  <div class="container">
-    <tiles:insertAttribute name="body" />
+  <div class="row">
+    <%-- Left part --%>
+    <div class="col-lg-9">
+      <tiles:insertAttribute name="login-body-left" />
+    </div>
+    
+    <%--Right part --%>
+    <div class="col-lg-3">
+      <tiles:insertAttribute name="login-body-right" />
+    </div>
+  </div>
+  <div class="footer">
+    <tiles:insertAttribute name="login-footer" />
   </div>
 </div>
 </body>

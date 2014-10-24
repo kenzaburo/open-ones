@@ -9,6 +9,10 @@
     <put-attribute name="footer" value="/WEB-INF/views/footer.jsp" />
   </definition>
   <definition name="loginlayout" template="/WEB-INF/layouts/loginlayout.jsp">
+    <put-attribute name="login-header" value="/WEB-INF/views/Login/login-header.jsp" />
+    <put-attribute name="login-body-left" value="/WEB-INF/views/Login/login-body-left.jsp" />
+    <put-attribute name="login-body-right" value="/WEB-INF/views/Login/login-body-right.jsp" />
+    <put-attribute name="login-footer" value="/WEB-INF/views/Login/login-footer.jsp" />
   </definition>
   <definition name="changepwdlayout" template="/WEB-INF/layouts/changepwdlayout.jsp">
   </definition>

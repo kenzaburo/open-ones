@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration
+2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<definition name="change-password" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/Password/change-password.jsp" />
+	</definition>
+
+    <definition name="reset-password" extends="loginlayout">
+        <put-attribute name="login-body-left" value="/WEB-INF/views/Password/reset-password.jsp" />
+    </definition>
+    
+    <definition name="confirm-reset-password" extends="loginlayout">
+        <put-attribute name="login-body-left" value="/WEB-INF/views/Password/confirm-reset-password.jsp" />
+    </definition>
+    
+
+</tiles-definitions>

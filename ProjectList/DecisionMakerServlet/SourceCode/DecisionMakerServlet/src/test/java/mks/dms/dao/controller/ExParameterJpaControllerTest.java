@@ -8,6 +8,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import mks.dms.dao.entity.Parameter;
+import mks.dms.service.BaseService;
+import mks.dms.util.AppCons;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -42,7 +44,7 @@ public class ExParameterJpaControllerTest {
 	public void testGetParameterByCd() {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DecisionMaker-DBModelPU");
 		ExParameterJpaController daoCtrl = new ExParameterJpaController(emf);
-		List<Parameter> listParameter = daoCtrl.getParameterByCd("Rank");
+		List<Parameter> listParameter = daoCtrl.findParameterByCd("Rank");
 		assertEquals(5, listParameter.size());
 	}
 
@@ -83,7 +85,10 @@ public class ExParameterJpaControllerTest {
 
 	@Test
 	public void testFindParameter() {
-		fail("Not yet implemented");
+		ExParameterJpaController paramDaoCtrl = new ExParameterJpaController(BaseService.getEmf());
+		
+		String emailSubject = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_SUBJECT, true);
+		assertEquals("[DMS] Khôi phục mật khẩu", emailSubject);
 	}
 
 	@Test
