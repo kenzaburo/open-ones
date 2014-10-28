@@ -15,7 +15,7 @@ public class TestChangePwd {
     public void test_N(){
         UserDAO entryDao = new UserDAO(ldapCfg);
         UserEntry entry = (UserEntry) entryDao.findByUid("user1");
-        Assert.assertEquals(true, entryDao.ChangePassword(entry.getUid(), "user2", "542829214"));
+        Assert.assertEquals(true, entryDao.changePassword(entry.getUid(), "user2", "542829214"));
     }
     
 }

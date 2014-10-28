@@ -328,7 +328,7 @@ public class UserDAO extends BaseDAO {
         return result;
     }
 
-    public boolean ChangePassword(String uid, String pwd, String newpwd) {
+    public boolean changePassword(String uid, String pwd, String newpwd) {
         boolean result;
         UserEntry entry = (UserEntry) findByUid(uid);
         boolean checkpass = checkPass(uid, pwd);
