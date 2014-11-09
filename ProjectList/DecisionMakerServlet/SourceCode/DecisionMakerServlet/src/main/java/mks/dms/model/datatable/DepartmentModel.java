@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package mks.dms.model;
+package mks.dms.model.datatable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,19 +24,19 @@ import java.util.Iterator;
 import java.util.List;
 
 import mks.dms.dao.entity.Department;
-import rocky.common.CHARA;
+import mks.dms.util.AppCons;
+import mks.dms.util.AppUtil;
 
 import com.google.gson.Gson;
 
 /**
  * @author ThachLN
  */
-public class DepartmentModel implements Serializable {
+public class DepartmentModel extends AbstractTableObjectModel implements Serializable {
     private String parentDepartment;
-    private List<Object[]> data = null;
-    
+
     public DepartmentModel() {
-        // TODO Auto-generated constructor stub
+        // Do nothing
     }
     
     public DepartmentModel(String parentDepartment, List<Object[]> data) {
@@ -44,7 +44,8 @@ public class DepartmentModel implements Serializable {
         this.data = data;
     }
 
-    public String getJsonDepartments() {
+    @Override
+    public String getJsonData() {
         Gson gson = new Gson();
         
         String jsonData;
@@ -53,21 +54,15 @@ public class DepartmentModel implements Serializable {
         
         // add prefix
         StringBuffer sb = new StringBuffer();
-        sb.append("{ \"data\": ")
+        sb.append(AppCons.BEGIN_JSON_DATA)
           .append(jsonData)
-          .append("}");
+          .append(AppCons.END_JSON_DATA);
         
         jsonData = sb.toString();
 
         return jsonData;
     }
-    public List<Object[]> getData() {
-        return data;
-    }
 
-    public void setData(List<Object[]> data) {
-        this.data = data;
-    }
 
     /**
      * Get value of parentDepartment.
@@ -87,8 +82,9 @@ public class DepartmentModel implements Serializable {
         this.parentDepartment = parentDepartment;
     }
 
-    public void setDepartments(List<Department> lstDepartments) {
-        Iterator<Department> itDepartment = lstDepartments.iterator();
+    @Override
+    public void setDataList(List<?> lstDepartments) {
+        Iterator itDepartment = lstDepartments.iterator();
         
         Department department;
         
@@ -97,27 +93,16 @@ public class DepartmentModel implements Serializable {
         }
         Object[] arrObjs;
         while (itDepartment.hasNext()) {
-            department = itDepartment.next();
+            department = (Department) itDepartment.next();
             
-            arrObjs = new Object[4];
-            arrObjs[0] = formatJson(department.getCd());
-            arrObjs[1] = formatJson(department.getName());
-            //arrObjs[2] = formatJson(department.getManagerName());
-            arrObjs[2] = formatJson(department.getManagerUsername());
-            arrObjs[3] = formatJson(department.getDescription());
+            arrObjs = new Object[5];
+            arrObjs[0] = AppUtil.formatJson(department.getId());
+            arrObjs[1] = AppUtil.formatJson(department.getCd());
+            arrObjs[2] = AppUtil.formatJson(department.getName());
+            arrObjs[3] = AppUtil.formatJson(department.getManagerUsername());
+            arrObjs[4] = AppUtil.formatJson(department.getDescription());
             
             data.add(arrObjs);
         }        
-    }
-
-    private Object formatJson(String text) {
-        if (text == null) {
-            text = CHARA.BLANK;
-        }
-        
-        return text;
-    }
-
-    
-    
+    } 
 }

@@ -3,8 +3,8 @@ package mks.dms.controller;
 import java.util.List;
 
 import mks.dms.dao.entity.Department;
-import mks.dms.model.DepartmentModel;
 import mks.dms.model.MasterDepartmentRequest;
+import mks.dms.model.datatable.DepartmentModel;
 import mks.dms.service.MasterService;
 
 import org.apache.log4j.Logger;
@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -81,9 +80,9 @@ public class MasterTemplateController {
             // Add an empty
             lstDepartments.add(department );
         }
-        departModel.setDepartments(lstDepartments);
+        departModel.setDataList(lstDepartments);
 
-        String jsonData = departModel.getJsonDepartments();
+        String jsonData = departModel.getJsonData();
 
         LOG.debug("jsonData=" + jsonData);
         

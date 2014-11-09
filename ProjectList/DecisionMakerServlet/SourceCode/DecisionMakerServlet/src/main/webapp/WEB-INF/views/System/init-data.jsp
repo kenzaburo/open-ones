@@ -5,66 +5,215 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-<!-- bootstrap 3.0.2 -->
-<link href="resources/AdminLTE/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<!-- font Awesome -->
-<link href="resources/AdminLTE/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<!-- Ionicons -->
-<link href="resources/AdminLTE/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+<script src="resources/handsontable/lib/jquery-1.10.2.js"></script>
+<script src="resources/handsontable/jquery.handsontable.full.js"></script>
+<script src="resources/handsontable/lib/jquery-ui/js/jquery-ui.custom.min.js"></script>
 
-<!-- DATA TABLES -->
-<link href="resources/AdminLTE/css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
-        
-<!-- jQuery -->
-<script src="resources/jquery/1.9.1/jquery-1.9.1.min.js"></script>
-<!-- Bootstrap -->
-<script src="resources/AdminLTE/js/bootstrap.min.js" type="text/javascript"></script>
-<!-- DATA TABES SCRIPT -->
-<script src="resources/AdminLTE/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
-<script src="resources/AdminLTE/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+<link rel="stylesheet" media="screen" href="resources/handsontable/jquery.handsontable.full.css">
+<link rel="stylesheet" media="screen" href="resources/handsontable/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
 
-<script type="text/javascript" src="resources/jquery-ui/1.9.2/ui/jquery-ui-1.9.2.js"></script>
-<link type="text/css" href="resources/jquery-ui/1.9.2/themes/base/jquery.ui.all.css" rel="stylesheet">
+<div>
+  <H5><s:message code="Request_type"/></H5>
+  <div>
+    <div id="dataTableRequestType"></div>
+    <a id="saveRequestType" class="button" href="saveAllRequestType"><s:message code="Save"/></a>
+  </div>
+  
+  <H5><s:message code="Department"/></H5>
+  <div id="dataTableDepartment"></div>
 
-<%-- Process confirmation delete request --%>
-<script type="text/javascript" src="resources/js/confirmFunction.js"></script>
-<script type="text/javascript" src="resources/js/common.js"></script>
-<script type="text/javascript" src="resources/js/data-table.js"></script>
+  <H5><s:message code="User"/></H5>
+  <div id="dataTableUser"></div>
+  
+  <H5><s:message code="Status_flow_request"/></H5>
+  <div id="dataTableStatusFlowRequest"></div>
 
-<jsp:include page="../_common/confirmDeleteRequest.jsp"/>
+  <H5><s:message code="Parameter"/></H5>
+  <div id="dataTableParameter"></div>
 
-<div class="box-body table-responsive">
-<table id="searchResult" class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th width="20px"><s:message code="No"/></th>
-      <th width="80px"><s:message code="Code"/></th>
-      <th width="100px"><s:message code="Name"/></th>
-      <th width="200px"><s:message code="Description"/></th>
-      <th width="80px"><s:message code="Enable"/></th>
-    </tr>
-  </thead>
-  <tbody>
-    <c:choose>
-        <c:when test="${result == true}">
-            <H3><s:message code="Init_data_success"/></H3>
-        </c:when>
-        <c:otherwise>
-            <label class="error">
-            <s:message code="Init_data_no_success"/>
-            </label>
-        </c:otherwise>
-    </c:choose>
-    <c:forEach var="reqType" items="${lstRequestType}" varStatus="status">
-      <tr>
-        <td>${status.count}.</td>
-        <td>${reqType.cd}</td>
-        <td>${reqType.name}</td>
-        <td>${reqType.description}</td>
-        <td>${reqType.enabled}</td>
-        
-      </tr>
-    </c:forEach>
-  </tbody>
-</table>
 </div>
+    
+<div class="box-body table-responsive">
+</div>
+
+<!-- Request types -->
+<script>
+    $(document).ready(function() {
+
+        var container = $("#dataTableRequestType");
+        var parent = container.parent();
+        container.handsontable({
+            startRows: 4,
+            startCols: 3,
+            rowHeaders: true,
+            colHeaders: ['<s:message code="Code"/>', '<s:message code="Name"/>', 'Result'],
+            colWidths: [100, 200],
+            manualColumnResize: true,
+            minSpareRows: 1
+        });
+
+        // Load current data of request types
+        $.ajax({
+            url: "load-request-type",
+            dataType: 'json',
+            type: 'GET',
+            success: function (res) {
+              var handsontable = container.data('handsontable');
+              handsontable.loadData(res.data);
+            },
+            error: function() {
+            	alert('<s:message code="Could_not_load_data"/>: <s:message code="Request_type"/>');
+            }
+        });
+
+        // Save
+        $("#saveRequestType").click(function() {
+            var tableData = container.handsontable('getData');
+
+            var formDataJson = JSON.stringify({"data":tableData});
+            
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/json',
+                url: "saveAllRequestType",
+                data: formDataJson,
+                success: function(res) {
+                    alert("After save:" + res.data);
+                    //location.reload(true);
+                },
+                error: function(res) {
+                    alert("Lỗi:" + res.data);
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Department -->
+<script>
+    $(document).ready(function() {
+
+        var container = $("#dataTableDepartment");
+        var parent = container.parent();
+        container.handsontable({
+            startRows: 1,
+            startCols: 5,
+            rowHeaders: true,
+            colHeaders: ['ID', '<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Manager"/>', '<s:message code="Note"/>'],
+            colWidths: [60, 120, 200, 200, 200],
+            manualColumnResize: true,
+            minSpareRows: 1
+        });
+
+        // Load current data of request types
+        $.ajax({
+            url: "load-department",
+            dataType: 'json',
+            type: 'GET',
+            success: function (res) {
+              var handsontable = container.data('handsontable');
+              handsontable.loadData(res.data);
+            },
+            error: function() {
+                alert('<s:message code="Could_not_load_data"/>: <s:message code="Department"/>');
+            }
+          });
+    });
+</script>
+
+<!-- User -->
+<script>
+    $(document).ready(function() {
+
+        var container = $("#dataTableUser");
+        var parent = container.parent();
+        container.handsontable({
+            startRows: 1,
+            startCols: 5,
+            rowHeaders: true,
+            colHeaders: ['ID', '<s:message code="Account"/>', '<s:message code="FirstName"/>', '<s:message code="LastName"/>', '<s:message code="Email"/>'],
+            colWidths: [60, 120, 200, 200, 200],
+            manualColumnResize: true,
+            minSpareRows: 1
+        });
+
+        // Load current data of request types
+        $.ajax({
+            url: "load-system-user",
+            dataType: 'json',
+            type: 'GET',
+            success: function (res) {
+              var handsontable = container.data('handsontable');
+              handsontable.loadData(res.data);
+            },
+            error: function() {
+                alert('<s:message code="Could_not_load_data"/>: <s:message code="User"/>');
+            }
+          });
+    });
+</script>
+
+<!-- Statuses of request -->
+<script>
+    $(document).ready(function() {
+
+        var container = $("#dataTableStatusFlowRequest");
+        var parent = container.parent();
+        container.handsontable({
+            startRows: 1,
+            startCols: 5,
+            rowHeaders: true,
+            colHeaders: ['ID', '<s:message code="Request_type"/>', '<s:message code="User_type"/>', '<s:message code="Current_status"/>', '<s:message code="Next_status"/>'],
+            colWidths: [60, 120, 200, 200, 200],
+            manualColumnResize: true,
+            minSpareRows: 1
+        });
+
+        // Load current data of request types
+        $.ajax({
+            url: "load-status-flow-request",
+            dataType: 'json',
+            type: 'GET',
+            success: function (res) {
+              var handsontable = container.data('handsontable');
+              handsontable.loadData(res.data);
+            },
+            error: function() {
+                alert('<s:message code="Could_not_load_data"/>: <s:message code="Status_flow_request"/>');
+            }
+          });
+    });
+</script>
+
+<!-- Parameters -->
+<script>
+    $(document).ready(function() {
+
+        var container = $("#dataTableParameter");
+        var parent = container.parent();
+        container.handsontable({
+            startRows: 1,
+            startCols: 5,
+            rowHeaders: true,
+            colHeaders: ['ID', '<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Value"/>', '<s:message code="Description"/>'],
+            colWidths: [60, 120, 200, 200, 200],
+            manualColumnResize: true,
+            minSpareRows: 1
+        });
+
+        // Load current data of request types
+        $.ajax({
+            url: "load-parameter",
+            dataType: 'json',
+            type: 'GET',
+            success: function (res) {
+              var handsontable = container.data('handsontable');
+              handsontable.loadData(res.data);
+            },
+            error: function() {
+                alert('<s:message code="Could_not_load_data"/>: <s:message code="Parameter"/>');
+            }
+          });
+    });
+</script>

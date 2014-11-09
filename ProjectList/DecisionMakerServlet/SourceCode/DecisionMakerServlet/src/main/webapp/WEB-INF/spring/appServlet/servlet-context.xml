@@ -76,14 +76,6 @@
         </property>
     </bean>
     
-    <!-- Configuration -->
-    <bean id="mailServerInfo" class="openones.mail.MailServerInfo">
-        <property name="name" value="smtp.googlemail.com"/>
-        <property name="port" value="587"/>
-        <property name="requireAuth" value="true"/>
-        <property name="enableStarttls" value="true"/>
-        <property name="username" value="youremail"/>
-        <property name="password" value="yourpassword"/>
-        
-    </bean>
+    <import resource="mail-configuration.xml"/>
+    
 </beans>

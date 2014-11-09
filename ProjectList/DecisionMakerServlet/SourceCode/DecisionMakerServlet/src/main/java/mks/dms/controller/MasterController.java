@@ -3,8 +3,8 @@ package mks.dms.controller;
 import java.util.List;
 
 import mks.dms.dao.entity.Department;
-import mks.dms.model.DepartmentModel;
 import mks.dms.model.MasterDepartmentRequest;
+import mks.dms.model.datatable.DepartmentModel;
 import mks.dms.service.MasterService;
 
 import org.apache.log4j.Logger;
@@ -54,41 +54,12 @@ public class MasterController {
         
         LOG.debug("parentDepartment=" + parentDepartment);
         
-        String jsonRefreshDepartment = getJsonDepartments();
+        String jsonRefreshDepartment = MasterService.getJsonDepartments();
         LOG.debug("jsonRefreshDepartment=" + jsonRefreshDepartment);
 
         return jsonRefreshDepartment;
     }
 
-    /**
-    * Provide array of department.
-    * @return
-    */
-    @RequestMapping(value = "master.department.load", method = RequestMethod.GET)
-    public @ResponseBody String loadDepartment() {
-        return getJsonDepartments();
-    }
-    
-    private String getJsonDepartments() {
-        DepartmentModel departModel = new DepartmentModel(); 
-
-        List<Department> lstDepartments = masterService.getDepartments();
-        
-        if (!CommonUtil.isNNandNB(lstDepartments)) {
-            Department department = new Department();
-            department.setCd(CHARA.BLANK);
-            department.setName(CHARA.BLANK);
-            // Add an empty
-            lstDepartments.add(department );
-        }
-        departModel.setDepartments(lstDepartments);
-
-        String jsonData = departModel.getJsonDepartments();
-
-        LOG.debug("jsonData=" + jsonData);
-        
-        return jsonData;
-    }
     
     @RequestMapping(value = "master.department.getNodeRoot", method = RequestMethod.GET)
     public @ResponseBody String getRootDepartment() {

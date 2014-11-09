@@ -14,11 +14,17 @@
   </c:if>
   <c:if test='${(not empty model.result) && (model.result == false)}'>
     <div id="" class="notice error alert alert-danger alert-dismissable">
-        <i class="icon-remove-sign icon-large"></i><s:message code="Message_reset_password_fail"/>!
+        <i class="icon-remove-sign icon-large"></i>
+            <c:choose>
+                <c:when test="${not empty model.errorCode}">
+                    <s:message code="${model.errorCode}"/>.
+                </c:when>
+                <c:otherwise>
+                    <s:message code="Message_reset_password_fail"/>!
+                </c:otherwise>
+            </c:choose>
+        
         <br/>
-        <c:if test="${not empty model.errorCode}">
-            <strong><s:message code="${model.errorCode}"/></strong>
-        </c:if>
         <a href="#close" class="icon-remove"></a>
     </div>
   

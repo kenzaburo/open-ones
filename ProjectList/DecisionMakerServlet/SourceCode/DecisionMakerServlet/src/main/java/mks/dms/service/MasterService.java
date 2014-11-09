@@ -35,23 +35,35 @@ import javax.persistence.criteria.Root;
 
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
+import mks.dms.dao.controller.ExRequestTypeJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
+import mks.dms.dao.controller.ParameterJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
+import mks.dms.dao.controller.StatusFlowJpaController;
 import mks.dms.dao.controller.UserJpaController;
 import mks.dms.dao.entity.Department;
+import mks.dms.dao.entity.Parameter;
 import mks.dms.dao.entity.Request;
 import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.StatusFlow;
 import mks.dms.dao.entity.User;
-import mks.dms.model.DepartmentModel;
 import mks.dms.model.DurationUnit;
 import mks.dms.model.MasterNode;
+import mks.dms.model.datatable.DepartmentModel;
+import mks.dms.model.datatable.ParameterModel;
+import mks.dms.model.datatable.RequestTypeModel;
+import mks.dms.model.datatable.StatusFlowModel;
+import mks.dms.model.datatable.SystemUserModel;
 import mks.dms.util.AppCons;
+import mks.dms.util.AppUtil;
+import mks.dms.util.SaveBatchException;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
-import rocky.common.CHARA;
+import rocky.common.CommonUtil;
 
 import com.google.gson.Gson;
 
@@ -75,7 +87,7 @@ public class MasterService extends BaseService {
         Account_existed, Success, Error
     }
     
-    public List<Department> getDepartments() {
+    public static List<Department> getDepartments() {
         DepartmentJpaController daoCtrl = new DepartmentJpaController(emf);
         
         List<Department> lstDepartments = daoCtrl.findDepartmentEntities();
@@ -155,7 +167,7 @@ public class MasterService extends BaseService {
         while (itRowData.hasNext()) {
             dataRow = itRowData.next();
             
-            if (isNotEmptyRow(dataRow)) {
+            if (AppUtil.isNotEmptyRow(dataRow)) {
                 cd = (String) dataRow[0];
                 name = (String) dataRow[1];
                 manager = (String) dataRow[2];
@@ -205,7 +217,7 @@ public class MasterService extends BaseService {
         while (itRowData.hasNext()) {
             dataRow = itRowData.next();
             
-            if (isNotEmptyRow(dataRow)) {
+            if (AppUtil.isNotEmptyRow(dataRow)) {
                 username = (String) dataRow[0];
                 email = (String) dataRow[1];
                 lastname = (String) dataRow[2];
@@ -241,23 +253,6 @@ public class MasterService extends BaseService {
         }
         
         return mapResult;
-    }
-    
-    /**
-    * Check a data row is not empty.
-    * @param dataRow items of columns in data row
-    * @return true if there is an item is not null.
-    */
-    private boolean isNotEmptyRow(Object[] dataRow) {
-        int len = (dataRow != null) ? dataRow.length : 0;
-        
-        for (int i = 0; i < len; i++) {
-            if ((dataRow[i] != null) && !CHARA.BLANK.equals(dataRow[i])) {
-                return true;
-            }
-        }
-        
-        return false;
     }
     
     /**
@@ -322,6 +317,13 @@ public class MasterService extends BaseService {
         String json = gson.toJson(beans);;
 
         return json;
+    }
+
+    public static RequestTypeJpaController getRequestTypeDaoController() {
+        // Initialize entity manager factory
+        RequestTypeJpaController daoCtrl = new RequestTypeJpaController(emf);
+        
+        return daoCtrl;
     }
     
     /* Get all user from database */
@@ -431,5 +433,124 @@ public class MasterService extends BaseService {
             return null;
         }
         
+    }
+    
+    public static String getJsonDepartments() {
+        DepartmentModel departModel = new DepartmentModel(); 
+
+        List<Department> lstDepartments = getDepartments();
+        
+//        if (!CommonUtil.isNNandNB(lstDepartments)) {
+//            Department department = new Department();
+//            department.setCd(CHARA.BLANK);
+//            department.setName(CHARA.BLANK);
+//            // Add an empty
+//            lstDepartments.add(department );
+//        }
+        departModel.setDataList(lstDepartments);
+
+        String jsonData = departModel.getJsonData();
+
+        LOG.debug("jsonData=" + jsonData);
+        
+        return jsonData;
+    }
+    
+    public static String getJsonRequestTypes() {
+        RequestTypeModel requestTypeModel = new RequestTypeModel(); 
+
+        RequestTypeJpaController requestTypeDaoCtrl = getRequestTypeDaoController();
+        List<RequestType> lstRequestTypes = requestTypeDaoCtrl.findRequestTypeEntities();
+        
+        if (!CommonUtil.isNNandNB(lstRequestTypes)) {
+            // Set default sample data
+//            List<Object[]> sampleRequestType = new ArrayList<Object[]>();
+//            sampleRequestType.add(new Object[] {"Task","Công việc"});
+            
+            ApplicationContext appCtx = new ClassPathXmlApplicationContext("init-data.xml");
+            requestTypeModel = appCtx.getBean("requestTypeTableModel", RequestTypeModel.class);
+            
+//            requestTypeModel.setData(sampleRequestType);
+        } else {
+            requestTypeModel.setDataList(lstRequestTypes);
+        }
+
+        String jsonData = requestTypeModel.getJsonData();
+
+        LOG.debug("jsonData=" + jsonData);
+        return jsonData;
+    }
+    
+    public static String getJsonSystemUser() {
+        SystemUserModel systemUserModel = new SystemUserModel(); 
+
+        ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
+        List<User> lstUsers = new ArrayList<User>(); 
+        lstUsers.add(userDaoCtrl.findUserByUsername("admin"));
+        
+//        if (!CommonUtil.isNNandNB(lstUsers)) {
+//            ExUser user = new ExUser();
+//            user.setFirstname(CHARA.BLANK);
+//            user.setLastname(CHARA.BLANK);
+//            // Add an empty
+//            lstUsers.add(user);
+//        }
+        
+        systemUserModel.setDataList(lstUsers);
+
+        String jsonData = systemUserModel.getJsonData();
+
+        LOG.debug("jsonData=" + jsonData);
+        return jsonData;
+    }
+
+    public static String getJsonStatusFlowRequest() {
+        StatusFlowModel statusFlowModel = new StatusFlowModel(); 
+
+        StatusFlowJpaController statusDaoCtrl = new StatusFlowJpaController(BaseService.getEmf());
+        List<StatusFlow> lstStatus = statusDaoCtrl.findStatusFlowEntities();
+        
+        statusFlowModel.setDataList(lstStatus);
+
+        String jsonData = statusFlowModel.getJsonData();
+
+        LOG.debug("jsonData=" + jsonData);
+
+        return jsonData;
+    }
+
+    public static String getJsonParameter() {
+        ParameterModel parameterModel = new ParameterModel(); 
+
+        ParameterJpaController parameterDaoCtrl = new ParameterJpaController(BaseService.getEmf());
+        List<Parameter> lstParam = parameterDaoCtrl.findParameterEntities();
+        
+        parameterModel.setDataList(lstParam);
+
+        String jsonData = parameterModel.getJsonData();
+
+        LOG.debug("jsonData=" + jsonData);
+
+        return jsonData;
+    }
+    
+    /**
+    * Create or Update the request types.
+    * <br/>
+    * For request code existed, update Name and other information.
+    * For request code did not existed, create newly.
+    * @param requestTypeModel
+    * @return fresh model
+     * @throws SaveBatchException 
+    */
+    public RequestTypeModel saveAllRequestTyle(RequestTypeModel requestTypeModel, String username) throws SaveBatchException {
+        ExRequestTypeJpaController requestTypeDaoCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
+        
+        List<RequestType> lstRequestType = requestTypeModel.getDataList();
+        List<AppCons.RESULT> lstResult = requestTypeDaoCtrl.save(lstRequestType, username);
+        
+        requestTypeModel.setResultList(lstResult);
+        
+        return requestTypeModel;
     }
 }

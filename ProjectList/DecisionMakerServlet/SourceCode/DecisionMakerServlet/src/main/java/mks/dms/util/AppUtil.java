@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
+import rocky.common.CHARA;
 import mks.dms.dao.entity.Request;
 import mks.dms.model.RequestModel;
 
@@ -80,8 +81,39 @@ public class AppUtil {
 
       return request;
   }
+  
+  public static Object formatJson(Integer number) {
+      if (number == null) {
+          return CHARA.BLANK;
+      } else {
+          return number.toString();
+      }
+  }
 
+  public static Object formatJson(String text) {
+      if (text == null) {
+          return CHARA.BLANK;
+      } else {
+          return text;
+      }
+  }
 
+  /**
+  * Check a data row is not empty.
+  * @param dataRow items of columns in data row
+  * @return true if there is an item is not null.
+  */
+  public static boolean isNotEmptyRow(Object[] dataRow) {
+      int len = (dataRow != null) ? dataRow.length : 0;
+      
+      for (int i = 0; i < len; i++) {
+          if ((dataRow[i] != null) && !CHARA.BLANK.equals(dataRow[i])) {
+              return true;
+          }
+      }
+      
+      return false;
+  }
 //    public static RequestModel parseRequestEntity2Model(Request request, RequestModel model) {
 //        model.setRequestId(request.getId());
 //        

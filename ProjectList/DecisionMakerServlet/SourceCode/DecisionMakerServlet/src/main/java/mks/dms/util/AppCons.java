@@ -85,6 +85,14 @@ public class AppCons {
         Creator
     };
     
+    /** Store result of create for update data. */
+    public enum RESULT {
+        CREATE_OK,
+        CREATE_FAIL,
+        UPDATE_OK,
+        UPDATE_FAIL
+    };
+    
     ////////////////////////////////////////////////////////
     /*
     * Parameters
@@ -98,5 +106,8 @@ public class AppCons {
     public static final String PARAM_RESET_PASSWORD_LINK = "ResetPasswdLink";
     public static final String PARAM_RESET_PASSWORD_FROM_ADDR = "ResetPasswdFromEmail";
     public static final String PARAM_RESET_PASSWORD_FROM_NAME = "ResetPasswdFromName";
+
+    public static final String BEGIN_JSON_DATA = "{ \"data\": ";
+    public static final Object END_JSON_DATA = "}";
 
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <!-- Configuration -->
+  <bean id="requestTypeTableModel" class="mks.dms.model.datatable.RequestTypeModel">
+    <property name="data">
+      <bean class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="targetListClass">
+          <value>java.util.ArrayList</value>
+        </property>
+        <property name="sourceList">
+          <list>
+            <list>
+              <value>Task</value>
+              <value>Công việc</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Rule</value>
+              <value>Quy định</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Announcement</value>
+              <value>Thông báo</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Leave</value>
+              <value>Nghỉ phép</value>
+              <value></value>
+            </list>
+          </list>
+        </property>
+      </bean>
+    </property>
+  </bean>
+</beans>

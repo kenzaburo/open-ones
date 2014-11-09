@@ -93,7 +93,7 @@ public class PasswordController {
     }
     
     @RequestMapping(value = "changePassword", method = RequestMethod.POST)
-    public ModelAndView changePass(@ModelAttribute(AppCons.MODEL) @Validated ChangePasswordModel model, BindingResult bindingResult, Principal principal) {
+    public ModelAndView changePassword(@ModelAttribute(AppCons.MODEL) @Validated ChangePasswordModel model, BindingResult bindingResult, Principal principal) {
         ModelAndView mav = new ModelAndView("change-password");
         
         if (bindingResult.hasErrors()) {
@@ -109,7 +109,7 @@ public class PasswordController {
         Entry entry = ldapService.findUserByUid(username);
         
         boolean changedPassOK = false;
-        String desc = null;
+        String errorCode = null;
         
         if (entry != null) {
             if (ldapService.checkPassword(username, password)) {
@@ -119,21 +119,21 @@ public class PasswordController {
                 if (changedPassOK) {
                     // No nothing
                 } else {
-                    desc = LDAP_ERROR;
+                    errorCode = LDAP_ERROR;
                 }
             } else {
-                desc = WRONG_PASSWORD;
+                errorCode = WRONG_PASSWORD;
                 // changedPassOK = false;
             }
         } else {
-            desc = ACCOUNT_DOES_NOT_EXIST;
+            errorCode = ACCOUNT_DOES_NOT_EXIST;
             // changedPassOK = false;
         }
         
         model.setNewPassword(CHARA.BLANK);
         model.setConfirmNewPassword(CHARA.BLANK);
         mav.addObject("result", changedPassOK);
-        mav.addObject("desc", desc);
+        mav.addObject("errorCode", errorCode);
 
         return mav;
     }
@@ -231,7 +231,7 @@ public class PasswordController {
         Entry entry = ldapService.findUserByEmail(email);
         
         boolean changedPassOK = false;
-        String desc = null;
+        String errorCode = null;
         
         if (entry != null) {
             String userDN = entry.getDn();
@@ -240,17 +240,17 @@ public class PasswordController {
             if (changedPassOK) {
                 // No nothing
             } else {
-                desc = LDAP_ERROR;
+                errorCode = LDAP_ERROR;
             }
         } else {
-            desc = ACCOUNT_DOES_NOT_EXIST;
+            errorCode = ACCOUNT_DOES_NOT_EXIST;
             // changedPassOK = false;
         }
         
         model.setNewPassword(CHARA.BLANK);
         model.setConfirmNewPassword(CHARA.BLANK);
         mav.addObject("result", changedPassOK);
-        mav.addObject("desc", desc);
+        mav.addObject("errorCode", errorCode);
 
         return mav;
     }

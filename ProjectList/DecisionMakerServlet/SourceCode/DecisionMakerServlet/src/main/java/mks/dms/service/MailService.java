@@ -121,8 +121,8 @@ public class MailService extends BaseService {
             result = true;
 
         } catch (MessagingException ex) {
-            em.getTransaction().rollback();
             LOG.error("Error!. Can't send", ex);
+            em.getTransaction().rollback();
         } finally {
             em.close();
         }
@@ -150,13 +150,13 @@ public class MailService extends BaseService {
     }
     
     private String getResetEmailSubject() {
-        String resetPasswordLink;
+        String resetEmailSubject;
         ExParameterJpaController paramDaoCtrl = new ExParameterJpaController(BaseService.getEmf());
         
         boolean isEnable = true;
-        resetPasswordLink = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_SUBJECT, isEnable);
+        resetEmailSubject = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_SUBJECT, isEnable);
         
-        return resetPasswordLink;
+        return resetEmailSubject;
     }
     
 

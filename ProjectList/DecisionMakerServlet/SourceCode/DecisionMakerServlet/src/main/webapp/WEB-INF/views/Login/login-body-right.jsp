@@ -43,7 +43,7 @@
   
       <div>
         <c:if test="${not empty error}">
-          <p>${error}</p>
+          <p><s:message code="${error}"/></p>
         </c:if>
         <c:if test="${not empty success}">
           <p>${success}</p>

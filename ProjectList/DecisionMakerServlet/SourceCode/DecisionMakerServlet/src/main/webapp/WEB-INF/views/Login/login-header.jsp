@@ -6,6 +6,6 @@
 
 <nav class="navbar navbar-static-top" role="navigation">
     <div class="navbar-right">
-      <a href="#" class="btn btn-success btn-sm"><s:message code="Register"/></a>
+<%--       <a href="#" class="btn btn-success btn-sm"><s:message code="Register"/></a> --%>
     </div>
 </nav>

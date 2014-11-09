@@ -28,18 +28,18 @@
 
 <link type="text/css" href="resources/css/app-validation.css" rel="stylesheet">
 <%-- Display the result/error --%>
-  <c:if test='${(not empty model.result) && (model.result == true)}'>
+  <c:if test='${(not empty result) && (result == true)}'>
     <div id="" class="notice success">
         <i class="icon-ok icon-large"></i><s:message code="Change_password_success"/>!
         <a href="#close" class="icon-remove"></a>
     </div>
   </c:if>
-  <c:if test='${(not empty model.result) && (model.result == false)}'>
+  <c:if test='${(not empty result) && (result == false)}'>
     <div id="" class="notice error">
         <i class="icon-remove-sign icon-large"></i><s:message code="Change_password_no_success"/>!
         <br/>
-        <c:if test="${not empty model.errorCode}">
-            <s:message code="${model.errorCode}"/>
+        <c:if test="${not empty errorCode}">
+            <s:message code="${errorCode}"/>
         </c:if>
         <a href="#close" class="icon-remove"></a>
     </div>
