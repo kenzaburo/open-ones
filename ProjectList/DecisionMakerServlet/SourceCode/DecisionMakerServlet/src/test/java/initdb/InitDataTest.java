@@ -57,43 +57,43 @@ public class InitDataTest {
         systemService.initData("admin");
     }
     
-    @Test 
-    public void testInitCreateRank() {
-    	ParameterJpaController daoCtrl = new ParameterJpaController(emf);
-    	
-    	Parameter rankBad = new Parameter();
-    	rankBad.setCd("Rank");
-    	rankBad.setName("Tệ");
-    	rankBad.setValue("Bad");
-    	daoCtrl.create(rankBad);
-    	
-    	Parameter rankNormal = new Parameter();
-    	rankNormal.setCd("Rank");
-    	rankNormal.setName("Bình thường");
-    	rankNormal.setValue("Normal");
-    	daoCtrl.create(rankNormal);
-    	
-    	Parameter rankGood = new Parameter();
-    	rankGood.setCd("Rank");
-    	rankGood.setName("Khá");
-    	rankGood.setValue("Good");
-    	daoCtrl.create(rankGood);
-    	
-    	Parameter rankPerfect = new Parameter();
-    	rankPerfect.setCd("Rank");
-    	rankPerfect.setName("Hoàn hảo");
-    	rankPerfect.setValue("Perfect");
-    	daoCtrl.create(rankPerfect);
-    	
-    	Parameter rankExcellent = new Parameter();
-    	rankExcellent.setCd("Rank");
-    	rankExcellent.setName("Xuất sắc, vượt trội");
-    	rankExcellent.setValue("Excellent");
-    	daoCtrl.create(rankExcellent);
-    	
-    	assertEquals(5, daoCtrl.getParameterCount());
-    	
-    }
+//    @Test 
+//    public void testInitCreateRank() {
+//    	ParameterJpaController daoCtrl = new ParameterJpaController(emf);
+//    	
+//    	Parameter rankBad = new Parameter();
+//    	rankBad.setCd("Rank");
+//    	rankBad.setName("Tệ");
+//    	rankBad.setValue("Bad");
+//    	daoCtrl.create(rankBad);
+//    	
+//    	Parameter rankNormal = new Parameter();
+//    	rankNormal.setCd("Rank");
+//    	rankNormal.setName("Bình thường");
+//    	rankNormal.setValue("Normal");
+//    	daoCtrl.create(rankNormal);
+//    	
+//    	Parameter rankGood = new Parameter();
+//    	rankGood.setCd("Rank");
+//    	rankGood.setName("Khá");
+//    	rankGood.setValue("Good");
+//    	daoCtrl.create(rankGood);
+//    	
+//    	Parameter rankPerfect = new Parameter();
+//    	rankPerfect.setCd("Rank");
+//    	rankPerfect.setName("Hoàn hảo");
+//    	rankPerfect.setValue("Perfect");
+//    	daoCtrl.create(rankPerfect);
+//    	
+//    	Parameter rankExcellent = new Parameter();
+//    	rankExcellent.setCd("Rank");
+//    	rankExcellent.setName("Xuất sắc, vượt trội");
+//    	rankExcellent.setValue("Excellent");
+//    	daoCtrl.create(rankExcellent);
+//    	
+//    	assertEquals(5, daoCtrl.getParameterCount());
+//    	
+//    }
 
     @Test
     public void testInitCreateUser() {

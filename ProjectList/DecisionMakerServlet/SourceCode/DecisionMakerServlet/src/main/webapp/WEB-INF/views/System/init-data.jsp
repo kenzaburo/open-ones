@@ -71,19 +71,39 @@
             var tableData = container.handsontable('getData');
 
             var formDataJson = JSON.stringify({"data":tableData});
-            
+
+//             $.ajax({
+//                 type: "POST",
+//                 contentType: "application/json; charset=utf-8",
+//                 url: "saveAllRequestType",
+//                 data: formDataJson,
+//                 success: function(res) {
+//                 	var result = $.parseJSON(res);
+//                     alert("After save:" + result.success);
+//                     //location.reload(true);
+//                 },
+//                 error: function(data, status) {
+//                 	alert(status);
+// 					alert(JSON.stringify(data));
+//                 }
+//             });
+            var obj = new Object();
+     				obj.first = "abc";
+     				obj.second = "def";
+     			var jsonData = JSON.stringify(obj);
             $.ajax({
                 type: "POST",
-                dataType: 'json',
-                contentType: 'application/json',
-                url: "saveAllRequestType",
-                data: formDataJson,
+                contentType: "application/json; charset=utf-8",
+                url: "testAjax",
+                data: jsonData,
                 success: function(res) {
-                    alert("After save:" + res.data);
-                    //location.reload(true);
+                	var result = $.parseJSON(res);
+                    alert("After save:" + result.result);
+                    location.reload(true);
                 },
-                error: function(res) {
-                    alert("Lỗi:" + res.data);
+                error: function(data, status) {
+                	alert(status);
+					alert(JSON.stringify(data));
                 }
             });
         });

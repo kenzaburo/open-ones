@@ -1,7 +1,12 @@
 package mks.dms.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.Principal;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import mks.dms.dao.controller.ExRequestTypeJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
@@ -14,14 +19,18 @@ import mks.dms.service.BaseService;
 import mks.dms.service.MasterService;
 import mks.dms.service.SystemService;
 import mks.dms.util.SaveBatchException;
+import netscape.javascript.JSObject;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -89,32 +98,50 @@ public class InitDataController {
         return MasterService.getJsonRequestTypes();
     }
 
-    @RequestMapping(value = "saveAllRequestType", method = RequestMethod.GET)
-    @ResponseBody
-    public String saveAllRequestTypeGET(@RequestBody RequestTypeModel requestTypeModel, Principal principal) {
-        return saveAllRequestType(requestTypeModel, principal);
-    }
+//    @RequestMapping(value = "saveAllRequestType", method = RequestMethod.GET)
+//    @ResponseBody
+//    public String saveAllRequestTypeGET(@RequestBody RequestTypeModel requestTypeModel, Principal principal) throws JSONException {
+//        return saveAllRequestType(requestTypeModel, principal);
+//    }
     
     @RequestMapping(value = "saveAllRequestType", method = RequestMethod.POST)
     @ResponseBody
-    public String saveAllRequestType(@RequestBody RequestTypeModel requestTypeModel, Principal principal) {
-        JsonObject jo = new JsonObject();
+    public String saveAllRequestType(@RequestBody RequestTypeModel requestTypeModel, Principal principal) throws JSONException {
+    	JsonObject jo = new JsonObject();
+        JSONObject jso = new JSONObject();
         try {
             requestTypeModel = masterService.saveAllRequestTyle(requestTypeModel, principal.getName());
             String jsonRefreshDepartment = requestTypeModel.getJsonData();
             LOG.debug("jsonRefreshDepartment=" + jsonRefreshDepartment);
-
             
-            jo.addProperty("success", "true");
-            return jo.toString();
+//            jo.addProperty("success", "true");
+            jso.put("success", "true");
+//            return jso.toString();
         } catch (SaveBatchException ex) {
             LOG.error("Could not save the request types", ex);
-            jo.addProperty("error", "true");
-            jo.addProperty("data", ex.getMessage());
-            
+//            jo.addProperty("error", "true");
+//            jo.addProperty("data", ex.getMessage());
+            jso.put("error", "true");
+            jso.put("data", ex.getMessage());
         }
-
-        return jo.toString();
+        System.out.println("Data : " + jso.toString());
+        return jso.toString();
+    }
+    
+    @RequestMapping(value = "testAjax", method = RequestMethod.POST)
+    @ResponseBody
+    public String testAjax(HttpServletRequest request, Principal principal) throws JSONException, IOException{
+    	BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		String json1 = "";
+	        if (br != null) {
+	            json1 = br.readLine();
+	        }
+	    JSONObject jsonObject = new JSONObject(json1);
+	    String first = (String) jsonObject.get("first");
+	    String second = (String) jsonObject.get("second");
+    	JSONObject json = new JSONObject();
+    	json.put("result", first + second);
+    	return json.toString();
     }
     
     /**
