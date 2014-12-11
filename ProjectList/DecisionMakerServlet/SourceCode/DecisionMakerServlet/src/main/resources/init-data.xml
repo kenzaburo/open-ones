@@ -41,4 +41,202 @@
       </bean>
     </property>
   </bean>
+  
+  <!-- Department -->
+  <bean id="departmentModel" class="mks.dms.model.datatable.DepartmentModel">
+    <property name="data">
+      <bean class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="targetListClass">
+          <value>java.util.ArrayList</value>
+        </property>
+        <property name="sourceList">
+          <list>
+            <list>
+              <value>All</value>
+              <value>Tất cả</value>
+              <value>admin</value>
+              <value>System</value>
+              <value></value>
+            </list>
+          </list>
+        </property>
+      </bean>
+    </property>
+  </bean>
+  
+  <!-- System user -->
+  <bean id="systemUserModel" class="mks.dms.model.datatable.SystemUserModel">
+    <property name="data">
+      <bean class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="targetListClass">
+          <value>java.util.ArrayList</value>
+        </property>
+        <property name="sourceList">
+          <list>
+            <list>
+              <value>admin</value>
+              <value>Admin</value>
+              <value>Mr</value>
+              <value>lnthach@yahoo.com</value>
+              <value></value>
+            </list>
+          </list>
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+  <!-- StatusFlowModel -->
+  <bean id="statusFlowModel" class="mks.dms.model.datatable.StatusFlowModel">
+    <property name="data">
+      <bean class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="targetListClass">
+          <value>java.util.ArrayList</value>
+        </property>
+        <property name="sourceList">
+          <list>
+            <list>
+              <value>Task</value>
+              <value>Owner</value>
+              <value>Created</value>
+              <value>Doing</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Task</value>
+              <value>Owner</value>
+              <value>Doing</value>
+              <value>Finish</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Task</value>
+              <value>Owner</value>
+              <value>Finish</value>
+              <value>Re-assigned</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Task</value>
+              <value>Owner</value>
+              <value>Re-assigned</value>
+              <value>Doing</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Task</value>
+              <value>Manager</value>
+              <value>Finish</value>
+              <value>Done</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Task</value>
+              <value>Manager</value>
+              <value>Done</value>
+              <value>Re-assigned</value>
+              <value></value>
+            </list>
+            
+            <!-- For leave -->
+            <list>
+              <value>Leave</value>
+              <value>Manager</value>
+              <value>Created</value>
+              <value>Approved</value>
+              <value></value>
+            </list>
+            
+            <list>
+              <value>Leave</value>
+              <value>Manager</value>
+              <value>Created</value>
+              <value>Rejected</value>
+              <value></value>
+            </list>
+          </list>
+        </property>
+      </bean>
+    </property>
+  </bean>
+  
+<!-- Parameter -->
+  <bean id="parameterModel" class="mks.dms.model.datatable.ParameterModel">
+    <property name="data">
+      <bean class="org.springframework.beans.factory.config.ListFactoryBean">
+        <property name="targetListClass">
+          <value>java.util.ArrayList</value>
+        </property>
+        <property name="sourceList">
+          <list>
+            <list>
+              <value>Rank</value>
+              <value>A</value>
+              <value>A</value>
+              <value>Excellent</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Rank</value>
+              <value>B</value>
+              <value>B</value>
+              <value>Fair</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Rank</value>
+              <value>C</value>
+              <value>C</value>
+              <value>Acceptable</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Rank</value>
+              <value>D</value>
+              <value>D</value>
+              <value>Un-acceptable</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Rank</value>
+              <value>C</value>
+              <value>C</value>
+              <value>Bad</value>
+              <value></value>
+            </list>
+            <!-- For Email -->
+            <list>
+              <value>Email</value>
+              <value>ResetPasswdSubject</value>
+              <value>[DMA] Khôi phục mật khẩu</value>
+              <value>Title of email to reset password</value>
+              <value></value>
+            </list>
+            
+            <list>
+              <value>Email</value>
+              <value>ResetPasswdFromEmail</value>
+              <value>Your email</value>
+              <value>Email to send to user</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Email</value>
+              <value>ResetPasswdFromName</value>
+              <value>Your Name</value>
+              <value>Name of sender</value>
+              <value></value>
+            </list>
+            <list>
+              <value>Email</value>
+              <value>ResetPasswdLink</value>
+              <value>http://your domain/confirm-reset-password</value>
+              <value>Prefix of reset password link</value>
+              <value></value>
+            </list>
+          </list>
+        </property>
+      </bean>
+    </property>
+  </bean>
 </beans>

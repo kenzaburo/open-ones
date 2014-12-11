@@ -48,11 +48,11 @@ public class ParameterModel extends AbstractTableObjectModel implements Serializ
             parameter = (Parameter) itParameter.next();
             
             arrObjs = new Object[5];
-            arrObjs[0] = AppUtil.formatJson(parameter.getId());
-            arrObjs[1] = AppUtil.formatJson(parameter.getCd());
-            arrObjs[2] = AppUtil.formatJson(parameter.getName());
-            arrObjs[3] = AppUtil.formatJson(parameter.getValue());
-            arrObjs[4] = AppUtil.formatJson(parameter.getDescription());
+            arrObjs[0] = AppUtil.formatJson(parameter.getCd());
+            arrObjs[1] = AppUtil.formatJson(parameter.getName());
+            arrObjs[2] = AppUtil.formatJson(parameter.getValue());
+            arrObjs[3] = AppUtil.formatJson(parameter.getDescription());
+            // Reserved column 5 for Result of saving
             
             data.add(arrObjs);
         }

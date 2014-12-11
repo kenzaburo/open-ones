@@ -4,22 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Principal;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import mks.dms.dao.controller.ExRequestTypeJpaController;
-import mks.dms.dao.controller.RequestTypeJpaController;
-import mks.dms.dao.entity.Department;
-import mks.dms.dao.entity.RequestType;
-import mks.dms.model.MasterDepartmentRequest;
-import mks.dms.model.datatable.DepartmentModel;
 import mks.dms.model.datatable.RequestTypeModel;
-import mks.dms.service.BaseService;
 import mks.dms.service.MasterService;
 import mks.dms.service.SystemService;
 import mks.dms.util.SaveBatchException;
-import netscape.javascript.JSObject;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -30,14 +21,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.JsonObject;
-
-import rocky.common.CHARA;
-import rocky.common.CommonUtil;
 
 /**
  * @author ThachLe
@@ -60,31 +47,23 @@ public class InitDataController {
     public ModelAndView goInitData(Model model, Principal principal) {
         ModelAndView mav = new ModelAndView("init-data");
 
-//        boolean initResult = systemService.initData(principal.getName());
-//
-//        mav.addObject("result", initResult);
-
-        ExRequestTypeJpaController reqTypeDaoCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
-        List<RequestType> lstRequestType = reqTypeDaoCtrl.findRequestTypeEntities();
-        mav.addObject("lstRequestType", lstRequestType);
-
         return mav;
     }
     
-    @RequestMapping(value = "initData", method = RequestMethod.POST)
-    public ModelAndView initData(Model model, Principal principal) {
-        ModelAndView mav = new ModelAndView("init-data");
-
-        boolean initResult = systemService.initData(principal.getName());
-
-        mav.addObject("result", initResult);
-
-        ExRequestTypeJpaController reqTypeDaoCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
-        List<RequestType> lstRequestType = reqTypeDaoCtrl.findRequestTypeEntities();
-        mav.addObject("lstRequestType", lstRequestType);
-
-        return mav;
-    }
+//    @RequestMapping(value = "initData", method = RequestMethod.POST)
+//    public ModelAndView initData(Model model, Principal principal) {
+//        ModelAndView mav = new ModelAndView("init-data");
+//
+//        boolean initResult = systemService.initData(principal.getName());
+//
+//        mav.addObject("result", initResult);
+//
+//        ExRequestTypeJpaController reqTypeDaoCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
+//        List<RequestType> lstRequestType = reqTypeDaoCtrl.findRequestTypeEntities();
+//        mav.addObject("lstRequestType", lstRequestType);
+//
+//        return mav;
+//    }
     
     /**
     * Provide array data of Request types.
@@ -104,27 +83,21 @@ public class InitDataController {
 //        return saveAllRequestType(requestTypeModel, principal);
 //    }
     
-    @RequestMapping(value = "saveAllRequestType", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "saveAllRequestType")
     @ResponseBody
-    public String saveAllRequestType(@RequestBody RequestTypeModel requestTypeModel, Principal principal) throws JSONException {
-    	JsonObject jo = new JsonObject();
-        JSONObject jso = new JSONObject();
+    public String saveAllRequestType(@RequestBody RequestTypeModel requestTypeModel, Principal princial) {
+    	JsonObject jso = new JsonObject();
         try {
-            requestTypeModel = masterService.saveAllRequestTyle(requestTypeModel, principal.getName());
+            requestTypeModel = masterService.saveAllRequestTyle(requestTypeModel, princial.getName());
             String jsonRefreshDepartment = requestTypeModel.getJsonData();
             LOG.debug("jsonRefreshDepartment=" + jsonRefreshDepartment);
             
-//            jo.addProperty("success", "true");
-            jso.put("success", "true");
-//            return jso.toString();
-        } catch (SaveBatchException ex) {
+            jso.addProperty("success", "true");
+            jso.addProperty("data", "Test");
+        } catch (Exception ex) {
             LOG.error("Could not save the request types", ex);
-//            jo.addProperty("error", "true");
-//            jo.addProperty("data", ex.getMessage());
-            jso.put("error", "true");
-            jso.put("data", ex.getMessage());
+            jso.addProperty("error", ex.getMessage());
         }
-        System.out.println("Data : " + jso.toString());
         return jso.toString();
     }
     
@@ -152,7 +125,25 @@ public class InitDataController {
     public @ResponseBody String loadDepartment() {
         return MasterService.getJsonDepartments();
     }
-    
+
+    @RequestMapping(method = RequestMethod.POST, value = "saveSystemDepartment")
+    @ResponseBody
+    public String saveSystemDepartment(@RequestBody RequestTypeModel requestTypeModel, Principal princial) {
+        JsonObject jso = new JsonObject();
+        try {
+            requestTypeModel = masterService.saveAllRequestTyle(requestTypeModel, princial.getName());
+            String jsonRefreshDepartment = requestTypeModel.getJsonData();
+            LOG.debug("jsonRefreshDepartment=" + jsonRefreshDepartment);
+            
+            jso.addProperty("success", "true");
+            jso.addProperty("data", "Test");
+        } catch (Exception ex) {
+            LOG.error("Could not save the request types", ex);
+            jso.addProperty("error", ex.getMessage());
+        }
+        return jso.toString();
+    }
+
     @RequestMapping(value = "load-system-user", method = RequestMethod.GET)
     public @ResponseBody String loadSystemUser() {
         return MasterService.getJsonSystemUser();

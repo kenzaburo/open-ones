@@ -35,6 +35,9 @@ public abstract class AbstractTableObjectModel implements Serializable {
     /** Mapping data with handsontable . */
     List<Object[]> data = null;
     
+    /** Sample: template data from configuration file .xml. */
+    private Boolean isSample;
+    
     public AbstractTableObjectModel() {
         // Do nothing
     }
@@ -48,16 +51,8 @@ public abstract class AbstractTableObjectModel implements Serializable {
             return null;
         } else {
             Gson gson = new Gson();
-
-            String jsonData;
-
-            jsonData = gson.toJson(data);
-
-            // add data into the block to support handsontable
-            StringBuffer sb = new StringBuffer();
-            sb.append(AppCons.BEGIN_JSON_DATA).append(jsonData).append(AppCons.END_JSON_DATA);
-
-            jsonData = sb.toString();
+            
+            String jsonData = gson.toJson(this);
 
             return jsonData;
         }
@@ -90,5 +85,21 @@ public abstract class AbstractTableObjectModel implements Serializable {
     }
 
     abstract void setDataList(List<?> dataList);
+
+    /**
+     * Get value of isSample.
+     * @return the isSample
+     */
+    public Boolean getIsSample() {
+        return isSample;
+    }
+
+    /**
+     * Set the value for isSample.
+     * @param isSample the isSample to set
+     */
+    public void setIsSample(Boolean isSample) {
+        this.isSample = isSample;
+    }
     
 }

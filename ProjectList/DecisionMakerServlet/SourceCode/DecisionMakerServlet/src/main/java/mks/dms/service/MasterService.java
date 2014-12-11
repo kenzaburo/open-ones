@@ -434,28 +434,7 @@ public class MasterService extends BaseService {
         }
         
     }
-    
-    public static String getJsonDepartments() {
-        DepartmentModel departModel = new DepartmentModel(); 
-
-        List<Department> lstDepartments = getDepartments();
         
-//        if (!CommonUtil.isNNandNB(lstDepartments)) {
-//            Department department = new Department();
-//            department.setCd(CHARA.BLANK);
-//            department.setName(CHARA.BLANK);
-//            // Add an empty
-//            lstDepartments.add(department );
-//        }
-        departModel.setDataList(lstDepartments);
-
-        String jsonData = departModel.getJsonData();
-
-        LOG.debug("jsonData=" + jsonData);
-        
-        return jsonData;
-    }
-    
     public static String getJsonRequestTypes() {
         RequestTypeModel requestTypeModel = new RequestTypeModel(); 
 
@@ -463,14 +442,10 @@ public class MasterService extends BaseService {
         List<RequestType> lstRequestTypes = requestTypeDaoCtrl.findRequestTypeEntities();
         
         if (!CommonUtil.isNNandNB(lstRequestTypes)) {
-            // Set default sample data
-//            List<Object[]> sampleRequestType = new ArrayList<Object[]>();
-//            sampleRequestType.add(new Object[] {"Task","Công việc"});
-            
+            // Set default sample data            
             ApplicationContext appCtx = new ClassPathXmlApplicationContext("init-data.xml");
             requestTypeModel = appCtx.getBean("requestTypeTableModel", RequestTypeModel.class);
-            
-//            requestTypeModel.setData(sampleRequestType);
+            requestTypeModel.setIsSample(true);
         } else {
             requestTypeModel.setDataList(lstRequestTypes);
         }
@@ -481,22 +456,49 @@ public class MasterService extends BaseService {
         return jsonData;
     }
     
+    public static String getJsonDepartments() {
+        DepartmentModel departModel = new DepartmentModel(); 
+
+        List<Department> lstDepartments = getDepartments();
+        
+        if (!CommonUtil.isNNandNB(lstDepartments)) {
+            // Set default sample data            
+            ApplicationContext appCtx = new ClassPathXmlApplicationContext("init-data.xml");
+            departModel = appCtx.getBean("departmentModel", DepartmentModel.class);
+            departModel.setIsSample(true);
+        } else {
+            departModel.setDataList(lstDepartments);
+        }
+
+        String jsonData = departModel.getJsonData();
+
+        LOG.debug("jsonData=" + jsonData);
+        
+        return jsonData;
+    }
+    
     public static String getJsonSystemUser() {
         SystemUserModel systemUserModel = new SystemUserModel(); 
 
         ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
-        List<User> lstUsers = new ArrayList<User>(); 
-        lstUsers.add(userDaoCtrl.findUserByUsername("admin"));
+        List<User> lstUsers = null;
+        User userAdmin = userDaoCtrl.findUserByUsername("admin");
         
-//        if (!CommonUtil.isNNandNB(lstUsers)) {
-//            ExUser user = new ExUser();
-//            user.setFirstname(CHARA.BLANK);
-//            user.setLastname(CHARA.BLANK);
-//            // Add an empty
-//            lstUsers.add(user);
-//        }
+        if (userAdmin != null) {
+            lstUsers = new ArrayList<User>(); 
+            lstUsers.add(userAdmin);
+        } else {
+            // Do nothing
+        }
         
-        systemUserModel.setDataList(lstUsers);
+        if (!CommonUtil.isNNandNB(lstUsers)) {
+            // Set default sample data            
+            ApplicationContext appCtx = new ClassPathXmlApplicationContext("init-data.xml");
+            systemUserModel = appCtx.getBean("systemUserModel", SystemUserModel.class);
+            systemUserModel.setIsSample(true);
+        } else {
+            systemUserModel.setDataList(lstUsers);
+        }
 
         String jsonData = systemUserModel.getJsonData();
 
@@ -509,8 +511,15 @@ public class MasterService extends BaseService {
 
         StatusFlowJpaController statusDaoCtrl = new StatusFlowJpaController(BaseService.getEmf());
         List<StatusFlow> lstStatus = statusDaoCtrl.findStatusFlowEntities();
-        
-        statusFlowModel.setDataList(lstStatus);
+
+        if (!CommonUtil.isNNandNB(lstStatus)) {
+            // Set default sample data            
+            ApplicationContext appCtx = new ClassPathXmlApplicationContext("init-data.xml");
+            statusFlowModel = appCtx.getBean("statusFlowModel", StatusFlowModel.class);
+            statusFlowModel.setIsSample(true);
+        } else {
+            statusFlowModel.setDataList(lstStatus);
+        }
 
         String jsonData = statusFlowModel.getJsonData();
 
@@ -525,8 +534,15 @@ public class MasterService extends BaseService {
         ParameterJpaController parameterDaoCtrl = new ParameterJpaController(BaseService.getEmf());
         List<Parameter> lstParam = parameterDaoCtrl.findParameterEntities();
         
-        parameterModel.setDataList(lstParam);
-
+        if (!CommonUtil.isNNandNB(lstParam)) {
+            // Set default sample data            
+            ApplicationContext appCtx = new ClassPathXmlApplicationContext("init-data.xml");
+            parameterModel = appCtx.getBean("parameterModel", ParameterModel.class);
+            parameterModel.setIsSample(true);
+        } else {
+            parameterModel.setDataList(lstParam);
+        }
+        
         String jsonData = parameterModel.getJsonData();
 
         LOG.debug("jsonData=" + jsonData);

@@ -47,11 +47,11 @@ public class SystemUserModel extends AbstractTableObjectModel implements Seriali
             user = (User) itUser.next();
             
             arrObjs = new Object[5];
-            arrObjs[0] = AppUtil.formatJson(user.getId());
-            arrObjs[1] = AppUtil.formatJson(user.getUsername());
-            arrObjs[2] = AppUtil.formatJson(user.getFirstname());
-            arrObjs[3] = AppUtil.formatJson(user.getLastname());
-            arrObjs[4] = AppUtil.formatJson(user.getEmail());
+            arrObjs[0] = AppUtil.formatJson(user.getUsername());
+            arrObjs[1] = AppUtil.formatJson(user.getFirstname());
+            arrObjs[2] = AppUtil.formatJson(user.getLastname());
+            arrObjs[3] = AppUtil.formatJson(user.getEmail());
+            // Reserved column 5 for Result of saving
             
             data.add(arrObjs);
         }

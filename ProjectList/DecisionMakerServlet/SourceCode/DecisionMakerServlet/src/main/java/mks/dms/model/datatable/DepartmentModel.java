@@ -44,26 +44,6 @@ public class DepartmentModel extends AbstractTableObjectModel implements Seriali
         this.data = data;
     }
 
-    @Override
-    public String getJsonData() {
-        Gson gson = new Gson();
-        
-        String jsonData;
-
-        jsonData = gson.toJson(data);
-        
-        // add prefix
-        StringBuffer sb = new StringBuffer();
-        sb.append(AppCons.BEGIN_JSON_DATA)
-          .append(jsonData)
-          .append(AppCons.END_JSON_DATA);
-        
-        jsonData = sb.toString();
-
-        return jsonData;
-    }
-
-
     /**
      * Get value of parentDepartment.
      * 
@@ -96,12 +76,12 @@ public class DepartmentModel extends AbstractTableObjectModel implements Seriali
             department = (Department) itDepartment.next();
             
             arrObjs = new Object[5];
-            arrObjs[0] = AppUtil.formatJson(department.getId());
-            arrObjs[1] = AppUtil.formatJson(department.getCd());
-            arrObjs[2] = AppUtil.formatJson(department.getName());
-            arrObjs[3] = AppUtil.formatJson(department.getManagerUsername());
-            arrObjs[4] = AppUtil.formatJson(department.getDescription());
-            
+            arrObjs[0] = AppUtil.formatJson(department.getCd());
+            arrObjs[1] = AppUtil.formatJson(department.getName());
+            arrObjs[2] = AppUtil.formatJson(department.getManagerUsername());
+            arrObjs[3] = AppUtil.formatJson(department.getDescription());
+            // Reserved column 5 for Result of saving
+
             data.add(arrObjs);
         }        
     } 

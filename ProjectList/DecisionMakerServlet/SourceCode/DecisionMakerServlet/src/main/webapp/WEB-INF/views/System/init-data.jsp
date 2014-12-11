@@ -14,22 +14,48 @@
 
 <div>
   <H5><s:message code="Request_type"/></H5>
-  <div>
-    <div id="dataTableRequestType"></div>
-    <a id="saveRequestType" class="button" href="saveAllRequestType"><s:message code="Save"/></a>
-  </div>
-  
+      <div>
+        <div>
+          <label id="labelRequestType"></label>
+        </div>
+        <div id="dataTableRequestType"></div>
+        <a id="saveRequestType" class="button" href="#"><s:message code="Save"/></a>
+      </div>
   <H5><s:message code="Department"/></H5>
-  <div id="dataTableDepartment"></div>
+  <div>
+    <div>
+      <label id="labelDepartment"></label>
+    </div>  
+    <div id="dataTableDepartment"></div>
+    <a id="saveDepartment" class="button" href="saveDepartment"><s:message code="Save"/></a>
+  </div>
 
   <H5><s:message code="User"/></H5>
-  <div id="dataTableUser"></div>
+  <div>
+    <div>
+      <label id="labelUser"></label>
+    </div>
+    <div id="dataTableUser"></div>
+    <a id="saveUser" class="button" href="saveUser"><s:message code="Save"/></a>
+  </div>
   
   <H5><s:message code="Status_flow_request"/></H5>
-  <div id="dataTableStatusFlowRequest"></div>
+  <div>
+    <div>
+      <label id="labelStatusFlowRequest"></label>
+    </div>
+    <div id="dataTableStatusFlowRequest"></div>
+    <a id="saveStatusFlowRequest" class="button" href="saveStatusFlowRequest"><s:message code="Save"/></a>
+  </div>
 
   <H5><s:message code="Parameter"/></H5>
-  <div id="dataTableParameter"></div>
+  <div>
+    <div>
+      <label id="labelParameter"></label>
+    </div>
+    <div id="dataTableParameter"></div>
+    <a id="saveParameter" class="button" href="saveParameter"><s:message code="Save"/></a>
+  </div>
 
 </div>
     
@@ -46,8 +72,8 @@
             startRows: 4,
             startCols: 3,
             rowHeaders: true,
-            colHeaders: ['<s:message code="Code"/>', '<s:message code="Name"/>', 'Result'],
-            colWidths: [100, 200],
+            colHeaders: ['<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Status"/>'],
+            colWidths: [150, 200, 150],
             manualColumnResize: true,
             minSpareRows: 1
         });
@@ -60,6 +86,11 @@
             success: function (res) {
               var handsontable = container.data('handsontable');
               handsontable.loadData(res.data);
+              if (res.isSample) {
+            	  $('#labelRequestType').html('<s:message code="Sample_data"/>');
+              } else {
+            	  $('#labelRequestType').html('<s:message code="Current_data"/>');
+              }
             },
             error: function() {
             	alert('<s:message code="Could_not_load_data"/>: <s:message code="Request_type"/>');
@@ -72,33 +103,13 @@
 
             var formDataJson = JSON.stringify({"data":tableData});
 
-//             $.ajax({
-//                 type: "POST",
-//                 contentType: "application/json; charset=utf-8",
-//                 url: "saveAllRequestType",
-//                 data: formDataJson,
-//                 success: function(res) {
-//                 	var result = $.parseJSON(res);
-//                     alert("After save:" + result.success);
-//                     //location.reload(true);
-//                 },
-//                 error: function(data, status) {
-//                 	alert(status);
-// 					alert(JSON.stringify(data));
-//                 }
-//             });
-            var obj = new Object();
-     				obj.first = "abc";
-     				obj.second = "def";
-     			var jsonData = JSON.stringify(obj);
             $.ajax({
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                url: "testAjax",
-                data: jsonData,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: "saveAllRequestType",
+                data: formDataJson,
                 success: function(res) {
-                	var result = $.parseJSON(res);
-                    alert("After save:" + result.result);
                     location.reload(true);
                 },
                 error: function(data, status) {
@@ -120,8 +131,8 @@
             startRows: 1,
             startCols: 5,
             rowHeaders: true,
-            colHeaders: ['ID', '<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Manager"/>', '<s:message code="Note"/>'],
-            colWidths: [60, 120, 200, 200, 200],
+            colHeaders: ['<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Manager"/>', '<s:message code="Note"/>', '<s:message code="Status"/>'],
+            colWidths: [60, 120, 200, 200, 150],
             manualColumnResize: true,
             minSpareRows: 1
         });
@@ -134,11 +145,37 @@
             success: function (res) {
               var handsontable = container.data('handsontable');
               handsontable.loadData(res.data);
+              if (res.isSample) {
+                  $('#labelDepartment').html('<s:message code="Sample_data"/>');
+              } else {
+                  $('#labelDepartment').html('<s:message code="Current_data"/>');
+              }
             },
             error: function() {
                 alert('<s:message code="Could_not_load_data"/>: <s:message code="Department"/>');
             }
           });
+        // Save
+        $("#saveDepartment").click(function() {
+            var tableData = container.handsontable('getData');
+
+            var formDataJson = JSON.stringify({"data":tableData});
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: "saveSystemDepartment",
+                data: formDataJson,
+                success: function(res) {
+                    location.reload(true);
+                },
+                error: function(data, status) {
+                    alert(status);
+                    alert(JSON.stringify(data));
+                }
+            });
+        });
     });
 </script>
 
@@ -152,8 +189,8 @@
             startRows: 1,
             startCols: 5,
             rowHeaders: true,
-            colHeaders: ['ID', '<s:message code="Account"/>', '<s:message code="FirstName"/>', '<s:message code="LastName"/>', '<s:message code="Email"/>'],
-            colWidths: [60, 120, 200, 200, 200],
+            colHeaders: ['<s:message code="Account"/>', '<s:message code="FirstName"/>', '<s:message code="LastName"/>', '<s:message code="Email"/>', '<s:message code="Status"/>'],
+            colWidths: [100, 120, 200, 200, 150],
             manualColumnResize: true,
             minSpareRows: 1
         });
@@ -166,11 +203,16 @@
             success: function (res) {
               var handsontable = container.data('handsontable');
               handsontable.loadData(res.data);
+              if (res.isSample) {
+                  $('#labelUser').html('<s:message code="Sample_data"/>');
+              } else {
+                  $('#labelUser').html('<s:message code="Current_data"/>');
+              }
             },
             error: function() {
                 alert('<s:message code="Could_not_load_data"/>: <s:message code="User"/>');
             }
-          });
+        });
     });
 </script>
 
@@ -184,8 +226,8 @@
             startRows: 1,
             startCols: 5,
             rowHeaders: true,
-            colHeaders: ['ID', '<s:message code="Request_type"/>', '<s:message code="User_type"/>', '<s:message code="Current_status"/>', '<s:message code="Next_status"/>'],
-            colWidths: [60, 120, 200, 200, 200],
+            colHeaders: ['<s:message code="Request_type"/>', '<s:message code="User_type"/>', '<s:message code="Current_status"/>', '<s:message code="Next_status"/>', '<s:message code="Status"/>'],
+            colWidths: [100, 120, 200, 200, 150],
             manualColumnResize: true,
             minSpareRows: 1
         });
@@ -198,6 +240,11 @@
             success: function (res) {
               var handsontable = container.data('handsontable');
               handsontable.loadData(res.data);
+              if (res.isSample) {
+                  $('#labelStatusFlowRequest').html('<s:message code="Sample_data"/>');
+              } else {
+                  $('#labelStatusFlowRequest').html('<s:message code="Current_data"/>');
+              }
             },
             error: function() {
                 alert('<s:message code="Could_not_load_data"/>: <s:message code="Status_flow_request"/>');
@@ -216,8 +263,8 @@
             startRows: 1,
             startCols: 5,
             rowHeaders: true,
-            colHeaders: ['ID', '<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Value"/>', '<s:message code="Description"/>'],
-            colWidths: [60, 120, 200, 200, 200],
+            colHeaders: ['<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Value"/>', '<s:message code="Description"/>', '<s:message code="Status"/>'],
+            colWidths: [60, 120, 200, 200, 150],
             manualColumnResize: true,
             minSpareRows: 1
         });
@@ -230,6 +277,11 @@
             success: function (res) {
               var handsontable = container.data('handsontable');
               handsontable.loadData(res.data);
+              if (res.isSample) {
+                  $('#labelParameter').html('<s:message code="Sample_data"/>');
+              } else {
+                  $('#labelParameter').html('<s:message code="Current_data"/>');
+              }
             },
             error: function() {
                 alert('<s:message code="Could_not_load_data"/>: <s:message code="Parameter"/>');

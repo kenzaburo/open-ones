@@ -24,11 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import mks.dms.dao.entity.RequestType;
-import mks.dms.util.AppCons;
 import mks.dms.util.AppCons.RESULT;
 import mks.dms.util.AppUtil;
-
-import com.google.gson.Gson;
 
 /**
  * This class support to capture data from the Handsontable (Excel-based form)
@@ -43,27 +40,6 @@ public class RequestTypeModel extends AbstractTableObjectModel implements Serial
     
     /** Store result of saving. */
     public final static int IDX_RESULT = 2;
-
-    @Override
-    public String getJsonData() {
-        if (this.data == null) {
-            return null;
-        } else {
-            Gson gson = new Gson();
-
-            String jsonData;
-
-            jsonData = gson.toJson(data);
-
-            // add data into the block to support handsontable
-            StringBuffer sb = new StringBuffer();
-            sb.append(AppCons.BEGIN_JSON_DATA).append(jsonData).append(AppCons.END_JSON_DATA);
-
-            jsonData = sb.toString();
-
-            return jsonData;
-        }
-    }
 
     @Override
     public void setDataList(List<?> lstRequestTypes) {

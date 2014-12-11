@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mks.dms.dao.entity.RequestType;
 import mks.dms.dao.entity.StatusFlow;
-import mks.dms.extentity.ExUser;
 import mks.dms.util.AppUtil;
 
 /**
@@ -49,14 +47,13 @@ public class StatusFlowModel extends AbstractTableObjectModel implements Seriali
             status = (StatusFlow) itStatus.next();
             
             arrObjs = new Object[5];
-            arrObjs[0] = AppUtil.formatJson(status.getId());
-            arrObjs[1] = AppUtil.formatJson(status.getRequesttypeCd());
-            arrObjs[2] = AppUtil.formatJson(status.getTypeUser());
-            arrObjs[3] = AppUtil.formatJson(status.getCurrentStatus());
-            arrObjs[4] = AppUtil.formatJson(status.getNextStatus());
+            arrObjs[0] = AppUtil.formatJson(status.getRequesttypeCd());
+            arrObjs[1] = AppUtil.formatJson(status.getTypeUser());
+            arrObjs[2] = AppUtil.formatJson(status.getCurrentStatus());
+            arrObjs[3] = AppUtil.formatJson(status.getNextStatus());
+            // Reserved column 5 for Result of saving
             
             data.add(arrObjs);
         }
     }
-
 }

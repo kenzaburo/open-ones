@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 
 import ldap.entry.UserEntry;
 import mks.dms.dao.controller.ExParameterJpaController;
-import mks.dms.dao.entity.Parameter;
+import mks.dms.dao.entity.ResetPassword;
 import mks.dms.util.AppCons;
 import openones.mail.MailInfo;
 import openones.mail.MailServerInfo;
@@ -58,7 +58,7 @@ public class MailService extends BaseService {
         varMap.put("uid", user.getUid());
         varMap.put("to", user.getEmail());
         varMap.put("password", user.getPassword());
-        varMap.put("from", "MeKongSolution");
+        varMap.put("from", getResetEmailFromName());
 
         EntityManager em = BaseService.getEmf().createEntityManager();
         try {
@@ -68,32 +68,32 @@ public class MailService extends BaseService {
             /*
              * CD = "ResetPasswd" NAME = account VALUE = yyyy-MM-dd HH:mm:ss
              */
-            Parameter param = new Parameter();
-            param.setCd(AppCons.RESET_PASSWORD);
-            param.setName(user.getEmail());
+            ResetPassword resetPasswdLog = new ResetPassword();
+            resetPasswdLog.setCd(AppCons.RESET_PASSWORD);
+            resetPasswdLog.setName(user.getEmail());
 
             Date curDate = new Date();
             String strDate = CommonUtil.formatDate(curDate, AppCons.DATETIME_FORMAT);
-            param.setValue(strDate);
+            resetPasswdLog.setValue(strDate);
 
-            param.setCreated(curDate);
-            param.setCreatedbyUsername(user.getUid());
-            param.setEnabled(true);
+            resetPasswdLog.setCreated(curDate);
+            resetPasswdLog.setCreatedbyUsername(user.getUid());
+            resetPasswdLog.setEnabled(true);
             
             // Set Random key
             Random random = new Random();
-            param.setDescription(String.valueOf(random.nextLong()));
+            resetPasswdLog.setDescription(String.valueOf(random.nextLong()));
 
-            String encodeValue = encode(param.getValue());
+            String encodeValue = encode(resetPasswdLog.getValue());
 
             // Key 1: current date
             // Key 2:
-            String randomNumber = encode(param.getDescription());
+            String randomNumber = encode(resetPasswdLog.getDescription());
             String resetPasswordLink = getResetPasswordLink() + "?email=" + user.getEmail() + "&key1=" + encodeValue
                     + "&key2=" + randomNumber;
             
             // Step 1: Save the parameter into database
-            em.persist(param);
+            em.persist(resetPasswdLog);
             
             
             varMap.put("resetPasswordLink", resetPasswordLink);
@@ -166,6 +166,16 @@ public class MailService extends BaseService {
         
         boolean isEnable = true;
         resetPasswordFromName = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_FROM_ADDR, isEnable);
+        
+        return resetPasswordFromName;
+    }
+    
+    private String getResetEmailFromName() {
+        String resetPasswordFromName;
+        ExParameterJpaController paramDaoCtrl = new ExParameterJpaController(BaseService.getEmf());
+        
+        boolean isEnable = true;
+        resetPasswordFromName = paramDaoCtrl.findParameterByName(AppCons.PARAM_EMAIL, AppCons.PARAM_RESET_PASSWORD_FROM_NAME, isEnable);
         
         return resetPasswordFromName;
     }

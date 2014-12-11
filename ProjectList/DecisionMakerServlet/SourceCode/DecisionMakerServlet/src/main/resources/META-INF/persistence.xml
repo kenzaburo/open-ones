@@ -17,7 +17,8 @@
     <class>mks.dms.dao.entity.Comment</class>
     <class>mks.dms.dao.entity.StatusFlow</class>
     <class>mks.dms.dao.entity.ReadStatus</class>
-    
+    <class>mks.dms.dao.entity.ResetPassword</class>
+
     <!-- For MySQL -->
 <!--     <properties> -->
 <!--       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dms?useUnicode=true&amp;characterEncoding=UTF-8"/> -->
@@ -33,7 +34,7 @@
       <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
       <property name="javax.persistence.jdbc.password" value=""/>
-      <property name="eclipselink.ddl-generation" value="create-tables"/>
+      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
 <!--       <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/> -->
     </properties> 
     <!--  For HSQL File Mode-->
