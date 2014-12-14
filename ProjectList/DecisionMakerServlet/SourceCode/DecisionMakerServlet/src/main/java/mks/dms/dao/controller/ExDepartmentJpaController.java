@@ -18,6 +18,8 @@
  */
 package mks.dms.dao.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,10 +30,11 @@ import javax.persistence.Query;
 
 import mks.dms.dao.controller.exceptions.NonexistentEntityException;
 import mks.dms.dao.entity.Department;
-import mks.dms.dao.entity.User;
+import mks.dms.util.AppCons;
+import mks.dms.util.AppCons.RESULT;
+import mks.dms.util.SaveBatchException;
 
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.jpa.config.NamedQuery;
 
 /**
  * @author ThachLe
@@ -111,5 +114,70 @@ public class ExDepartmentJpaController extends DepartmentJpaController {
             }
         }
         
+    }
+    
+    public List<RESULT> save(List<Department> lstDepartment, String username) throws SaveBatchException {
+        List<RESULT> lstResult = new ArrayList<AppCons.RESULT>();
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            
+            Department department;
+
+            Department currentDepartment;
+            AppCons.RESULT result;
+            for (Iterator<Department> itRequestType = lstDepartment.iterator(); itRequestType.hasNext(); ) {
+                department = itRequestType.next();
+
+                currentDepartment = findDepartmentByCd(department.getCd(), em);
+                
+                if (currentDepartment == null) {
+                    // Create
+                    em.persist(department);
+                    result = AppCons.RESULT.CREATE_OK;
+                } else {
+                    // Update
+                    // Name
+                    currentDepartment.setName(department.getName());
+                    currentDepartment.setDescription(department.getDescription());
+                    currentDepartment.setLastmodified(new Date());
+                    currentDepartment.setLastmodifiedbyUsername(username);
+
+                    em.merge(currentDepartment);
+                    result = AppCons.RESULT.UPDATE_OK;
+                }
+                
+                lstResult.add(result);
+            }            
+            
+            em.getTransaction().commit();
+        } catch (Throwable th) {
+            em.getTransaction().rollback();
+            
+            throw new SaveBatchException(th);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+        return lstResult;
+    }
+
+    private Department findDepartmentByCd(String departmentCd, EntityManager em) {
+        Query query;
+        Department department = null;
+        
+        // Try to query the current record
+        query = em.createNamedQuery("Department.findByCd");
+        query.setParameter("cd", departmentCd);
+        try {
+            department = (Department) query.getSingleResult();
+        } catch (NoResultException nsEx) {
+            // Do nothing
+        }
+        
+        return department;
     }
 }

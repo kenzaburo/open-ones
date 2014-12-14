@@ -35,7 +35,9 @@ import javax.persistence.criteria.Root;
 
 import mks.dms.dao.controller.DepartmentJpaController;
 import mks.dms.dao.controller.ExDepartmentJpaController;
+import mks.dms.dao.controller.ExParameterJpaController;
 import mks.dms.dao.controller.ExRequestTypeJpaController;
+import mks.dms.dao.controller.ExStatusFlowJpaController;
 import mks.dms.dao.controller.ExUserJpaController;
 import mks.dms.dao.controller.ParameterJpaController;
 import mks.dms.dao.controller.RequestTypeJpaController;
@@ -492,10 +494,19 @@ public class MasterService extends BaseService {
         }
         
         if (!CommonUtil.isNNandNB(lstUsers)) {
-            // Set default sample data            
-            ApplicationContext appCtx = new ClassPathXmlApplicationContext("init-data.xml");
-            systemUserModel = appCtx.getBean("systemUserModel", SystemUserModel.class);
-            systemUserModel.setIsSample(true);
+            // Set default sample data
+            ApplicationContext appCtx = null;
+
+            try {
+                appCtx = new ClassPathXmlApplicationContext("init-data.xml");
+                systemUserModel = appCtx.getBean("systemUserModel", SystemUserModel.class);
+                systemUserModel.setIsSample(true);
+            } finally {
+                if (appCtx != null) {
+                    // close resource
+                }
+
+            }
         } else {
             systemUserModel.setDataList(lstUsers);
         }
@@ -559,7 +570,7 @@ public class MasterService extends BaseService {
     * @return fresh model
      * @throws SaveBatchException 
     */
-    public RequestTypeModel saveAllRequestTyle(RequestTypeModel requestTypeModel, String username) throws SaveBatchException {
+    public RequestTypeModel saveAllRequestType(RequestTypeModel requestTypeModel, String username) throws SaveBatchException {
         ExRequestTypeJpaController requestTypeDaoCtrl = new ExRequestTypeJpaController(BaseService.getEmf());
         
         List<RequestType> lstRequestType = requestTypeModel.getDataList();
@@ -568,5 +579,49 @@ public class MasterService extends BaseService {
         requestTypeModel.setResultList(lstResult);
         
         return requestTypeModel;
+    }
+    
+    public DepartmentModel saveAllDepartment(DepartmentModel departmentModel, String username) throws SaveBatchException {
+        ExDepartmentJpaController departmentDaoCtrl = new ExDepartmentJpaController(BaseService.getEmf());
+        
+        List<Department> lstDepartment = departmentModel.getDataList();
+        List<AppCons.RESULT> lstResult = departmentDaoCtrl.save(lstDepartment, username);
+        
+        departmentModel.setResultList(lstResult);
+        
+        return departmentModel;
+    }
+
+    public SystemUserModel saveAllUser(SystemUserModel userModel, String username) throws SaveBatchException {
+        ExUserJpaController userDaoCtrl = new ExUserJpaController(BaseService.getEmf());
+        
+        List<User> lstUser = userModel.getDataList();
+        List<AppCons.RESULT> lstResult = userDaoCtrl.save(lstUser, username);
+        
+        userModel.setResultList(lstResult);
+        
+        return userModel;
+    }
+    
+    public StatusFlowModel saveAllStatusFlowRequest(StatusFlowModel statusFlowModel, String username) throws SaveBatchException {
+        ExStatusFlowJpaController statusFlowDaoCtrl = new ExStatusFlowJpaController(BaseService.getEmf());
+        
+        List<StatusFlow> lstStatusFlow = statusFlowModel.getDataList();
+        List<AppCons.RESULT> lstResult = statusFlowDaoCtrl.save(lstStatusFlow, username);
+        
+        statusFlowModel.setResultList(lstResult);
+        
+        return statusFlowModel;
+    }
+    
+    public ParameterModel saveAllParameter(ParameterModel parameterModel, String username) throws SaveBatchException {
+        ExParameterJpaController parameterDaoCtrl = new ExParameterJpaController(BaseService.getEmf());
+        
+        List<Parameter> lstParameter = parameterModel.getDataList();
+        List<AppCons.RESULT> lstResult = parameterDaoCtrl.save(lstParameter, username);
+        
+        parameterModel.setResultList(lstResult);
+        
+        return parameterModel;
     }
 }

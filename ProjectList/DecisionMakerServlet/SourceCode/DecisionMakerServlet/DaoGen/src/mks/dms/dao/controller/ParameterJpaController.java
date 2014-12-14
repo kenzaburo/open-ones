@@ -117,7 +117,7 @@ public class ParameterJpaController implements Serializable {
     public Parameter findParameter(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Parameter.class, id);
+            return (id != null) ? em.find(Parameter.class, id) : null;
         } finally {
             em.close();
         }

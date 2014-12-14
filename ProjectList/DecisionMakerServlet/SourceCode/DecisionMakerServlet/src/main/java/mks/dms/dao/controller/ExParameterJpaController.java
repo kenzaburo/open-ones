@@ -1,5 +1,8 @@
 package mks.dms.dao.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,6 +16,9 @@ import javax.persistence.criteria.Root;
 
 import mks.dms.dao.entity.Parameter;
 import mks.dms.dao.entity.Request;
+import mks.dms.util.AppCons;
+import mks.dms.util.AppCons.RESULT;
+import mks.dms.util.SaveBatchException;
 
 import org.apache.log4j.Logger;
 
@@ -100,4 +106,55 @@ public class ExParameterJpaController extends ParameterJpaController {
         return null;
     }
 
+    public List<RESULT> save(List<Parameter> lstParameter, String username) throws SaveBatchException {
+        List<RESULT> lstResult = new ArrayList<AppCons.RESULT>();
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            
+            Parameter parameter;
+
+            Parameter currentParameter;
+            AppCons.RESULT result;
+            for (Iterator<Parameter> itParameter = lstParameter.iterator(); itParameter.hasNext(); ) {
+                parameter = itParameter.next();
+
+                currentParameter = findParameter(parameter.getId());
+                
+                if (currentParameter == null) {
+                    // Create
+                    em.persist(parameter);
+                    result = AppCons.RESULT.CREATE_OK;
+                } else {
+                    // Update
+                    // Name
+                    currentParameter.setCd(parameter.getCd());
+                    currentParameter.setName(parameter.getName());
+                    currentParameter.setValue(parameter.getValue());
+                    currentParameter.setDescription(parameter.getDescription());
+
+                    currentParameter.setLastmodified(new Date());
+                    currentParameter.setLastmodifiedbyUsername(username);
+
+                    em.merge(currentParameter);
+                    result = AppCons.RESULT.UPDATE_OK;
+                }
+                
+                lstResult.add(result);
+            }            
+            
+            em.getTransaction().commit();
+        } catch (Throwable th) {
+            em.getTransaction().rollback();
+            
+            throw new SaveBatchException(th);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+        return lstResult;
+    }
 }

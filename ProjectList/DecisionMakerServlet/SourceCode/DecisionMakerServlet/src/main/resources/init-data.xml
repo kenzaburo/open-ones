@@ -96,6 +96,7 @@
         <property name="sourceList">
           <list>
             <list>
+              <value></value>
               <value>Task</value>
               <value>Owner</value>
               <value>Created</value>
@@ -103,6 +104,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Task</value>
               <value>Owner</value>
               <value>Doing</value>
@@ -110,6 +112,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Task</value>
               <value>Owner</value>
               <value>Finish</value>
@@ -117,6 +120,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Task</value>
               <value>Owner</value>
               <value>Re-assigned</value>
@@ -124,6 +128,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Task</value>
               <value>Manager</value>
               <value>Finish</value>
@@ -131,6 +136,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Task</value>
               <value>Manager</value>
               <value>Done</value>
@@ -140,6 +146,7 @@
             
             <!-- For leave -->
             <list>
+              <value></value>
               <value>Leave</value>
               <value>Manager</value>
               <value>Created</value>
@@ -148,6 +155,7 @@
             </list>
             
             <list>
+              <value></value>
               <value>Leave</value>
               <value>Manager</value>
               <value>Created</value>
@@ -170,6 +178,7 @@
         <property name="sourceList">
           <list>
             <list>
+              <value></value>
               <value>Rank</value>
               <value>A</value>
               <value>A</value>
@@ -177,6 +186,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Rank</value>
               <value>B</value>
               <value>B</value>
@@ -184,6 +194,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Rank</value>
               <value>C</value>
               <value>C</value>
@@ -191,6 +202,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Rank</value>
               <value>D</value>
               <value>D</value>
@@ -198,6 +210,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Rank</value>
               <value>C</value>
               <value>C</value>
@@ -206,6 +219,7 @@
             </list>
             <!-- For Email -->
             <list>
+              <value></value>
               <value>Email</value>
               <value>ResetPasswdSubject</value>
               <value>[DMA] Khôi phục mật khẩu</value>
@@ -214,6 +228,7 @@
             </list>
             
             <list>
+              <value></value>
               <value>Email</value>
               <value>ResetPasswdFromEmail</value>
               <value>Your email</value>
@@ -221,6 +236,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Email</value>
               <value>ResetPasswdFromName</value>
               <value>Your Name</value>
@@ -228,6 +244,7 @@
               <value></value>
             </list>
             <list>
+              <value></value>
               <value>Email</value>
               <value>ResetPasswdLink</value>
               <value>http://your domain/confirm-reset-password</value>

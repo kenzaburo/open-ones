@@ -24,15 +24,26 @@ import java.util.Iterator;
 import java.util.List;
 
 import mks.dms.dao.entity.Department;
-import mks.dms.util.AppCons;
+import mks.dms.util.AppCons.RESULT;
 import mks.dms.util.AppUtil;
-
-import com.google.gson.Gson;
 
 /**
  * @author ThachLN
  */
 public class DepartmentModel extends AbstractTableObjectModel implements Serializable {
+    /** Index column CD in data list . */
+    public final static int IDX_CD = 0;
+    
+    /** Index column NAME in data list . */
+    public final static int IDX_NAME = 1;
+    
+    public final static int IDX_MANAGER = 2;
+    
+    public final static int IDX_NOTE = 3;
+
+    /** Store result of saving. */
+    public final static int IDX_RESULT = 4;
+    
     private String parentDepartment;
 
     public DepartmentModel() {
@@ -61,7 +72,61 @@ public class DepartmentModel extends AbstractTableObjectModel implements Seriali
     public void setParentDepartment(String parentDepartment) {
         this.parentDepartment = parentDepartment;
     }
+    
+    /**
+    * Convert from the data list (List of object[]) to contextual data list.
+    * @return
+    */
+    public List<Department> getDataList() {
+        List<Department> lstDepartment = null;
+        if (data == null) {
+            // Do nothing
+        } else {
+            lstDepartment = new ArrayList<Department>();
+            Object[] row;
+            Department department;
 
+            for (Iterator<Object[]> itRow = data.iterator(); itRow.hasNext(); ) {
+                row = itRow.next();
+
+                department = new Department();
+                department.setCd(String.valueOf(row[IDX_CD]));
+                department.setName(String.valueOf(row[IDX_NAME]));
+                department.setManagerUsername(String.valueOf(row[IDX_MANAGER]));
+                department.setDescription(String.valueOf(row[IDX_NOTE]));
+                
+
+                lstDepartment.add(department);
+            }
+        }
+        
+        return lstDepartment;
+    }
+    
+    public void setResultList(List<RESULT> lstResult) {
+        if ((lstResult == null) || (this.data == null)) {
+            return;
+        } else {
+            Object[] row;
+            Department department;
+            int i = 0;
+            int numResult = lstResult.size();
+            for (Iterator<Object[]> itRow = data.iterator(); itRow.hasNext(); i++) {
+                row = itRow.next();
+
+                department = new Department();
+                department.setCd(String.valueOf(row[IDX_CD]));
+                department.setName(String.valueOf(row[IDX_NAME]));
+                department.setManagerUsername(String.valueOf(row[IDX_MANAGER]));
+                department.setDescription(String.valueOf(row[IDX_NOTE]));
+
+                if (i < numResult) {
+                    row[IDX_RESULT] = lstResult.get(i).name();
+                }
+            }
+        }
+    }
+    
     @Override
     public void setDataList(List<?> lstDepartments) {
         Iterator itDepartment = lstDepartments.iterator();

@@ -7,10 +7,13 @@ import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
 
+import mks.dms.model.datatable.DepartmentModel;
+import mks.dms.model.datatable.ParameterModel;
 import mks.dms.model.datatable.RequestTypeModel;
+import mks.dms.model.datatable.StatusFlowModel;
+import mks.dms.model.datatable.SystemUserModel;
 import mks.dms.service.MasterService;
 import mks.dms.service.SystemService;
-import mks.dms.util.SaveBatchException;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -88,7 +91,7 @@ public class InitDataController {
     public String saveAllRequestType(@RequestBody RequestTypeModel requestTypeModel, Principal princial) {
     	JsonObject jso = new JsonObject();
         try {
-            requestTypeModel = masterService.saveAllRequestTyle(requestTypeModel, princial.getName());
+            requestTypeModel = masterService.saveAllRequestType(requestTypeModel, princial.getName());
             String jsonRefreshDepartment = requestTypeModel.getJsonData();
             LOG.debug("jsonRefreshDepartment=" + jsonRefreshDepartment);
             
@@ -126,13 +129,13 @@ public class InitDataController {
         return MasterService.getJsonDepartments();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "saveSystemDepartment")
+    @RequestMapping(method = RequestMethod.POST, value = "saveAllDepartment")
     @ResponseBody
-    public String saveSystemDepartment(@RequestBody RequestTypeModel requestTypeModel, Principal princial) {
+    public String saveAllDepartment(@RequestBody DepartmentModel departmentModel, Principal princial) {
         JsonObject jso = new JsonObject();
         try {
-            requestTypeModel = masterService.saveAllRequestTyle(requestTypeModel, princial.getName());
-            String jsonRefreshDepartment = requestTypeModel.getJsonData();
+            departmentModel = masterService.saveAllDepartment(departmentModel, princial.getName());
+            String jsonRefreshDepartment = departmentModel.getJsonData();
             LOG.debug("jsonRefreshDepartment=" + jsonRefreshDepartment);
             
             jso.addProperty("success", "true");
@@ -148,14 +151,70 @@ public class InitDataController {
     public @ResponseBody String loadSystemUser() {
         return MasterService.getJsonSystemUser();
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "saveSystemUser")
+    @ResponseBody
+    public String saveSystemUser(@RequestBody SystemUserModel userUser, Principal princial) {
+        JsonObject jso = new JsonObject();
+        try {
+            userUser = masterService.saveAllUser(userUser, princial.getName());
+            String jsonSystemUser = userUser.getJsonData();
+            LOG.debug("jsonSystemUser=" + jsonSystemUser);
+            
+            jso.addProperty("success", "true");
+            jso.addProperty("data", "Test");
+        } catch (Exception ex) {
+            LOG.error("Could not save the request types", ex);
+            jso.addProperty("error", ex.getMessage());
+        }
+        return jso.toString();
+    }
     
     @RequestMapping(value = "load-status-flow-request", method = RequestMethod.GET)
     public @ResponseBody String loadStatusFlowRequest() {
         return MasterService.getJsonStatusFlowRequest();
     }
     
+    
+    @RequestMapping(method = RequestMethod.POST, value = "saveAllStatusFlowRequest")
+    @ResponseBody
+    public String saveAllStatusFlowRequest(@RequestBody StatusFlowModel statusFlowModel, Principal princial) {
+        JsonObject jso = new JsonObject();
+        try {
+            statusFlowModel = masterService.saveAllStatusFlowRequest(statusFlowModel, princial.getName());
+            String jsonRefreshStatusFlow = statusFlowModel.getJsonData();
+            LOG.debug("jsonRefreshStatusFlow=" + jsonRefreshStatusFlow);
+            
+            jso.addProperty("success", "true");
+            jso.addProperty("data", "Test");
+        } catch (Exception ex) {
+            LOG.error("Could not save the request types", ex);
+            jso.addProperty("error", ex.getMessage());
+        }
+        return jso.toString();
+    }
+    
+    
     @RequestMapping(value = "load-parameter", method = RequestMethod.GET)
     public @ResponseBody String loadParameter() {
         return MasterService.getJsonParameter();
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "saveAllParameter")
+    @ResponseBody
+    public String saveAllParameter(@RequestBody ParameterModel parameterModel, Principal princial) {
+        JsonObject jso = new JsonObject();
+        try {
+            parameterModel = masterService.saveAllParameter(parameterModel, princial.getName());
+            String jsonRefreshParameter = parameterModel.getJsonData();
+            LOG.debug("jsonRefreshParameter=" + jsonRefreshParameter);
+            
+            jso.addProperty("success", "true");
+            jso.addProperty("data", "Test");
+        } catch (Exception ex) {
+            LOG.error("Could not save the request types", ex);
+            jso.addProperty("error", ex.getMessage());
+        }
+        return jso.toString();
     }
 }

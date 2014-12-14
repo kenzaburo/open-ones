@@ -19,6 +19,8 @@
 package mks.dms.dao.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -26,8 +28,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import mks.dms.dao.entity.Department;
 import mks.dms.dao.entity.User;
 import mks.dms.extentity.ExUser;
+import mks.dms.util.AppCons;
+import mks.dms.util.SaveBatchException;
+import mks.dms.util.AppCons.RESULT;
 
 import org.apache.log4j.Logger;
 
@@ -53,7 +59,7 @@ public class ExUserJpaController extends UserJpaController {
     public User findUserByUsername(String username) {
         EntityManager em = getEntityManager();
         try {
-            Query query = em.createQuery("Select e FROM User e WHERE e.username = :username");
+            Query query = em.createNamedQuery("User.findByUsername");
             query.setParameter("username", username);
             User user = (User) query.getSingleResult();
             
@@ -66,6 +72,23 @@ public class ExUserJpaController extends UserJpaController {
         }
     }
 
+    public User findUserByUsername(String username, EntityManager em) {
+        User user = null;
+
+        try {
+            
+            Query query = em.createNamedQuery("User.findByUsername");
+            query.setParameter("username", username);
+            user = (User) query.getSingleResult();
+            
+            return user;
+        } catch (NoResultException nsEx) { 
+            // Do nothing
+        }
+
+        return user;
+    }
+    
     /**
      * Get user information by departmentCd.
      * @param departmentCd
@@ -84,5 +107,55 @@ public class ExUserJpaController extends UserJpaController {
         } finally {
             em.close();
         }
+    }
+    
+    public List<RESULT> save(List<User> lstUser, String username) throws SaveBatchException {
+        List<RESULT> lstResult = new ArrayList<AppCons.RESULT>();
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            
+            User user;
+
+            User currentUser;
+            AppCons.RESULT result;
+            for (Iterator<User> itRequestType = lstUser.iterator(); itRequestType.hasNext(); ) {
+                user = itRequestType.next();
+
+                currentUser = findUserByUsername(username);
+                
+                if (currentUser == null) {
+                    // Create
+                    em.persist(user);
+                    result = AppCons.RESULT.CREATE_OK;
+                } else {
+                    // Update
+                    // Name
+                    currentUser.setFirstname(user.getFirstname());
+                    currentUser.setLastname(user.getLastname());
+                    currentUser.setEmail(user.getEmail());
+                    currentUser.setLastmodified(new Date());
+                    currentUser.setLastmodifiedbyUsername(username);
+
+                    em.merge(currentUser);
+                    result = AppCons.RESULT.UPDATE_OK;
+                }
+                
+                lstResult.add(result);
+            }            
+            
+            em.getTransaction().commit();
+        } catch (Throwable th) {
+            em.getTransaction().rollback();
+            
+            throw new SaveBatchException(th);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+        return lstResult;
     }
 }

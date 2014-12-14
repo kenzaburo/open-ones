@@ -27,7 +27,7 @@
       <label id="labelDepartment"></label>
     </div>  
     <div id="dataTableDepartment"></div>
-    <a id="saveDepartment" class="button" href="saveDepartment"><s:message code="Save"/></a>
+    <a id="saveDepartment" class="button" href="#"><s:message code="Save"/></a>
   </div>
 
   <H5><s:message code="User"/></H5>
@@ -36,7 +36,7 @@
       <label id="labelUser"></label>
     </div>
     <div id="dataTableUser"></div>
-    <a id="saveUser" class="button" href="saveUser"><s:message code="Save"/></a>
+    <a id="saveSystemUser" class="button" href="#"><s:message code="Save"/></a>
   </div>
   
   <H5><s:message code="Status_flow_request"/></H5>
@@ -45,7 +45,7 @@
       <label id="labelStatusFlowRequest"></label>
     </div>
     <div id="dataTableStatusFlowRequest"></div>
-    <a id="saveStatusFlowRequest" class="button" href="saveStatusFlowRequest"><s:message code="Save"/></a>
+    <a id="saveStatusFlowRequest" class="button" href="#"><s:message code="Save"/></a>
   </div>
 
   <H5><s:message code="Parameter"/></H5>
@@ -54,7 +54,7 @@
       <label id="labelParameter"></label>
     </div>
     <div id="dataTableParameter"></div>
-    <a id="saveParameter" class="button" href="saveParameter"><s:message code="Save"/></a>
+    <a id="saveParameter" class="button" href="#"><s:message code="Save"/></a>
   </div>
 
 </div>
@@ -165,7 +165,7 @@
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
-                url: "saveSystemDepartment",
+                url: "saveAllDepartment",
                 data: formDataJson,
                 success: function(res) {
                     location.reload(true);
@@ -213,6 +213,27 @@
                 alert('<s:message code="Could_not_load_data"/>: <s:message code="User"/>');
             }
         });
+        // Save
+        $("#saveSystemUser").click(function() {
+            var tableData = container.handsontable('getData');
+
+            var formDataJson = JSON.stringify({"data":tableData});
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: "saveSystemUser",
+                data: formDataJson,
+                success: function(res) {
+                    location.reload(true);
+                },
+                error: function(data, status) {
+                    alert(status);
+                    alert(JSON.stringify(data));
+                }
+            });
+        });
     });
 </script>
 
@@ -224,10 +245,10 @@
         var parent = container.parent();
         container.handsontable({
             startRows: 1,
-            startCols: 5,
+            startCols: 6,
             rowHeaders: true,
-            colHeaders: ['<s:message code="Request_type"/>', '<s:message code="User_type"/>', '<s:message code="Current_status"/>', '<s:message code="Next_status"/>', '<s:message code="Status"/>'],
-            colWidths: [100, 120, 200, 200, 150],
+            colHeaders: ['ID', '<s:message code="Request_type"/>', '<s:message code="User_type"/>', '<s:message code="Current_status"/>', '<s:message code="Next_status"/>', '<s:message code="Status"/>'],
+            colWidths: [50, 100, 120, 200, 200, 150],
             manualColumnResize: true,
             minSpareRows: 1
         });
@@ -249,7 +270,28 @@
             error: function() {
                 alert('<s:message code="Could_not_load_data"/>: <s:message code="Status_flow_request"/>');
             }
-          });
+        });
+        // Save
+        $("#saveStatusFlowRequest").click(function() {
+            var tableData = container.handsontable('getData');
+
+            var formDataJson = JSON.stringify({"data":tableData});
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: "saveAllStatusFlowRequest",
+                data: formDataJson,
+                success: function(res) {
+                    location.reload(true);
+                },
+                error: function(data, status) {
+                    alert(status);
+                    alert(JSON.stringify(data));
+                }
+            });
+        });
     });
 </script>
 
@@ -261,10 +303,10 @@
         var parent = container.parent();
         container.handsontable({
             startRows: 1,
-            startCols: 5,
+            startCols: 6,
             rowHeaders: true,
-            colHeaders: ['<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Value"/>', '<s:message code="Description"/>', '<s:message code="Status"/>'],
-            colWidths: [60, 120, 200, 200, 150],
+            colHeaders: ['ID', '<s:message code="Code"/>', '<s:message code="Name"/>', '<s:message code="Value"/>', '<s:message code="Description"/>', '<s:message code="Status"/>'],
+            colWidths: [50, 60, 120, 200, 200, 150],
             manualColumnResize: true,
             minSpareRows: 1
         });
@@ -286,6 +328,28 @@
             error: function() {
                 alert('<s:message code="Could_not_load_data"/>: <s:message code="Parameter"/>');
             }
-          });
+        });
+
+        // Save
+        $("#saveParameter").click(function() {
+            var tableData = container.handsontable('getData');
+
+            var formDataJson = JSON.stringify({"data":tableData});
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: "saveAllParameter",
+                data: formDataJson,
+                success: function(res) {
+                    location.reload(true);
+                },
+                error: function(data, status) {
+                    alert(status);
+                    alert(JSON.stringify(data));
+                }
+            });
+        });
     });
 </script>

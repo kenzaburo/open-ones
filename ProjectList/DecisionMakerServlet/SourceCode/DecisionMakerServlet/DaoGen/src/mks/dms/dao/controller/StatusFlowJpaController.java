@@ -117,7 +117,11 @@ public class StatusFlowJpaController implements Serializable {
     public StatusFlow findStatusFlow(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(StatusFlow.class, id);
+            if (id != null) {
+                return em.find(StatusFlow.class, id);
+            } else {
+                return null;
+            }
         } finally {
             em.close();
         }
