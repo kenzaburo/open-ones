@@ -2,14 +2,14 @@ package ldap.test;
 
 import ldap.dao.UserDAO;
 import ldap.entry.UserEntry;
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestChangePwd {
     
-    private ServerConfig ldapCfg = Config.getServerConfig();
+    private LdapConfiguration ldapCfg = Config.getServerConfig();
     
     @Test
     public void test_N(){

@@ -27,7 +27,7 @@ import ldap.dao.GroupDAO;
 import ldap.entry.Entry;
 import ldap.entry.GroupEntry;
 import ldap.test.Config;
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,7 +38,7 @@ import org.junit.Test;
  *
  */
 public class GroupDAOTest {
-    private ServerConfig ldapCfg = Config.getServerConfig();
+    private LdapConfiguration ldapCfg = Config.getServerConfig();
     private String userOU = "ou=Users,dc=maxcrc,dc=com";
     
     /**

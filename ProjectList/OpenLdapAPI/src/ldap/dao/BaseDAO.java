@@ -18,16 +18,16 @@
  */
 package ldap.dao;
 
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 /**
  * @author ThachLe
  *
  */
 public class BaseDAO {
-    protected ServerConfig ldapCfg;
+    protected LdapConfiguration ldapCfg;
 
-    public BaseDAO(ServerConfig ldapCfg) {
+    public BaseDAO(LdapConfiguration ldapCfg) {
         this.ldapCfg = ldapCfg;
     }
 }

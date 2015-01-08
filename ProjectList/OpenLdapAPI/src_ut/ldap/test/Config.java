@@ -1,6 +1,6 @@
 package ldap.test;
 
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import com.novell.ldap.LDAPConnection;
 
@@ -10,7 +10,7 @@ public class Config {
     * OpenLdap on localhost.
     * @return
     */
-    public static ServerConfig getServerConfig() {
+    public static LdapConfiguration getServerConfig() {
         String host = "localhost";
         String rootDN = "dc=maxcrc,dc=com";
         int version= LDAPConnection.LDAP_V3;
@@ -19,9 +19,15 @@ public class Config {
 
         String loginDN = "cn=Manager,dc=maxcrc,dc=com";
         
-        ServerConfig ldapCfg = new ServerConfig(host, port, version, loginDN, pwdLogin, rootDN);
+        LdapConfiguration ldapConfiguration = new LdapConfiguration();
+        ldapConfiguration.setHost(host);
+        ldapConfiguration.setPort(port);
+        ldapConfiguration.setVersion(version);
+        ldapConfiguration.setLoginDN(loginDN);
+        ldapConfiguration.setPwdLogin(pwdLogin);
+        ldapConfiguration.setRootDN(rootDN);
         
-        return ldapCfg;
+        return ldapConfiguration;
     }
 
 }

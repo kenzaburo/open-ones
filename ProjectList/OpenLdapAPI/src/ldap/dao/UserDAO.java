@@ -8,7 +8,7 @@ import java.util.List;
 import ldap.entry.Entry;
 import ldap.entry.UserEntry;
 import ldap.util.ConnectionManager;
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import org.apache.log4j.Logger;
 
@@ -28,7 +28,7 @@ public class UserDAO extends BaseDAO {
     /** Logging. */
     private final static Logger LOG = Logger.getLogger(UserDAO.class);
 
-    public UserDAO(ServerConfig ldapCfg) {
+    public UserDAO(LdapConfiguration ldapCfg) {
         super(ldapCfg);
     }
 

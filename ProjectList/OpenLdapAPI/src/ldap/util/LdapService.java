@@ -47,10 +47,12 @@ import com.novell.ldap.util.Base64;
  *
  */
 public class LdapService {
-	private static final String LDAP_CFG_PATH = "/ldap.properties";
+    private static final Logger LOG = Logger.getLogger(LdapService.class);
+    
+//    private static final String LDAP_CFG_PATH = "/ldap.properties";
 	private static final String NODEROOT = "Users";
-	private static final Logger LOG = Logger.getLogger(LdapService.class);
-	protected static ServerConfig ldapCfg = null;
+	
+	private LdapConfiguration ldapConfiguration = null;
 
 	private Entry root = null;
 	
@@ -59,11 +61,13 @@ public class LdapService {
 	/** OU for starting lookup accounts . */
 	private static String userOU = null;
 
-	private static LdapService defaultInstance = new LdapService();
-	static {
+	/**
+	 * @param configResource classpath resource configuration.
+	 */
+	public LdapService(String configResource) {
 		try {
 			LOG.info("Loading configuration...");
-			Properties props = PropertiesManager.newInstanceFromProps(LDAP_CFG_PATH);
+			Properties props = PropertiesManager.newInstanceFromProps(configResource);
 			String host = props.getProperty("host");
 			String strPort = props.getProperty("port");
 			int port = ((strPort != null) && (!strPort.isEmpty()))
@@ -81,10 +85,21 @@ public class LdapService {
 
 			userOU = props.getProperty("userOU");
 
-			ldapCfg = new ServerConfig(host, port, version, loginDN, pwdLogin, rootDN);
+			// ldapConfiguration = new LdapConfiguration(host, port, version, loginDN, pwdLogin, rootDN);
+			ldapConfiguration = new LdapConfiguration();
+			ldapConfiguration.setHost(host);
+			ldapConfiguration.setPort(port);
+			ldapConfiguration.setVersion(version);
+			ldapConfiguration.setLoginDN(loginDN);
+			ldapConfiguration.setPwdLogin(pwdLogin);
+			ldapConfiguration.setRootDN(rootDN);
 		} catch (IOException ex) {
-			LOG.error("Could not load configuration from resource '" + LDAP_CFG_PATH + "'", ex);
+			LOG.error("Could not load configuration from resource '" + configResource + "'", ex);
 		}
+	}
+	
+	public LdapService(LdapConfiguration ldapConfiguration) {
+	    this.ldapConfiguration = ldapConfiguration;
 	}
 
 	/**
@@ -92,9 +107,9 @@ public class LdapService {
 	 * 
 	 * @return an instance of LdapService
 	 */
-	public static LdapService getInstance() {
-		return defaultInstance;
-	}
+//	public static LdapService getInstance() {
+//		return defaultInstance;
+//	}
 
 	/**
 	 * [Give the description for method].
@@ -102,7 +117,7 @@ public class LdapService {
 	 * @return
 	 */
 	public Entry findGroups() {
-		GroupDAO group = new GroupDAO(ldapCfg);
+		GroupDAO group = new GroupDAO(ldapConfiguration);
 		root = group.findGroupByDN(userOU);
 		return root;
 	}
@@ -114,27 +129,32 @@ public class LdapService {
 	 * @return
 	 */
 	public Entry findGroupByDN(String name) {
-		GroupDAO group = new GroupDAO(ldapCfg);
+		GroupDAO group = new GroupDAO(ldapConfiguration);
 		return group.findGroupByDN(name);
 	}
 
 	public Entry findUserByUid(String uid) {
-		UserDAO userdao = new UserDAO(ldapCfg);
+		UserDAO userdao = new UserDAO(ldapConfiguration);
 		return userdao.findByUid(uid);
 	}
 
 	public List<Entry> findUsersByDN(String name) {
-		UserDAO users = new UserDAO(ldapCfg);
+		UserDAO users = new UserDAO(ldapConfiguration);
 		return users.findByOU(name);
 	}
 
 	public boolean addGroup(GroupEntry entry) {
-		GroupDAO dao = new GroupDAO(ldapCfg);
+		GroupDAO dao = new GroupDAO(ldapConfiguration);
 		return dao.add(entry);
 	}
 
+    public boolean deleteGroup(String groupDn) {
+        GroupDAO dao = new GroupDAO(ldapConfiguration);
+        return dao.deleteGroup(groupDn);
+    }
+	   
 	public boolean addUser(UserEntry entry) {
-		UserDAO dao = new UserDAO(ldapCfg);
+		UserDAO dao = new UserDAO(ldapConfiguration);
 		return dao.add(entry);
 	}
 
@@ -150,7 +170,7 @@ public class LdapService {
 	* Step 2: verify with encrypted password
 	*/
 	public boolean checkPassword(String uid, String pwd) {
-		UserDAO userDao = new UserDAO(ldapCfg);
+		UserDAO userDao = new UserDAO(ldapConfiguration);
 		boolean result = userDao.checkPass(uid, pwd);
 		if (!result) {
 		    // Try to check with encrypted pass
@@ -264,14 +284,14 @@ public class LdapService {
 	
     public boolean changePass(String userDN, String newPwd) {
         boolean result = false;
-        ConnectionManager.connection(ldapCfg);
+        ConnectionManager.connection(ldapConfiguration);
 
         String encryptedPwd = encrypt(newPwd);
         LDAPAttribute attributePassword = new LDAPAttribute("userPassword", encryptedPwd);
 
         try {            
-            ConnectionManager.connection(ldapCfg);
-            LDAPConnection ldapConn = ConnectionManager.getInstance(ldapCfg);
+            ConnectionManager.connection(ldapConfiguration);
+            LDAPConnection ldapConn = ConnectionManager.getInstance(ldapConfiguration);
             
             LDAPModification modification = new LDAPModification(LDAPModification.REPLACE, attributePassword);
 
@@ -316,7 +336,23 @@ public class LdapService {
     }
 
     public UserEntry findUserByEmail(String email) {
-		UserDAO users = new UserDAO(ldapCfg);
+		UserDAO users = new UserDAO(ldapConfiguration);
 		return users.findByEmail(email);
+    }
+
+    /**
+     * Get value of ldapConfiguration.
+     * @return the ldapConfiguration
+     */
+    public LdapConfiguration getLdapConfiguration() {
+        return ldapConfiguration;
+    }
+
+    /**
+     * Set the value for ldapConfiguration.
+     * @param ldapConfiguration the ldapConfiguration to set
+     */
+    public void setLdapConfiguration(LdapConfiguration ldapConfiguration) {
+        this.ldapConfiguration = ldapConfiguration;
     }
 }

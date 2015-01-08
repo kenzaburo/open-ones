@@ -6,7 +6,7 @@ import com.novell.ldap.LDAPConnection;
  * @author HoaNV, ThachLe
  * Class ServerConfig presents LDAP connection
  * */
-public class ServerConfig {
+public class LdapConfiguration {
 
     /** hostLDAP it's a String variable for store IP of LDAP Server. */
     private String host = "localhost";
@@ -26,7 +26,13 @@ public class ServerConfig {
     /** rootDN it's a String variable for store DN of LDAP Server. */
     private String rootDN = null;
 
+    /** DN contains sub groups . */
+    private String rootGroupOU;
     
+//    public LdapConfiguration() {
+//        // Do nothing
+//    }
+
     /**
      * Create an instance of LDAPManager
      * @param host
@@ -36,14 +42,14 @@ public class ServerConfig {
      * @param pwdLogin
      * @param rootDN
      */
-    public ServerConfig(String host, int port, int version, String loginDN, String pwdLogin, String rootDN) {
-        this.host = host;
-        this.port = port;
-        this.version = version;
-        this.loginDN = loginDN;
-        this.pwdLogin = pwdLogin;
-        this.rootDN = rootDN;
-    }
+//    public LdapConfiguration(String host, int port, int version, String loginDN, String pwdLogin, String rootDN) {
+//        this.host = host;
+//        this.port = port;
+//        this.version = version;
+//        this.loginDN = loginDN;
+//        this.pwdLogin = pwdLogin;
+//        this.rootDN = rootDN;
+//    }
 
     /**
      * Get value of host.
@@ -139,6 +145,22 @@ public class ServerConfig {
      */
     public void setRootDN(String rootDN) {
         this.rootDN = rootDN;
+    }
+
+    /**
+     * Get value of rootGroupOU.
+     * @return the rootGroupOU
+     */
+    public String getRootGroupOU() {
+        return rootGroupOU;
+    }
+
+    /**
+     * Set the value for rootGroupOU.
+     * @param rootGroupOU the rootGroupOU to set
+     */
+    public void setRootGroupOU(String rootGroupOU) {
+        this.rootGroupOU = rootGroupOU;
     }
 
 }

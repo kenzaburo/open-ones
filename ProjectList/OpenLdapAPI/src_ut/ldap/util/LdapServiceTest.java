@@ -19,6 +19,7 @@
 package ldap.util;
 
 import static org.junit.Assert.*;
+import ldap.entry.Entry;
 
 import org.junit.After;
 import org.junit.Before;
@@ -51,12 +52,31 @@ public class LdapServiceTest {
      */
     @Test
     public void testCheckPassword() {
-        LdapService ldapService = new LdapService();
+        LdapService ldapService = new LdapService("/ldap.properties");
         String newPwd="12345";
         String userDN="admin";
         
         boolean success = ldapService.checkPassword("admin", "Admin12345");
         assertTrue(success);
+        
+        Entry groupEntry = ldapService.findGroups();
+        assertEquals("", groupEntry.getGroup());
+        assertEquals("", groupEntry.getName());
+    }
+    
+    @Test
+    public void testDeleteGroup() {
+        LdapService ldapService = new LdapService("/ldap.properties");
+        String groupDn = "ou=abc123456";
+        boolean delOK = ldapService.deleteGroup(groupDn);
+        
+        assertFalse(delOK);
+        
+        //
+        groupDn = "ou=abc123456, ou=Users,dc=maxcrc,dc=com";
+        delOK = ldapService.deleteGroup(groupDn);
+        
+        assertTrue(delOK);
     }
 
 }

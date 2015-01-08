@@ -7,7 +7,7 @@ import java.util.List;
 import ldap.entry.Entry;
 import ldap.entry.GroupEntry;
 import ldap.util.ConnectionManager;
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import org.apache.log4j.Logger;
 
@@ -24,7 +24,7 @@ public class GroupDAO extends BaseDAO {
      * Create an instance with given configuration.
      * @param ldapCfg
      */
-    public GroupDAO(ServerConfig ldapCfg) {
+    public GroupDAO(LdapConfiguration ldapCfg) {
         super(ldapCfg);
     }
 

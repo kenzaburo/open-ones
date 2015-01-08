@@ -3,13 +3,13 @@ package ldap.test;
 import static org.junit.Assert.*;
 import ldap.dao.UserDAO;
 import ldap.entry.UserEntry;
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import org.junit.Test;
 
 
 public class TestUpdateEntry {
-    private ServerConfig ldapCfg = Config.getServerConfig();
+    private LdapConfiguration ldapCfg = Config.getServerConfig();
     
 	@Test
 	public void test() {

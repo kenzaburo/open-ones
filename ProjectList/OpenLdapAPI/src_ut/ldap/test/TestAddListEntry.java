@@ -7,12 +7,12 @@ import java.util.List;
 
 import ldap.dao.UserDAO;
 import ldap.entry.Entry;
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import org.junit.Test;
 
 public class TestAddListEntry {
-    private ServerConfig ldapCfg = Config.getServerConfig();
+    private LdapConfiguration ldapCfg = Config.getServerConfig();
     
 	@Test
 	public void test() {

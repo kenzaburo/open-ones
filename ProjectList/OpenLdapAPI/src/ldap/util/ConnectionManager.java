@@ -35,7 +35,7 @@ public class ConnectionManager {
      *         LDAPconnect and return it.
      * @return an LDAPConnection has been connected to server
      */
-    public static LDAPConnection getInstance(ServerConfig ldapCfg) {
+    public static LDAPConnection getInstance(LdapConfiguration ldapCfg) {
         if (ldapConnection == null) {
             ldapConnection = new LDAPConnection();
             connection(ldapCfg);
@@ -62,7 +62,7 @@ public class ConnectionManager {
     /**
      * connect's going to connect to LDAP server.
      */
-    public static boolean connection(ServerConfig ldapCfg) {
+    public static boolean connection(LdapConfiguration ldapCfg) {
         boolean result;
         try {
             LOG.info("Connecting to LDAP Server: " + ldapCfg.getHost());

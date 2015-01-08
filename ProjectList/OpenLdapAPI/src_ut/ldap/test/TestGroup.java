@@ -1,13 +1,13 @@
 package ldap.test;
 import ldap.dao.GroupDAO;
 import ldap.entry.GroupEntry;
-import ldap.util.ServerConfig;
+import ldap.util.LdapConfiguration;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestGroup {
-    private ServerConfig ldapCfg = Config.getServerConfig();
+    private LdapConfiguration ldapCfg = Config.getServerConfig();
     private String userOU = "ou=Users,dc=fsoft,dc=com,dc=vn";
     
     
