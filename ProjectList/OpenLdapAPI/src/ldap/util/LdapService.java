@@ -18,12 +18,10 @@
  */
 package ldap.util;
 
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import ldap.dao.GroupDAO;
 import ldap.dao.UserDAO;
@@ -32,8 +30,6 @@ import ldap.entry.GroupEntry;
 import ldap.entry.UserEntry;
 
 import org.apache.log4j.Logger;
-
-import rocky.common.PropertiesManager;
 
 import com.google.gson.Gson;
 import com.novell.ldap.LDAPAttribute;
@@ -48,68 +44,28 @@ import com.novell.ldap.util.Base64;
  */
 public class LdapService {
     private static final Logger LOG = Logger.getLogger(LdapService.class);
-    
-//    private static final String LDAP_CFG_PATH = "/ldap.properties";
+
 	private static final String NODEROOT = "Users";
 	
+    /** Attribute for a Ldap role's group entry. */
+    private static final String LDAPATTR_MEMBER = "member";
+
 	private LdapConfiguration ldapConfiguration = null;
 
 	private Entry root = null;
 	
 	String json = null;
 
-	/** OU for starting lookup accounts . */
-	private static String userOU = null;
-
 	/**
 	 * @param configResource classpath resource configuration.
 	 */
 	public LdapService(String configResource) {
-		try {
-			LOG.info("Loading configuration...");
-			Properties props = PropertiesManager.newInstanceFromProps(configResource);
-			String host = props.getProperty("host");
-			String strPort = props.getProperty("port");
-			int port = ((strPort != null) && (!strPort.isEmpty()))
-			        ? Integer.valueOf(strPort)
-			        : LDAPConnection.DEFAULT_PORT;
-
-			String strVersion = props.getProperty("version");
-			int version = ((strVersion != null) && (!strVersion.isEmpty()))
-			        ? Integer.valueOf(strVersion)
-			        : LDAPConnection.LDAP_V3;
-
-			String loginDN = props.getProperty("loginDN");
-			String pwdLogin = props.getProperty("pwdLogin");
-			String rootDN = props.getProperty("rootDN");
-
-			userOU = props.getProperty("userOU");
-
-			// ldapConfiguration = new LdapConfiguration(host, port, version, loginDN, pwdLogin, rootDN);
-			ldapConfiguration = new LdapConfiguration();
-			ldapConfiguration.setHost(host);
-			ldapConfiguration.setPort(port);
-			ldapConfiguration.setVersion(version);
-			ldapConfiguration.setLoginDN(loginDN);
-			ldapConfiguration.setPwdLogin(pwdLogin);
-			ldapConfiguration.setRootDN(rootDN);
-		} catch (IOException ex) {
-			LOG.error("Could not load configuration from resource '" + configResource + "'", ex);
-		}
+	    ldapConfiguration = LdapConfigurationUtil.getConfiguration(configResource);
 	}
 	
 	public LdapService(LdapConfiguration ldapConfiguration) {
 	    this.ldapConfiguration = ldapConfiguration;
 	}
-
-	/**
-	 * Get default implementation of Ldap service.
-	 * 
-	 * @return an instance of LdapService
-	 */
-//	public static LdapService getInstance() {
-//		return defaultInstance;
-//	}
 
 	/**
 	 * [Give the description for method].
@@ -118,7 +74,7 @@ public class LdapService {
 	 */
 	public Entry findGroups() {
 		GroupDAO group = new GroupDAO(ldapConfiguration);
-		root = group.findGroupByDN(userOU);
+		root = group.findGroupByDN(ldapConfiguration.getRootGroupOU());
 		return root;
 	}
 
@@ -158,6 +114,40 @@ public class LdapService {
 		return dao.add(entry);
 	}
 
+    /**
+     * Delete User.
+     * 
+     * @param userDn is dn of group wanna delete
+     * @return is deleteUser?
+     */
+    public boolean deleteUser(String userDn) {
+        UserDAO dao = new UserDAO(ldapConfiguration);
+
+        return dao.deleteUser(dao.findByDN(userDn));
+    }
+
+    /**
+     * Delete Group.
+     * 
+     * @param userDn is dn of group wanna delete
+     * @param roleDn is of group
+     * @return is deleteUser?
+     */
+    public boolean deleteUser(String userDn, String roleDn) {
+        UserDAO dao = new UserDAO(ldapConfiguration);
+        UserEntry ue = (UserEntry) dao.findByDN(userDn);
+
+        boolean result = false;
+
+        if (dao.deleteUser(ue)) {
+            // Delete roles
+            result = deleteRole(roleDn, ue.getDn());
+        } else {
+            // Do nothing.
+        }
+
+        return result;
+    }
 	/**
 	* Check password of user.
 	* @param uid account name
@@ -339,6 +329,154 @@ public class LdapService {
 		UserDAO users = new UserDAO(ldapConfiguration);
 		return users.findByEmail(email);
     }
+
+    
+    /**
+     * Add role for a specific user.
+     * 
+     * @param roleDn string
+     * @param uid of user
+     * @return success?
+     */
+    public boolean addRole(String roleDn, String uid) {
+        ConnectionManager.connection(ldapConfiguration);
+        LDAPConnection ldapConn = ConnectionManager.getInstance(ldapConfiguration);
+        LDAPModification modifications = new LDAPModification();
+        LDAPAttribute addR = new LDAPAttribute(LDAPATTR_MEMBER, uid);
+        modifications = new LDAPModification(LDAPModification.ADD, addR);
+        boolean result;
+        try {
+            ldapConn.modify(roleDn, modifications);
+            result = true;
+        } catch (LDAPException ex) {
+            if (ex.getResultCode() == LDAPException.NO_SUCH_OBJECT) {
+                LOG.info("Entry doesn't exist!");
+            } else {
+                LOG.info("Error, can't add Role", ex);
+            }
+            result = false;
+        }
+
+        ConnectionManager.disconnect();
+        return result;
+    }
+
+    /**
+     * Delete Role.
+     * 
+     * @param roleDn from Ldap
+     * @param uid from Ldap
+     * @return is deleteRole?
+     */
+    public boolean deleteRole(String roleDn, String uid) {
+        ConnectionManager.connection(ldapConfiguration);
+        LDAPConnection con = ConnectionManager.getInstance(ldapConfiguration);
+
+        LDAPAttribute dele = new LDAPAttribute(LDAPATTR_MEMBER, uid);
+        LDAPModification del = new LDAPModification(LDAPModification.DELETE, dele);
+
+        boolean result;
+        try {
+            con.modify(roleDn, del);
+            result = true;
+        } catch (LDAPException ex) {
+            if (ex.getResultCode() == LDAPException.NO_SUCH_OBJECT) {
+                LOG.info("Entry doesn't exist!");
+            } else {
+                LOG.info("Error, can't delete Role", ex);
+            }
+            result = false;
+        }
+
+        ConnectionManager.disconnect();
+
+        return result;
+    }
+
+    /**
+     * Update Role.
+     * 
+     * @param roleDn from Ldap
+     * @param uid from Ldap
+     * @param oldUid from Ldap
+     * @return is updateRole?
+     */
+    public boolean updateRole(String roleDn, String uid, String oldUid) {
+        String curRoleDn = getRole(oldUid);
+
+        ConnectionManager.connection(ldapConfiguration);
+        LDAPConnection con = ConnectionManager.getInstance(ldapConfiguration);
+
+        LDAPModification[] mods = new LDAPModification[2];
+
+        LDAPAttribute dele = new LDAPAttribute(LDAPATTR_MEMBER, oldUid);
+        mods[0] = new LDAPModification(LDAPModification.DELETE, dele);
+
+        LDAPAttribute ad = new LDAPAttribute(LDAPATTR_MEMBER, uid);
+        mods[1] = new LDAPModification(LDAPModification.ADD, ad);
+
+        boolean result;
+        try {
+            con.modify(curRoleDn, mods[0]);
+            con.modify(roleDn, mods[1]);
+            result = true;
+        } catch (LDAPException ex) {
+            if (ex.getResultCode() == LDAPException.NO_SUCH_OBJECT) {
+                LOG.info("Entry doesn't exist!");
+            } else {
+                LOG.info("Error, can't change Role", ex);
+            }
+            result = false;
+        }
+
+        ConnectionManager.disconnect();
+
+        return result;
+    }
+
+    /**
+     * Get role dn string of a specific user.
+     * 
+     * @param userDn for looking up
+     * @return role dn
+     */
+    public String getRole(String userDn) {
+        ConnectionManager.connection(ldapConfiguration);
+        LDAPConnection ldapConn = ConnectionManager.getInstance(ldapConfiguration);
+        LDAPModification[] mods = new LDAPModification[2];
+        LDAPAttribute target = new LDAPAttribute(LDAPATTR_MEMBER, userDn);
+        mods[0] = new LDAPModification(LDAPModification.DELETE, target);
+        mods[1] = new LDAPModification(LDAPModification.ADD, target);
+
+        final String dnRoleAdmin = ldapConfiguration.getDnRoleAdmin();
+        final String dnRoleUser = ldapConfiguration.getDnRoleUser();
+
+        // Go into each Role group and delete the specific target (if delete
+        // success, add that target back and return immediately the result)
+        // catch block in each test below do nothing since this is just for test
+        // whether the statement can run smoothly
+
+        // Test Admin role
+        try {
+            ldapConn.modify(dnRoleAdmin, mods);
+            return dnRoleAdmin;
+        } catch (LDAPException e) {
+            // Do nothing.
+        }
+
+        // Test User role
+        try {
+            ldapConn.modify(dnRoleUser, mods);
+            return dnRoleUser;
+        } catch (LDAPException e) {
+            // Do nothing.
+        }
+
+        ConnectionManager.disconnect();
+
+        return "";
+    }
+
 
     /**
      * Get value of ldapConfiguration.

@@ -28,7 +28,13 @@ public class LdapConfiguration {
 
     /** DN contains sub groups . */
     private String rootGroupOU;
+
+    /** DN contains permission Admin of accounts. */
+    private String dnRoleAdmin;
     
+    
+    /** DN contains permission User of accounts . */
+    private String dnRoleUser;
 //    public LdapConfiguration() {
 //        // Do nothing
 //    }
@@ -161,6 +167,38 @@ public class LdapConfiguration {
      */
     public void setRootGroupOU(String rootGroupOU) {
         this.rootGroupOU = rootGroupOU;
+    }
+
+    /**
+     * Get value of dnRoleAdmin.
+     * @return the dnRoleAdmin
+     */
+    public String getDnRoleAdmin() {
+        return dnRoleAdmin;
+    }
+
+    /**
+     * Set the value for dnRoleAdmin.
+     * @param dnRoleAdmin the dnRoleAdmin to set
+     */
+    public void setDnRoleAdmin(String dnRoleAdmin) {
+        this.dnRoleAdmin = dnRoleAdmin;
+    }
+
+    /**
+     * Get value of dnRoleUser.
+     * @return the dnRoleUser
+     */
+    public String getDnRoleUser() {
+        return dnRoleUser;
+    }
+
+    /**
+     * Set the value for dnRoleUser.
+     * @param dnRoleUser the dnRoleUser to set
+     */
+    public void setDnRoleUser(String dnRoleUser) {
+        this.dnRoleUser = dnRoleUser;
     }
 
 }
