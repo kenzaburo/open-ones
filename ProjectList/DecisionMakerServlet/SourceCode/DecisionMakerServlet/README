@@ -27,8 +27,15 @@ On Windows, Create soft link "
 From the prompt of folder "..../DecisionMakerServlet/src/main/webapp", execute command:
 mklink /D img resources\htmlkickstart\css\img
 
+Step 4)
+Login by admin/admin
+
+Going to menu menu Admin > "Khởi tạo dữ liệu". Click on buttons "Lưu" of data to create system data.
+Then click on "Trang chủ".
+After that, going to menu "Quản lý chung > Tạo mới yêu cầu" to explore some features.
+
 ---------
 Le Ngoc Thach
 MKS Group
-Make your work better.
+Make your work better!
 http://mks.com.vn
