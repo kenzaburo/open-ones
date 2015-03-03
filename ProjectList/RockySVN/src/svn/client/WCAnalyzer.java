@@ -22,15 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.tmatesoft.svn.core.ISVNLogEntryHandler;
 import org.tmatesoft.svn.core.SVNCancelException;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
-import org.tmatesoft.svn.core.internal.wc17.db.SVNWCDbRoot.WCLock;
 import org.tmatesoft.svn.core.wc.ISVNEventHandler;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNEvent;
@@ -39,52 +41,50 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.tmatesoft.svn.core.wc2.SvnCheckout;
-import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
-import org.tmatesoft.svn.core.wc2.SvnTarget;
-import org.tmatesoft.svn.core.wc2.SvnUpdate;
 
 import rocky.common.CommonUtil;
 /**
- * SVNClient wrapper.
- * It loads configuration from resource file "/svn.properties"
- *   svnpath=
- *   username=
- *   password=
- *   rev=-1
+ * This is a SVNClient wrapper. It provides utilities to analyze the working copy folder of SVN.
+ * Prerequisite:
+ * - The working copy folder is the folder which is checked-out before.
  * 
+ * How to use this class:
+ * Case 1:
+ *  - Create an instance with constructor:
+ *    WCAnalyzer wcAnalyzer = WCAnalyzer(String svnUrl, String wcPath, String username, String password)
+ *  - Call method start()
+ *    wcAnalyzer.start() 
  * @author thachln
  */
 public class WCAnalyzer implements ISVNEventHandler {
-    private final static Logger LOG = Logger.getLogger("SVNClient");
-    
-    /**  . */
-    public static final String DSP_DTE_FMT = "yyyy/MM/dd HH:mm";
-    
-    private static Properties props;
-    private static String svnUrl = null;
-    private static String wcPath = null;
-    private static String username = null;
-    private static String password = null;
-    
+    private final static Logger LOG = Logger.getLogger("WCAnalyzer");
+
+    private String svnUrl = null;
+    private String wcPath = null;
+    private String username = null;
+    private String password = null;
+
     /** Null mean latest revision. */
     private static Long rev = null;
-    
+
     /** Last time run the checkout. */
     private Date lastCheckDate = null;
 
     SVNWCClient wcClient = null;
 
     /**
-     *  Avoid create instance without parameter.
+     * Avoid create instance without parameter.
      */
     private WCAnalyzer() {
         // No nothing
     }
-    
+
     /**
-     * Create an instance of SVNClient to get information from local working copy.
-     * @param wcPath path of working copy
+     * Create an instance of analyzer in case of existed working copy (checkout folder). SVNClient to get information
+     * from local working copy.
+     * 
+     * @param wcPath
+     *            path of working copy
      * @param username
      * @param password
      */
@@ -95,22 +95,42 @@ public class WCAnalyzer implements ISVNEventHandler {
     }
 
     /**
+     * Create an instance in case of the working copy folder is empty (no checkout before).
+     * 
+     * @param svnUrl
+     *            Server Url
+     * @param wcPath
+     *            working copy folder
+     * @param username
+     * @param password
+     */
+    public WCAnalyzer(String svnUrl, String wcPath, String username, String password) {
+        this.svnUrl = svnUrl;
+        this.wcPath = wcPath;
+        this.username = username;
+        this.password = password;
+    }
+
+    /**
      * [Give the description for method].
+     * 
      * @param configFile
+     *            It loads configuration from resource file "/svn.properties" svnpath= username= password= rev=-1
+     * 
      * @return
      */
     public WCAnalyzer(String configFile) {
         try {
             Properties props = new Properties();
             props.load(CommonUtil.loadResource(configFile));
-            
+
             String revVal = props.getProperty("rev");
-            
-            // this.svnUrl = props.getProperty("svn.url");
-            this.wcPath = props.getProperty("svn.wc");
+
+            this.svnUrl = props.getProperty("svnUrl");
+            this.wcPath = props.getProperty("wcPath");
             this.username = props.getProperty("username");
             this.password = props.getProperty("password");
-            
+
             rev = null;
             if ((revVal != null) && (!"-1".equalsIgnoreCase(revVal))) {
                 rev = Long.valueOf(revVal);
@@ -122,7 +142,31 @@ public class WCAnalyzer implements ISVNEventHandler {
         }
     }
 
+    /**
+     * 
+     */
+    public void start() {
+        // Get start date of SVN repo
 
+        SVNClient svnCLient = new SVNClient(svnUrl, wcPath , username, password);
+        Date firstCommittedDte = svnCLient.getFirstCommittedDate();
+        
+        LOG.debug("The first time committed '" + firstCommittedDte + "'");
+        
+        // Clean up - in case any modification from local
+        doCleanUp();
+
+//        // Update from SVN to local path (working copy folder) for the first version
+//        doUpdate(firstCommittedDte);
+//        
+//        Calendar cal = new GregorianCalendar();
+//        cal.setTime(firstCommittedDte);
+//        cal.add(Calendar.DATE, +1);
+//        
+//        // Update next day
+//        doUpdate(new Date());
+    }
+    
     private SVNWCClient getSVNWCClient() {
         if (wcClient == null) {
             SVNClientManager clientManager = getClientManager();
@@ -135,30 +179,24 @@ public class WCAnalyzer implements ISVNEventHandler {
 
     /**
      * [Give the description for method].
+     * 
      * @return
      */
     public SVNClientManager getClientManager() {
         DefaultSVNOptions myOptions = SVNWCUtil.createDefaultOptions(true);;
         SVNClientManager clientManager = SVNClientManager.newInstance(myOptions, username, password);
-        
+
         clientManager.setEventHandler(this);
         return clientManager;
     }
-    
-    /**
-     * Get value of wcPath.
-     * @return the wcPath
-     */
-    public static String getWcPath() {
-        return wcPath;
-    }
 
     /**
-     * Set the value for wcPath.
-     * @param wcPath the wcPath to set
+     * Get value of wcPath.
+     * 
+     * @return the wcPath
      */
-    public static void setWcPath(String wcPath) {
-        WCAnalyzer.wcPath = wcPath;
+    public String getWcPath() {
+        return wcPath;
     }
 
     public long doCheckout(String svnUrlPath) {
@@ -169,63 +207,65 @@ public class WCAnalyzer implements ISVNEventHandler {
         } catch (SVNException ex) {
             LOG.error("Parse URL path '" + svnUrlPath + "'", ex);
         }
-        
+
         return -1;
     }
-    
+
     public long doCheckout(SVNURL url) {
         SVNUpdateClient updateClient = getClientManager().getUpdateClient();
         File path = new File(wcPath);
-        SVNRevision svnRev = (rev == null) ? SVNRevision.UNDEFINED : SVNRevision.create(rev);
+        SVNRevision svnRev = ((rev == null || rev == -1)) ? SVNRevision.UNDEFINED : SVNRevision.create(rev);
 
         try {
             lastCheckDate = new Date();
-            LOG.debug("Checkout..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
+            LOG.debug("Checkout..." + path + " at " + lastCheckDate);
             long lastRev = updateClient.doCheckout(url, path, svnRev, svnRev, SVNDepth.INFINITY, true);
             LOG.debug("lastRev=" + lastRev);
-            
+
             return lastRev;
         } catch (SVNException ex) {
             LOG.error("Checkout SVN...", ex);
         }
-        
-        return -1;
-    } 
 
-    public long checkOut2() {
-        final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
-        try {
-            final SvnCheckout checkout = svnOperationFactory.createCheckout();
-            checkout.setSingleTarget(SvnTarget.fromFile(new File(wcPath)));
-            checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(svnUrl)));
-            //... other options
-            return checkout.run();
-        } catch (SVNException ex) {
-            LOG.error("Checkout", ex);
-        } finally {
-            svnOperationFactory.dispose();
-        }
-        
         return -1;
     }
-    public long doUpdate2() {
-        final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
-        try {
-            final SvnUpdate update = svnOperationFactory.createUpdate();
-            update.setSingleTarget(SvnTarget.fromFile(new File(wcPath)));
 
-            //checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(svnUrl)));
-            //... other options
-            long[] retValues = update.run();
-            return retValues[0];
+    public long doCheckout(SVNURL url, long rev) {
+        SVNUpdateClient updateClient = getClientManager().getUpdateClient();
+        File path = new File(wcPath);
+        SVNRevision svnRev = SVNRevision.create(rev);
+
+        try {
+            lastCheckDate = new Date();
+            LOG.debug("Checkout..." + path + " at " + lastCheckDate);
+            long lastRev = updateClient.doCheckout(url, path, svnRev, svnRev, SVNDepth.INFINITY, true);
+            LOG.debug("lastRev=" + lastRev);
+
+            return lastRev;
         } catch (SVNException ex) {
-            LOG.error("Update", ex);
-        } finally {
-            svnOperationFactory.dispose();
+            LOG.error("Checkout SVN...", ex);
         }
-        
+
         return -1;
     }
+    
+    /**
+     * @return true if no error
+     */
+    public boolean doCleanUp() {
+        File path = new File(wcPath);
+        
+        LOG.debug("Do cleaning up '" + wcPath + "'...");
+        try {
+            getSVNWCClient().doCleanup(path);
+        } catch (SVNException ex) {
+            LOG.warn("Could not clean up the path '" + path + "'", ex);
+            return false;
+        }
+        
+        return true;
+    }
+    
     public long doUpdate() {
         SVNUpdateClient updateClient = getClientManager().getUpdateClient();
         File path = new File(wcPath);
@@ -233,33 +273,35 @@ public class WCAnalyzer implements ISVNEventHandler {
 
         try {
             lastCheckDate = new Date();
-            LOG.debug("Update..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
-            long lastRev = updateClient.doUpdate(path, svnRev,  SVNDepth.INFINITY, false, true);
+            LOG.debug("Update..." + path + " at " + lastCheckDate);
+            long lastRev = updateClient.doUpdate(path, svnRev, SVNDepth.INFINITY, false, true);
             LOG.debug("lastRev=" + lastRev);
-            
+
             return lastRev;
         } catch (SVNException ex) {
             LOG.error("Update SVN...", ex);
         }
-        
+
         return -1;
     }
-    
+
     /**
      * Check out at the end of date (23:59).
-     * @param endDate yyyy/MM/dd
+     * 
+     * @param endDate
+     *            yyyy/MM/dd
      */
     public long doUpdate(String endDate, String pattern) {
         Date dte = CommonUtil.parse(endDate, pattern);
         Calendar cal = Calendar.getInstance();
         cal.setTime(dte);
-        
+
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
-        
+
         return doUpdate(cal.getTime());
     }
-    
+
     public long doUpdate(Date endDate) {
         SVNUpdateClient updateClient = getClientManager().getUpdateClient();
         File path = new File(wcPath);
@@ -267,20 +309,21 @@ public class WCAnalyzer implements ISVNEventHandler {
 
         try {
             lastCheckDate = endDate;
-            LOG.debug("Update..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
-            long lastRev = updateClient.doUpdate(path, svnRev,  SVNDepth.INFINITY, false, true);
+            LOG.debug("Update..." + path + " at " + lastCheckDate + ";rev=" + svnRev);
+            long lastRev = updateClient.doUpdate(path, svnRev, SVNDepth.INFINITY, false, true);
             LOG.debug("lastRev=" + lastRev);
-            
+
             return lastRev;
         } catch (SVNException ex) {
             LOG.error("Update SVN...", ex);
         }
-        
+
         return -1;
     }
-    
+
     /**
      * Get information of current WC folder.
+     * 
      * @return
      * @throws SVNException
      */
@@ -296,7 +339,9 @@ public class WCAnalyzer implements ISVNEventHandler {
 
     /**
      * Get information of given path of folder or file.
-     * @param path file path or folder path
+     * The information is based on the latest revision.
+     * @param path
+     *            file path or folder path
      * @return
      * @throws SVNException
      */
@@ -305,14 +350,22 @@ public class WCAnalyzer implements ISVNEventHandler {
         File file = new File(path);
         return getSVNWCClient().doInfo(file, revision);
     }
+
+    public SVNInfo getInfoBase(String path) throws SVNException {
+        SVNRevision revision = SVNRevision.WORKING;
+        File file = new File(path);
+        return getSVNWCClient().doInfo(file, revision);
+    }
+
     
     public SVNInfo getInfo(File file) throws SVNException {
         SVNRevision revision = SVNRevision.HEAD;
         return getSVNWCClient().doInfo(file, revision);
     }
-    
+
     /**
      * Get value of lastCheckDate.
+     * 
      * @return the lastCheckDate
      */
     public Date getLastCheckDate() {
@@ -321,7 +374,9 @@ public class WCAnalyzer implements ISVNEventHandler {
 
     /**
      * Set the value for lastCheckDate.
-     * @param lastCheckDate the lastCheckDate to set
+     * 
+     * @param lastCheckDate
+     *            the lastCheckDate to set
      */
     public void setLastCheckDate(Date lastCheckDate) {
         this.lastCheckDate = lastCheckDate;
@@ -329,17 +384,19 @@ public class WCAnalyzer implements ISVNEventHandler {
 
     /**
      * [Explain the description for this method here].
+     * 
      * @throws SVNCancelException
      * @see org.tmatesoft.svn.core.ISVNCanceller#checkCancelled()
      */
     @Override
     public void checkCancelled() throws SVNCancelException {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
      * [Explain the description for this method here].
+     * 
      * @param arg0
      * @param arg1
      * @throws SVNException
@@ -352,6 +409,7 @@ public class WCAnalyzer implements ISVNEventHandler {
 
     /**
      * Get value of rev.
+     * 
      * @return the rev
      */
     public static Long getRev() {
@@ -360,10 +418,43 @@ public class WCAnalyzer implements ISVNEventHandler {
 
     /**
      * Set the value for rev.
-     * @param rev the rev to set
+     * 
+     * @param rev
+     *            the rev to set
      */
     public static void setRev(Long rev) {
         WCAnalyzer.rev = rev;
     }
 
+}
+
+/**
+ * Capture logs of history to get the first date committed.
+ * 
+ * @author ThachLN
+ *
+ */
+class AnalyzeLogHandler implements ISVNLogEntryHandler {
+    private final static Logger LOG = Logger.getLogger("LogHandler");
+    Date firstDateCommitted = new Date();
+
+    /**
+     * Get value of the firstDateCommitted.
+     * 
+     * @return the firstDateCommitted
+     */
+    public Date getFirstDateCommitted() {
+        return firstDateCommitted;
+    }
+
+    @Override
+    public void handleLogEntry(SVNLogEntry svnLogEntry) throws SVNException {
+        LOG.debug("svnLogEntry=" + svnLogEntry.getRevision() + ";date=" + svnLogEntry.getDate() + ";author="
+                + svnLogEntry.getAuthor());
+        if (firstDateCommitted.after(svnLogEntry.getDate())) {
+            firstDateCommitted = svnLogEntry.getDate();
+        } else {
+            // Do nothing
+        }
+    }
 }

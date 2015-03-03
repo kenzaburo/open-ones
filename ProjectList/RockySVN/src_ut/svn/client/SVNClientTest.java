@@ -37,7 +37,7 @@ public class SVNClientTest {
      */
     @Test
     public void testDoUpdateDate() {
-        SVNClient svCln = SVNClient.newClientFromConfiguration("/svn-cam.properties");
+        SVNClient svCln = new SVNClient("/svn-cam.properties");
         svCln.doUpdate("2013/09/23", "yyyy/MM/dd");
     }
 
@@ -46,13 +46,13 @@ public class SVNClientTest {
      */
     @Test
     public void testDoCheckOut() {
-        SVNClient svCln = SVNClient.newClientFromConfiguration("/svn-cam.properties");
+        SVNClient svCln = new SVNClient("/svn-cam.properties");
         svCln.doCheckout("https://hcm-svn.fsoft.fpt.vn/svn/F15-HCAM/trunk/source");
     }
     
     @Test
     public void testDoUpdateDate2() {
-        SVNClient svCln = SVNClient.newClientFromConfiguration("/svn-cam.properties");
+        SVNClient svCln = new SVNClient("/svn-cam.properties");
         svCln.doUpdate2();
     }
     
@@ -61,7 +61,7 @@ public class SVNClientTest {
         String svnUrl = "https://subversion.assembla.com/svn/team6capstoneprj/trunk";
         String username = "thachln";
         String password = "assembla1qaz";
-        SVNClient svCln = SVNClient.newClientFromUrl(svnUrl, username, password);
+        SVNClient svCln = new SVNClient(svnUrl, null, username, password);
         svCln.setWcPath("D:/Project/MyProject/Salary3P");
         
         svCln.doCheckout(svnUrl);
@@ -72,7 +72,7 @@ public class SVNClientTest {
         String svnUrl = "http://gst.fsoft.com.vn/svn/SVNObserver/";
         String username = "manhp@gmail.com";
         String password = "abc";
-       SVNClient svnClient = SVNClient.newClientFromUrl(svnUrl, username, password);
+       SVNClient svnClient = new SVNClient(svnUrl, null, username, password);
        long r;
     try {
         r = svnClient.getLattestRevision();
@@ -90,7 +90,7 @@ public class SVNClientTest {
         String svnUrl = "http://gst.fsoft.com.vn/svn/SVNObserver/";
         String username = "manhp@gmail.com";
         String password = "abc";
-       SVNClient svnClient = SVNClient.newClientFromUrl(svnUrl, username, password);
+       SVNClient svnClient = new SVNClient(svnUrl, null, username, password);
        svnClient.setWcPath("/home/admin/Downloads/SVNObserver/SVN/SVNObserver/trunk/source/SVNObserver/SVNLoader");
        long r;
     try {
@@ -109,7 +109,7 @@ public class SVNClientTest {
         String svnUrl = "http://gst.fsoft.com.vn/svn/SVNObserver/";
         String username = "manhp@gmail.com";
         String password = "abc";
-       SVNClient svnClient = SVNClient.newClientFromUrl(svnUrl, username, password);
+       SVNClient svnClient = new SVNClient(svnUrl, null, username, password);
        svnClient.setWcPath("/home/admin/Downloads/SVNObserver/SVN/SVNObserver/trunk/source/SVNObserver/SVNLoader");
        long r;
     try {

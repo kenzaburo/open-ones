@@ -24,7 +24,6 @@ import static junit.framework.Assert.fail;
 
 import java.io.File;
 import java.util.Date;
-
 import java.io.File;
 import java.util.Date;
 
@@ -55,7 +54,7 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 public class SVNClientTestWC {
     private final static Logger LOG = Logger.getLogger("SVNClientTestWC");
     String wcPath = "/media/truecrypt1/Project/MeKong/Solution/SVNObserver/svn/svn-mkss/svnobserver/SourceCode/SVNLoader/";
-    SVNClient svnCln = SVNClient.newClientFromWC(wcPath , "thach", "Thach2O13");
+    SVNClient svnCln = new SVNClient(null, wcPath , "thach", "Thach2O13");
     
 
     /**
@@ -86,7 +85,7 @@ public class SVNClientTestWC {
      */
     @Test
     public void testGetInfo() {
-        SVNClient svnCln = SVNClient.newClientFromWC("D:/Project/HCAM/svn/trunk/doc", "", "");
+        SVNClient svnCln = new SVNClient(null, "D:/Project/HCAM/svn/trunk/doc", "", "");
         svnCln.getRev();
         try {
             SVNInfo svnInfo = svnCln.getInfo();

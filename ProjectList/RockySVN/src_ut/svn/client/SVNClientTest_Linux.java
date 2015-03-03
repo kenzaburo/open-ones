@@ -50,7 +50,7 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 public class SVNClientTest_Linux {
     private final static Logger LOG = Logger.getLogger("SVNClientTestWC");
     String wcPath = "/media/Thach/HCAM/svn/source/PanoramaSystem/CamSysViewer/";
-    SVNClient svnCln = SVNClient.newClientFromWC(wcPath , "", "");
+    SVNClient svnCln = new SVNClient(null, wcPath , "", "");
     
 
     /**

@@ -25,23 +25,22 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.tmatesoft.svn.core.ISVNLogEntryHandler;
 import org.tmatesoft.svn.core.SVNCancelException;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.internal.util.SVNURLUtil;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
-import org.tmatesoft.svn.core.internal.wc17.db.statement.SVNWCDbSchema.WORKING_NODE__Fields;
 import org.tmatesoft.svn.core.wc.ISVNEventHandler;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNEvent;
 import org.tmatesoft.svn.core.wc.SVNInfo;
+import org.tmatesoft.svn.core.wc.SVNLogClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.tmatesoft.svn.core.wc2.SvnCheckout;
-import org.tmatesoft.svn.core.wc2.SvnInfo;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 import org.tmatesoft.svn.core.wc2.SvnUpdate;
@@ -49,441 +48,437 @@ import org.tmatesoft.svn.core.wc2.SvnUpdate;
 import rocky.common.CommonUtil;
 
 /**
- * SVNClient wrapper. It loads configuration from resource file
- * "/svn.properties" svnpath= username= password= rev=-1
+ * This is a SVNClient wrapper. It provides utilities to analyze the working copy folder of SVN. It support to load
+ * configuration from resource file "/svn.properties" svnpath= username= password= rev=-1
  * 
  * @author thachln
  */
 public class SVNClient implements ISVNEventHandler {
-	private final static Logger LOG = Logger.getLogger("SVNClient");
+    private final static Logger LOG = Logger.getLogger("SVNClient");
 
-	/** . */
-	public static final String DSP_DTE_FMT = "yyyy/MM/dd HH:mm";
+    /** . */
+    public static final String DSP_DTE_FMT = "yyyy/MM/dd HH:mm";
 
-	private static Properties props;
-	private static String svnUrl = null;
-	private static String wcPath = null;
-	private static String username = null;
-	private static String password = null;
+    private Properties props;
+    private String svnUrl = null;
+    private String wcPath = null;
+    private String username = null;
+    private String password = null;
 
-	/** Null mean latest revision. */
-	private static Long rev = null;
+    /** Null mean latest revision. */
+    private Long rev = null;
 
-	/** Last time run the checkout. */
-	private Date lastCheckDate = null;
+    /** Last time run the checkout. */
+    private Date lastCheckDate = null;
 
-	SVNWCClient wcClient = null;
+    SVNWCClient wcClient = null;
 
-	/**
-	 * Avoid create instance without parameter.
-	 */
-	private SVNClient() {
-		// No nothing
-	}
+    /**
+     * Avoid create instance without parameter.
+     */
+    private SVNClient() {
+        // No nothing
+    }
 
-	/**
-	 * Create an instance of SVNClient to get information from local working
-	 * copy.
-	 * 
-	 * @param wcPath
-	 *            path of working copy
-	 * @param username
-	 * @param password
-	 */
-	public static SVNClient newClientFromWC(String wcPath, String username,
-			String password) {
-		SVNClient svnClient = new SVNClient();
-		svnClient.wcPath = wcPath;
-		svnClient.username = username;
-		svnClient.password = password;
+    /**
+     * Create an instance of SVNClient to get information from local working copy.
+     * 
+     * @param wcPath
+     *            path of working copy
+     * @param username
+     * @param password
+     */
+    public SVNClient(String svnUrl, String wcPath, String username, String password) {
+        this.svnUrl = svnUrl;
+        this.wcPath = wcPath;
+        this.username = username;
+        this.password = password;
+    }
 
-		return svnClient;
-	}
-	
-	   public static SVNClient newClientFromWC(String wcPath) {
-	        SVNClient svnClient = new SVNClient();
-	        svnClient.wcPath = wcPath;
+    /**
+     * [Give the description for method].
+     * 
+     * @param configFile
+     * @return
+     */
+    public SVNClient(String configFile) {
+        try {
+            Properties props = new Properties();
+            props.load(CommonUtil.loadResource(configFile));
 
-	        return svnClient;
-	    }
+            String revVal = props.getProperty("rev");
 
-	public static SVNClient newClientFromUrl(String svnUrl, String username,
-			String password) {
-		SVNClient svnClient = new SVNClient();
-		svnClient.svnUrl = svnUrl;
-		svnClient.username = username;
-		svnClient.password = password;
+            this.svnUrl = props.getProperty("svn.url");
+            this.wcPath = props.getProperty("svn.wc");
+            this.username = props.getProperty("username");
+            this.password = props.getProperty("password");
 
-		return svnClient;
-	}
+            rev = null;
+            if ((revVal != null) && (!"-1".equalsIgnoreCase(revVal))) {
+                rev = Long.valueOf(revVal);
+                this.setRev(rev);
+            }
 
-	/**
-	 * [Give the description for method].
-	 * 
-	 * @param configFile
-	 * @return
-	 */
-	public static SVNClient newClientFromConfiguration(String configFile) {
-		try {
-			Properties props = new Properties();
-			props.load(CommonUtil.loadResource(configFile));
+        } catch (IOException ex) {
+            LOG.error("Could not load resource file '" + configFile + "'", ex);
+        }
+    }
 
-			String revVal = props.getProperty("rev");
+    public SVNWCClient getSVNWCClient() {
+        SVNClientManager clientManager = getClientManager();
 
-			SVNClient svnClient = new SVNClient();
-			svnClient.svnUrl = props.getProperty("svn.url");
-			svnClient.wcPath = props.getProperty("svn.wc");
-			svnClient.username = props.getProperty("username");
-			svnClient.password = props.getProperty("password");
+        return clientManager.getWCClient();
+    }
 
-			rev = null;
-			if ((revVal != null) && (!"-1".equalsIgnoreCase(revVal))) {
-				rev = Long.valueOf(revVal);
-				svnClient.setRev(rev);
-			}
+    /**
+     * [Give the description for method].
+     * 
+     * @return
+     */
+    public SVNClientManager getClientManager() {
+        DefaultSVNOptions myOptions = SVNWCUtil.createDefaultOptions(true);;
+        SVNClientManager clientManager = SVNClientManager.newInstance(myOptions, username, password);
 
-			return svnClient;
-		} catch (IOException ex) {
-			LOG.error("Could not load resource file '" + configFile + "'", ex);
-		}
+        clientManager.setEventHandler(this);
+        return clientManager;
+    }
 
-		return null;
-	}
+    /**
+     * Get value of wcPath.
+     * 
+     * @return the wcPath
+     */
+    public String getWcPath() {
+        return wcPath;
+    }
 
-	/**
-	 * [Give the description for method].
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// SVNClientManager clientManager = getClientManager();
-		//
-		// SVNWCClient wcClient = clientManager.getWCClient();
-		//
-		// SVNRevision revision = SVNRevision.HEAD;
-		// File path = new File(wcPath);
-		// try {
-		// SVNInfo info = wcClient.doInfo(path, revision);
-		// LOG.debug("URL " + info.getURL());
-		// LOG.debug("CommittedDate:" +
-		// CommonUtil.formatDate(info.getCommittedDate(), "yyyy/MM/dd HH:mm"));
-		// LOG.debug("Revision:" + info.getRevision().getNumber());
-		// LOG.debug("Last Committer:" + info.getAuthor());
-		//
-		// } catch (SVNException ex) {
-		// LOG.error("", ex);
-		// }
+    /**
+     * Set the value for wcPath.
+     * 
+     * @param wcPath
+     *            the wcPath to set
+     */
+    public void setWcPath(String wcPath) {
+        this.wcPath = wcPath;
+    }
 
-	}
+    public long doCheckout(String svnUrlPath) {
+        SVNURL svnUrl;
+        try {
+            svnUrl = SVNURL.parseURIEncoded(svnUrlPath);
+            return doCheckout(svnUrl, null);
+        } catch (SVNException ex) {
+            LOG.error("Parse URL path '" + svnUrlPath + "'", ex);
+        }
 
-	public SVNWCClient getSVNWCClient() {
-		SVNClientManager clientManager = getClientManager();
+        return -1;
+    }
 
-		return clientManager.getWCClient();
-	}
+    public long doCheckout(String svnUrlPath, Long rev) {
+        SVNURL svnUrl;
+        try {
+            svnUrl = SVNURL.parseURIEncoded(svnUrlPath);
+            return doCheckout(svnUrl, rev);
+        } catch (SVNException ex) {
+            LOG.error("Parse URL path '" + svnUrlPath + "'", ex);
+        }
 
-	/**
-	 * [Give the description for method].
-	 * 
-	 * @return
-	 */
-	public SVNClientManager getClientManager() {
-		DefaultSVNOptions myOptions = SVNWCUtil.createDefaultOptions(true);
-		;
-		SVNClientManager clientManager = SVNClientManager.newInstance(
-				myOptions, username, password);
+        return -1;
+    }
 
-		clientManager.setEventHandler(this);
-		return clientManager;
-	}
+    public long doCheckout(SVNURL url, Long rev) {
+        SVNUpdateClient updateClient = getClientManager().getUpdateClient();
+        File path = new File(wcPath);
+        SVNRevision svnRev = (rev == null) ? SVNRevision.UNDEFINED : SVNRevision.create(rev);
 
-	/**
-	 * Get value of wcPath.
-	 * 
-	 * @return the wcPath
-	 */
-	public static String getWcPath() {
-		return wcPath;
-	}
+        try {
+            lastCheckDate = new Date();
+            LOG.debug("CleanUp..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
+            doCleanUp();
+            LOG.debug("Checkout..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
 
-	/**
-	 * Set the value for wcPath.
-	 * 
-	 * @param wcPath
-	 *            the wcPath to set
-	 */
-	public static void setWcPath(String wcPath) {
-		SVNClient.wcPath = wcPath;
-	}
+            long lastRev = updateClient.doCheckout(url, path, svnRev, svnRev, SVNDepth.INFINITY, true);
+            LOG.debug("lastRev=" + lastRev);
 
-	public long doCheckout(String svnUrlPath) {
-		SVNURL svnUrl;
-		try {
-			svnUrl = SVNURL.parseURIEncoded(svnUrlPath);
-			return doCheckout(svnUrl, null);
-		} catch (SVNException ex) {
-			LOG.error("Parse URL path '" + svnUrlPath + "'", ex);
-		}
+            return lastRev;
+        } catch (SVNException ex) {
+            LOG.error("Checkout SVN...", ex);
+        }
 
-		return -1;
-	}
+        return -1;
+    }
 
-	public long doCheckout(String svnUrlPath, Long rev) {
-		SVNURL svnUrl;
-		try {
-			svnUrl = SVNURL.parseURIEncoded(svnUrlPath);
-			return doCheckout(svnUrl, rev);
-		} catch (SVNException ex) {
-			LOG.error("Parse URL path '" + svnUrlPath + "'", ex);
-		}
+    public void doCleanUp() {
+        SVNWCClient workingCopyClient = getClientManager().getWCClient();
+        File path = new File(wcPath);
+        try {
+            workingCopyClient.doCleanup(path);
+        } catch (SVNException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-		return -1;
-	}
+    public long doUpdate2() {
+        final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
+        try {
+            final SvnUpdate update = svnOperationFactory.createUpdate();
+            update.setSingleTarget(SvnTarget.fromFile(new File(wcPath)));
 
-	public long doCheckout(SVNURL url, Long rev) {
-		SVNUpdateClient updateClient = getClientManager().getUpdateClient();
-		File path = new File(wcPath);
-		SVNRevision svnRev = (rev == null) ? SVNRevision.UNDEFINED
-				: SVNRevision.create(rev);
+            // checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(svnUrl)));
+            // ... other options
+            long[] retValues = update.run();
+            return retValues[0];
+        } catch (SVNException ex) {
+            LOG.error("Update", ex);
+        } finally {
+            svnOperationFactory.dispose();
+        }
 
-		try {
-			lastCheckDate = new Date();
-			LOG.debug("CleanUp..." + path + " at "
-					+ CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
-			doCleanUp();
-			LOG.debug("Checkout..." + path + " at "
-					+ CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
-			
-			long lastRev = updateClient.doCheckout(url, path, svnRev, svnRev,
-					SVNDepth.INFINITY, true);
-			LOG.debug("lastRev=" + lastRev);
+        return -1;
+    }
 
-			return lastRev;
-		} catch (SVNException ex) {
-			LOG.error("Checkout SVN...", ex);
-		}
+    public long doUpdate() {
+        SVNUpdateClient updateClient = getClientManager().getUpdateClient();
+        File path = new File(wcPath);
+        SVNRevision svnRev = (rev == null) ? SVNRevision.UNDEFINED : SVNRevision.create(rev);
 
-		return -1;
-	}
+        try {
+            lastCheckDate = new Date();
+            LOG.debug("Update..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
+            long lastRev = updateClient.doUpdate(path, svnRev, SVNDepth.INFINITY, false, true);
+            LOG.debug("lastRev=" + lastRev);
 
-	public void doCleanUp() {
-		SVNWCClient workingCopyClient = getClientManager().getWCClient();
-		File path = new File(wcPath);
-		try {
-			workingCopyClient.doCleanup(path);
-		} catch (SVNException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+            return lastRev;
+        } catch (SVNException ex) {
+            LOG.error("Update SVN...", ex);
+        }
 
-	
-	public long doUpdate2() {
-		final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
-		try {
-			final SvnUpdate update = svnOperationFactory.createUpdate();
-			update.setSingleTarget(SvnTarget.fromFile(new File(wcPath)));
+        return -1;
+    }
 
-			// checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(svnUrl)));
-			// ... other options
-			long[] retValues = update.run();
-			return retValues[0];
-		} catch (SVNException ex) {
-			LOG.error("Update", ex);
-		} finally {
-			svnOperationFactory.dispose();
-		}
+    /**
+     * Check out at the end of date (23:59).
+     * 
+     * @param endDate
+     *            yyyy/MM/dd
+     */
+    public long doUpdate(String endDate, String pattern) {
+        Date dte = CommonUtil.parse(endDate, pattern);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dte);
 
-		return -1;
-	}
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
 
-	public long doUpdate() {
-		SVNUpdateClient updateClient = getClientManager().getUpdateClient();
-		File path = new File(wcPath);
-		SVNRevision svnRev = (rev == null) ? SVNRevision.UNDEFINED
-				: SVNRevision.create(rev);
+        return doUpdate(cal.getTime());
+    }
 
-		try {
-			lastCheckDate = new Date();
-			LOG.debug("Update..." + path + " at "
-					+ CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
-			long lastRev = updateClient.doUpdate(path, svnRev,
-					SVNDepth.INFINITY, false, true);
-			LOG.debug("lastRev=" + lastRev);
+    public long doUpdate(Date endDate) {
+        SVNUpdateClient updateClient = getClientManager().getUpdateClient();
+        File path = new File(wcPath);
+        SVNRevision svnRev = SVNRevision.create(endDate);
 
-			return lastRev;
-		} catch (SVNException ex) {
-			LOG.error("Update SVN...", ex);
-		}
+        try {
+            lastCheckDate = endDate;
+            LOG.debug("Update..." + path + " at " + CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
+            long lastRev = updateClient.doUpdate(path, svnRev, SVNDepth.INFINITY, false, true);
+            LOG.debug("lastRev=" + lastRev);
 
-		return -1;
-	}
+            return lastRev;
+        } catch (SVNException ex) {
+            LOG.error("Update SVN...", ex);
+        }
 
-	/**
-	 * Check out at the end of date (23:59).
-	 * 
-	 * @param endDate
-	 *            yyyy/MM/dd
-	 */
-	public long doUpdate(String endDate, String pattern) {
-		Date dte = CommonUtil.parse(endDate, pattern);
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dte);
+        return -1;
+    }
 
-		cal.set(Calendar.HOUR_OF_DAY, 23);
-		cal.set(Calendar.MINUTE, 59);
+    /**
+     * Get the first date which the SVN URL is committed.
+     * @return
+     */
+    public Date getFirstCommittedDate() {
 
-		return doUpdate(cal.getTime());
-	}
+        SVNClientManager clientManager = getClientManager();
+        SVNLogClient svnLog = clientManager.getLogClient();
 
-	public long doUpdate(Date endDate) {
-		SVNUpdateClient updateClient = getClientManager().getUpdateClient();
-		File path = new File(wcPath);
-		SVNRevision svnRev = SVNRevision.create(endDate);
+        SVNLogHandler handler = new SVNLogHandler();
 
-		try {
-			lastCheckDate = endDate;
-			LOG.debug("Update..." + path + " at "
-					+ CommonUtil.formatDate(lastCheckDate, DSP_DTE_FMT));
-			long lastRev = updateClient.doUpdate(path, svnRev,
-					SVNDepth.INFINITY, false, true);
-			LOG.debug("lastRev=" + lastRev);
+        String[] paths = null;
+        SVNRevision pegRevision = SVNRevision.create(1);
+        SVNRevision startRevision = SVNRevision.create(1);
+        SVNRevision endRevision = SVNRevision.create(1);
+        boolean stopOnCopy = true;
+        boolean discoverChangedPaths = false;
+        long limit = 100;
 
-			return lastRev;
-		} catch (SVNException ex) {
-			LOG.error("Update SVN...", ex);
-		}
+        try {
+            SVNURL url = SVNURL.parseURIEncoded(svnUrl);
+            svnLog.doLog(url, paths, pegRevision, startRevision, endRevision, stopOnCopy, discoverChangedPaths, limit,
+                    handler);
+            return handler.getFirstDateCommitted();
+        } catch (SVNException ex) {
+            LOG.error("Could not get log of '" + svnUrl, ex);
+        }
 
-		return -1;
-	}
+        return null;
+    }
 
-
-	/**
-	 * @return SVNInfo of the lastest svn Revision
-	 * @throws SVNException
-	 */
-	public SVNInfo getInfo() throws SVNException {
-		if (wcClient == null) {
-			wcClient = getSVNWCClient();
-		}
-		
-		SVNRevision revision = SVNRevision.HEAD;
-		File path = new File(wcPath);
-		return wcClient.doInfo(path, revision);
-	}
-	
-	public Long getLattestRevision() throws SVNException{
-	    if (wcClient == null) {
+    /**
+     * @return SVNInfo of the latest svn Revision
+     * @throws SVNException
+     */
+    public SVNInfo getInfo() throws SVNException {
+        if (wcClient == null) {
             wcClient = getSVNWCClient();
         }
-	    
-	    return wcClient.doGetRevisionProperty(SVNURL.parseURIEncoded(svnUrl), null, SVNRevision.HEAD, null);
-	}
-	
-	/**
-	 * @return SvnInfo of local working directory
-	 * @throws SVNException
-	 */
-	public SVNInfo getLocalInfo() throws SVNException{
-		if (wcClient == null) {
-			wcClient = getSVNWCClient();
-		}
 
-		SVNRevision revision = SVNRevision.WORKING;
-		File path = new File(wcPath);
-		return wcClient.doInfo(path, revision);
-	}
+        SVNRevision revision = SVNRevision.HEAD;
+        File path = new File(wcPath);
+        return wcClient.doInfo(path, revision);
+    }
 
-	/**
-	 * [Give the description for method].
-	 * 
-	 * @param path
-	 *            file path or folder path
-	 * @return
-	 * @throws SVNException
-	 */
-	public SVNInfo getInfo(String path) throws SVNException {
-		if (wcClient == null) {
-			wcClient = getSVNWCClient();
-		}
+    public Long getLattestRevision() throws SVNException {
+        if (wcClient == null) {
+            wcClient = getSVNWCClient();
+        }
 
-		SVNRevision revision = SVNRevision.HEAD;
-		File file = new File(path);
-		return wcClient.doInfo(file, revision);
-	}
+        return wcClient.doGetRevisionProperty(SVNURL.parseURIEncoded(svnUrl), null, SVNRevision.HEAD, null);
+    }
 
-	public SVNInfo getInfo(File file) throws SVNException {
-		if (wcClient == null) {
-			wcClient = getSVNWCClient();
-		}
+    /**
+     * @return SvnInfo of local working directory
+     * @throws SVNException
+     */
+    public SVNInfo getLocalInfo() throws SVNException {
+        if (wcClient == null) {
+            wcClient = getSVNWCClient();
+        }
 
-		SVNRevision revision = SVNRevision.HEAD;
-		return wcClient.doInfo(file, revision);
-	}
+        SVNRevision revision = SVNRevision.WORKING;
+        File path = new File(wcPath);
+        return wcClient.doInfo(path, revision);
+    }
 
-	/**
-	 * Get value of lastCheckDate.
-	 * 
-	 * @return the lastCheckDate
-	 */
-	public Date getLastCheckDate() {
-		return lastCheckDate;
-	}
+    /**
+     * [Give the description for method].
+     * 
+     * @param path
+     *            file path or folder path
+     * @return
+     * @throws SVNException
+     */
+    public SVNInfo getInfo(String path) throws SVNException {
+        if (wcClient == null) {
+            wcClient = getSVNWCClient();
+        }
 
-	/**
-	 * Set the value for lastCheckDate.
-	 * 
-	 * @param lastCheckDate
-	 *            the lastCheckDate to set
-	 */
-	public void setLastCheckDate(Date lastCheckDate) {
-		this.lastCheckDate = lastCheckDate;
-	}
+        SVNRevision revision = SVNRevision.HEAD;
+        File file = new File(path);
+        return wcClient.doInfo(file, revision);
+    }
 
-	/**
-	 * [Explain the description for this method here].
-	 * 
-	 * @throws SVNCancelException
-	 * @see org.tmatesoft.svn.core.ISVNCanceller#checkCancelled()
-	 */
-	@Override
-	public void checkCancelled() throws SVNCancelException {
-		// TODO Auto-generated method stub
+    public SVNInfo getInfo(File file) throws SVNException {
+        if (wcClient == null) {
+            wcClient = getSVNWCClient();
+        }
 
-	}
+        SVNRevision revision = SVNRevision.HEAD;
+        return wcClient.doInfo(file, revision);
+    }
 
-	/**
-	 * [Explain the description for this method here].
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 * @throws SVNException
-	 * @see org.tmatesoft.svn.core.wc.ISVNEventHandler#handleEvent(org.tmatesoft.svn.core.wc.SVNEvent,
-	 *      double)
-	 */
-	@Override
-	public void handleEvent(SVNEvent event, double progress)
-			throws SVNException {
-		LOG.debug(event.getAction() + " " + event.getFile().getPath());
-	}
+    /**
+     * Get value of lastCheckDate.
+     * 
+     * @return the lastCheckDate
+     */
+    public Date getLastCheckDate() {
+        return lastCheckDate;
+    }
 
-	/**
-	 * Get value of rev.
-	 * 
-	 * @return the rev
-	 */
-	public static Long getRev() {
-		return rev;
-	}
+    /**
+     * Set the value for lastCheckDate.
+     * 
+     * @param lastCheckDate
+     *            the lastCheckDate to set
+     */
+    public void setLastCheckDate(Date lastCheckDate) {
+        this.lastCheckDate = lastCheckDate;
+    }
 
-	/**
-	 * Set the value for rev.
-	 * 
-	 * @param rev
-	 *            the rev to set
-	 */
-	public static void setRev(Long rev) {
-		SVNClient.rev = rev;
-	}
+    /**
+     * [Explain the description for this method here].
+     * 
+     * @throws SVNCancelException
+     * @see org.tmatesoft.svn.core.ISVNCanceller#checkCancelled()
+     */
+    @Override
+    public void checkCancelled() throws SVNCancelException {
+        // TODO Auto-generated method stub
 
+    }
+
+    /**
+     * [Explain the description for this method here].
+     * 
+     * @param arg0
+     * @param arg1
+     * @throws SVNException
+     * @see org.tmatesoft.svn.core.wc.ISVNEventHandler#handleEvent(org.tmatesoft.svn.core.wc.SVNEvent, double)
+     */
+    @Override
+    public void handleEvent(SVNEvent event, double progress) throws SVNException {
+        LOG.debug(event.getAction() + " " + event.getFile().getPath());
+    }
+
+    /**
+     * Get value of rev.
+     * 
+     * @return the rev
+     */
+    public Long getRev() {
+        return rev;
+    }
+
+    /**
+     * Set the value for rev.
+     * 
+     * @param rev
+     *            the rev to set
+     */
+    public void setRev(Long rev) {
+        this.rev = rev;
+    }
+
+}
+
+/**
+ * Capture logs of history to get the first date committed.
+ * 
+ * @author ThachLN
+ *
+ */
+class SVNLogHandler implements ISVNLogEntryHandler {
+    private final static Logger LOG = Logger.getLogger("LogHandler");
+    Date firstDateCommitted = new Date();
+
+    /**
+     * Get value of the firstDateCommitted.
+     * 
+     * @return the firstDateCommitted
+     */
+    public Date getFirstDateCommitted() {
+        return firstDateCommitted;
+    }
+
+    @Override
+    public void handleLogEntry(SVNLogEntry svnLogEntry) throws SVNException {
+        LOG.debug("svnLogEntry=" + svnLogEntry.getRevision() + ";date=" + svnLogEntry.getDate() + ";author="
+                + svnLogEntry.getAuthor());
+        if (firstDateCommitted.after(svnLogEntry.getDate())) {
+            firstDateCommitted = svnLogEntry.getDate();
+        } else {
+            // Do nothing
+        }
+    }
 }

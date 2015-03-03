@@ -18,6 +18,8 @@
  */
 package svn.client;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,31 +30,16 @@ import org.junit.Test;
 public class SVNClientTestSVN_GST {
 
     @Test
-    public void testSVN_GST_CTU() {
-        String svnUrl = "https://gst.fsoft.com.vn/svn/CTU_003_JSD_01_J1.2";
-        String username = "student";
+    public void testSVN_GST_HCMUT() {
+        String svnUrl = "https://gst.fsoft.com.vn/svn/HCMUT_012_JSD_01_13/trunk";
+        String username = "campuslink.reviewer@fsoft.com.vn";
         String password = "123456";
-        SVNClient svCln = SVNClient.newClientFromUrl(svnUrl, username, password);
-        svCln.setWcPath("D:/Project/Campulink/CTU-MockProject/CTU_003_JSD_01_J1.2");
+        String wcPath = "D:/Projects/Campulink/svn/trunk/wip/hcm_hcmut/MockProject/svn/HCMUT_012_JSD_01_13/trunk";
         
-        // Checkout
-        long lastRev = svCln.doCheckout(svnUrl);
+        WCAnalyzer wcAnalyzer = new WCAnalyzer(svnUrl, wcPath , username, password);
         
-        Assert.assertNotEquals(lastRev, 0);
-
-        // Update
-        long lastUpdateRev = svCln.doUpdate();
-        Assert.assertNotEquals(lastUpdateRev, lastRev);
+        wcAnalyzer.start();
+        
     }
     
-    @Test
-    public void testSVN_GSTInfra() {
-        String svnUrl = "https://gst.fsoft.com.vn/svn/GSTInfra/AccountManagementLDAP/LdapManagementWeb/";
-        String username = "your account";
-        String password = "your password";
-        SVNClient svCln = SVNClient.newClientFromUrl(svnUrl, username, password);
-        svCln.setWcPath("D:/Temp/LdapManagementWeb");
-        
-        svCln.doCheckout(svnUrl);
-    }
 }
